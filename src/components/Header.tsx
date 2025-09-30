@@ -110,7 +110,7 @@ const Header = () => {
             <img 
               src={sportsConnectLogo} 
               alt="SportsConnect" 
-              className="h-8 w-auto"
+              className="h-6 w-auto"
             />
           </button>
         </div>
