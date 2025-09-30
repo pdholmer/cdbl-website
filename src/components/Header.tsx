@@ -35,24 +35,10 @@ const Header = () => {
       {/* Blue Header - League Overview */}
       <div className="bg-primary border-b border-primary-foreground/10">
         <div className="container relative flex h-20 items-center justify-between px-4 gap-4">
-          {/* Left: Search Bar */}
-          <div className="relative z-10 w-full max-w-xs hidden lg:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary-foreground/60" />
-            <input
-              type="search"
-              placeholder="Search..."
-              className="w-full h-10 pl-10 pr-4 rounded-md bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground/60 border border-primary-foreground/20 focus:outline-none focus:ring-2 focus:ring-primary-foreground/40"
-              aria-label="Search"
-            />
+          {/* Left: Weather Display */}
+          <div className="z-10">
+            <WeatherDisplay />
           </div>
-
-          {/* Mobile: Search Icon */}
-          <button 
-            className="lg:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors z-10" 
-            aria-label="Search"
-          >
-            <Search className="h-5 w-5" />
-          </button>
 
           {/* Center: CDBL Logo - Absolutely centered on page */}
           <div className="absolute left-1/2 -translate-x-1/2">
@@ -94,8 +80,24 @@ const Header = () => {
       {/* White Header - Baseball Season Specific */}
       <div className="bg-background border-b border-border">
         <div className="container flex h-16 items-center justify-between px-4 gap-8">
-          {/* Left: Weather Display */}
-          <WeatherDisplay />
+          {/* Left: Search Bar */}
+          <div className="relative w-full max-w-xs hidden lg:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="search"
+              placeholder="Search..."
+              className="w-full h-10 pl-10 pr-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+              aria-label="Search"
+            />
+          </div>
+
+          {/* Mobile: Search Icon */}
+          <button 
+            className="lg:hidden text-foreground hover:text-primary transition-colors" 
+            aria-label="Search"
+          >
+            <Search className="h-5 w-5" />
+          </button>
           
           <div className="flex-1"></div>
 
