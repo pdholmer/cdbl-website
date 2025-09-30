@@ -81,28 +81,28 @@ const WeatherDisplay = () => {
     });
   };
 
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
+  const formatShortDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric'
     });
   };
 
   return (
-    <div className="flex items-center gap-4 text-xs font-medium">
-      <div className="flex items-center gap-2">
-        <span className="font-semibold">{formatDate(dateTime)}</span>
-        <span className="text-muted-foreground">|</span>
-        <span className="font-semibold">{formatTime(dateTime)}</span>
-      </div>
+    <div className="flex items-center gap-2 lg:gap-4 text-xs font-medium text-primary-foreground">
+      {/* Desktop: Full date */}
+      <span className="font-semibold hidden lg:inline">{formatDate(dateTime)}</span>
+      
+      {/* Mobile/Tablet: Short date */}
+      <span className="font-semibold lg:hidden">{formatShortDate(dateTime)}</span>
+      
       {weather && (
         <>
-          <span className="text-muted-foreground">|</span>
-          <div className="flex items-center gap-2">
+          <span className="hidden lg:inline">|</span>
+          <div className="flex items-center gap-1 lg:gap-2">
             {getWeatherIcon(weather.condition)}
             <span className="font-semibold">{weather.temp}°F</span>
-            <span className="text-muted-foreground">{weather.condition}</span>
+            <span className="hidden lg:inline">{weather.condition}</span>
           </div>
         </>
       )}
