@@ -176,7 +176,7 @@ const Header = () => {
 
       {/* Top White Header - Future Rockets */}
       <div className="bg-background border-b border-border">
-        <div className="container flex h-12 items-center justify-between px-4">
+        <div className="container flex h-12 items-center justify-end px-4">
           <div className="flex items-center">
             <span className="text-sm font-extrabold tracking-[0.2em] text-foreground">
               FUTURE ROCKETS START HERE
