@@ -1,9 +1,10 @@
 import { useState } from "react";
 import cdblLogo from "@/assets/cdbl-logo-main.png";
 import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
+import rocketLogo from "@/assets/rocket-blue.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, Facebook, Instagram, ChevronDown } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,8 +24,83 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-primary shadow-md">
-      <div className="container flex h-20 items-center justify-between px-4">
+    <header className="sticky top-0 z-50 w-full shadow-md">
+      {/* Top White Header - Future Rockets */}
+      <div className="bg-background border-b border-border">
+        <div className="container flex h-12 items-center justify-between px-4">
+          <div className="flex items-center">
+            <span className="text-sm font-extrabold tracking-[0.2em] text-foreground">
+              FUTURE ROCKETS START HERE
+            </span>
+          </div>
+          <div className="hidden md:flex items-center gap-4">
+            <img src={rocketLogo} alt="Rocket" className="h-6 w-auto" />
+            <span className="text-xs font-semibold text-muted-foreground">SOCIAL:</span>
+            <a 
+              href="https://facebook.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-foreground hover:text-primary transition-colors"
+              aria-label="Facebook"
+            >
+              <Facebook className="h-4 w-4" />
+            </a>
+            <a 
+              href="https://instagram.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-foreground hover:text-primary transition-colors"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Middle White Header - League Links */}
+      <div className="bg-background border-b border-border">
+        <div className="container flex h-10 items-center justify-end px-4">
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-medium">
+            <a href="#" className="text-foreground hover:text-primary transition-colors">FIELDS</a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">REGISTRATION</a>
+            <a 
+              href="https://www.cdbaseball.org/page/show/9035619-scholarship" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              SCHOLARSHIP
+            </a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">EVENTS</a>
+            <button className="text-foreground hover:text-primary transition-colors" aria-label="Search">
+              <Search className="h-4 w-4" />
+            </button>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">SHOP</a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">DONATE</a>
+          </nav>
+        </div>
+      </div>
+
+      {/* Bottom White Header - Baseball Specific */}
+      <div className="bg-background border-b border-border">
+        <div className="container flex h-10 items-center px-4">
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-medium">
+            <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">Coaches</a>
+            <a href="#" className="text-foreground hover:text-primary transition-colors">Board</a>
+            <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors">
+              More <ChevronDown className="h-3 w-3" />
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      {/* Main Blue Header - CDBL */}
+      <div className="bg-primary">
+        <div className="container flex h-20 items-center justify-between px-4">
         {/* Logo and Tagline */}
         <div className="flex items-center gap-3">
           <img 
@@ -123,6 +199,7 @@ const Header = () => {
             </SheetContent>
           </Sheet>
         </div>
+      </div>
       </div>
     </header>
   );
