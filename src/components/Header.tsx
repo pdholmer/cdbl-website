@@ -66,19 +66,17 @@ const Header = () => {
           </button>
 
           {/* SportsConnect Button - Desktop */}
-          <Button
-            variant="destructive"
-            size="lg"
-            className="hidden lg:flex items-center gap-2 bg-[#CC0000] hover:bg-[#AA0000] text-white font-bold"
+          <button
+            className="hidden lg:block p-2 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
             onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+            aria-label="SportsConnect"
           >
             <img 
               src={sportsConnectLogo} 
               alt="SportsConnect" 
-              className="h-6 w-auto"
+              className="h-8 w-auto"
             />
-            SportsConnect
-          </Button>
+          </button>
 
           {/* Mobile Menu */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -107,22 +105,20 @@ const Header = () => {
                 </nav>
 
                 {/* SportsConnect Button - Mobile */}
-                <Button
-                  variant="destructive"
-                  size="lg"
-                  className="w-full flex items-center justify-center gap-2 bg-[#CC0000] hover:bg-[#AA0000] text-white font-bold mt-4"
+                <button
+                  className="w-full flex items-center justify-center p-4 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors mt-4"
                   onClick={() => {
                     window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank');
                     setIsMenuOpen(false);
                   }}
+                  aria-label="SportsConnect"
                 >
                   <img 
                     src={sportsConnectLogo} 
                     alt="SportsConnect" 
-                    className="h-6 w-auto"
+                    className="h-8 w-auto"
                   />
-                  SportsConnect
-                </Button>
+                </button>
               </div>
             </SheetContent>
           </Sheet>
