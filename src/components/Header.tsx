@@ -29,17 +29,32 @@ const Header = () => {
       {/* Blue Header - League Overview */}
       <div className="bg-primary border-b border-primary-foreground/10">
         <div className="container flex h-20 items-center justify-between px-4 gap-8">
-          {/* Left: CDBL Logo */}
+          {/* Left: Seasonal Navigation */}
+          <nav className="hidden lg:flex items-center gap-4 text-[0.8625rem] font-medium">
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">Schedule</a>
+            <span className="text-primary-foreground/40">|</span>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">In-House</a>
+            <span className="text-primary-foreground/40">|</span>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">Travel</a>
+            <span className="text-primary-foreground/40">|</span>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">Coaches</a>
+            <span className="text-primary-foreground/40">|</span>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">Board</a>
+            <span className="text-primary-foreground/40">|</span>
+            <button className="flex items-center gap-1 text-primary-foreground hover:text-primary-foreground/80 transition-colors">
+              More <ChevronDown className="h-3 w-3" />
+            </button>
+          </nav>
+
+          {/* Center: CDBL Logo */}
           <img 
             src={cdblLogo} 
             alt="CDBL Logo" 
             className="h-14 w-auto flex-shrink-0"
           />
           
-          <div className="flex-1"></div>
-
-          {/* Right: League Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
+          {/* Right: Annual Navigation */}
+          <nav className="hidden lg:flex items-center gap-4 text-[0.8625rem] font-bold uppercase">
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">FIELDS</a>
             <span className="text-primary-foreground/40">|</span>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">REGISTRATION</a>
@@ -120,37 +135,18 @@ const Header = () => {
           
           <div className="flex-1"></div>
 
-          {/* Right: Baseball Navigation + SportsConnect Button */}
-          <div className="hidden lg:flex items-center gap-6">
-            <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Coaches</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Board</a>
-              <span className="text-muted-foreground">|</span>
-              <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors">
-                More <ChevronDown className="h-3 w-3" />
-              </button>
-            </nav>
-
-            {/* SportsConnect Button */}
-            <button
-              className="p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-              aria-label="SportsConnect"
-            >
-              <img 
-                src={sportsConnectLogo} 
-                alt="SportsConnect" 
-                className="h-6 w-auto"
-              />
-            </button>
-          </div>
+          {/* Right: SportsConnect Button */}
+          <button
+            className="hidden lg:block p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
+            onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+            aria-label="SportsConnect"
+          >
+            <img 
+              src={sportsConnectLogo} 
+              alt="SportsConnect" 
+              className="h-6 w-auto"
+            />
+          </button>
         </div>
       </div>
     </header>
