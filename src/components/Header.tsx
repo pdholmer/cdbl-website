@@ -217,47 +217,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* White Header - Baseball Season Specific */}
-      <div className="bg-background border-b border-border">
-        <div className="container flex h-16 items-center justify-between px-4 gap-8">
-          {/* Left: Weather Display aligned with CDBL logo */}
-          <WeatherDisplay />
-          
-          <div className="flex-1"></div>
-
-          {/* Right: Baseball Navigation + SportsConnect Button */}
-          <div className="hidden lg:flex items-center gap-6">
-            <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Coaches</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Board</a>
-              <span className="text-muted-foreground">|</span>
-              <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors">
-                More <ChevronDown className="h-3 w-3" />
-              </button>
-            </nav>
-
-            {/* SportsConnect Button */}
-            <button
-              className="p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-              aria-label="SportsConnect"
-            >
-              <img 
-                src={sportsConnectLogo} 
-                alt="SportsConnect" 
-                className="h-6 w-auto"
-              />
-            </button>
-          </div>
-        </div>
-      </div>
     </header>
   );
 };
