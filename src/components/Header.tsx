@@ -106,8 +106,6 @@ const Header = () => {
               <span className="text-muted-foreground">|</span>
               <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
               <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Coaches</a>
-              <span className="text-muted-foreground">|</span>
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-colors outline-none">
                   More <ChevronDown className="h-3 w-3" />
