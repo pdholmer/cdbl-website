@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import cdblLogo from "@/assets/cdbl-logo-main.png";
 import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
-import rocketLogo from "@/assets/rocket-blue.png";
-import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Search, Facebook, Instagram, ChevronDown, ShoppingCart, Heart } from "lucide-react";
+import { Menu, ShoppingCart, Heart } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
 import {
   DropdownMenu,
@@ -62,20 +61,20 @@ const Header = () => {
           <div className="flex items-center gap-6 z-10">
             {/* Desktop: Shop & Donate with labels */}
             <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
-              <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
+              <Link to="/shop" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
                 <ShoppingCart className="h-4 w-4" />
                 SHOP
-              </a>
+              </Link>
               <span className="text-primary-foreground/40">|</span>
-              <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
+              <Link to="/volunteer" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
                 <Heart className="h-4 w-4" />
                 DONATE
-              </a>
+              </Link>
             </nav>
 
             {/* Mobile/Tablet: Rotating Shop/Donate button */}
-            <a 
-              href="#" 
+            <Link 
+              to={showShop ? "/shop" : "/volunteer"} 
               className="lg:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2 text-[0.8625rem] font-bold uppercase"
               aria-label={showShop ? "Shop" : "Donate"}
             >
@@ -90,7 +89,7 @@ const Header = () => {
                   <span>DONATE</span>
                 </>
               )}
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -110,42 +109,19 @@ const Header = () => {
           
           <div className="flex-1"></div>
 
-          {/* Right: Navigation + SportsConnect Button */}
-          <div className="hidden lg:flex items-center gap-6">
-            <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Fields</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Registration</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Events</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
-              <span className="text-muted-foreground">|</span>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
-              <span className="text-muted-foreground">|</span>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-colors outline-none">
-                  More <ChevronDown className="h-3 w-3" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem asChild>
-                    <a 
-                      href="https://www.cdbaseball.org/page/show/9035619-scholarship" 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="cursor-pointer"
-                    >
-                      Scholarship
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href="#" className="cursor-pointer">Board</a>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </nav>
+            {/* Right: Navigation + SportsConnect Button */}
+            <div className="hidden lg:flex items-center gap-6">
+              <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
+                <Link to="/registration" className="text-foreground hover:text-primary transition-colors">Register</Link>
+                <span className="text-muted-foreground">|</span>
+                <Link to="/teams" className="text-foreground hover:text-primary transition-colors">Teams</Link>
+                <span className="text-muted-foreground">|</span>
+                <Link to="/schedule" className="text-foreground hover:text-primary transition-colors">Schedule</Link>
+                <span className="text-muted-foreground">|</span>
+                <Link to="/fields" className="text-foreground hover:text-primary transition-colors">Fields</Link>
+                <span className="text-muted-foreground">|</span>
+                <Link to="/events" className="text-foreground hover:text-primary transition-colors">Events</Link>
+              </nav>
 
             {/* SportsConnect Button */}
             <button
@@ -176,41 +152,36 @@ const Header = () => {
               <div className="flex flex-col gap-6 mt-8">
                 {/* Mobile Navigation */}
                 <nav className="flex flex-col gap-4">
-                  {navItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => scrollToSection(item.id)}
-                      className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
-                    Fields
-                  </a>
-                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
+                  <Link to="/registration" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Registration
+                  </Link>
+                  <Link to="/teams" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Teams
+                  </Link>
+                  <Link to="/schedule" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
                     Schedule
-                  </a>
-                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
-                    In-House
-                  </a>
-                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
-                    Travel
-                  </a>
-                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
-                    Coaches
-                  </a>
-                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
-                    Board
-                  </a>
-                  <a 
-                    href="https://www.cdbaseball.org/page/show/9035619-scholarship" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2"
-                  >
-                    Scholarship
-                  </a>
+                  </Link>
+                  <Link to="/fields" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Fields
+                  </Link>
+                  <Link to="/events" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Events
+                  </Link>
+                  <Link to="/about" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    About
+                  </Link>
+                  <Link to="/rules" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Rules
+                  </Link>
+                  <Link to="/volunteer" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Volunteer
+                  </Link>
+                  <Link to="/sponsors" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Sponsors
+                  </Link>
+                  <Link to="/contact" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
+                    Contact
+                  </Link>
                 </nav>
 
                 {/* SportsConnect Button - Mobile */}
