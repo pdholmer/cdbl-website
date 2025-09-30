@@ -55,16 +55,8 @@ const Header = () => {
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">DONATE</a>
           </nav>
 
-          {/* Right: Future Rockets Button + SportsConnect */}
+          {/* Right: SportsConnect Only */}
           <div className="hidden lg:flex items-center gap-4">
-            {/* Future Rockets Button */}
-            <Button 
-              variant="secondary"
-              className="text-xs font-extrabold tracking-[0.15em] bg-primary-light text-primary-foreground hover:bg-primary-light/90"
-            >
-              FUTURE ROCKETS START HERE
-            </Button>
-
             {/* SportsConnect Button */}
             <button
               className="p-2 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors flex-shrink-0"
@@ -128,7 +120,17 @@ const Header = () => {
 
       {/* White Header - Baseball Season Specific */}
       <div className="bg-background border-b border-border">
-        <div className="container flex h-10 items-center justify-end px-4">
+        <div className="container flex h-10 items-center justify-between px-4">
+          {/* Left: Future Rockets Button aligned with CDBL logo */}
+          <Button 
+            variant="secondary"
+            size="sm"
+            className="text-xs font-extrabold tracking-[0.15em] bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            FUTURE ROCKETS START HERE
+          </Button>
+          
+          {/* Right: Baseball Navigation */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-medium">
             <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
             <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
