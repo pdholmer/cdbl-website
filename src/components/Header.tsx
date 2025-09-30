@@ -1,5 +1,5 @@
 import { useState } from "react";
-import cdblLogo from "@/assets/cdbl-logo-white.png";
+import cdblLogo from "@/assets/cdbl-logo-main.png";
 import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
