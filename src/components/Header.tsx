@@ -83,6 +83,181 @@ const Header = () => {
         </div>
       </div>
 
+      {/* White Header - Baseball Season Specific */}
+      <div className="bg-background border-b border-border">
+        <div className="container flex h-16 items-center justify-between px-4 gap-8">
+          {/* Left: Weather Display */}
+          <WeatherDisplay />
+          
+          <div className="flex-1"></div>
+
+          {/* Right: Navigation + SportsConnect Button */}
+          <div className="hidden lg:flex items-center gap-6">
+            <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Fields</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Registration</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Events</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Coaches</a>
+              <span className="text-muted-foreground">|</span>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 text-foreground hover:text-primary transition-colors outline-none">
+                  More <ChevronDown className="h-3 w-3" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <a 
+                      href="https://www.cdbaseball.org/page/show/9035619-scholarship" 
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer"
+                    >
+                      Scholarship
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href="#" className="cursor-pointer">Board</a>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </nav>
+
+            {/* SportsConnect Button */}
+            <button
+              className="p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
+              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+              aria-label="SportsConnect"
+            >
+              <img 
+                src={sportsConnectLogo} 
+                alt="SportsConnect" 
+                className="h-6 w-auto"
+              />
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <SheetTrigger asChild>
+              <button 
+                className="lg:hidden flex items-center gap-2 text-foreground font-semibold"
+                aria-label="Open menu"
+              >
+                <Menu className="h-6 w-6" />
+                <span className="text-sm">MENU</span>
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[280px] sm:w-[350px]">
+              <div className="flex flex-col gap-6 mt-8">
+                {/* Mobile Navigation */}
+                <nav className="flex flex-col gap-4">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => scrollToSection(item.id)}
+                      className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2"
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
+                    Fields
+                  </a>
+                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
+                    Schedule
+                  </a>
+                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
+                    In-House
+                  </a>
+                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
+                    Travel
+                  </a>
+                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
+                    Coaches
+                  </a>
+                  <a href="#" className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2">
+                    Board
+                  </a>
+                  <a 
+                    href="https://www.cdbaseball.org/page/show/9035619-scholarship" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-left text-lg font-medium text-foreground hover:text-primary transition-colors py-2"
+                  >
+                    Scholarship
+                  </a>
+                </nav>
+
+                {/* SportsConnect Button - Mobile */}
+                <button
+                  className="w-full flex items-center justify-center p-4 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors mt-4"
+                  onClick={() => {
+                    window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank');
+                    setIsMenuOpen(false);
+                  }}
+                  aria-label="SportsConnect"
+                >
+                  <img 
+                    src={sportsConnectLogo} 
+                    alt="SportsConnect" 
+                    className="h-8 w-auto"
+                  />
+                </button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+
+      {/* White Header - Baseball Season Specific */}
+      <div className="bg-background border-b border-border">
+        <div className="container flex h-16 items-center justify-between px-4 gap-8">
+          {/* Left: Weather Display aligned with CDBL logo */}
+          <WeatherDisplay />
+          
+          <div className="flex-1"></div>
+
+          {/* Right: Baseball Navigation + SportsConnect Button */}
+          <div className="hidden lg:flex items-center gap-6">
+            <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Coaches</a>
+              <span className="text-muted-foreground">|</span>
+              <a href="#" className="text-foreground hover:text-primary transition-colors">Board</a>
+              <span className="text-muted-foreground">|</span>
+              <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors">
+                More <ChevronDown className="h-3 w-3" />
+              </button>
+            </nav>
+
+            {/* SportsConnect Button */}
+            <button
+              className="p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
+              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+              aria-label="SportsConnect"
+            >
+              <img 
+                src={sportsConnectLogo} 
+                alt="SportsConnect" 
+                className="h-6 w-auto"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
     </header>
   );
 };
