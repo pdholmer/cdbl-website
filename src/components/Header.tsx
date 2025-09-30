@@ -34,17 +34,17 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full shadow-md">
       {/* Blue Header - League Overview */}
       <div className="bg-primary border-b border-primary-foreground/10">
-        <div className="container flex h-20 items-center justify-between px-4 gap-4">
+        <div className="container relative flex h-20 items-center justify-between px-4 gap-4">
           {/* Left: Search Icon */}
           <button 
-            className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" 
+            className="text-primary-foreground hover:text-primary-foreground/80 transition-colors z-10" 
             aria-label="Search"
           >
             <Search className="h-5 w-5" />
           </button>
 
-          {/* Center: CDBL Logo */}
-          <div className="flex-1 flex justify-center">
+          {/* Center: CDBL Logo - Absolutely centered on page */}
+          <div className="absolute left-1/2 -translate-x-1/2">
             <img 
               src={cdblLogo} 
               alt="CDBL Logo" 
@@ -53,7 +53,7 @@ const Header = () => {
           </div>
 
           {/* Right: Shop & Donate */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 z-10">
             {/* Desktop: Shop & Donate with labels */}
             <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
               <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
