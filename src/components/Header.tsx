@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import cdblLogo from "@/assets/cdbl-logo-main.png";
 import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
 import rocketLogo from "@/assets/rocket-blue.png";
@@ -15,6 +15,16 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showShop, setShowShop] = useState(true);
+
+  // Rotate between Shop and Donate every 3 seconds
+  useEffect(() => {
+    const rotationTimer = setInterval(() => {
+      setShowShop((prev) => !prev);
+    }, 3000);
+
+    return () => clearInterval(rotationTimer);
+  }, []);
   
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -35,13 +45,18 @@ const Header = () => {
       {/* Blue Header - League Overview */}
       <div className="bg-primary border-b border-primary-foreground/10">
         <div className="container relative flex h-20 items-center justify-between px-4 gap-4">
-          {/* Left: Weather Display */}
-          <div className="z-10">
+          {/* Mobile: Only Weather Display */}
+          <div className="lg:hidden w-full flex justify-center">
             <WeatherDisplay />
           </div>
 
-          {/* Center: CDBL Logo - Absolutely centered on page */}
-          <div className="absolute left-1/2 -translate-x-1/2">
+          {/* Desktop: Weather on Left */}
+          <div className="hidden lg:block z-10">
+            <WeatherDisplay />
+          </div>
+
+          {/* Desktop: Center CDBL Logo */}
+          <div className="hidden lg:block absolute left-1/2 -translate-x-1/2">
             <img 
               src={cdblLogo} 
               alt="CDBL Logo" 
@@ -49,10 +64,9 @@ const Header = () => {
             />
           </div>
 
-          {/* Right: Shop & Donate */}
-          <div className="flex items-center gap-6 z-10">
-            {/* Desktop: Shop & Donate with labels */}
-            <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
+          {/* Desktop: Shop & Donate on Right */}
+          <div className="hidden lg:flex items-center gap-6 z-10">
+            <nav className="flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
               <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
                 <ShoppingCart className="h-4 w-4" />
                 SHOP
@@ -63,16 +77,6 @@ const Header = () => {
                 DONATE
               </a>
             </nav>
-
-            {/* Mobile/Tablet: Shop & Donate icons only */}
-            <div className="flex lg:hidden items-center gap-4">
-              <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" aria-label="Shop">
-                <ShoppingCart className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" aria-label="Donate">
-                <Heart className="h-5 w-5" />
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -80,23 +84,33 @@ const Header = () => {
       {/* White Header - Baseball Season Specific */}
       <div className="bg-background border-b border-border">
         <div className="container flex h-16 items-center justify-between px-4 gap-8">
-          {/* Left: Search Bar */}
-          <div className="relative w-full max-w-xs hidden lg:block">
+          {/* Search Bar - Always visible */}
+          <div className="relative w-full max-w-[200px] lg:max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="search"
               placeholder="Search..."
-              className="w-full h-10 pl-10 pr-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full h-10 pl-10 pr-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
               aria-label="Search"
             />
           </div>
-
-          {/* Mobile: Search Icon */}
+          
+          {/* Mobile: Rotating Shop/Donate Button */}
           <button 
-            className="lg:hidden text-foreground hover:text-primary transition-colors" 
-            aria-label="Search"
+            className="lg:hidden flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-all text-sm font-semibold"
+            aria-label={showShop ? "Shop" : "Donate"}
           >
-            <Search className="h-5 w-5" />
+            {showShop ? (
+              <>
+                <ShoppingCart className="h-4 w-4" />
+                SHOP
+              </>
+            ) : (
+              <>
+                <Heart className="h-4 w-4" />
+                DONATE
+              </>
+            )}
           </button>
           
           <div className="flex-1"></div>
