@@ -120,7 +120,7 @@ const Header = () => {
 
           {/* Right: Baseball Navigation + SportsConnect Button */}
           <div className="hidden lg:flex items-center gap-6">
-            <nav className="flex items-center gap-6 text-xs font-medium">
+            <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
               <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
               <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
               <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
