@@ -38,7 +38,7 @@ const Header = () => {
           <div className="flex-1"></div>
 
           {/* Right: League Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-black uppercase">
+          <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">FIELDS</a>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">REGISTRATION</a>
             <a 
