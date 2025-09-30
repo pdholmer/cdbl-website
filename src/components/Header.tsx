@@ -100,11 +100,10 @@ const Header = () => {
         <div className="container flex h-16 items-center justify-between px-4 gap-8">
           {/* Search Bar - Persistent across all views */}
           <div className="relative w-full max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="search"
               placeholder="Search..."
-              className="w-full h-10 pl-10 pr-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
+              className="w-full h-10 px-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
               aria-label="Search"
             />
           </div>
