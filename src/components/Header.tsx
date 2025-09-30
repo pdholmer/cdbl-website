@@ -5,6 +5,7 @@ import rocketLogo from "@/assets/rocket-blue.png";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Search, Facebook, Instagram, ChevronDown } from "lucide-react";
+import WeatherDisplay from "@/components/WeatherDisplay";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -114,13 +115,8 @@ const Header = () => {
       {/* White Header - Baseball Season Specific */}
       <div className="bg-background border-b border-border">
         <div className="container flex h-16 items-center justify-between px-4 gap-8">
-          {/* Left: Future Rockets Button aligned with CDBL logo */}
-          <Button 
-            variant="secondary"
-            className="text-xs font-extrabold tracking-[0.15em] bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3"
-          >
-            FUTURE ROCKETS START HERE
-          </Button>
+          {/* Left: Weather Display aligned with CDBL logo */}
+          <WeatherDisplay />
           
           <div className="flex-1"></div>
 
