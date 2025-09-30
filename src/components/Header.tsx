@@ -35,8 +35,10 @@ const Header = () => {
             className="h-14 w-auto flex-shrink-0"
           />
           
-          {/* Center: League Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-medium">
+          <div className="flex-1"></div>
+
+          {/* Right: League Navigation */}
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-black uppercase">
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">FIELDS</a>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">REGISTRATION</a>
             <a 
@@ -54,8 +56,6 @@ const Header = () => {
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">SHOP</a>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">DONATE</a>
           </nav>
-
-          <div className="flex-1"></div>
 
 
           {/* Mobile Menu */}
