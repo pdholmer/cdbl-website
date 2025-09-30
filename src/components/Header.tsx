@@ -55,21 +55,6 @@ const Header = () => {
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">DONATE</a>
           </nav>
 
-          {/* Right: SportsConnect Only */}
-          <div className="hidden lg:flex items-center gap-4">
-            {/* SportsConnect Button */}
-            <button
-              className="p-2 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors flex-shrink-0"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-              aria-label="SportsConnect"
-            >
-              <img 
-                src={sportsConnectLogo} 
-                alt="SportsConnect" 
-                className="h-6 w-auto"
-              />
-            </button>
-          </div>
 
           {/* Mobile Menu */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -130,7 +115,7 @@ const Header = () => {
             FUTURE ROCKETS START HERE
           </Button>
           
-          {/* Right: Baseball Navigation */}
+          {/* Center: Baseball Navigation */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-medium">
             <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
             <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
@@ -141,6 +126,19 @@ const Header = () => {
               More <ChevronDown className="h-3 w-3" />
             </button>
           </nav>
+
+          {/* Right: SportsConnect Button */}
+          <button
+            className="hidden lg:block p-2 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
+            onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+            aria-label="SportsConnect"
+          >
+            <img 
+              src={sportsConnectLogo} 
+              alt="SportsConnect" 
+              className="h-6 w-auto"
+            />
+          </button>
         </div>
       </div>
     </header>
