@@ -40,7 +40,9 @@ const Header = () => {
           {/* Right: League Navigation */}
           <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">FIELDS</a>
+            <span className="text-primary-foreground/40">|</span>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">REGISTRATION</a>
+            <span className="text-primary-foreground/40">|</span>
             <a 
               href="https://www.cdbaseball.org/page/show/9035619-scholarship" 
               target="_blank"
@@ -49,11 +51,15 @@ const Header = () => {
             >
               SCHOLARSHIP
             </a>
+            <span className="text-primary-foreground/40">|</span>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">EVENTS</a>
+            <span className="text-primary-foreground/40">|</span>
             <button className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" aria-label="Search">
               <Search className="h-4 w-4" />
             </button>
+            <span className="text-primary-foreground/40">|</span>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">SHOP</a>
+            <span className="text-primary-foreground/40">|</span>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">DONATE</a>
           </nav>
 
@@ -122,10 +128,15 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-6">
             <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
               <a href="#" className="text-foreground hover:text-primary transition-colors">Schedule</a>
+              <span className="text-muted-foreground">|</span>
               <a href="#" className="text-foreground hover:text-primary transition-colors">In-House</a>
+              <span className="text-muted-foreground">|</span>
               <a href="#" className="text-foreground hover:text-primary transition-colors">Travel</a>
+              <span className="text-muted-foreground">|</span>
               <a href="#" className="text-foreground hover:text-primary transition-colors">Coaches</a>
+              <span className="text-muted-foreground">|</span>
               <a href="#" className="text-foreground hover:text-primary transition-colors">Board</a>
+              <span className="text-muted-foreground">|</span>
               <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors">
                 More <ChevronDown className="h-3 w-3" />
               </button>
