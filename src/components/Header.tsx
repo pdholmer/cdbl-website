@@ -28,18 +28,16 @@ const Header = () => {
     <header className="sticky top-0 z-50 w-full shadow-md">
       {/* Blue Header - League Overview */}
       <div className="bg-primary border-b border-primary-foreground/10">
-        <div className="container flex h-20 items-center justify-between px-4 gap-8">
-          {/* Left: CDBL Logo */}
+        <div className="container flex h-20 items-center justify-center px-4 gap-8">
+          {/* Centered Logo */}
           <img 
             src={cdblLogo} 
             alt="CDBL Logo" 
-            className="h-14 w-auto flex-shrink-0"
+            className="h-14 w-auto"
           />
-          
-          <div className="flex-1"></div>
 
-          {/* Right: League Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
+          {/* Right: League Navigation - Absolute positioned */}
+          <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase absolute right-4">
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">FIELDS</a>
             <span className="text-primary-foreground/40">|</span>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">REGISTRATION</a>
@@ -63,7 +61,6 @@ const Header = () => {
             <span className="text-primary-foreground/40">|</span>
             <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">DONATE</a>
           </nav>
-
 
           {/* Mobile Menu */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
