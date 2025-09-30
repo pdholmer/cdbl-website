@@ -82,12 +82,12 @@ const Header = () => {
               {showShop ? (
                 <>
                   <ShoppingCart className="h-4 w-4" />
-                  <span className="hidden sm:inline">SHOP</span>
+                  <span>SHOP</span>
                 </>
               ) : (
                 <>
                   <Heart className="h-4 w-4" />
-                  <span className="hidden sm:inline">DONATE</span>
+                  <span>DONATE</span>
                 </>
               )}
             </a>
