@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import cdblLogo from "@/assets/cdbl-logo.png";
 import { Mail, Phone, MapPin } from "lucide-react";
 
@@ -5,7 +6,7 @@ const Footer = () => {
   return (
     <footer id="contact" className="bg-foreground text-background py-12">
       <div className="container">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-5 gap-8 mb-8">
           <div className="md:col-span-2">
             <img 
               src={cdblLogo} 
@@ -24,29 +25,65 @@ const Footer = () => {
             <h4 className="font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#about" className="opacity-80 hover:opacity-100 transition-opacity">
+                <Link to="/about" className="opacity-80 hover:opacity-100 transition-opacity">
                   About CDBL
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#registration" className="opacity-80 hover:opacity-100 transition-opacity">
+                <Link to="/registration" className="opacity-80 hover:opacity-100 transition-opacity">
                   Registration
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#spirit-wear" className="opacity-80 hover:opacity-100 transition-opacity">
-                  Spirit Wear
-                </a>
+                <Link to="/teams" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Teams
+                </Link>
               </li>
               <li>
-                <a href="#umpires" className="opacity-80 hover:opacity-100 transition-opacity">
-                  Youth Umpires
-                </a>
+                <Link to="/schedule" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Schedule
+                </Link>
               </li>
               <li>
-                <a href="#sponsors" className="opacity-80 hover:opacity-100 transition-opacity">
+                <Link to="/fields" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Fields
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Events
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold mb-4">More</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link to="/shop" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Shop
+                </Link>
+              </li>
+              <li>
+                <Link to="/rules" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Rules
+                </Link>
+              </li>
+              <li>
+                <Link to="/volunteer" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Volunteer
+                </Link>
+              </li>
+              <li>
+                <Link to="/sponsors" className="opacity-80 hover:opacity-100 transition-opacity">
                   Sponsors
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Contact
+                </Link>
               </li>
             </ul>
           </div>
@@ -60,8 +97,8 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <a href="mailto:info@cdbl.org" className="opacity-80 hover:opacity-100 transition-opacity">
-                  info@cdbl.org
+                <a href="mailto:info@cdbaseball.org" className="opacity-80 hover:opacity-100 transition-opacity">
+                  info@cdbaseball.org
                 </a>
               </li>
               <li className="flex items-start gap-2">

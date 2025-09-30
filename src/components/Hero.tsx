@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -9,23 +10,31 @@ import crowdSpirit from "@/assets/crowd-spirit.jpg";
 const carouselSlides = [
   {
     image: heroImage,
-    title: "Where Champions Are Made",
-    subtitle: "Join Central District Baseball League - 38 Years of Excellence"
+    title: "Register for 2026 Season",
+    subtitle: "Join Central District Baseball League - 38 Years of Excellence",
+    primaryCta: { text: "Register Now", link: "/registration" },
+    secondaryCta: { text: "View Programs", link: "/teams" }
   },
   {
     image: playerPitching,
-    title: "Travel & Rec Baseball",
-    subtitle: "Expert coaching for all skill levels since 1987"
+    title: "Check Game Schedule",
+    subtitle: "Find game times, field locations, and important dates",
+    primaryCta: { text: "View Schedule", link: "/schedule" },
+    secondaryCta: { text: "Find Fields", link: "/fields" }
   },
   {
     image: slidingAction,
-    title: "Play Hard, Have Fun",
-    subtitle: "Building character through America's favorite pastime"
+    title: "Shop Rockets Gear",
+    subtitle: "Show your team spirit with official CDBL merchandise",
+    primaryCta: { text: "Shop Now", link: "/shop" },
+    secondaryCta: { text: "View Events", link: "/events" }
   },
   {
     image: crowdSpirit,
-    title: "Join Our Community",
-    subtitle: "Non-profit organization dedicated to youth development"
+    title: "Volunteer Today",
+    subtitle: "Help make a difference in our community through youth baseball",
+    primaryCta: { text: "Get Involved", link: "/volunteer" },
+    secondaryCta: { text: "Learn More", link: "/about" }
   }
 ];
 
@@ -73,20 +82,17 @@ const Hero = () => {
                       <Button 
                         variant="hero" 
                         size="lg"
-                        onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+                        asChild
                       >
-                        Register Now
+                        <Link to={slide.primaryCta.link}>{slide.primaryCta.text}</Link>
                       </Button>
                       <Button 
                         variant="outline" 
                         size="lg"
                         className="bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-sm"
-                        onClick={() => {
-                          const element = document.getElementById("registration");
-                          element?.scrollIntoView({ behavior: "smooth" });
-                        }}
+                        asChild
                       >
-                        View Programs
+                        <Link to={slide.secondaryCta.link}>{slide.secondaryCta.text}</Link>
                       </Button>
                     </div>
                   </div>
