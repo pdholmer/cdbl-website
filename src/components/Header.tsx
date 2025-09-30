@@ -58,26 +58,31 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Middle White Header - League Links */}
-      <div className="bg-background border-b border-border">
-        <div className="container flex h-10 items-center justify-end px-4">
+      {/* Middle Blue Header - League Links with CDBL Logo */}
+      <div className="bg-primary border-b border-primary-foreground/10">
+        <div className="container flex h-16 items-center justify-between px-4">
+          <img 
+            src={cdblLogo} 
+            alt="CDBL Logo" 
+            className="h-12 w-auto"
+          />
           <nav className="hidden lg:flex items-center gap-6 text-xs font-medium">
-            <a href="#" className="text-foreground hover:text-primary transition-colors">FIELDS</a>
-            <a href="#" className="text-foreground hover:text-primary transition-colors">REGISTRATION</a>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">FIELDS</a>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">REGISTRATION</a>
             <a 
               href="https://www.cdbaseball.org/page/show/9035619-scholarship" 
               target="_blank"
               rel="noopener noreferrer"
-              className="text-foreground hover:text-primary transition-colors"
+              className="text-primary-foreground hover:text-primary-foreground/80 transition-colors"
             >
               SCHOLARSHIP
             </a>
-            <a href="#" className="text-foreground hover:text-primary transition-colors">EVENTS</a>
-            <button className="text-foreground hover:text-primary transition-colors" aria-label="Search">
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">EVENTS</a>
+            <button className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" aria-label="Search">
               <Search className="h-4 w-4" />
             </button>
-            <a href="#" className="text-foreground hover:text-primary transition-colors">SHOP</a>
-            <a href="#" className="text-foreground hover:text-primary transition-colors">DONATE</a>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">SHOP</a>
+            <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">DONATE</a>
           </nav>
         </div>
       </div>
