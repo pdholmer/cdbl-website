@@ -93,9 +93,6 @@ const WeatherDisplay = () => {
       {/* Desktop: Full date */}
       <span className="font-semibold hidden lg:inline">{formatDate(dateTime)}</span>
       
-      {/* Mobile/Tablet: Short date */}
-      <span className="font-semibold lg:hidden">{formatShortDate(dateTime)}</span>
-      
       {weather && (
         <>
           <span className="hidden lg:inline">|</span>

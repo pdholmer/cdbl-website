@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import cdblLogo from "@/assets/cdbl-logo-main.png";
 import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
 import rocketLogo from "@/assets/rocket-blue.png";
@@ -15,6 +15,15 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showShop, setShowShop] = useState(true);
+
+  // Rotate between Shop and Donate every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowShop(prev => !prev);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
   
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -64,15 +73,24 @@ const Header = () => {
               </a>
             </nav>
 
-            {/* Mobile/Tablet: Shop & Donate icons only */}
-            <div className="flex lg:hidden items-center gap-4">
-              <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" aria-label="Shop">
-                <ShoppingCart className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors" aria-label="Donate">
-                <Heart className="h-5 w-5" />
-              </a>
-            </div>
+            {/* Mobile/Tablet: Rotating Shop/Donate button */}
+            <a 
+              href="#" 
+              className="lg:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2 text-[0.8625rem] font-bold uppercase"
+              aria-label={showShop ? "Shop" : "Donate"}
+            >
+              {showShop ? (
+                <>
+                  <ShoppingCart className="h-4 w-4" />
+                  <span className="hidden sm:inline">SHOP</span>
+                </>
+              ) : (
+                <>
+                  <Heart className="h-4 w-4" />
+                  <span className="hidden sm:inline">DONATE</span>
+                </>
+              )}
+            </a>
           </div>
         </div>
       </div>
@@ -80,24 +98,16 @@ const Header = () => {
       {/* White Header - Baseball Season Specific */}
       <div className="bg-background border-b border-border">
         <div className="container flex h-16 items-center justify-between px-4 gap-8">
-          {/* Left: Search Bar */}
-          <div className="relative w-full max-w-xs hidden lg:block">
+          {/* Search Bar - Persistent across all views */}
+          <div className="relative w-full max-w-xs">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="search"
               placeholder="Search..."
-              className="w-full h-10 pl-10 pr-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full h-10 pl-10 pr-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
               aria-label="Search"
             />
           </div>
-
-          {/* Mobile: Search Icon */}
-          <button 
-            className="lg:hidden text-foreground hover:text-primary transition-colors" 
-            aria-label="Search"
-          >
-            <Search className="h-5 w-5" />
-          </button>
           
           <div className="flex-1"></div>
 
