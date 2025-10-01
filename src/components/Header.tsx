@@ -5,6 +5,7 @@ import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, ChevronDown } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
+import NavigationTray from "@/components/NavigationTray";
 import {
   Collapsible,
   CollapsibleContent,
@@ -13,6 +14,7 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isTrayOpen, setIsTrayOpen] = useState(false);
   const [showShop, setShowShop] = useState(true);
 
   // Rotate between Shop and Donate every 3 seconds
@@ -99,6 +101,14 @@ const Header = () => {
             {/* Right: Navigation + SportsConnect Button */}
             <div className="hidden lg:flex items-center gap-6">
               <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
+                <button 
+                  onClick={() => setIsTrayOpen(!isTrayOpen)}
+                  className="text-foreground hover:text-primary transition-colors flex items-center gap-1"
+                >
+                  More
+                  <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${isTrayOpen ? 'rotate-180' : ''}`} />
+                </button>
+                <span className="text-muted-foreground">|</span>
                 <Link to="/registration" className="text-foreground hover:text-primary transition-colors">Register</Link>
                 <span className="text-muted-foreground">|</span>
                 <Link to="/teams" className="text-foreground hover:text-primary transition-colors">Teams</Link>
@@ -237,6 +247,8 @@ const Header = () => {
         </div>
       </div>
 
+      {/* Navigation Tray */}
+      <NavigationTray isOpen={isTrayOpen} onClose={() => setIsTrayOpen(false)} />
     </header>
   );
 };
