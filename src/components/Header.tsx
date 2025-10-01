@@ -49,25 +49,23 @@ const Header = () => {
           </div>
 
           {/* Center: CDBL Logo - Absolutely centered on page */}
-          <div className="absolute left-1/2 -translate-x-1/2">
+          <Link to="/" className="absolute left-1/2 -translate-x-1/2">
             <img 
               src={cdblLogo} 
               alt="CDBL Logo" 
-              className="h-14 w-auto"
+              className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity"
             />
-          </div>
+          </Link>
 
           {/* Right: Shop & Donate */}
           <div className="flex items-center gap-6 z-10">
             {/* Desktop: Shop & Donate with labels */}
             <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
-              <Link to="/shop" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
-                <ShoppingCart className="h-4 w-4" />
+              <Link to="/shop" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">
                 SHOP
               </Link>
               <span className="text-primary-foreground/40">|</span>
-              <Link to="/volunteer" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2">
-                <Heart className="h-4 w-4" />
+              <Link to="/volunteer" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">
                 DONATE
               </Link>
             </nav>
@@ -75,20 +73,10 @@ const Header = () => {
             {/* Mobile/Tablet: Rotating Shop/Donate button */}
             <Link 
               to={showShop ? "/shop" : "/volunteer"} 
-              className="lg:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors flex items-center gap-2 text-[0.8625rem] font-bold uppercase"
+              className="lg:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase"
               aria-label={showShop ? "Shop" : "Donate"}
             >
-              {showShop ? (
-                <>
-                  <ShoppingCart className="h-4 w-4" />
-                  <span>SHOP</span>
-                </>
-              ) : (
-                <>
-                  <Heart className="h-4 w-4" />
-                  <span>DONATE</span>
-                </>
-              )}
+              {showShop ? "SHOP" : "DONATE"}
             </Link>
           </div>
         </div>
