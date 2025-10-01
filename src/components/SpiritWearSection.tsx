@@ -4,7 +4,7 @@ import { ShoppingBag, Heart, TrendingUp } from "lucide-react";
 
 const SpiritWearSection = () => {
   return (
-    <section id="spirit-wear" className="py-12 md:py-20 relative overflow-hidden"
+    <section id="spirit-wear" className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
              style={{ background: 'var(--gradient-primary)' }}>
       <div 
         className="absolute inset-0 opacity-15 bg-cover bg-center"
@@ -19,10 +19,10 @@ const SpiritWearSection = () => {
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6">
             CDBL Spirit Wear
           </h2>
-          <p className="text-lg md:text-xl mb-3 md:mb-4 opacity-95">
+          <p className="text-lg md:text-xl mb-3 md:mb-4 text-carolina">
             Show your Rockets pride with official CDBL merchandise!
           </p>
-          <p className="text-base md:text-lg mb-6 md:mb-8 opacity-90">
+          <p className="text-base md:text-lg mb-6 md:mb-8 text-carolina/90">
             <Heart className="inline w-4 h-4 md:w-5 md:h-5 mr-2" />
             10% of all proceeds go to support the league!
           </p>
