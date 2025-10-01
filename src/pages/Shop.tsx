@@ -10,7 +10,7 @@ const Shop = () => {
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary to-primary-light py-20 text-primary-foreground">
+        <section className="hero-viewport flex items-center bg-gradient-to-br from-primary to-primary-light text-primary-foreground">
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">CDBL Shop</h1>
             <p className="text-xl max-w-2xl">Show your Rockets pride! Get official CDBL spirit wear and gear.</p>

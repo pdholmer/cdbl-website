@@ -4,7 +4,7 @@ import { ShoppingBag, Heart, TrendingUp } from "lucide-react";
 
 const SpiritWearSection = () => {
   return (
-    <section id="spirit-wear" className="py-12 md:py-20 relative overflow-hidden"
+    <section id="spirit-wear" className="hero-viewport relative overflow-hidden flex items-center"
              style={{ background: 'var(--gradient-primary)' }}>
       <div 
         className="absolute inset-0 opacity-15 bg-cover bg-center"
