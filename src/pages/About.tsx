@@ -195,75 +195,51 @@ const About = () => {
               <Link to="/board" className="text-primary hover:underline font-semibold">View meeting schedules, minutes, and election information →</Link>
             </p>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
               <Card>
                 <CardHeader>
-                  <CardTitle>John Smith</CardTitle>
+                  <CardTitle>Jason Taylor</CardTitle>
                   <p className="text-sm text-primary font-semibold">President</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">
-                    CDBL parent for 8 years. Background in youth sports administration.
+                    Leading CDBL's mission to provide exceptional youth baseball programs and foster community engagement.
                   </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Lisa Davis</CardTitle>
+                  <CardTitle>Humberto Camacho</CardTitle>
                   <p className="text-sm text-primary font-semibold">Vice President</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">
-                    Former college softball player. Passionate about youth athletics and education.
+                    Overseeing operations, registration, scheduling, and website management for the league.
                   </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Sarah Johnson</CardTitle>
+                  <CardTitle>Todd Weachter</CardTitle>
                   <p className="text-sm text-primary font-semibold">Treasurer</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">
-                    CPA with 15 years experience. Joined CDBL board in 2025.
+                    Managing league finances and serving as Bronco Division Coordinator.
                   </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Mike Chen</CardTitle>
-                  <p className="text-sm text-primary font-semibold">Player Agent</p>
+                  <CardTitle>Carrie Wolak</CardTitle>
+                  <p className="text-sm text-primary font-semibold">Secretary</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">
-                    High school baseball coach. CDBL coach for 10+ years.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Dave Martinez</CardTitle>
-                  <p className="text-sm text-primary font-semibold">Travel Coordinator</p>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-sm">
-                    Former minor league player. Leads our competitive travel program.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Amy Wilson</CardTitle>
-                  <p className="text-sm text-primary font-semibold">Sponsorship Director</p>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground text-sm">
-                    Marketing professional. Builds relationships with local businesses.
+                    Maintaining league records and supporting travel program coordination.
                   </p>
                 </CardContent>
               </Card>
