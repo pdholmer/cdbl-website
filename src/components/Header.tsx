@@ -59,15 +59,18 @@ const Header = () => {
 
           {/* Right: Shop & Donate */}
           <div className="flex items-center gap-6 z-10">
-            {/* Desktop: Shop link only */}
-            <Link to="/shop" className="hidden lg:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">
+            {/* Desktop/Tablet: Both Shop and Donate links */}
+            <Link to="/shop" className="hidden md:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">
               SHOP
             </Link>
+            <Link to="/volunteer" className="hidden md:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">
+              DONATE
+            </Link>
 
-            {/* Mobile/Tablet: Rotating Shop/Donate button */}
+            {/* Mobile only: Rotating Shop/Donate button */}
             <Link 
               to={showShop ? "/shop" : "/volunteer"} 
-              className="lg:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase"
+              className="md:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase"
               aria-label={showShop ? "Shop" : "Donate"}
             >
               {showShop ? "SHOP" : "DONATE"}
