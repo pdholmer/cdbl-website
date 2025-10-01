@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import cdblLogo from "@/assets/cdbl-logo-main.png";
-import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, ChevronDown } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
@@ -98,18 +97,6 @@ const Header = () => {
             <div className="hidden lg:flex items-center gap-6">
               <DropdownNav />
 
-            {/* SportsConnect Button */}
-            <button
-              className="p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-              aria-label="SportsConnect"
-            >
-              <img 
-                src={sportsConnectLogo} 
-                alt="SportsConnect" 
-                className="h-6 w-auto"
-              />
-            </button>
           </div>
 
           {/* Mobile Menu */}
@@ -205,20 +192,6 @@ const Header = () => {
                 </nav>
 
                 {/* SportsConnect Button - Mobile */}
-                <button
-                  className="w-full flex items-center justify-center p-4 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors mt-4"
-                  onClick={() => {
-                    window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank');
-                    setIsMenuOpen(false);
-                  }}
-                  aria-label="SportsConnect"
-                >
-                  <img 
-                    src={sportsConnectLogo} 
-                    alt="SportsConnect" 
-                    className="h-8 w-auto"
-                  />
-                </button>
               </div>
             </SheetContent>
           </Sheet>
