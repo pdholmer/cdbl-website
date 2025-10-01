@@ -58,7 +58,7 @@ const Hero = () => {
                       {slide.title}
                     </h1>
                     
-                    <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed text-carolina">
+                    <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95">
                       {slide.subtitle}
                     </p>
 

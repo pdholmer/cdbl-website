@@ -5,14 +5,14 @@ import { Calendar, ClipboardList, Users } from "lucide-react";
 
 const RegistrationSection = () => {
   return (
-    <section id="registration" className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+    <section id="registration" className="py-12 md:py-20 relative overflow-hidden"
              style={{ background: 'var(--gradient-subtle)' }}>
       <div className="container">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
             Travel Player Registration
           </h2>
-          <p className="text-base md:text-lg lg:text-xl text-carolina max-w-2xl mx-auto">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto">
             Join the Rockets and take your baseball skills to the next level
           </p>
         </div>
