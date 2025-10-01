@@ -89,16 +89,17 @@ const WeatherDisplay = () => {
   };
 
   return (
-    <div className="flex items-center gap-2 lg:gap-4 text-xs font-medium text-primary-foreground">
-      {/* Desktop: Full date */}
-      <span className="font-semibold hidden lg:inline">{formatDate(dateTime)}</span>
+    <div className="flex items-center gap-2 lg:gap-4 text-[0.8625rem] font-bold text-primary-foreground">
+      {/* Mobile/Tablet: Short date, Desktop: Full date */}
+      <span className="lg:hidden">{formatShortDate(dateTime)}</span>
+      <span className="hidden lg:inline">{formatDate(dateTime)}</span>
       
       {weather && (
         <>
           <span className="hidden lg:inline">|</span>
           <div className="flex items-center gap-1 lg:gap-2">
             {getWeatherIcon(weather.condition)}
-            <span className="font-semibold">{weather.temp}°F</span>
+            <span>{weather.temp}°F</span>
             <span className="hidden lg:inline">{weather.condition}</span>
           </div>
         </>
