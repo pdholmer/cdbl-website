@@ -11,7 +11,7 @@ const Registration = () => {
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="hero-viewport flex items-center bg-gradient-to-br from-primary to-primary-light text-primary-foreground">
+        <section className="bg-gradient-to-br from-primary to-primary-light py-20 text-primary-foreground">
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Register for 2026 Season</h1>
             <p className="text-xl mb-8 max-w-2xl">Join the CDBL family! Registration is now open for the 2026 baseball season.</p>

@@ -131,11 +131,4 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
-  
-  /* Hero viewport height - accounts for iOS safe areas */
-  .hero-viewport {
-    min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
-    padding-bottom: env(safe-area-inset-bottom);
-  }
 }

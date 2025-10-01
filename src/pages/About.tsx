@@ -11,7 +11,7 @@ const About = () => {
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="hero-viewport flex items-center bg-gradient-to-br from-primary to-primary-light text-primary-foreground">
+        <section className="bg-gradient-to-br from-primary to-primary-light py-20 text-primary-foreground">
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">About CDBL</h1>
             <p className="text-xl max-w-2xl">38 years of building character, skills, and community through youth baseball.</p>

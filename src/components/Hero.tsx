@@ -32,7 +32,7 @@ const carouselSlides = [
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden hero-viewport">
+    <section className="relative overflow-hidden">
       <Carousel
         opts={{
           align: "start",
@@ -49,7 +49,7 @@ const Hero = () => {
           {carouselSlides.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
               <section 
-                className="relative h-full flex items-center text-primary-foreground overflow-hidden"
+                className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
                 style={{ background: 'var(--gradient-hero)' }}
               >
                 <div className="container relative z-10">
