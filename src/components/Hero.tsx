@@ -66,10 +66,6 @@ const Hero = () => {
                 
                 <div className="container relative z-10 py-8 md:py-16">
                   <div className="max-w-2xl">
-                    <div className="inline-block bg-primary/20 backdrop-blur-sm border border-primary/30 text-primary-foreground px-3 py-1.5 rounded-full mb-3 text-xs md:text-sm font-semibold">
-                      38 Years of Excellence
-                    </div>
-                    
                     <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 md:mb-4 leading-tight animate-fade-in">
                       {slide.title}
                     </h1>
