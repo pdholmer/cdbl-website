@@ -16,6 +16,8 @@ import Rules from "./pages/Rules";
 import Volunteer from "./pages/Volunteer";
 import Sponsors from "./pages/Sponsors";
 import Contact from "./pages/Contact";
+import NewToCDBL from "./pages/NewToCDBL";
+import BoardInfo from "./pages/BoardInfo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +42,8 @@ const App = () => (
           <Route path="/volunteer" element={<Volunteer />} />
           <Route path="/sponsors" element={<Sponsors />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/new-to-cdbl" element={<NewToCDBL />} />
+          <Route path="/board" element={<BoardInfo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

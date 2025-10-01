@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Users, Trophy, Target, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -39,7 +40,7 @@ const Teams = () => {
                   <Card>
                     <CardHeader>
                       <CardTitle>T-Ball Division</CardTitle>
-                      <CardDescription>Ages 4-6</CardDescription>
+                      <CardDescription>Ages 4-6 • Tee Ball</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
@@ -51,7 +52,16 @@ const Teams = () => {
                           <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
                           <p className="text-lg">April - June 2026</p>
                         </div>
-                        <p className="text-sm text-muted-foreground pt-2">Introduction to baseball fundamentals with emphasis on fun and learning.</p>
+                        <div>
+                          <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
+                          <p className="text-sm">1 practice + 1 game/week (Saturdays)</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground pt-2">
+                          Introduction to baseball fundamentals with emphasis on fun and learning. Players hit off a tee, learn basic throwing and fielding skills.
+                        </p>
+                        <Button variant="link" asChild className="p-0 h-auto text-primary">
+                          <Link to="/rules">View Rules & Policies →</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -59,7 +69,7 @@ const Teams = () => {
                   <Card>
                     <CardHeader>
                       <CardTitle>Pinto Division</CardTitle>
-                      <CardDescription>Ages 7-8</CardDescription>
+                      <CardDescription>Ages 7-8 • Coach Pitch</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
@@ -71,7 +81,16 @@ const Teams = () => {
                           <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
                           <p className="text-lg">April - June 2026</p>
                         </div>
-                        <p className="text-sm text-muted-foreground pt-2">Coach pitch baseball developing hitting and fielding skills.</p>
+                        <div>
+                          <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
+                          <p className="text-sm">2 practices + 1-2 games/week</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground pt-2">
+                          Coach pitch baseball developing hitting and fielding skills. Games typically weeknights (6pm) and Saturdays.
+                        </p>
+                        <Button variant="link" asChild className="p-0 h-auto text-primary">
+                          <Link to="/rules">View Rules & Policies →</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -98,6 +117,9 @@ const Teams = () => {
                         <p className="text-sm text-muted-foreground pt-2">
                           Player pitch baseball with focus on game strategy, teamwork, and advanced fundamentals. Pitch counts enforced for player safety.
                         </p>
+                        <Button variant="link" asChild className="p-0 h-auto text-primary">
+                          <Link to="/rules">View Rules & Policies →</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -105,7 +127,7 @@ const Teams = () => {
                   <Card>
                     <CardHeader>
                       <CardTitle>Pony Division</CardTitle>
-                      <CardDescription>Ages 11-12</CardDescription>
+                      <CardDescription>Ages 11-12 • Player Pitch</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
@@ -117,7 +139,16 @@ const Teams = () => {
                           <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
                           <p className="text-lg">April - July 2026</p>
                         </div>
-                        <p className="text-sm text-muted-foreground pt-2">Advanced skills with increased competitive play.</p>
+                        <div>
+                          <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
+                          <p className="text-sm">2 practices + 2 games/week</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground pt-2">
+                          Advanced skills with increased competitive play. Strict pitch counts and proper mechanics emphasized.
+                        </p>
+                        <Button variant="link" asChild className="p-0 h-auto text-primary">
+                          <Link to="/rules">View Rules & Policies →</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -125,7 +156,7 @@ const Teams = () => {
                   <Card>
                     <CardHeader>
                       <CardTitle>Colt Division</CardTitle>
-                      <CardDescription>Ages 13-14</CardDescription>
+                      <CardDescription>Ages 13-14 • Player Pitch</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
@@ -137,7 +168,16 @@ const Teams = () => {
                           <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
                           <p className="text-lg">April - July 2026</p>
                         </div>
-                        <p className="text-sm text-muted-foreground pt-2">Preparing players for high school baseball.</p>
+                        <div>
+                          <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
+                          <p className="text-sm">2-3 practices + 2 games/week</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground pt-2">
+                          Preparing players for high school baseball with advanced strategy, conditioning, and competitive play.
+                        </p>
+                        <Button variant="link" asChild className="p-0 h-auto text-primary">
+                          <Link to="/rules">View Rules & Policies →</Link>
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
