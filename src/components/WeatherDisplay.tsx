@@ -90,8 +90,7 @@ const WeatherDisplay = () => {
 
   return (
     <div className="flex items-center gap-2 lg:gap-4 text-[0.8625rem] font-bold text-primary-foreground">
-      {/* Mobile/Tablet: Short date, Desktop: Full date */}
-      <span className="lg:hidden">{formatShortDate(dateTime)}</span>
+      {/* Desktop only: Full date */}
       <span className="hidden lg:inline">{formatDate(dateTime)}</span>
       
       {weather && (
