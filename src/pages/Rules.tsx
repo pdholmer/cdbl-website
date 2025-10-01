@@ -20,14 +20,279 @@ const Rules = () => {
         {/* Rules Content */}
         <section className="py-16 bg-background">
           <div className="container max-w-6xl">
-            <Tabs defaultValue="tball" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mb-8">
+            <Tabs defaultValue="constitution" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 mb-8">
+                <TabsTrigger value="constitution">Constitution</TabsTrigger>
                 <TabsTrigger value="tball">T-Ball</TabsTrigger>
                 <TabsTrigger value="pinto">Pinto</TabsTrigger>
                 <TabsTrigger value="mustang">Mustang</TabsTrigger>
                 <TabsTrigger value="bronco">Bronco</TabsTrigger>
                 <TabsTrigger value="other">Other Rules</TabsTrigger>
               </TabsList>
+
+              {/* Constitution */}
+              <TabsContent value="constitution">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-3xl">CDBL Constitution</CardTitle>
+                    <p className="text-muted-foreground">Central District Baseball League</p>
+                    <p className="text-sm text-muted-foreground">Revised May 2024 by CDBL Board</p>
+                  </CardHeader>
+                  <CardContent>
+                    <Accordion type="single" collapsible>
+                      <AccordionItem value="article1">
+                        <AccordionTrigger>Article I - Name</AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground">
+                          <p>
+                            This organization shall be known as Central District Baseball League, hereinafter referred to as "CDBL" and/or "League." 
+                            Children who reside within the communities of Central School District 301 boundaries and subscribe to the rules of this league 
+                            are eligible. Once a player has resided and played in the league, they shall be eligible to play in the league even after 
+                            moving out of the district.
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article2">
+                        <AccordionTrigger>Article II - Objectives</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <p>
+                            <strong>Section 1 - Objectives:</strong>
+                          </p>
+                          <p>
+                            A. The objective of the Central District Baseball League shall be to implant firmly in the participants of the community 
+                            the ideas of good sportsmanship, honesty, loyalty, courage, and respect for authority. The league shall not tolerate any 
+                            less from its participants, coaches, or parents.
+                          </p>
+                          <p>
+                            B. All Directors, Officers, and Members shall bear in mind that the winning of games is secondary. Building every player's 
+                            skill and providing a positive, enjoyable, and safe environment to play baseball is a priority.
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article3">
+                        <AccordionTrigger>Article III - Membership</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <p><strong>Section 1 - Eligibility:</strong> Any person sincerely interested in active participation to affect the objective of this league may apply to become a Member.</p>
+                          
+                          <p><strong>Section 2 - Classes of Members:</strong></p>
+                          <ul className="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>Regular Members:</strong> Must be voted in with 51% vote at annual September meeting. Must attend 50% of scheduled meetings to maintain voting rights.</li>
+                            <li><strong>Honorary Members:</strong> Elected by unanimous vote of Directors. No management rights or obligations.</li>
+                            <li><strong>Sustaining Members:</strong> Financial contributors who may be approved by 51% Board vote. No management rights.</li>
+                          </ul>
+
+                          <p><strong>Section 3 - Disciplinary Action:</strong></p>
+                          <ul className="list-disc list-inside space-y-2 ml-4">
+                            <li>Board may discipline, suspend, or terminate membership by two-thirds vote</li>
+                            <li>Person notified in writing 3 days prior to hearing</li>
+                            <li>Penalties may include: Warning, Suspension, Dismissal, or Termination</li>
+                            <li>Complaints must be submitted in writing within 72 hours of occurrence</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article4">
+                        <AccordionTrigger>Article IV - League Fees</AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground">
+                          <p>
+                            A reasonable League fee may be assessed as a parents' obligation to assure the operational continuity of the League. 
+                            At no time should payment of any fee be a prerequisite for participation in the Central District Baseball League baseball program.
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article5">
+                        <AccordionTrigger>Article V - Meetings</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <ul className="list-disc list-inside space-y-2">
+                            <li><strong>Annual Meeting:</strong> Held in September for electing Officers and Directors</li>
+                            <li><strong>Notice:</strong> At least 10 days advance notice via email</li>
+                            <li><strong>Special Meetings:</strong> May be called by Board, Secretary, or President. Requires 51% Board Member written request</li>
+                            <li><strong>Quorum:</strong> 51% of Members necessary for regularly scheduled meeting</li>
+                            <li><strong>Voting:</strong> Only Regular Members in good standing with required attendance may vote</li>
+                            <li><strong>Elections:</strong> By secret ballot, show of hands, or voice vote</li>
+                            <li><strong>Proxies:</strong> Must be in written form and on file with Board prior to use</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article6">
+                        <AccordionTrigger>Article VI - Executive Board of Directors</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <ul className="list-disc list-inside space-y-2">
+                            <li>Management vested in executive board of directors</li>
+                            <li>Minimum 5 Board Members, no maximum</li>
+                            <li>Directors serve from September annual meeting to following year's annual meeting</li>
+                            <li>Board includes Officers and duly elected League Members</li>
+                            <li>Annual election in September by 51% majority vote</li>
+                            <li>Officers elected first, then remaining board members</li>
+                            <li>Directors may be removed by two-thirds vote of Board Members in attendance</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article7">
+                        <AccordionTrigger>Article VII - Committees</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <p>The Board may establish committees including but not limited to:</p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Grounds & Property Committee</li>
+                            <li>Registration Committee</li>
+                            <li>Scheduling Committee</li>
+                            <li>Travel Team Committee</li>
+                            <li>Equipment Committee</li>
+                            <li>Uniforms Committee</li>
+                            <li>Tournament Committee</li>
+                            <li>Safety Committee</li>
+                            <li>Sponsorship/Fundraising Committee</li>
+                            <li>Concessions Committee</li>
+                            <li>Player & Coach Development Committee</li>
+                            <li>Division Coordinators</li>
+                            <li>Umpire Committee</li>
+                            <li>Rules Committee</li>
+                            <li>Disciplinary Committee</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article8">
+                        <AccordionTrigger>Article VIII - Officers, Duties & Powers</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <p><strong>Required Officers:</strong></p>
+                          <ul className="list-disc list-inside space-y-2 ml-4">
+                            <li><strong>President:</strong> Presides at all meetings, exercises general supervision over league affairs</li>
+                            <li><strong>Vice President:</strong> Performs duties of President in their absence, supervises coaches and managers</li>
+                            <li><strong>Secretary:</strong> Keeps minutes of all meetings, maintains records and correspondence</li>
+                            <li><strong>Treasurer:</strong> Receives and disburses funds, maintains financial records, prepares budget</li>
+                          </ul>
+                          <p>Officers elected by majority vote at annual September meeting. Term is one year.</p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article9">
+                        <AccordionTrigger>Article IX - Managers, Coaches, Umpires & Players</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <p><strong>Manager/Coach Selection:</strong></p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Applications reviewed and approved by Board</li>
+                            <li>Must complete background check</li>
+                            <li>Must sign Code of Conduct</li>
+                            <li>Responsible for team conduct and adherence to league rules</li>
+                          </ul>
+
+                          <p><strong>Player Eligibility:</strong></p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Age determined as of April 30th of current year</li>
+                            <li>Must register and pay fees</li>
+                            <li>Must provide proof of age</li>
+                            <li>Subject to league rules and Code of Conduct</li>
+                          </ul>
+
+                          <p><strong>Call-Up Rules:</strong></p>
+                          <ul className="list-disc list-inside space-y-1 ml-4">
+                            <li>Manager must contact division coordinator below</li>
+                            <li>Call-up pool is blind - no specific player requests</li>
+                            <li>Pool player must play minimum 2 innings and stay in batting order</li>
+                            <li>Cannot decline player once they arrive</li>
+                            <li>Violations result in loss of privileges and disciplinary review</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article10">
+                        <AccordionTrigger>Article X - Affiliation</AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground">
+                          <p>
+                            The League may affiliate with regional, state, or national youth baseball organizations as determined by the Board of Directors.
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article11">
+                        <AccordionTrigger>Article XI - Financial and Accounting</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <ul className="list-disc list-inside space-y-2">
+                            <li>Treasurer maintains all financial records</li>
+                            <li>Annual budget prepared and approved by Board</li>
+                            <li>All expenditures require proper authorization</li>
+                            <li>Financial reports presented at regular meetings</li>
+                            <li>Annual financial review/audit conducted</li>
+                            <li>All funds belong to the League</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article13">
+                        <AccordionTrigger>Article XIII - Travel and Tournament Teams</AccordionTrigger>
+                        <AccordionContent className="space-y-3 text-muted-foreground">
+                          <ul className="list-disc list-inside space-y-2">
+                            <li>Travel teams represent CDBL in competitive tournaments</li>
+                            <li>Try-outs conducted for team selection</li>
+                            <li>Additional fees may apply for travel programs</li>
+                            <li>Travel teams subject to all CDBL rules and policies</li>
+                            <li>Tournament teams organized for specific events</li>
+                            <li>Travel coordinator oversees all travel programs</li>
+                          </ul>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article14">
+                        <AccordionTrigger>Article XIV - Rules & Regulations</AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground">
+                          <p>
+                            The Board of Directors shall have the power to make, adopt, amend, and enforce such Rules and Regulations, 
+                            not inconsistent with this Constitution, as it shall deem necessary for the management and operation of the League. 
+                            All Rules and Regulations shall be in writing and made available to all members.
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="article15">
+                        <AccordionTrigger>Article XV - Amendments</AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground">
+                          <p>
+                            This Constitution may be amended at any regular or special meeting of the Members by a two-thirds vote of those present, 
+                            providing that written notice of the proposed amendment is given to each member at least ten (10) days prior to the meeting.
+                          </p>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      <AccordionItem value="conduct">
+                        <AccordionTrigger>Code of Conduct</AccordionTrigger>
+                        <AccordionContent className="space-y-4 text-muted-foreground">
+                          <div>
+                            <p className="font-semibold mb-2">Family Code of Conduct:</p>
+                            <ul className="list-disc list-inside space-y-1 ml-4">
+                              <li>Treat all players, coaches, officials, and spectators with respect</li>
+                              <li>Display good sportsmanship at all times</li>
+                              <li>Support all players, not just your child</li>
+                              <li>Respect officials' decisions</li>
+                              <li>No use of profane, insulting, or abusive language</li>
+                              <li>No violence or threat of violence</li>
+                              <li>Promote positive experience for all participants</li>
+                            </ul>
+                          </div>
+
+                          <div>
+                            <p className="font-semibold mb-2">Coach Code of Conduct:</p>
+                            <ul className="list-disc list-inside space-y-1 ml-4">
+                              <li>Be a positive role model for players</li>
+                              <li>Promote fair play and sportsmanship</li>
+                              <li>Ensure player safety at all times</li>
+                              <li>Treat all players fairly and equitably</li>
+                              <li>Communicate appropriately with players, parents, and officials</li>
+                              <li>Follow all league rules and policies</li>
+                              <li>Complete required training and background checks</li>
+                              <li>Focus on player development over winning</li>
+                            </ul>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
               {/* T-Ball Rules */}
               <TabsContent value="tball">
