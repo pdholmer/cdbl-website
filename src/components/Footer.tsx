@@ -25,6 +25,11 @@ const Footer = () => {
             <h4 className="font-bold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
+                <Link to="/new-to-cdbl" className="opacity-80 hover:opacity-100 transition-opacity">
+                  New to CDBL?
+                </Link>
+              </li>
+              <li>
                 <Link to="/about" className="opacity-80 hover:opacity-100 transition-opacity">
                   About CDBL
                 </Link>
@@ -68,6 +73,11 @@ const Footer = () => {
               <li>
                 <Link to="/rules" className="opacity-80 hover:opacity-100 transition-opacity">
                   Rules
+                </Link>
+              </li>
+              <li>
+                <Link to="/board" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Board
                 </Link>
               </li>
               <li>

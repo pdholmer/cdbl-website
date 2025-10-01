@@ -22,6 +22,19 @@ const Teams = () => {
         {/* Teams Tabs */}
         <section className="py-16 bg-background">
           <div className="container">
+            {/* Registration Reminder Banner */}
+            <div className="mb-12 p-6 bg-primary/10 rounded-lg border border-primary/20 max-w-4xl mx-auto">
+              <h3 className="text-xl font-bold mb-2 text-center">2026 Registration Now Open!</h3>
+              <p className="text-center text-muted-foreground mb-4">
+                <strong>Early Registration:</strong> December 1, 2025 • <strong>Regular:</strong> January 15, 2026 • <strong>Late:</strong> March 1, 2026
+              </p>
+              <div className="flex justify-center">
+                <Button asChild>
+                  <Link to="/registration">Register Now</Link>
+                </Button>
+              </div>
+            </div>
+
             <Tabs defaultValue="in-house" className="w-full">
               <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
                 <TabsTrigger value="in-house">In-House Teams</TabsTrigger>
@@ -31,9 +44,12 @@ const Teams = () => {
               <TabsContent value="in-house">
                 <div className="mb-8">
                   <h2 className="text-3xl font-bold mb-4">In-House League</h2>
-                  <p className="text-muted-foreground max-w-3xl">
+                  <p className="text-muted-foreground max-w-3xl mb-4">
                     Our In-House program features recreational teams organized by age division. Teams are formed based on age, skill level, and availability to ensure balanced, competitive play.
                   </p>
+                  <Button variant="outline" asChild size="sm">
+                    <Link to="/new-to-cdbl">New to CDBL? Start Here →</Link>
+                  </Button>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

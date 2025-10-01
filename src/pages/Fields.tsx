@@ -230,6 +230,39 @@ const Fields = () => {
             </div>
           </div>
         </section>
+
+        {/* Coach Resources - Field Status Reporting */}
+        <section className="py-16 bg-muted/30">
+          <div className="container max-w-3xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">For Coaches</h2>
+            
+            <Card className="bg-primary/10 border-primary/20">
+              <CardHeader>
+                <CardTitle>Field Status & Maintenance Reporting</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground mb-4">
+                  Coaches: If you notice field issues (standing water, damaged equipment, unsafe conditions), please report them immediately:
+                </p>
+                <div className="space-y-3 text-sm">
+                  <div className="p-4 bg-card rounded-lg">
+                    <p className="font-semibold mb-2">Emergency Issues (Unsafe Conditions)</p>
+                    <p className="text-muted-foreground">Call Field Hotline: <span className="font-bold text-foreground">(555) 123-4567</span></p>
+                  </div>
+                  <div className="p-4 bg-card rounded-lg">
+                    <p className="font-semibold mb-2">Non-Emergency Maintenance</p>
+                    <p className="text-muted-foreground">Email: <span className="font-bold text-foreground">fieldops@cdbl.org</span></p>
+                    <p className="text-xs text-muted-foreground mt-2">Include: Field number, issue description, date/time, your name</p>
+                  </div>
+                  <div className="p-4 bg-card rounded-lg">
+                    <p className="font-semibold mb-2">Weather-Related Cancellations</p>
+                    <p className="text-muted-foreground">Check field status updates 2 hours before game time on this page or contact your division coordinator</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

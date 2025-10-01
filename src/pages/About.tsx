@@ -1,6 +1,7 @@
 import cdblSeal from "@/assets/cdbl-seal.png";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, Heart, Users, Target } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -189,7 +190,10 @@ const About = () => {
         {/* Board Members */}
         <section className="py-16 bg-background">
           <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Board of Directors</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Board of Directors</h2>
+            <p className="text-center text-muted-foreground mb-12">
+              <Link to="/board" className="text-primary hover:underline font-semibold">View meeting schedules, minutes, and election information →</Link>
+            </p>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card>

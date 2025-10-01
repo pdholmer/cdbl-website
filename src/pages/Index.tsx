@@ -23,7 +23,9 @@ const Index = () => {
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div>
                 <h3 className="text-2xl font-bold mb-2">Questions About Registration or Programs?</h3>
-                <p className="text-primary-foreground/90">We're here to help! Get answers to your questions or contact us directly.</p>
+                <p className="text-primary-foreground/90">
+                  New to CDBL? <Link to="/new-to-cdbl" className="underline hover:no-underline font-semibold">Start here</Link> or contact us for help.
+                </p>
               </div>
               <Button 
                 size="lg" 

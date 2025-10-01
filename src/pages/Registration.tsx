@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExternalLink, Calendar, DollarSign, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -213,7 +214,10 @@ const Registration = () => {
         {/* How to Register Section */}
         <section className="py-16 bg-background">
           <div className="container max-w-3xl">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">How to Register</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">How to Register</h2>
+            <p className="text-center text-muted-foreground mb-8">
+              New to CDBL? <Link to="/new-to-cdbl" className="text-primary hover:underline font-semibold">Check out our orientation guide</Link> for everything you need to know.
+            </p>
             
             <div className="space-y-6">
               <div className="flex gap-4">
