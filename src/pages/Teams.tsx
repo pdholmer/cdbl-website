@@ -203,12 +203,15 @@ const Teams = () => {
               <TabsContent value="travel">
                 <div className="mb-8">
                   <h2 className="text-3xl font-bold mb-4">CDBL Rockets Travel Program</h2>
-                  <p className="text-muted-foreground max-w-3xl">
+                  <p className="text-muted-foreground max-w-3xl mb-4">
                     Our competitive travel teams represent CDBL in tournaments across the region. Tryouts are held annually, and teams compete at the highest level.
                   </p>
+                  <Button variant="outline" asChild size="sm">
+                    <Link to="/registration">Travel Registration & Tryouts →</Link>
+                  </Button>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                   <Card>
                     <CardHeader>
                       <CardTitle>8U Rockets</CardTitle>
@@ -301,6 +304,168 @@ const Teams = () => {
                     </CardContent>
                   </Card>
                 </div>
+
+                {/* Travel Tryout Information */}
+                <div className="mt-12 space-y-8">
+                  <div className="max-w-4xl mx-auto">
+                    <h3 className="text-2xl font-bold mb-6 text-center">Travel Tryout Information</h3>
+                    
+                    <div className="grid md:grid-cols-2 gap-6 mb-8">
+                      <Card className="bg-primary/5">
+                        <CardHeader>
+                          <CardTitle>Tryout Schedule</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3 text-sm">
+                            <div className="p-3 bg-card rounded-lg">
+                              <p className="font-semibold mb-1">Saturday, March 8, 2026</p>
+                              <p className="text-muted-foreground">8U & 10U: 9:00 AM - 12:00 PM</p>
+                              <p className="text-muted-foreground">12U & 14U: 1:00 PM - 4:00 PM</p>
+                            </div>
+                            <div className="p-3 bg-card rounded-lg">
+                              <p className="font-semibold mb-1">Sunday, March 9, 2026</p>
+                              <p className="text-muted-foreground">Callback sessions (invitation only)</p>
+                              <p className="text-muted-foreground">Times TBD based on Saturday results</p>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-3">
+                              Location: CDBL Main Complex, Championship Field
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="bg-primary/5">
+                        <CardHeader>
+                          <CardTitle>What to Bring</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <ul className="space-y-2 text-sm">
+                            <li className="flex items-start gap-2">
+                              <span className="text-primary font-bold">•</span>
+                              <span>Baseball glove (well broken in)</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-primary font-bold">•</span>
+                              <span>Bat (or use provided bats)</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-primary font-bold">•</span>
+                              <span>Batting helmet with cage</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-primary font-bold">•</span>
+                              <span>Cleats (turf or molded)</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-primary font-bold">•</span>
+                              <span>Athletic cup (required)</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-primary font-bold">•</span>
+                              <span>Water bottle & snacks</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <span className="text-primary font-bold">•</span>
+                              <span>Completed tryout registration form</span>
+                            </li>
+                          </ul>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Tryout Evaluation Process</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground mb-4">
+                          Players will be evaluated in the following areas. Each coach will score players independently, and scores are combined to create balanced teams:
+                        </p>
+                        <div className="grid md:grid-cols-3 gap-4 mb-4">
+                          <div className="p-3 bg-muted rounded-lg">
+                            <p className="font-semibold mb-2">Hitting</p>
+                            <ul className="text-sm text-muted-foreground space-y-1">
+                              <li>• Batting stance & mechanics</li>
+                              <li>• Contact consistency</li>
+                              <li>• Power & bat speed</li>
+                              <li>• Bunting ability</li>
+                            </ul>
+                          </div>
+                          <div className="p-3 bg-muted rounded-lg">
+                            <p className="font-semibold mb-2">Fielding</p>
+                            <ul className="text-sm text-muted-foreground space-y-1">
+                              <li>• Ground ball mechanics</li>
+                              <li>• Fly ball tracking</li>
+                              <li>• Throwing accuracy</li>
+                              <li>• Arm strength</li>
+                            </ul>
+                          </div>
+                          <div className="p-3 bg-muted rounded-lg">
+                            <p className="font-semibold mb-2">Pitching & Running</p>
+                            <ul className="text-sm text-muted-foreground space-y-1">
+                              <li>• Pitching mechanics (if applicable)</li>
+                              <li>• Speed & agility</li>
+                              <li>• Base running instincts</li>
+                              <li>• Overall athleticism</li>
+                            </ul>
+                          </div>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          <strong>Note:</strong> Attitude, coachability, and hustle are also important factors. We're looking for players who love the game and are willing to learn and work hard.
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-primary/10 border-primary/20 mt-6">
+                      <CardHeader>
+                        <CardTitle>Travel Team Commitment</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground mb-4">
+                          Travel baseball is a significant commitment for both players and families. Before trying out, please ensure you understand the expectations:
+                        </p>
+                        <div className="grid md:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <p className="font-semibold mb-2">Time Commitment:</p>
+                            <ul className="space-y-1 text-muted-foreground">
+                              <li>• 2-3 practices per week (weeknights)</li>
+                              <li>• 2-3 games per week (weeknights/weekends)</li>
+                              <li>• 8-15 weekend tournaments (March-August)</li>
+                              <li>• Year-round conditioning recommended</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <p className="font-semibold mb-2">Financial Commitment:</p>
+                            <ul className="space-y-1 text-muted-foreground">
+                              <li>• ~$600 registration fee</li>
+                              <li>• Tournament entry fees ($50-150 each)</li>
+                              <li>• Travel expenses (hotels, gas, meals)</li>
+                              <li>• Additional equipment as needed</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <p className="font-semibold mb-2">Player Expectations:</p>
+                            <ul className="space-y-1 text-muted-foreground">
+                              <li>• Attend all practices & games</li>
+                              <li>• Arrive 30 min early for warm-ups</li>
+                              <li>• Maintain passing grades in school</li>
+                              <li>• Represent CDBL with class</li>
+                            </ul>
+                          </div>
+                          <div>
+                            <p className="font-semibold mb-2">Parent Expectations:</p>
+                            <ul className="space-y-1 text-muted-foreground">
+                              <li>• Transport player to all activities</li>
+                              <li>• Volunteer at fundraisers</li>
+                              <li>• Support positive team culture</li>
+                              <li>• Communicate with coaches</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
@@ -311,7 +476,7 @@ const Teams = () => {
           <div className="container">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Coach Resources</h2>
             <p className="text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
-              Current and prospective coaches can find helpful information below. Access rosters, schedules, and coaching materials through SportsConnect.
+              Current and prospective coaches: Access rosters, schedules, and coaching materials through SportsConnect. Find practice plans, drill libraries, and helpful resources below.
             </p>
 
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
@@ -350,7 +515,7 @@ const Teams = () => {
               </Card>
             </div>
 
-            <div className="p-6 bg-primary/10 rounded-lg max-w-3xl mx-auto">
+            <div className="p-6 bg-primary/10 rounded-lg max-w-3xl mx-auto mb-12">
               <h3 className="text-xl font-bold mb-4">Who to Contact</h3>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
@@ -369,6 +534,237 @@ const Teams = () => {
                   <p className="font-semibold">Fundraising & Sponsorship:</p>
                   <p className="text-muted-foreground">Amy Wilson, Sponsorship Director</p>
                 </div>
+              </div>
+            </div>
+
+            {/* Practice Resources & Drill Library */}
+            <div className="max-w-6xl mx-auto">
+              <h3 className="text-2xl font-bold mb-8 text-center">Practice Plans & Drill Library</h3>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">T-Ball (Ages 4-6)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">Focus: Fun, basic skills, attention span</p>
+                    <div className="space-y-2 text-sm">
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Sample Practice (45 min)</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Warm-up games (10 min)</li>
+                          <li>• Hitting off tee (15 min)</li>
+                          <li>• Throwing basics (10 min)</li>
+                          <li>• Base running fun (10 min)</li>
+                        </ul>
+                      </div>
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Key Drills</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Alligator catch (fielding)</li>
+                          <li>• Freeze tag (agility)</li>
+                          <li>• Partner toss (throwing)</li>
+                          <li>• Red light/green light (running)</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Pinto (Ages 7-8)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">Focus: Fundamentals, positions, teamwork</p>
+                    <div className="space-y-2 text-sm">
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Sample Practice (60 min)</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Warm-up & stretch (5 min)</li>
+                          <li>• Throwing progression (15 min)</li>
+                          <li>• Live batting practice (20 min)</li>
+                          <li>• Fielding stations (15 min)</li>
+                          <li>• Situational scrimmage (5 min)</li>
+                        </ul>
+                      </div>
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Key Drills</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Ground ball progression</li>
+                          <li>• Soft toss hitting</li>
+                          <li>• Relay throws</li>
+                          <li>• Pop fly communication</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Bronco (Ages 9-10)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">Focus: Player pitch, strategy, positions</p>
+                    <div className="space-y-2 text-sm">
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Sample Practice (75 min)</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Dynamic warm-up (10 min)</li>
+                          <li>• Throwing & arm care (10 min)</li>
+                          <li>• Batting practice rotation (25 min)</li>
+                          <li>• Infield/outfield work (20 min)</li>
+                          <li>• Situational play (10 min)</li>
+                        </ul>
+                      </div>
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Key Drills</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Pitching mechanics</li>
+                          <li>• Rundowns</li>
+                          <li>• Double play turns</li>
+                          <li>• Bunt defense</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Pony (Ages 11-12)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">Focus: Advanced skills, game situations</p>
+                    <div className="space-y-2 text-sm">
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Sample Practice (90 min)</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Arm care routine (15 min)</li>
+                          <li>• Live BP stations (30 min)</li>
+                          <li>• Position-specific work (25 min)</li>
+                          <li>• Team defense (15 min)</li>
+                          <li>• Conditioning (5 min)</li>
+                        </ul>
+                      </div>
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Key Drills</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Cutoff & relay systems</li>
+                          <li>• First & third defense</li>
+                          <li>• Two-strike approach hitting</li>
+                          <li>• Pick-off moves</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">Colt (Ages 13-14)</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">Focus: High school prep, competition</p>
+                    <div className="space-y-2 text-sm">
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Sample Practice (90 min)</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Band work & stretching (10 min)</li>
+                          <li>• Live pitching (35 min)</li>
+                          <li>• Advanced defensive work (25 min)</li>
+                          <li>• Situational scrimmage (15 min)</li>
+                          <li>• Strength & conditioning (5 min)</li>
+                        </ul>
+                      </div>
+                      <div className="p-3 bg-muted rounded-lg">
+                        <p className="font-semibold mb-1">Key Drills</p>
+                        <ul className="text-xs text-muted-foreground space-y-1">
+                          <li>• Pitch sequencing</li>
+                          <li>• Situational hitting (hit & run, etc.)</li>
+                          <li>• Pitcher covering first</li>
+                          <li>• Sliding techniques</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-primary/10">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Downloadable Resources</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">Additional coaching materials available:</p>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">📋</span>
+                        <span>Practice plan templates</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">📊</span>
+                        <span>Pitch count tracking sheets</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">📈</span>
+                        <span>Player evaluation forms</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">🎯</span>
+                        <span>Drill diagram library</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-primary">📱</span>
+                        <span>Team communication tips</span>
+                      </li>
+                    </ul>
+                    <p className="text-xs text-muted-foreground mt-4">
+                      Email <strong>coaches@cdbl.org</strong> to request access to full library
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Additional Coach Resources */}
+              <div className="grid md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>External Coaching Resources</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Recommended resources for continued coaching development:
+                    </p>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• USA Baseball Coaching Education</li>
+                      <li>• PONY Baseball Coaching Guides</li>
+                      <li>• Positive Coaching Alliance</li>
+                      <li>• YouTube: Baseball coaching channels</li>
+                      <li>• Local coaching clinics (posted in Events)</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Safety & First Aid</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      All coaches must complete:
+                    </p>
+                    <ul className="space-y-2 text-sm text-muted-foreground">
+                      <li>• Background check (provided by CDBL)</li>
+                      <li>• CPR certification (recommended)</li>
+                      <li>• Concussion awareness training</li>
+                      <li>• Heat illness prevention</li>
+                    </ul>
+                    <p className="text-xs text-muted-foreground mt-3">
+                      First aid kits available at each field
+                    </p>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
