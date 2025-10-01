@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, Trophy, Target } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, Trophy, Target, ExternalLink } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -77,8 +78,8 @@ const Teams = () => {
 
                   <Card>
                     <CardHeader>
-                      <CardTitle>Bronco Division</CardTitle>
-                      <CardDescription>Ages 9-10</CardDescription>
+                      <CardTitle>Bronco Division (formerly Mustang)</CardTitle>
+                      <CardDescription>Ages 9-10 • Player Pitch</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
@@ -90,7 +91,13 @@ const Teams = () => {
                           <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
                           <p className="text-lg">April - June 2026</p>
                         </div>
-                        <p className="text-sm text-muted-foreground pt-2">Player pitch with focus on game strategy and teamwork.</p>
+                        <div>
+                          <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
+                          <p className="text-sm">2 practices + 1-2 games/week</p>
+                        </div>
+                        <p className="text-sm text-muted-foreground pt-2">
+                          Player pitch baseball with focus on game strategy, teamwork, and advanced fundamentals. Pitch counts enforced for player safety.
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -240,6 +247,74 @@ const Teams = () => {
                 </div>
               </TabsContent>
             </Tabs>
+          </div>
+        </section>
+
+        {/* Coach Resources */}
+        <section className="py-16 bg-background">
+          <div className="container">
+            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Coach Resources</h2>
+            <p className="text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
+              Current and prospective coaches can find helpful information below. Access rosters, schedules, and coaching materials through SportsConnect.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+              <Card>
+                <CardHeader>
+                  <Target className="h-10 w-10 text-primary mb-2" />
+                  <CardTitle>Access SportsConnect</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    View your team roster, player contact info, schedule, and communicate with families through our league management system.
+                  </p>
+                  <Button 
+                    variant="outline"
+                    onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+                  >
+                    Login to SportsConnect <ExternalLink className="ml-2 h-4 w-4" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Users className="h-10 w-10 text-primary mb-2" />
+                  <CardTitle>Important Dates for Coaches</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li><strong>March 8-9:</strong> Player Evaluations</li>
+                    <li><strong>March 15:</strong> Draft Day</li>
+                    <li><strong>March 20:</strong> Rosters Released</li>
+                    <li><strong>Late March:</strong> First Team Practice</li>
+                    <li><strong>April:</strong> Season Opens</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="p-6 bg-primary/10 rounded-lg max-w-3xl mx-auto">
+              <h3 className="text-xl font-bold mb-4">Who to Contact</h3>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="font-semibold">Draft & Roster Questions:</p>
+                  <p className="text-muted-foreground">Mike Chen, Player Agent</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Travel Team Issues:</p>
+                  <p className="text-muted-foreground">Dave Martinez, Travel Coordinator</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Field Maintenance:</p>
+                  <p className="text-muted-foreground">Contact via field status form</p>
+                </div>
+                <div>
+                  <p className="font-semibold">Fundraising & Sponsorship:</p>
+                  <p className="text-muted-foreground">Amy Wilson, Sponsorship Director</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

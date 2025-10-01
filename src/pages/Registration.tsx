@@ -79,59 +79,133 @@ const Registration = () => {
           </div>
         </section>
 
-        {/* Programs Section */}
+        {/* In-House vs Travel Comparison */}
         <section className="py-16 bg-muted/30">
           <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Choose Your Program</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">In-House vs Travel Baseball</h2>
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Not sure which program is right for your child? Here's a quick comparison to help you decide.
+            </p>
             
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">In-House League</CardTitle>
-                  <CardDescription>Recreational baseball for all skill levels</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Perfect for players developing their skills in a fun, supportive environment. Games are played locally at CDBL fields.
-                  </p>
-                  <ul className="space-y-2 text-muted-foreground mb-6">
-                    <li>• Ages 4-14</li>
-                    <li>• Weekly practices and games</li>
-                    <li>• Parent coaching opportunities</li>
-                    <li>• Emphasis on fun and fundamentals</li>
-                  </ul>
-                  <Button 
-                    className="w-full"
-                    onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-                  >
-                    Register for In-House
-                  </Button>
-                </CardContent>
-              </Card>
+            <div className="overflow-x-auto">
+              <table className="w-full max-w-5xl mx-auto bg-card rounded-lg">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-4 font-bold">Feature</th>
+                    <th className="text-left p-4 font-bold text-primary">In-House League</th>
+                    <th className="text-left p-4 font-bold text-primary">Travel Baseball</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="p-4 font-semibold">Age Groups</td>
+                    <td className="p-4">Ages 4-14 (T-Ball through Colt)</td>
+                    <td className="p-4">Ages 8-14 (8U through 14U)</td>
+                  </tr>
+                  <tr className="border-b bg-muted/30">
+                    <td className="p-4 font-semibold">Registration Fee</td>
+                    <td className="p-4">$75-$155 per season</td>
+                    <td className="p-4">~$600 per season + tournament fees</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-4 font-semibold">Time Commitment</td>
+                    <td className="p-4">1-2 practices + 1-2 games per week</td>
+                    <td className="p-4">2-3 practices + 2-3 games per week + tournaments</td>
+                  </tr>
+                  <tr className="border-b bg-muted/30">
+                    <td className="p-4 font-semibold">Season Length</td>
+                    <td className="p-4">April - June/July (12-16 games)</td>
+                    <td className="p-4">March - August (50+ games)</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-4 font-semibold">Travel Required</td>
+                    <td className="p-4">Local fields only</td>
+                    <td className="p-4">Regional tournaments (weekend trips)</td>
+                  </tr>
+                  <tr className="border-b bg-muted/30">
+                    <td className="p-4 font-semibold">Tryouts</td>
+                    <td className="p-4">No tryouts - all players accepted</td>
+                    <td className="p-4">Tryouts required (March 8-9, 2026)</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="p-4 font-semibold">Competition Level</td>
+                    <td className="p-4">Recreational, balanced teams</td>
+                    <td className="p-4">Competitive, elite players</td>
+                  </tr>
+                  <tr>
+                    <td className="p-4 font-semibold">Best For</td>
+                    <td className="p-4">Learning fundamentals, having fun, all skill levels</td>
+                    <td className="p-4">Experienced players seeking advanced competition</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-2xl">Travel Baseball</CardTitle>
-                  <CardDescription>Competitive play for experienced players</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    For players ready to compete at a higher level. Teams travel to tournaments and play against top competition.
-                  </p>
-                  <ul className="space-y-2 text-muted-foreground mb-6">
-                    <li>• Ages 8-14</li>
-                    <li>• Tryout required</li>
-                    <li>• Tournament schedule</li>
-                    <li>• Advanced coaching and training</li>
-                  </ul>
-                  <Button 
-                    className="w-full"
-                    onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-                  >
-                    Register for Travel
-                  </Button>
-                </CardContent>
-              </Card>
+            <div className="mt-12 p-6 bg-primary/10 rounded-lg max-w-3xl mx-auto">
+              <h3 className="text-xl font-bold mb-3">Is Travel Right for My Child?</h3>
+              <p className="text-muted-foreground mb-4">
+                Travel baseball requires a higher level of commitment from both players and families. Consider travel if your child:
+              </p>
+              <ul className="space-y-2 text-muted-foreground ml-4">
+                <li>• Has played multiple seasons and shows strong fundamental skills</li>
+                <li>• Is passionate about baseball and eager to practice frequently</li>
+                <li>• Can commit to weekend tournaments and additional practice schedules</li>
+                <li>• Your family can support the time commitment and travel expenses</li>
+              </ul>
+              <p className="text-muted-foreground mt-4">
+                <strong>Not sure?</strong> Start with In-House and consider travel in future seasons!
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-16 bg-background">
+          <div className="container max-w-4xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
+            
+            <div className="space-y-6">
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="font-bold text-lg mb-2">Are scholarships or financial assistance available?</h3>
+                <p className="text-muted-foreground">
+                  Yes! CDBL is committed to making baseball accessible to all families. We offer need-based scholarships and payment plans. Contact our Treasurer, Sarah Johnson, at treasurer@cdbl.org or (555) 123-4567 for confidential assistance.
+                </p>
+              </div>
+
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="font-bold text-lg mb-2">Do you offer sibling discounts or family caps?</h3>
+                <p className="text-muted-foreground">
+                  Yes! Families registering multiple children receive a 10% discount on the second child and 15% on additional children. Maximum family fee is capped at $400 for in-house programs (excluding travel).
+                </p>
+              </div>
+
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="font-bold text-lg mb-2">What is your refund policy?</h3>
+                <p className="text-muted-foreground">
+                  Full refunds are available before March 1, 2026. After March 1, a 50% refund is available until the first game. No refunds after the season starts, except for documented medical reasons.
+                </p>
+              </div>
+
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="font-bold text-lg mb-2">What equipment does my child need?</h3>
+                <p className="text-muted-foreground">
+                  CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet with face guard (ages 4-12), cleats (no metal under age 13), athletic cup (required for catchers and recommended for all), and water bottle. Catchers gear is provided by the league.
+                </p>
+              </div>
+
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="font-bold text-lg mb-2">What volunteer commitments are required?</h3>
+                <p className="text-muted-foreground">
+                  All families are asked to volunteer for 2 concession stand shifts per season and help with one league event (opening day, field cleanup, etc.). Coaching and assistant coaching positions are always welcome but not required.
+                </p>
+              </div>
+
+              <div className="p-6 bg-card rounded-lg border">
+                <h3 className="font-bold text-lg mb-2">When are evaluations and the draft?</h3>
+                <p className="text-muted-foreground">
+                  Player evaluations are held March 8-9, 2026. The draft takes place March 15, 2026. Teams are formed by the player agent to ensure balanced, competitive play. Travel team tryouts are also March 8-9.
+                </p>
+              </div>
             </div>
           </div>
         </section>
