@@ -28,9 +28,15 @@ const Fields = () => {
               <div className="mb-4">
                 <WeatherDisplay />
               </div>
-              <p className="text-muted-foreground">
-                Fields are open and playable. In case of inclement weather, field status updates will be posted here and on our social media channels. Coaches will be notified of any game cancellations.
+              <p className="text-muted-foreground mb-4">
+                For the most up-to-date field status information, including weather-related updates and cancellations, please check our Sports Connect portal.
               </p>
+              <button
+                onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Check Field Status on Sports Connect
+              </button>
             </div>
           </div>
         </section>
@@ -256,7 +262,13 @@ const Fields = () => {
                   </div>
                   <div className="p-4 bg-card rounded-lg">
                     <p className="font-semibold mb-2">Weather-Related Cancellations</p>
-                    <p className="text-muted-foreground">Check field status updates 2 hours before game time on this page or contact your division coordinator</p>
+                    <p className="text-muted-foreground mb-3">Check field status updates 2 hours before game time or contact your division coordinator</p>
+                    <button
+                      onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')}
+                      className="text-primary hover:text-primary/80 font-semibold underline"
+                    >
+                      View Field Status on Sports Connect →
+                    </button>
                   </div>
                 </div>
               </CardContent>

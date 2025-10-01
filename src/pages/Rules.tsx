@@ -230,14 +230,20 @@ const Rules = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground mb-4">
-                    Games may be postponed or cancelled due to weather. Field status updates are posted on our website and social media.
+                    Games may be postponed or cancelled due to weather. Field status updates are posted on Sports Connect and social media.
                   </p>
-                  <ul className="space-y-2 text-muted-foreground">
+                  <ul className="space-y-2 text-muted-foreground mb-4">
                     <li>• Coaches notified of cancellations</li>
-                    <li>• Check website for field status</li>
+                    <li>• Check Sports Connect for field status</li>
                     <li>• Makeup games scheduled when possible</li>
                     <li>• Safety is our top priority</li>
                   </ul>
+                  <button
+                    onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')}
+                    className="text-primary hover:text-primary/80 font-semibold underline"
+                  >
+                    View Field Status →
+                  </button>
                 </CardContent>
               </Card>
 

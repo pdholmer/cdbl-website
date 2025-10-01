@@ -134,6 +134,12 @@ const Contact = () => {
                       <p className="text-sm text-muted-foreground mt-2">
                         For field status and cancellations
                       </p>
+                      <button
+                        onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')}
+                        className="mt-3 text-primary hover:text-primary/80 font-semibold underline text-sm"
+                      >
+                        Check Field Status Online →
+                      </button>
                     </CardContent>
                   </Card>
 
