@@ -75,7 +75,7 @@ const Hero = () => {
                         variant="outline" 
                         size="lg"
                         asChild
-                        className="border-2 border-white/80 text-white hover:bg-white/10 hover:border-white font-semibold"
+                        className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
                       >
                         <Link to={slide.secondaryCta.link}>{slide.secondaryCta.text}</Link>
                       </Button>
