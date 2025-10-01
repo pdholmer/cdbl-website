@@ -21,7 +21,7 @@ const NavigationTray = ({ isOpen, onClose }: NavigationTrayProps) => {
       {/* Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 animate-fade-in"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 animate-fade-in"
           onClick={onClose}
           aria-hidden="true"
         />
@@ -30,9 +30,9 @@ const NavigationTray = ({ isOpen, onClose }: NavigationTrayProps) => {
       {/* Sliding Tray */}
       <div 
         className={`
-          fixed top-[136px] left-0 right-0 z-50 bg-background border-b border-border shadow-lg
-          transition-transform duration-300 ease-out
-          ${isOpen ? 'translate-y-0' : '-translate-y-full'}
+          fixed top-[136px] left-0 right-0 z-40 bg-background border-b border-border shadow-lg
+          transition-all duration-300 ease-out
+          ${isOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'}
         `}
       >
         <div className="container px-4 py-6 max-h-[70vh] overflow-y-auto">
