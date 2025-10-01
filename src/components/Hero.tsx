@@ -61,18 +61,18 @@ const Hero = () => {
 
                     <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                       <Button 
-                        variant="hero" 
+                        variant="default" 
                         size="lg"
                         asChild
-                        className="bg-background text-foreground hover:bg-background/90"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90"
                       >
                         <Link to={slide.primaryCta.link}>{slide.primaryCta.text}</Link>
                       </Button>
                       <Button 
-                        variant="outline" 
+                        variant="secondary" 
                         size="lg"
                         asChild
-                        className="border-primary-foreground/30 hover:bg-primary-foreground/10"
+                        className="bg-white text-black hover:bg-white/90"
                       >
                         <Link to={slide.secondaryCta.link}>{slide.secondaryCta.text}</Link>
                       </Button>
