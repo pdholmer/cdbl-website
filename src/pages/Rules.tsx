@@ -31,11 +31,15 @@ const Rules = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground mb-6">
-                    The official CDBL constitution outlines our league's mission, governance structure, board responsibilities, and operational procedures.
+                    The official CDBL constitution outlines our league's mission, governance structure, board responsibilities, and operational procedures. Revised May 2024.
                   </p>
-                  <Button size="lg" className="w-full">
-                    <Download className="mr-2 h-5 w-5" />
-                    Download Constitution (PDF)
+                  <Button 
+                    size="lg" 
+                    className="w-full"
+                    onClick={() => window.open('https://www.cdbaseball.org/page/show/8348856-cdbl-constitution', '_blank')}
+                  >
+                    <FileText className="mr-2 h-5 w-5" />
+                    View Constitution
                   </Button>
                 </CardContent>
               </Card>
@@ -43,16 +47,20 @@ const Rules = () => {
               <Card>
                 <CardHeader>
                   <FileText className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle className="text-2xl">Playing Rules</CardTitle>
-                  <CardDescription>Complete rulebook for all divisions</CardDescription>
+                  <CardTitle className="text-2xl">HR Derby Rules</CardTitle>
+                  <CardDescription>Home run derby competition rules</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground mb-6">
-                    Official playing rules for all CDBL divisions, including field dimensions, equipment requirements, and game procedures.
+                    Rules and scoring system for CDBL home run derby competitions held at all division levels at Plato Fields.
                   </p>
-                  <Button size="lg" className="w-full">
-                    <Download className="mr-2 h-5 w-5" />
-                    Download Rulebook (PDF)
+                  <Button 
+                    size="lg" 
+                    className="w-full"
+                    onClick={() => window.open('https://www.cdbaseball.org/page/show/8348831-hr-derby-rules', '_blank')}
+                  >
+                    <FileText className="mr-2 h-5 w-5" />
+                    View HR Derby Rules
                   </Button>
                 </CardContent>
               </Card>
@@ -68,18 +76,23 @@ const Rules = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>T-Ball (Ages 4-6)</CardTitle>
+                  <CardTitle>T-Ball (5-6 Years Old)</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Games: 4 innings or 60 minutes</li>
-                    <li>• No score kept</li>
+                    <li>• Games: 1 hour 15 minutes</li>
+                    <li>• No official score kept</li>
                     <li>• All players bat each inning</li>
-                    <li>• No stealing or leadoffs</li>
-                    <li>• Tee batting only</li>
+                    <li>• Coach pitch + tee</li>
+                    <li>• All players in field</li>
                     <li>• Focus on fun and fundamentals</li>
                   </ul>
-                  <Button variant="outline" className="w-full mt-4" size="sm">
+                  <Button 
+                    variant="outline" 
+                    className="w-full mt-4" 
+                    size="sm"
+                    onClick={() => window.open('https://www.cdbaseball.org/page/show/8354151-tball-rules', '_blank')}
+                  >
                     View T-Ball Rules
                   </Button>
                 </CardContent>
@@ -87,18 +100,24 @@ const Rules = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Pinto (Ages 7-8)</CardTitle>
+                  <CardTitle>Pinto (7-8 Years Old)</CardTitle>
+                  <CardDescription>1st & 2nd Graders</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Games: 6 innings or 1.5 hours</li>
+                    <li>• Games: 1 hour 45 minutes</li>
                     <li>• Coach pitch format</li>
-                    <li>• 10 run mercy rule</li>
+                    <li>• Noncompetitive/transitional</li>
                     <li>• Continuous batting order</li>
-                    <li>• No stealing home</li>
-                    <li>• Maximum 5 runs per inning</li>
+                    <li>• 5 runs max per inning</li>
+                    <li>• Building on T-Ball skills</li>
                   </ul>
-                  <Button variant="outline" className="w-full mt-4" size="sm">
+                  <Button 
+                    variant="outline" 
+                    className="w-full mt-4" 
+                    size="sm"
+                    onClick={() => window.open('https://www.cdbaseball.org/page/show/8354273-pinto-rules', '_blank')}
+                  >
                     View Pinto Rules
                   </Button>
                 </CardContent>
@@ -106,76 +125,49 @@ const Rules = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Bronco (Ages 9-10)</CardTitle>
+                  <CardTitle>Mustang (9-10 Years Old)</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Games: 6 innings or 2 hours</li>
-                    <li>• Player pitch (60' / 45')</li>
-                    <li>• Stealing allowed</li>
+                    <li>• Games: 2 hours (1:45 if double header)</li>
+                    <li>• Player pitch introduced</li>
+                    <li>• Stealing allowed (not home)</li>
                     <li>• 10 run mercy after 4 innings</li>
-                    <li>• Standard baseball rules apply</li>
                     <li>• Pitch count regulations</li>
+                    <li>• Competitive play begins</li>
                   </ul>
-                  <Button variant="outline" className="w-full mt-4" size="sm">
-                    View Bronco Rules
+                  <Button 
+                    variant="outline" 
+                    className="w-full mt-4" 
+                    size="sm"
+                    onClick={() => window.open('https://www.cdbaseball.org/page/show/8354297-mustang-rules', '_blank')}
+                  >
+                    View Mustang Rules
                   </Button>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Pony (Ages 11-12)</CardTitle>
+                  <CardTitle>Bronco (11-12 Years Old)</CardTitle>
+                  <CardDescription>5th & 6th Graders</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Games: 6 innings or 2 hours</li>
-                    <li>• Player pitch (70' / 50')</li>
+                    <li>• Games: 2 hours</li>
+                    <li>• Player pitch (60' / 45')</li>
                     <li>• Full stealing rules</li>
                     <li>• 10 run mercy after 4 innings</li>
                     <li>• Leading off allowed</li>
                     <li>• Strict pitch count limits</li>
                   </ul>
-                  <Button variant="outline" className="w-full mt-4" size="sm">
-                    View Pony Rules
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Colt (Ages 13-14)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Games: 7 innings or 2.5 hours</li>
-                    <li>• Player pitch (80' / 60')</li>
-                    <li>• High school rules adapted</li>
-                    <li>• Metal cleats allowed</li>
-                    <li>• Pitch count & rest rules</li>
-                    <li>• Protest procedures apply</li>
-                  </ul>
-                  <Button variant="outline" className="w-full mt-4" size="sm">
-                    View Colt Rules
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Travel Teams</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Tournament specific rules</li>
-                    <li>• USSSA / AAU regulations</li>
-                    <li>• Advanced pitching rules</li>
-                    <li>• Equipment requirements</li>
-                    <li>• Code of conduct</li>
-                    <li>• Travel team policies</li>
-                  </ul>
-                  <Button variant="outline" className="w-full mt-4" size="sm">
-                    View Travel Rules
+                  <Button 
+                    variant="outline" 
+                    className="w-full mt-4" 
+                    size="sm"
+                    onClick={() => window.open('https://www.cdbaseball.org/page/show/8355440-bronco-rules', '_blank')}
+                  >
+                    View Bronco Rules
                   </Button>
                 </CardContent>
               </Card>
