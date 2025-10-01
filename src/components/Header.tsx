@@ -5,6 +5,7 @@ import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, ChevronDown } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
+import DropdownNav from "@/components/DropdownNav";
 import {
   Collapsible,
   CollapsibleContent,
@@ -58,16 +59,10 @@ const Header = () => {
 
           {/* Right: Shop & Donate */}
           <div className="flex items-center gap-6 z-10">
-            {/* Desktop: Shop & Donate with labels */}
-            <nav className="hidden lg:flex items-center gap-6 text-[0.8625rem] font-bold uppercase">
-              <Link to="/shop" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">
-                SHOP
-              </Link>
-              <span className="text-primary-foreground/40">|</span>
-              <Link to="/volunteer" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors">
-                DONATE
-              </Link>
-            </nav>
+            {/* Desktop: Shop link only */}
+            <Link to="/shop" className="hidden lg:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">
+              SHOP
+            </Link>
 
             {/* Mobile/Tablet: Rotating Shop/Donate button */}
             <Link 
@@ -98,17 +93,7 @@ const Header = () => {
 
             {/* Right: Navigation + SportsConnect Button */}
             <div className="hidden lg:flex items-center gap-6">
-              <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
-                <Link to="/registration" className="text-foreground hover:text-primary transition-colors">Register</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/teams" className="text-foreground hover:text-primary transition-colors">Teams</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/schedule" className="text-foreground hover:text-primary transition-colors">Schedule</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/fields" className="text-foreground hover:text-primary transition-colors">Fields</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/events" className="text-foreground hover:text-primary transition-colors">Events</Link>
-              </nav>
+              <DropdownNav />
 
             {/* SportsConnect Button */}
             <button
