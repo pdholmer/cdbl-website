@@ -5,6 +5,7 @@ import sportsConnectLogo from "@/assets/sportsconnect-logo.png";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, ChevronDown } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
+import NavigationTray from "@/components/NavigationTray";
 import {
   Collapsible,
   CollapsibleContent,
@@ -13,6 +14,7 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isTrayOpen, setIsTrayOpen] = useState(false);
   const [showShop, setShowShop] = useState(true);
 
   // Rotate between Shop and Donate every 3 seconds
@@ -38,7 +40,8 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow-md">
+    <>
+      <header className="sticky top-0 z-50 w-full shadow-md">
       {/* Blue Header - League Overview */}
       <div className="bg-primary border-b border-primary-foreground/10">
         <div className="container relative flex h-20 items-center justify-between px-4 gap-4">
@@ -96,33 +99,32 @@ const Header = () => {
           
           <div className="flex-1"></div>
 
-            {/* Right: Navigation + SportsConnect Button */}
-            <div className="hidden lg:flex items-center gap-6">
-              <nav className="flex items-center gap-6 text-[0.8625rem] font-medium">
-                <Link to="/registration" className="text-foreground hover:text-primary transition-colors">Register</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/teams" className="text-foreground hover:text-primary transition-colors">Teams</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/schedule" className="text-foreground hover:text-primary transition-colors">Schedule</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/fields" className="text-foreground hover:text-primary transition-colors">Fields</Link>
-                <span className="text-muted-foreground">|</span>
-                <Link to="/events" className="text-foreground hover:text-primary transition-colors">Events</Link>
-              </nav>
+            {/* Right: More Button + SportsConnect Button */}
+            <div className="hidden lg:flex items-center gap-4">
+              {/* More/Browse Navigation Button */}
+              <button
+                onClick={() => setIsTrayOpen(!isTrayOpen)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors rounded-md hover:bg-muted"
+                aria-label="Browse navigation"
+                aria-expanded={isTrayOpen}
+              >
+                <span>Browse</span>
+                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isTrayOpen ? 'rotate-180' : ''}`} />
+              </button>
 
-            {/* SportsConnect Button */}
-            <button
-              className="p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-              aria-label="SportsConnect"
-            >
-              <img 
-                src={sportsConnectLogo} 
-                alt="SportsConnect" 
-                className="h-6 w-auto"
-              />
-            </button>
-          </div>
+              {/* SportsConnect Button */}
+              <button
+                className="p-3 bg-[#CC0000] hover:bg-[#AA0000] rounded-md transition-colors"
+                onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+                aria-label="SportsConnect"
+              >
+                <img 
+                  src={sportsConnectLogo} 
+                  alt="SportsConnect" 
+                  className="h-6 w-auto"
+                />
+              </button>
+            </div>
 
           {/* Mobile Menu */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -236,8 +238,11 @@ const Header = () => {
           </Sheet>
         </div>
       </div>
-
     </header>
+
+    {/* Navigation Tray */}
+    <NavigationTray isOpen={isTrayOpen} onClose={() => setIsTrayOpen(false)} />
+    </>
   );
 };
 
