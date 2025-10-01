@@ -49,7 +49,7 @@ const Hero = () => {
           {carouselSlides.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
               <section 
-                className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+                className="relative h-full flex items-center text-primary-foreground overflow-hidden"
                 style={{ background: 'var(--gradient-hero)' }}
               >
                 <div className="container relative z-10">
