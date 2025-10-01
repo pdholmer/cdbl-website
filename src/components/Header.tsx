@@ -140,7 +140,7 @@ const Header = () => {
                 {/* Mobile Navigation - Collapsible Categories */}
                 <nav className="flex flex-col gap-2">
                   {/* Registration & Teams */}
-                  <Collapsible defaultOpen>
+                  <Collapsible>
                     <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 text-sm font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted">
                       <span>Registration & Teams</span>
                       <ChevronDown className="h-4 w-4 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
@@ -156,7 +156,7 @@ const Header = () => {
                   </Collapsible>
 
                   {/* Schedule & Fields */}
-                  <Collapsible defaultOpen>
+                  <Collapsible>
                     <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 text-sm font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted">
                       <span>Schedule & Fields</span>
                       <ChevronDown className="h-4 w-4 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
