@@ -5,6 +5,7 @@ export interface SearchPage {
   path: string;
   description: string;
   keywords: string[];
+  category?: string;
 }
 
 export interface CommonTopic {
@@ -205,12 +206,13 @@ export function searchContent(query: string): {
   const siteResults = searchSiteContent(query);
   const topResults = getTopResults(siteResults, 10);
 
-  // Convert site search results to SearchPage format
+  // Convert site search results to SearchPage format with category
   const pagesFromSiteSearch: SearchPage[] = topResults.map((result) => ({
     title: result.title,
     path: result.path,
     description: result.snippet,
     keywords: [result.category],
+    category: result.category,
   }));
 
   // Also search through our predefined pages for additional context
@@ -224,18 +226,25 @@ export function searchContent(query: string): {
     );
   });
 
-  // Merge results, prioritizing site search results
-  const mergedPages = [...pagesFromSiteSearch];
-  for (const page of filteredPages) {
-    if (!mergedPages.find((p) => p.path === page.path)) {
-      mergedPages.push(page);
+  // De-duplicate by path, prioritizing site search results first
+  const seenPaths = new Set<string>();
+  const deduplicatedPages: SearchPage[] = [];
+  
+  // Add site search results first (higher priority)
+  for (const page of pagesFromSiteSearch) {
+    if (!seenPaths.has(page.path)) {
+      seenPaths.add(page.path);
+      deduplicatedPages.push(page);
     }
   }
-
-  // Search topics
-  const filteredTopics = commonTopics.filter((topic) =>
-    topic.title.toLowerCase().includes(normalizedQuery)
-  );
+  
+  // Then add filtered predefined pages if not already included
+  for (const page of filteredPages) {
+    if (!seenPaths.has(page.path)) {
+      seenPaths.add(page.path);
+      deduplicatedPages.push(page);
+    }
+  }
 
   // Search FAQs
   const filteredFAQs = faqs.filter(
@@ -245,8 +254,8 @@ export function searchContent(query: string): {
   );
 
   return {
-    pages: mergedPages.slice(0, 12), // Limit to top 12 results
-    topics: filteredTopics,
+    pages: deduplicatedPages.slice(0, 12), // Limit to top 12 results
+    topics: commonTopics, // Keep all topics for fallback
     faqs: filteredFAQs,
   };
 }

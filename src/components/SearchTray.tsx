@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FileText, Tag, HelpCircle, ArrowRight } from "lucide-react";
+import { FileText, HelpCircle, ArrowRight } from "lucide-react";
 import { searchContent } from "@/data/searchData";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface SearchTrayProps {
   isOpen: boolean;
@@ -58,14 +59,14 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
         aria-label="Search results"
       >
         <div className="container mx-auto px-4 py-8 max-h-[calc(100vh-144px)] overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {/* Column 1: Live Search Results */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm font-semibold uppercase text-muted-foreground mb-4">
                 <FileText className="h-4 w-4" />
                 <span>Search Results</span>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                   {results.pages.length > 0 ? (
                     results.pages.map((page) => (
                       <Card
@@ -73,16 +74,23 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                         className="p-4 cursor-pointer hover:bg-accent transition-colors group"
                         onClick={() => handleNavigate(page.path)}
                       >
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              {page.category && (
+                                <Badge variant="secondary" className="text-xs">
+                                  {page.category}
+                                </Badge>
+                              )}
+                            </div>
+                            <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors mb-1">
                               {page.title}
                             </h3>
-                            <p className="text-sm text-muted-foreground mt-1">
+                            <p className="text-sm text-muted-foreground">
                               {page.description}
                             </p>
                           </div>
-                          <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
+                          <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 flex-shrink-0 mt-1" />
                         </div>
                       </Card>
                     ))
@@ -92,37 +100,9 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                 </div>
             </div>
 
-            {/* Column 2: Common Topics */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm font-semibold uppercase text-muted-foreground mb-4">
-                <Tag className="h-4 w-4" />
-                <span>Common Topics</span>
-              </div>
-              <div className="space-y-3">
-                  {results.topics.map((topic, index) => (
-                    <div key={index}>
-                      {index === 0 || topic.category !== results.topics[index - 1].category ? (
-                        <div className="text-xs font-medium text-muted-foreground uppercase mb-2 mt-4 first:mt-0">
-                          {topic.category}
-                        </div>
-                      ) : null}
-                      <button
-                        onClick={() => handleNavigate(topic.path)}
-                        className="w-full text-left px-3 py-2 rounded-md hover:bg-accent transition-colors group flex items-center justify-between"
-                      >
-                        <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                          {topic.title}
-                        </span>
-                        <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-            </div>
-
-            {/* Column 3: FAQs */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm font-semibold uppercase text-muted-foreground mb-4">
+            {/* Column 2: FAQs with Blue Background */}
+            <div className="space-y-4 bg-[hsl(201,63%,56%)] p-6 rounded-lg">
+              <div className="flex items-center gap-2 text-sm font-semibold uppercase text-white mb-4">
                 <HelpCircle className="h-4 w-4" />
                 <span>Frequently Asked</span>
               </div>
@@ -130,10 +110,10 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                   {results.faqs.map((faq, index) => (
                     <Card
                       key={index}
-                      className="p-4 cursor-pointer hover:bg-accent transition-colors group"
+                      className="p-4 cursor-pointer bg-white hover:shadow-lg transition-all group"
                       onClick={() => handleNavigate(faq.link)}
                     >
-                      <h4 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
+                      <h4 className="text-sm font-bold text-foreground group-hover:text-primary transition-colors mb-2">
                         {faq.question}
                       </h4>
                       <p className="text-xs text-muted-foreground">
