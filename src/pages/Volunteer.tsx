@@ -10,7 +10,10 @@ const Volunteer = () => {
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary to-primary-light py-20 text-primary-foreground">
+        <section 
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+          style={{ background: 'var(--gradient-hero)' }}
+        >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Volunteer & Support</h1>
             <p className="text-xl max-w-2xl">CDBL runs on community support. Join our team of dedicated volunteers making a difference!</p>
