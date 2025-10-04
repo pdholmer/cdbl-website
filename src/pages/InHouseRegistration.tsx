@@ -115,52 +115,64 @@ const InHouseRegistration = () => {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-16 bg-background">
-          <div className="container max-w-4xl">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
+        <section className="py-16 bg-primary">
+          <div className="container">
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-primary-foreground">Frequently Asked Questions</h2>
             
-            <div className="space-y-6">
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">Are scholarships or financial assistance available?</h3>
-                <p className="text-muted-foreground">
-                  Yes! CDBL is committed to making baseball accessible to all families. We offer need-based scholarships and payment plans. Contact our Treasurer, Sarah Johnson, at treasurer@cdbl.org or (555) 123-4567 for confidential assistance.
-                </p>
-              </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="bg-background">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg mb-3">Are scholarships or financial assistance available?</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Yes! CDBL is committed to making baseball accessible to all families. We offer need-based scholarships and payment plans. Contact our Treasurer, Sarah Johnson, at treasurer@cdbl.org or (555) 123-4567 for confidential assistance.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">Do you offer sibling discounts or family caps?</h3>
-                <p className="text-muted-foreground">
-                  Yes! Families registering multiple children receive a 10% discount on the second child and 15% on additional children. Maximum family fee is capped at $400 for in-house programs.
-                </p>
-              </div>
+              <Card className="bg-background">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg mb-3">Do you offer sibling discounts or family caps?</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Yes! Families registering multiple children receive a 10% discount on the second child and 15% on additional children. Maximum family fee is capped at $400 for in-house programs.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">What is your refund policy?</h3>
-                <p className="text-muted-foreground">
-                  Full refunds are available before March 1, 2026. After March 1, a 50% refund is available until the first game. No refunds after the season starts, except for documented medical reasons.
-                </p>
-              </div>
+              <Card className="bg-background">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg mb-3">What is your refund policy?</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Full refunds are available before March 1, 2026. After March 1, a 50% refund is available until the first game. No refunds after the season starts, except for documented medical reasons.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">What equipment does my child need?</h3>
-                <p className="text-muted-foreground">
-                  CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet with face guard (ages 4-12), cleats (no metal under age 13), athletic cup (required for catchers and recommended for all), and water bottle. Catchers gear is provided by the league.
-                </p>
-              </div>
+              <Card className="bg-background">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg mb-3">What equipment does my child need?</h3>
+                  <p className="text-muted-foreground text-sm">
+                    CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet with face guard (ages 4-12), cleats (no metal under age 13), athletic cup (required for catchers and recommended for all), and water bottle. Catchers gear is provided by the league.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">What volunteer commitments are required?</h3>
-                <p className="text-muted-foreground">
-                  All families are asked to volunteer for 2 concession stand shifts per season and help with one league event (opening day, field cleanup, etc.). Coaching and assistant coaching positions are always welcome but not required.
-                </p>
-              </div>
+              <Card className="bg-background">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg mb-3">What volunteer commitments are required?</h3>
+                  <p className="text-muted-foreground text-sm">
+                    All families are asked to volunteer for 2 concession stand shifts per season and help with one league event (opening day, field cleanup, etc.). Coaching and assistant coaching positions are always welcome but not required.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">When are evaluations and the draft?</h3>
-                <p className="text-muted-foreground">
-                  Player evaluations are held March 8-9, 2026. The draft takes place March 15, 2026. Teams are formed by the player agent to ensure balanced, competitive play.
-                </p>
-              </div>
+              <Card className="bg-background">
+                <CardContent className="p-6">
+                  <h3 className="font-bold text-lg mb-3">When are evaluations and the draft?</h3>
+                  <p className="text-muted-foreground text-sm">
+                    Player evaluations are held March 8-9, 2026. The draft takes place March 15, 2026. Teams are formed by the player agent to ensure balanced, competitive play.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
