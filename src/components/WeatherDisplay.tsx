@@ -96,11 +96,16 @@ const WeatherDisplay = () => {
       {weather && (
         <>
           <span className="hidden lg:inline">|</span>
-          <div className="flex items-center gap-1 lg:gap-2">
+          <a 
+            href="https://www.weatherchannel.com" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 lg:gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+          >
             {getWeatherIcon(weather.condition)}
             <span>{weather.temp}°F</span>
             <span className="hidden lg:inline">{weather.condition}</span>
-          </div>
+          </a>
         </>
       )}
     </div>
