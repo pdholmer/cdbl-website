@@ -85,7 +85,7 @@ const Header = () => {
       <div className="bg-background border-b border-border">
         <div className="container flex h-16 items-center justify-between px-4 gap-8">
           {/* Search Bar - Persistent across all views */}
-          <div className="relative w-full max-w-xs">
+          <div className="relative flex-1 max-w-2xl">
             <input
               type="search"
               placeholder="Search..."
@@ -109,7 +109,7 @@ const Header = () => {
             )}
           </div>
           
-          <div className="flex-1"></div>
+          <div className="flex-shrink-0"></div>
 
             {/* Right: Navigation + SportsConnect Button */}
             <div className="hidden lg:flex items-center gap-6">
