@@ -18,20 +18,20 @@ const Index = () => {
         <Hero />
         
         {/* Quick Help CTA */}
-        <section className="py-8 bg-primary text-primary-foreground">
+        <section className="py-4 bg-muted">
           <div className="container">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div>
                 <h3 className="text-2xl font-bold mb-2">Questions About Registration or Programs?</h3>
-                <p className="text-primary-foreground/90">
+                <p className="text-muted-foreground">
                   New to CDBL? <Link to="/new-to-cdbl" className="underline hover:no-underline font-semibold">Start here</Link> or contact us for help.
                 </p>
               </div>
               <Button 
                 size="lg" 
-                variant="secondary"
+                variant="default"
                 asChild
-                className="bg-white text-primary hover:bg-white/90 flex-shrink-0"
+                className="flex-shrink-0"
               >
                 <Link to="/contact">
                   <MessageCircle className="mr-2 h-5 w-5" />
