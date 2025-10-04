@@ -141,6 +141,47 @@ export const faqs: FAQ[] = [
     question: "Who can I contact for help?",
     answer: "Reach out to us through the Contact page.",
     link: "/contact"
+  },
+  // Travel-specific FAQs
+  {
+    question: "How do I know if my child is ready for travel baseball?",
+    answer: "Travel baseball is best for players with multiple seasons of experience, strong fundamental skills, genuine passion for the game, and families who can commit to weekend tournaments and additional practice schedules.",
+    link: "/travel#readiness"
+  },
+  {
+    question: "What's the time commitment for travel teams?",
+    answer: "Travel teams require 2-3 practices per week, 2-3 games per week, and 8-15 weekend tournaments per season running March through August.",
+    link: "/travel#commitment"
+  },
+  {
+    question: "How much does travel baseball cost?",
+    answer: "Travel baseball costs approximately $600 registration plus $1,500-2,500 in tournament fees, totaling $2,500-3,500 per season plus travel expenses.",
+    link: "/travel#costs"
+  },
+  {
+    question: "When are travel team tryouts?",
+    answer: "Travel team tryouts are held March 8-9, 2026, with callback sessions on March 9. Team announcements will be made on March 10.",
+    link: "/travel#tryouts"
+  },
+  {
+    question: "Can my child play both in-house and travel?",
+    answer: "Players typically choose one program due to scheduling conflicts, but policies may vary by division. Contact your division coordinator for specific guidance.",
+    link: "/registration#dual-participation"
+  },
+  {
+    question: "What's the difference between travel and in-house teams?",
+    answer: "Travel teams are competitive with tryouts, 50+ games, extensive tournament schedules, and higher costs. In-house is recreational, all skill levels welcome, local games only, and more affordable.",
+    link: "/registration#comparison"
+  },
+  {
+    question: "Do travel players get college exposure?",
+    answer: "Our program focuses on skill development and competition. 14U teams attend showcase tournaments where college scouts are present.",
+    link: "/travel#college-prep"
+  },
+  {
+    question: "What makes CDBL Rockets competitive?",
+    answer: "CDBL Rockets have experienced coaching staff, state tournament appearances, regional championships, and a strong player development pipeline to Burlington Central High School.",
+    link: "/travel#competitive-edge"
   }
 ];
 

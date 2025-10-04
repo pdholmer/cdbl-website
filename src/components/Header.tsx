@@ -32,14 +32,6 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
-  const navItems = [
-    { id: "about", label: "About" },
-    { id: "registration", label: "Registration" },
-    { id: "spirit-wear", label: "Spirit Wear" },
-    { id: "umpires", label: "Umpires" },
-    { id: "sponsors", label: "Sponsors" },
-  ];
-
   return (
     <header className="sticky top-0 z-50 w-full shadow-md">
       {/* Blue Header - League Overview */}
@@ -130,6 +122,56 @@ const Header = () => {
               <div className="flex flex-col gap-4 mt-8">
                 {/* Mobile Navigation - Collapsible Categories */}
                 <nav className="flex flex-col gap-2">
+                  {/* In-House Program */}
+                  <Collapsible>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 text-sm font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted">
+                      <span>In-House Program</span>
+                      <ChevronDown className="h-4 w-4 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-3 pt-2 space-y-1">
+                      <Link to="/in-house" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Overview
+                      </Link>
+                      <Link to="/teams#in-house" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Teams & Divisions
+                      </Link>
+                      <Link to="/registration#in-house" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Registration
+                      </Link>
+                      <Link to="/schedule#in-house" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Schedule
+                      </Link>
+                      <Link to="/rules" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Rules & FAQ
+                      </Link>
+                    </CollapsibleContent>
+                  </Collapsible>
+
+                  {/* Travel Program */}
+                  <Collapsible>
+                    <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 text-sm font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted">
+                      <span>Travel Program</span>
+                      <ChevronDown className="h-4 w-4 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-3 pt-2 space-y-1">
+                      <Link to="/travel" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Overview
+                      </Link>
+                      <Link to="/teams#travel" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Rockets Teams
+                      </Link>
+                      <Link to="/registration#travel" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Tryouts & Registration
+                      </Link>
+                      <Link to="/schedule#travel" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Tournament Schedule
+                      </Link>
+                      <Link to="/registration#travel-faq" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Travel FAQ
+                      </Link>
+                    </CollapsibleContent>
+                  </Collapsible>
+
                   {/* About CDBL */}
                   <Collapsible>
                     <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 text-sm font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted">
@@ -141,41 +183,13 @@ const Header = () => {
                         New to CDBL?
                       </Link>
                       <Link to="/about" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        About
-                      </Link>
-                      <Link to="/rules" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Rules
+                        About Us
                       </Link>
                       <Link to="/board" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Board
-                      </Link>
-                      <Link to="/sponsors" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Sponsors
-                      </Link>
-                    </CollapsibleContent>
-                  </Collapsible>
-
-                  {/* Season Info */}
-                  <Collapsible>
-                    <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 text-sm font-semibold uppercase text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted">
-                      <span>Season Info</span>
-                      <ChevronDown className="h-4 w-4 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="pl-3 pt-2 space-y-1">
-                      <Link to="/registration" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Registration
-                      </Link>
-                      <Link to="/teams" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Teams
-                      </Link>
-                      <Link to="/schedule" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Schedule
+                        Board & Leadership
                       </Link>
                       <Link to="/fields" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Fields
-                      </Link>
-                      <Link to="/events" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
-                        Events
+                        Fields & Facilities
                       </Link>
                     </CollapsibleContent>
                   </Collapsible>
@@ -189,6 +203,12 @@ const Header = () => {
                     <CollapsibleContent className="pl-3 pt-2 space-y-1">
                       <Link to="/volunteer" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
                         Volunteer
+                      </Link>
+                      <Link to="/sponsors" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Sponsors
+                      </Link>
+                      <Link to="/shop" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Shop Spirit Wear
                       </Link>
                       <Link to="/contact" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
                         Contact

@@ -15,8 +15,26 @@ export const contentIndex: ContentItem[] = [
   {
     title: "Home",
     path: "/",
-    content: "CDBL Rockets Baseball League Burlington Illinois youth baseball registration season schedule teams travel in-house programs community",
+    content: "CDBL Rockets Baseball League Burlington Illinois youth baseball registration season schedule teams travel in-house programs community MLB Rockets future stars Burlington Central",
     category: "Main",
+    priority: 100,
+  },
+
+  // In-House Program
+  {
+    title: "In-House Baseball Program",
+    path: "/in-house",
+    content: "In-House recreational baseball MLB teams Cardinals Cubs Dodgers Giants Athletics T-Ball Pinto Bronco Pony Colt ages 4-14 no tryouts all skill levels $75-$155 local games weeknight Saturday affordable family friendly neighborhood baseball fundamentals sportsmanship teamwork April June July",
+    category: "Programs",
+    priority: 100,
+  },
+
+  // Travel Program
+  {
+    title: "Rockets Travel Program", 
+    path: "/travel",
+    content: "CDBL Rockets travel baseball competitive tournaments tryouts March 8U 10U 12U 14U Burlington Central High School District 301 future stars college prep $600 registration tournament fees experienced players coaches 50+ games regional state championship showcase",
+    category: "Programs",
     priority: 100,
   },
 

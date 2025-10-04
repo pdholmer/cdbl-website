@@ -5,6 +5,12 @@ import Autoplay from "embla-carousel-autoplay";
 
 const carouselSlides = [
   {
+    title: "Which Program is Right for You?",
+    subtitle: "In-House (MLB teams) or Travel (Rockets) - Choose your path",
+    primaryCta: { text: "In-House Baseball", link: "/in-house" },
+    secondaryCta: { text: "Travel Teams", link: "/travel" }
+  },
+  {
     title: "2026 Registration",
     subtitle: "Join CDBL - 38 Years of Youth Baseball Excellence",
     primaryCta: { text: "Register Now", link: "/registration" },
