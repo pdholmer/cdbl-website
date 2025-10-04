@@ -16,31 +16,13 @@ const Fields = () => {
         >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Fields & Facilities</h1>
-            <p className="text-xl max-w-2xl">Find directions to all CDBL baseball fields and check current field conditions.</p>
-          </div>
-        </section>
-
-        {/* Weather & Field Status */}
-        <section className="py-12 bg-muted/30">
-          <div className="container">
-            <div className="bg-card rounded-lg p-6 shadow-lg max-w-3xl mx-auto">
-              <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                <AlertTriangle className="h-6 w-6 text-primary" />
-                Current Field Status
-              </h2>
-              <div className="mb-4">
-                <WeatherDisplay />
-              </div>
-              <p className="text-muted-foreground mb-4">
-                For the most up-to-date field status information, including weather-related updates and cancellations, please check our Sports Connect portal.
-              </p>
-              <button
-                onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg font-semibold transition-colors"
-              >
-                Check Field Status on Sports Connect
-              </button>
-            </div>
+            <p className="text-xl max-w-2xl mb-6">Find directions to all CDBL baseball fields and check current field conditions.</p>
+            <button
+              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')}
+              className="bg-white text-primary hover:bg-white/90 px-6 py-3 rounded-lg font-semibold shadow-lg transition-colors"
+            >
+              Check Field Status
+            </button>
           </div>
         </section>
 
