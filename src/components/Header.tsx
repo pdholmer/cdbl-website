@@ -83,7 +83,7 @@ const Header = () => {
 
       {/* White Header - Baseball Season Specific */}
       <div className="bg-background border-b border-border">
-        <div className="container flex h-16 items-center justify-between px-4 gap-8">
+        <div className="container flex h-16 items-center px-4 gap-4 lg:gap-8">
           {/* Search Bar - Persistent across all views */}
           <div className="relative flex-1 max-w-2xl">
             <input
@@ -108,11 +108,9 @@ const Header = () => {
               </button>
             )}
           </div>
-          
-          <div className="flex-shrink-0"></div>
 
             {/* Right: Navigation + SportsConnect Button */}
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center gap-6 flex-shrink-0">
               <DropdownNav />
 
           </div>
@@ -121,7 +119,7 @@ const Header = () => {
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <button 
-                className="lg:hidden flex items-center gap-2 text-foreground font-semibold"
+                className="lg:hidden flex items-center gap-2 text-foreground font-semibold flex-shrink-0"
                 aria-label="Open menu"
               >
                 <Menu className="h-6 w-6" />
