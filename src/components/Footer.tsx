@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import cdblLogo from "@/assets/cdbl-logo.png";
+import cdblLogo from "@/assets/cdbl-footer-logo.png";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
@@ -11,7 +11,7 @@ const Footer = () => {
             <img 
               src={cdblLogo} 
               alt="CDBL Logo" 
-              className="h-16 w-auto mb-4 brightness-0 invert"
+              className="h-16 w-auto mb-4"
             />
             <p className="text-sm opacity-80 mb-4">
               Central District Baseball League - Burlington, IL
