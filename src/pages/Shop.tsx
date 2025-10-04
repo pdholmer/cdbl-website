@@ -112,67 +112,6 @@ const Shop = () => {
           </div>
         </section>
 
-        {/* Product Categories */}
-        <section className="py-16 bg-muted/30">
-          <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Popular Items</h2>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Performance Tees</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-square bg-muted rounded-lg mb-4 flex items-center justify-center">
-                    <Shirt className="h-16 w-16 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground mb-2">Moisture-wicking CDBL shirts</p>
-                  <p className="text-2xl font-bold text-primary">$24.99</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Rockets Cap</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-square bg-muted rounded-lg mb-4 flex items-center justify-center">
-                    <Shirt className="h-16 w-16 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground mb-2">Embroidered team logo cap</p>
-                  <p className="text-2xl font-bold text-primary">$19.99</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Hoodies</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-square bg-muted rounded-lg mb-4 flex items-center justify-center">
-                    <Shirt className="h-16 w-16 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground mb-2">Cozy CDBL fleece hoodie</p>
-                  <p className="text-2xl font-bold text-primary">$39.99</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Equipment Bag</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-square bg-muted rounded-lg mb-4 flex items-center justify-center">
-                    <Shirt className="h-16 w-16 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground mb-2">Durable team gear bag</p>
-                  <p className="text-2xl font-bold text-primary">$34.99</p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
         {/* Custom Orders */}
         <section className="py-16 bg-background">
           <div className="container max-w-3xl">
