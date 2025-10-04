@@ -29,11 +29,11 @@ const Travel = () => {
         >
           <div className="container">
             <div className="flex items-center gap-4 mb-6">
-              <img src={rocketLogo} alt="CDBL Rockets" className="h-16 w-auto" />
               <div>
                 <h1 className="text-4xl md:text-6xl font-bold">CDBL Rockets</h1>
                 <p className="text-xl opacity-90">The Future Starts Here</p>
               </div>
+              <img src={rocketLogo} alt="CDBL Rockets" className="h-16 w-auto" />
             </div>
             <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
             <div className="flex flex-wrap gap-4">
