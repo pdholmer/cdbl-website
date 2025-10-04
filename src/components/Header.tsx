@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import cdblLogo from "@/assets/cdbl-logo-main.png";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu, ChevronDown, X } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
 import DropdownNav from "@/components/DropdownNav";
 import SearchTray from "@/components/SearchTray";
@@ -92,9 +92,21 @@ const Header = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchOpen(true)}
-              className="w-full h-10 px-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
+              className="w-full h-10 px-4 pr-10 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
               aria-label="Search"
             />
+            {isSearchOpen && (
+              <button
+                onClick={() => {
+                  setIsSearchOpen(false);
+                  setSearchQuery("");
+                }}
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md hover:bg-accent transition-colors"
+                aria-label="Close search"
+              >
+                <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+              </button>
+            )}
           </div>
           
           <div className="flex-1"></div>
