@@ -5,26 +5,26 @@ import Autoplay from "embla-carousel-autoplay";
 
 const carouselSlides = [
   {
-    title: "Register for 2026 Season",
-    subtitle: "Join Central District Baseball League - 38 Years of Excellence",
+    title: "2026 Registration",
+    subtitle: "Join CDBL - 38 Years of Youth Baseball Excellence",
     primaryCta: { text: "Register Now", link: "/registration" },
     secondaryCta: { text: "View Programs", link: "/teams" }
   },
   {
-    title: "Check Game Schedule",
-    subtitle: "Find game times, field locations, and important dates",
+    title: "View Game Schedule",
+    subtitle: "Find game times, field locations, and more",
     primaryCta: { text: "View Schedule", link: "/schedule" },
     secondaryCta: { text: "Find Fields", link: "/fields" }
   },
   {
     title: "Shop Rockets Gear",
-    subtitle: "Show your team spirit with official CDBL merchandise",
+    subtitle: "Official CDBL merchandise and team spirit wear",
     primaryCta: { text: "Shop Now", link: "/shop" },
     secondaryCta: { text: "View Events", link: "/events" }
   },
   {
-    title: "Volunteer Today",
-    subtitle: "Help make a difference in our community through youth baseball",
+    title: "Volunteer With Us",
+    subtitle: "Make a difference in youth baseball today",
     primaryCta: { text: "Get Involved", link: "/volunteer" },
     secondaryCta: { text: "Learn More", link: "/about" }
   }
@@ -54,11 +54,11 @@ const Hero = () => {
               >
                 <div className="container relative z-10">
                   <div className="max-w-3xl">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight line-clamp-1">
                       {slide.title}
                     </h1>
                     
-                    <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95">
+                    <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95 line-clamp-2">
                       {slide.subtitle}
                     </p>
 
