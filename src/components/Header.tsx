@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, ChevronDown } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
 import DropdownNav from "@/components/DropdownNav";
+import SearchTray from "@/components/SearchTray";
 import {
   Collapsible,
   CollapsibleContent,
@@ -14,6 +15,8 @@ import {
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showShop, setShowShop] = useState(true);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Rotate between Shop and Donate every 3 seconds
   useEffect(() => {
@@ -86,6 +89,9 @@ const Header = () => {
             <input
               type="search"
               placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchOpen(true)}
               className="w-full h-10 px-4 rounded-md bg-muted text-foreground placeholder:text-muted-foreground border border-border focus:outline-none focus:ring-2 focus:ring-ring text-sm"
               aria-label="Search"
             />
@@ -188,6 +194,15 @@ const Header = () => {
         </div>
       </div>
 
+      {/* Search Tray */}
+      <SearchTray 
+        isOpen={isSearchOpen} 
+        searchQuery={searchQuery}
+        onClose={() => {
+          setIsSearchOpen(false);
+          setSearchQuery("");
+        }}
+      />
     </header>
   );
 };
