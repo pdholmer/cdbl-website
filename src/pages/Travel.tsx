@@ -31,7 +31,7 @@ const Travel = () => {
               <img src={rocketLogo} alt="CDBL Rockets" className="h-16 w-auto" />
               <div>
                 <h1 className="text-4xl md:text-6xl font-bold">CDBL Rockets</h1>
-                <p className="text-xl opacity-90">Home of Future Stars</p>
+                <p className="text-xl opacity-90">The Future Starts Here</p>
               </div>
             </div>
             <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
