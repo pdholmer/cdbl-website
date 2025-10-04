@@ -3,6 +3,7 @@ import { MapPin, Navigation, Phone, AlertTriangle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WeatherDisplay from "@/components/WeatherDisplay";
+import heroFieldBg from "@/assets/hero-field-bg.jpg";
 
 const Fields = () => {
   return (
@@ -12,7 +13,11 @@ const Fields = () => {
         {/* Hero Section */}
         <section 
           className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
-          style={{ background: 'var(--gradient-hero)' }}
+          style={{ 
+            background: `linear-gradient(135deg, hsl(215 100% 26% / 0.95) 0%, hsl(201 63% 56% / 0.9) 100%), url(${heroFieldBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Fields & Facilities</h1>
