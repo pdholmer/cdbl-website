@@ -36,17 +36,13 @@ const InHouseTeams = () => {
             </div>
 
             <div className="mb-8">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div className="flex-1">
-                  <h2 className="text-3xl font-bold mb-4">In-House League Divisions</h2>
-                  <p className="text-muted-foreground max-w-3xl">
-                    Our In-House program features recreational teams organized by age division. Teams are formed based on age, skill level, and availability to ensure balanced, competitive play.
-                  </p>
-                </div>
-                <Button variant="default" asChild size="lg" className="md:flex-shrink-0 md:self-start">
-                  <Link to="/new-to-cdbl">New to CDBL? Start Here →</Link>
-                </Button>
-              </div>
+              <h2 className="text-3xl font-bold mb-4">In-House League Divisions</h2>
+              <p className="text-muted-foreground max-w-3xl mb-4">
+                Our In-House program features recreational teams organized by age division. Teams are formed based on age, skill level, and availability to ensure balanced, competitive play.
+              </p>
+              <Button variant="outline" asChild size="sm">
+                <Link to="/new-to-cdbl">New to CDBL? Start Here →</Link>
+              </Button>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
