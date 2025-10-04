@@ -23,7 +23,7 @@ const Shop = () => {
         {/* Main Shop Section */}
         <section className="py-16 bg-background">
           <div className="container">
-            <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
               <Card className="border-2 border-primary">
                 <CardHeader>
                   <Shirt className="h-12 w-12 text-primary mb-4" />
@@ -70,6 +70,41 @@ const Shop = () => {
                   </ul>
                   <Button size="lg" className="w-full" variant="outline">
                     Learn More
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 border-primary">
+                <CardHeader>
+                  <ExternalLink className="h-12 w-12 text-primary mb-4" />
+                  <CardTitle className="text-2xl">Wilson Team Store</CardTitle>
+                  <CardDescription>Official equipment and custom team gear</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-6">
+                    Shop premium Wilson baseball equipment and custom team gear through our official partnership. Quality equipment for every player.
+                  </p>
+                  <ul className="space-y-2 text-muted-foreground mb-6">
+                    <li>• Custom jerseys and uniforms</li>
+                    <li>• Baseball gloves and bats</li>
+                    <li>• Team equipment packages</li>
+                    <li>• Personalization available</li>
+                    <li>• Official Wilson quality</li>
+                  </ul>
+                  <Button 
+                    size="lg" 
+                    className="w-full" 
+                    variant="outline"
+                    asChild
+                  >
+                    <a 
+                      href="https://www.team.shop/en-us" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="mr-2 h-5 w-5" />
+                      Visit Wilson Store
+                    </a>
                   </Button>
                 </CardContent>
               </Card>
