@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import rocketLogo from "@/assets/rocket-white-2.png";
 import chsLogo from "@/assets/chs-rocket.png";
+import rocketWhite3 from "@/assets/rocket-white-3.png";
 
 const Travel = () => {
   const teams = [
@@ -290,7 +291,7 @@ const Travel = () => {
           }}
         >
           <div className="container text-center">
-            <Rocket className="h-16 w-16 mx-auto mb-6 text-white" />
+            <img src={rocketWhite3} alt="CDBL Rockets" className="h-16 w-auto mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Launch Your Baseball Career</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
               Join the CDBL Rockets and take your game to the next level. Future stars start here.
