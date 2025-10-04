@@ -11,7 +11,10 @@ const About = () => {
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary to-primary-light py-20 text-primary-foreground">
+        <section 
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+          style={{ background: 'var(--gradient-hero)' }}
+        >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">About CDBL</h1>
             <p className="text-xl max-w-2xl">38 years of building character, skills, and community through youth baseball.</p>
