@@ -97,7 +97,7 @@ const WeatherDisplay = () => {
         <>
           <span className="hidden lg:inline">|</span>
           <a 
-            href="https://www.weatherchannel.com" 
+            href="https://weather.com/weather/radar/interactive/l/53203840c46936ec797e1de85c5a5467b73139e1ca5e1a3c2ff94e5c1f302cc9" 
             target="_blank" 
             rel="noopener noreferrer"
             className="flex items-center gap-1 lg:gap-2 cursor-pointer hover:opacity-80 transition-opacity"
