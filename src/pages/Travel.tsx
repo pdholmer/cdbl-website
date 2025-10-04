@@ -37,16 +37,16 @@ const Travel = () => {
             <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
             <div className="flex flex-wrap gap-4">
               <Button 
-                size="lg" 
-                variant="hero"
+                variant="default" 
+                size="lg"
                 asChild
-                className="bg-background text-foreground hover:bg-background/90 shadow-lg"
+                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
               >
                 <Link to="/registration#travel">Tryout Information</Link>
               </Button>
               <Button 
-                size="lg" 
-                variant="outline"
+                variant="outline" 
+                size="lg"
                 asChild
                 className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
               >
@@ -270,7 +270,12 @@ const Travel = () => {
             </div>
 
             <div className="mt-12 text-center">
-              <Button size="lg" variant="hero" asChild>
+              <Button 
+                variant="default" 
+                size="lg"
+                asChild
+                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+              >
                 <Link to="/registration#travel">Register for Tryouts</Link>
               </Button>
             </div>
@@ -292,16 +297,16 @@ const Travel = () => {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button 
-                size="lg" 
-                variant="hero"
+                variant="default" 
+                size="lg"
                 asChild
-                className="bg-background text-foreground hover:bg-background/90"
+                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
               >
                 <Link to="/registration#travel">Register for Tryouts</Link>
               </Button>
               <Button 
-                size="lg" 
-                variant="outline"
+                variant="outline" 
+                size="lg"
                 asChild
                 className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
               >
