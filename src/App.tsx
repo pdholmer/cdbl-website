@@ -20,6 +20,14 @@ import NewToCDBL from "./pages/NewToCDBL";
 import BoardInfo from "./pages/BoardInfo";
 import InHouse from "./pages/InHouse";
 import Travel from "./pages/Travel";
+import InHouseTeams from "./pages/InHouseTeams";
+import InHouseRegistration from "./pages/InHouseRegistration";
+import InHouseSchedule from "./pages/InHouseSchedule";
+import InHouseRules from "./pages/InHouseRules";
+import TravelTeams from "./pages/TravelTeams";
+import TravelRegistration from "./pages/TravelRegistration";
+import TravelSchedule from "./pages/TravelSchedule";
+import TravelFAQ from "./pages/TravelFAQ";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,7 +55,15 @@ const App = () => (
           <Route path="/new-to-cdbl" element={<NewToCDBL />} />
           <Route path="/board" element={<BoardInfo />} />
           <Route path="/in-house" element={<InHouse />} />
+          <Route path="/in-house/teams" element={<InHouseTeams />} />
+          <Route path="/in-house/registration" element={<InHouseRegistration />} />
+          <Route path="/in-house/schedule" element={<InHouseSchedule />} />
+          <Route path="/in-house/rules" element={<InHouseRules />} />
           <Route path="/travel" element={<Travel />} />
+          <Route path="/travel/teams" element={<TravelTeams />} />
+          <Route path="/travel/registration" element={<TravelRegistration />} />
+          <Route path="/travel/schedule" element={<TravelSchedule />} />
+          <Route path="/travel/faq" element={<TravelFAQ />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

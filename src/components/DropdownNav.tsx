@@ -23,22 +23,22 @@ const DropdownNav = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/teams#in-house" className="w-full cursor-pointer">
+            <Link to="/in-house/teams" className="w-full cursor-pointer">
               Teams & Divisions
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/registration#in-house" className="w-full cursor-pointer">
+            <Link to="/in-house/registration" className="w-full cursor-pointer">
               Registration
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/schedule#in-house" className="w-full cursor-pointer">
+            <Link to="/in-house/schedule" className="w-full cursor-pointer">
               Schedule
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/rules" className="w-full cursor-pointer">
+            <Link to="/in-house/rules" className="w-full cursor-pointer">
               Rules & FAQ
             </Link>
           </DropdownMenuItem>
@@ -60,22 +60,22 @@ const DropdownNav = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/teams#travel" className="w-full cursor-pointer">
+            <Link to="/travel/teams" className="w-full cursor-pointer">
               Rockets Teams
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/registration#travel" className="w-full cursor-pointer">
+            <Link to="/travel/registration" className="w-full cursor-pointer">
               Tryouts & Registration
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/schedule#travel" className="w-full cursor-pointer">
+            <Link to="/travel/schedule" className="w-full cursor-pointer">
               Tournament Schedule
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/registration#travel-faq" className="w-full cursor-pointer">
+            <Link to="/travel/faq" className="w-full cursor-pointer">
               Travel FAQ
             </Link>
           </DropdownMenuItem>
