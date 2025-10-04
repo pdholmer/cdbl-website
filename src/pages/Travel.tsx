@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 import { Rocket, Trophy, Target, Calendar, DollarSign, Star, TrendingUp, Award } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import rocketLogo from "@/assets/rocket-blue.png";
+import rocketLogo from "@/assets/rocket-white-2.png";
+import chsLogo from "@/assets/chs-rocket.png";
 
 const Travel = () => {
   const teams = [
@@ -22,7 +23,7 @@ const Travel = () => {
         <section 
           className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
           style={{ 
-            background: 'linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(215 90% 35%) 50%, hsl(4 90% 58%) 100%)'
+            background: 'linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(201 63% 56%) 100%)'
           }}
         >
           <div className="container">
@@ -47,7 +48,7 @@ const Travel = () => {
                 size="lg" 
                 variant="outline"
                 asChild
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
               >
                 <Link to="/teams#travel">View Rosters</Link>
               </Button>
@@ -59,7 +60,7 @@ const Travel = () => {
         <section className="py-16 bg-background">
           <div className="container">
             <div className="text-center mb-12">
-              <Rocket className="h-12 w-12 text-primary mx-auto mb-4" />
+              <img src={chsLogo} alt="Central High School Rockets" className="h-16 w-auto mx-auto mb-4" />
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Building Future Rockets</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Our travel program creates a direct pipeline to Burlington Central High School (District 301), 
@@ -280,7 +281,7 @@ const Travel = () => {
         <section 
           className="py-16 text-primary-foreground"
           style={{ 
-            background: 'linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(4 90% 58%) 100%)'
+            background: 'linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(201 63% 56%) 100%)'
           }}
         >
           <div className="container text-center">
@@ -302,7 +303,7 @@ const Travel = () => {
                 size="lg" 
                 variant="outline"
                 asChild
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
               >
                 <Link to="/teams#travel">Meet the Teams</Link>
               </Button>
