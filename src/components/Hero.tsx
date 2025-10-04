@@ -11,7 +11,7 @@ const carouselSlides = [
     secondaryCta: { text: "View Programs", link: "/teams" }
   },
   {
-    title: "View Game Schedule",
+    title: "Game Schedule",
     subtitle: "Find game times, field locations, and more",
     primaryCta: { text: "View Schedule", link: "/schedule" },
     secondaryCta: { text: "Find Fields", link: "/fields" }
