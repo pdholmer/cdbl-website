@@ -1,9 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useState } from "react";
 
 const InHouseRules = () => {
+  const [selectedLeague, setSelectedLeague] = useState("tball");
+
+  const leagues = [
+    { value: "tball", label: "T-Ball" },
+    { value: "pinto", label: "Pinto" },
+    { value: "bronco", label: "Bronco" },
+    { value: "pony", label: "Pony" },
+    { value: "colt", label: "Colt" },
+  ];
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -22,8 +34,25 @@ const InHouseRules = () => {
         {/* Rules Content */}
         <section className="py-16 bg-background">
           <div className="container max-w-6xl">
-            <Tabs defaultValue="tball" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 mb-8">
+            <Tabs value={selectedLeague} onValueChange={setSelectedLeague} className="w-full">
+              {/* Mobile/Tablet Dropdown */}
+              <div className="lg:hidden mb-8">
+                <Select value={selectedLeague} onValueChange={setSelectedLeague}>
+                  <SelectTrigger className="w-full bg-background">
+                    <SelectValue placeholder="Select a league" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    {leagues.map((league) => (
+                      <SelectItem key={league.value} value={league.value}>
+                        {league.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Desktop Buttons */}
+              <TabsList className="hidden lg:grid w-full grid-cols-5 mb-8">
                 <TabsTrigger value="tball">T-Ball</TabsTrigger>
                 <TabsTrigger value="pinto">Pinto</TabsTrigger>
                 <TabsTrigger value="bronco">Bronco</TabsTrigger>
