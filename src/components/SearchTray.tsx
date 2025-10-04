@@ -46,7 +46,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 animate-in fade-in duration-300"
+        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 animate-in fade-in duration-300"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -54,7 +54,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
       {/* Search Tray */}
       <div
         ref={trayRef}
-        className="fixed left-0 right-0 top-[136px] z-50 bg-background border-b border-border shadow-2xl animate-in slide-in-from-top duration-300"
+        className="fixed left-0 right-0 top-[144px] z-40 bg-background border-b border-border shadow-2xl animate-in slide-in-from-top duration-300"
         role="dialog"
         aria-label="Search results"
       >
