@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, Tag, HelpCircle, ArrowRight } from "lucide-react";
 import { searchContent } from "@/data/searchData";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card } from "@/components/ui/card";
 
 interface SearchTrayProps {
@@ -46,7 +45,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 animate-in fade-in duration-300"
+        className="fixed left-0 right-0 bottom-0 top-[144px] bg-background/80 backdrop-blur-sm z-30 animate-in fade-in duration-300"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -58,7 +57,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
         role="dialog"
         aria-label="Search results"
       >
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 max-h-[calc(100vh-144px)] overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {/* Column 1: Live Search Results */}
             <div className="space-y-4">
@@ -66,8 +65,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                 <FileText className="h-4 w-4" />
                 <span>Search Results</span>
               </div>
-              <ScrollArea className="h-[400px] pr-4">
-                <div className="space-y-2">
+              <div className="space-y-2">
                   {results.pages.length > 0 ? (
                     results.pages.map((page) => (
                       <Card
@@ -92,7 +90,6 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                     <p className="text-sm text-muted-foreground">No results found</p>
                   )}
                 </div>
-              </ScrollArea>
             </div>
 
             {/* Column 2: Common Topics */}
@@ -101,8 +98,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                 <Tag className="h-4 w-4" />
                 <span>Common Topics</span>
               </div>
-              <ScrollArea className="h-[400px] pr-4">
-                <div className="space-y-3">
+              <div className="space-y-3">
                   {results.topics.map((topic, index) => (
                     <div key={index}>
                       {index === 0 || topic.category !== results.topics[index - 1].category ? (
@@ -122,7 +118,6 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                     </div>
                   ))}
                 </div>
-              </ScrollArea>
             </div>
 
             {/* Column 3: FAQs */}
@@ -131,8 +126,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                 <HelpCircle className="h-4 w-4" />
                 <span>Frequently Asked</span>
               </div>
-              <ScrollArea className="h-[400px] pr-4">
-                <div className="space-y-3">
+              <div className="space-y-3">
                   {results.faqs.map((faq, index) => (
                     <Card
                       key={index}
@@ -148,7 +142,6 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                     </Card>
                   ))}
                 </div>
-              </ScrollArea>
             </div>
           </div>
         </div>
