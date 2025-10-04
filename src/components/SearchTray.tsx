@@ -61,7 +61,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
         <div className="container mx-auto px-4 py-8 max-h-[calc(100vh-144px)] overflow-y-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {/* Column 1: Live Search Results */}
-            <div className="space-y-4">
+            <Card className="space-y-4 bg-card p-6 rounded-lg">
               <div className="flex items-center gap-2 text-sm font-semibold uppercase text-muted-foreground mb-4">
                 <FileText className="h-4 w-4" />
                 <span>Search Results</span>
@@ -71,7 +71,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                     results.pages.map((page) => (
                       <Card
                         key={page.path}
-                        className="p-4 cursor-pointer hover:bg-accent transition-colors group"
+                        className="p-4 cursor-pointer hover:bg-primary transition-colors group"
                         onClick={() => handleNavigate(page.path)}
                       >
                         <div className="flex items-start justify-between gap-3">
@@ -83,14 +83,14 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                                 </Badge>
                               )}
                             </div>
-                            <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors mb-1">
+                            <h3 className="font-bold text-base text-foreground group-hover:text-white transition-colors mb-1">
                               {page.title}
                             </h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground group-hover:text-white/90 transition-colors">
                               {page.description}
                             </p>
                           </div>
-                          <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-all group-hover:translate-x-1 flex-shrink-0 mt-1" />
+                          <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-white transition-all group-hover:translate-x-1 flex-shrink-0 mt-1" />
                         </div>
                       </Card>
                     ))
@@ -98,10 +98,10 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
                     <p className="text-sm text-muted-foreground">No results found</p>
                   )}
                 </div>
-            </div>
+            </Card>
 
-            {/* Column 2: FAQs with Blue Background */}
-            <div className="space-y-4 bg-[hsl(201,63%,56%)] p-6 rounded-lg">
+            {/* Column 2: FAQs with Primary Blue Background */}
+            <div className="space-y-4 bg-primary p-6 rounded-lg">
               <div className="flex items-center gap-2 text-sm font-semibold uppercase text-white mb-4">
                 <HelpCircle className="h-4 w-4" />
                 <span>Frequently Asked</span>
