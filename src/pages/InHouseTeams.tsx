@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import heroTeamBg from "@/assets/hero-team-bg.jpg";
 
 const InHouseTeams = () => {
   return (
@@ -13,11 +12,7 @@ const InHouseTeams = () => {
         {/* Hero Section */}
         <section 
           className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
-          style={{ 
-            background: `linear-gradient(135deg, hsl(215 100% 26% / 0.95) 0%, hsl(201 63% 56% / 0.9) 100%), url(${heroTeamBg})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
+          style={{ background: 'var(--gradient-hero)' }}
         >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">In-House Teams & Divisions</h1>
