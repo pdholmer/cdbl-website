@@ -23,26 +23,34 @@ const InHouse = () => {
           className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
           style={{ background: 'var(--gradient-hero)' }}
         >
-          <div className="container">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">In-House Baseball Program</h1>
-            <p className="text-xl mb-8 max-w-2xl">Where every child plays, learns, and loves the game. Recreational baseball for ages 4-14 using MLB team names.</p>
-            <div className="flex flex-wrap gap-4">
-              <Button 
-                size="lg" 
-                variant="hero"
-                asChild
-                className="bg-background text-foreground hover:bg-background/90"
-              >
-                <Link to="/registration">Register Now</Link>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                asChild
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-              >
-                <Link to="/teams#in-house">View Teams</Link>
-              </Button>
+          <div className="container relative z-10">
+            <div className="max-w-3xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
+                In-House Baseball Program
+              </h1>
+              
+              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95">
+                Where every child plays, learns, and loves the game. Recreational baseball for ages 4-14 using MLB team names.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <Button 
+                  variant="default" 
+                  size="lg"
+                  asChild
+                  className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+                >
+                  <Link to="/registration">Register Now</Link>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  asChild
+                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
+                >
+                  <Link to="/teams#in-house">View Teams</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
