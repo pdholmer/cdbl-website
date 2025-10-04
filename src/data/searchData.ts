@@ -1,3 +1,5 @@
+import { searchSiteContent, getTopResults } from "@/utils/searchUtils";
+
 export interface SearchPage {
   title: string;
   path: string;
@@ -148,34 +150,62 @@ export function searchContent(query: string): {
   faqs: FAQ[];
 } {
   if (!query || query.trim().length === 0) {
+    // Return default results when no query
     return {
-      pages: searchPages.slice(0, 5),
+      pages: searchPages.slice(0, 6),
       topics: commonTopics,
-      faqs: faqs
+      faqs: faqs,
     };
   }
 
-  const lowerQuery = query.toLowerCase().trim();
+  const normalizedQuery = query.toLowerCase().trim();
 
-  const matchedPages = searchPages.filter(page => 
-    page.title.toLowerCase().includes(lowerQuery) ||
-    page.description.toLowerCase().includes(lowerQuery) ||
-    page.keywords.some(keyword => keyword.toLowerCase().includes(lowerQuery))
-  ).slice(0, 5);
+  // Use the new site-wide content search
+  const siteResults = searchSiteContent(query);
+  const topResults = getTopResults(siteResults, 10);
 
-  const matchedTopics = commonTopics.filter(topic =>
-    topic.title.toLowerCase().includes(lowerQuery) ||
-    topic.category.toLowerCase().includes(lowerQuery)
+  // Convert site search results to SearchPage format
+  const pagesFromSiteSearch: SearchPage[] = topResults.map((result) => ({
+    title: result.title,
+    path: result.path,
+    description: result.snippet,
+    keywords: [result.category],
+  }));
+
+  // Also search through our predefined pages for additional context
+  const filteredPages = searchPages.filter((page) => {
+    return (
+      page.title.toLowerCase().includes(normalizedQuery) ||
+      page.description.toLowerCase().includes(normalizedQuery) ||
+      page.keywords.some((keyword) =>
+        keyword.toLowerCase().includes(normalizedQuery)
+      )
+    );
+  });
+
+  // Merge results, prioritizing site search results
+  const mergedPages = [...pagesFromSiteSearch];
+  for (const page of filteredPages) {
+    if (!mergedPages.find((p) => p.path === page.path)) {
+      mergedPages.push(page);
+    }
+  }
+
+  // Search topics
+  const filteredTopics = commonTopics.filter((topic) =>
+    topic.title.toLowerCase().includes(normalizedQuery)
   );
 
-  const matchedFaqs = faqs.filter(faq =>
-    faq.question.toLowerCase().includes(lowerQuery) ||
-    faq.answer.toLowerCase().includes(lowerQuery)
+  // Search FAQs
+  const filteredFAQs = faqs.filter(
+    (faq) =>
+      faq.question.toLowerCase().includes(normalizedQuery) ||
+      faq.answer.toLowerCase().includes(normalizedQuery)
   );
 
   return {
-    pages: matchedPages.length > 0 ? matchedPages : searchPages.slice(0, 5),
-    topics: matchedTopics.length > 0 ? matchedTopics : commonTopics,
-    faqs: matchedFaqs.length > 0 ? matchedFaqs : faqs
+    pages: mergedPages.slice(0, 12), // Limit to top 12 results
+    topics: filteredTopics,
+    faqs: filteredFAQs,
   };
 }
