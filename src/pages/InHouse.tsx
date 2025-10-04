@@ -40,7 +40,7 @@ const InHouse = () => {
                   asChild
                   className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
                 >
-                  <Link to="/registration">Register Now</Link>
+                  <a href="https://leagues.bluesombrero.com/Default.aspx?tabid=2121025" target="_blank" rel="noopener noreferrer">Register Now</a>
                 </Button>
                 <Button 
                   variant="outline" 
