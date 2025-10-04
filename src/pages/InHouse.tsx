@@ -258,18 +258,18 @@ const InHouse = () => {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button 
-                size="lg" 
-                variant="hero"
+                variant="default" 
+                size="lg"
                 asChild
-                className="bg-background text-foreground hover:bg-background/90"
+                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
               >
                 <Link to="/registration">Register Today</Link>
               </Button>
               <Button 
-                size="lg" 
-                variant="outline"
+                variant="outline" 
+                size="lg"
                 asChild
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
               >
                 <Link to="/new-to-cdbl">New to CDBL?</Link>
               </Button>
