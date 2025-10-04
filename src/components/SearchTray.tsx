@@ -53,7 +53,7 @@ const SearchTray = ({ isOpen, searchQuery, onClose }: SearchTrayProps) => {
       {/* Search Tray */}
       <div
         ref={trayRef}
-        className="fixed left-0 right-0 top-[144px] z-40 bg-background border-b border-border shadow-2xl animate-in slide-in-from-top duration-300"
+        className="fixed left-0 right-0 top-[144px] z-40 bg-background border-b border-border shadow-2xl animate-in fade-in duration-300"
         role="dialog"
         aria-label="Search results"
       >
