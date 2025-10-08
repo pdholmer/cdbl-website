@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import ScrollIndicator from "@/components/ScrollIndicator";
 
 const carouselSlides = [
   {
@@ -39,7 +38,7 @@ const carouselSlides = [
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden min-h-[calc(100vh-136px)] scroll-snap-align-start">
+    <section className="relative overflow-hidden">
       <Carousel
         opts={{
           align: "start",
@@ -56,7 +55,7 @@ const Hero = () => {
           {carouselSlides.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
               <section 
-                className="relative min-h-[calc(100vh-136px)] flex items-center text-primary-foreground overflow-hidden"
+                className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
                 style={{ background: 'var(--gradient-hero)' }}
               >
                 <div className="container relative z-10">
@@ -89,7 +88,6 @@ const Hero = () => {
                     </div>
                   </div>
                 </div>
-                <ScrollIndicator />
               </section>
             </CarouselItem>
           ))}

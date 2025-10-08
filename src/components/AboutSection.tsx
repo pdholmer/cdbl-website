@@ -1,12 +1,11 @@
 import cdblSeal from "@/assets/cdbl-seal.png";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, Heart, Users, Target } from "lucide-react";
-import ScrollIndicator from "@/components/ScrollIndicator";
 
 const AboutSection = () => {
   return (
     <>
-      <section id="about" className="relative min-h-[calc(100vh-136px)] scroll-snap-align-start py-12 md:py-20 bg-gradient-to-b from-background to-muted/20 flex items-center">
+      <section id="about" className="py-12 md:py-20 bg-gradient-to-b from-background to-muted/20">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
             <div>
@@ -29,11 +28,10 @@ const AboutSection = () => {
             </div>
           </div>
         </div>
-        <ScrollIndicator />
       </section>
 
       {/* Core Values - No Cards, Direct Content */}
-      <section className="relative min-h-[calc(100vh-136px)] scroll-snap-align-start py-12 md:py-20 bg-background flex items-center">
+      <section className="py-12 md:py-20 bg-background">
         <div className="container">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-8 md:mb-12 text-center">Our Core Values</h2>
           
@@ -114,7 +112,6 @@ const AboutSection = () => {
             </div>
           </div>
         </div>
-        <ScrollIndicator />
       </section>
     </>
   );

@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart } from "lucide-react";
-import ScrollIndicator from "@/components/ScrollIndicator";
 
 const SponsorsSection = () => {
   // Placeholder for sponsor logos - these would be replaced with actual sponsor images
@@ -14,7 +13,7 @@ const SponsorsSection = () => {
   ];
 
   return (
-    <section id="sponsors" className="relative min-h-[calc(100vh-136px)] scroll-snap-align-start py-12 md:py-20 bg-gradient-to-b from-background to-muted/20 flex items-center">
+    <section id="sponsors" className="py-12 md:py-20 bg-gradient-to-b from-background to-muted/20">
       <div className="container">
         <div className="text-center mb-8 md:mb-12">
           <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-carolina/10 rounded-full mb-4">
@@ -63,7 +62,6 @@ const SponsorsSection = () => {
           </a>
         </div>
       </div>
-      <ScrollIndicator />
     </section>
   );
 };

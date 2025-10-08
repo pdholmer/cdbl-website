@@ -2,11 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import playerPitching from "@/assets/player-pitching.jpg";
 import { Calendar, ClipboardList, Users } from "lucide-react";
-import ScrollIndicator from "@/components/ScrollIndicator";
 
 const RegistrationSection = () => {
   return (
-    <section id="registration" className="relative min-h-[calc(100vh-136px)] scroll-snap-align-start py-12 md:py-20 overflow-hidden flex items-center"
+    <section id="registration" className="py-12 md:py-20 relative overflow-hidden"
              style={{ background: 'var(--gradient-subtle)' }}>
       <div className="container">
         <div className="text-center mb-8 md:mb-12">
@@ -75,7 +74,6 @@ const RegistrationSection = () => {
           </div>
         </div>
       </div>
-      <ScrollIndicator />
     </section>
   );
 };
