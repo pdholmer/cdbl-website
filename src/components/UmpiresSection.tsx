@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import slidingAction from "@/assets/sliding-action.jpg";
 import { Sparkles, DollarSign, GraduationCap, Users } from "lucide-react";
+import ScrollIndicator from "@/components/ScrollIndicator";
 
 const UmpiresSection = () => {
   return (
-    <section id="umpires" className="py-12 md:py-20 bg-gradient-to-b from-muted/30 to-background">
+    <section id="umpires" className="relative min-h-[calc(100vh-136px)] scroll-snap-align-start py-12 md:py-20 bg-gradient-to-b from-muted/30 to-background flex items-center">
       <div className="container">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
@@ -93,6 +94,7 @@ const UmpiresSection = () => {
           </p>
         </div>
       </div>
+      <ScrollIndicator />
     </section>
   );
 };

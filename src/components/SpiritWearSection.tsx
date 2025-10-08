@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import crowdSpirit from "@/assets/crowd-spirit.jpg";
 import { ShoppingBag, Heart, TrendingUp } from "lucide-react";
+import ScrollIndicator from "@/components/ScrollIndicator";
 
 const SpiritWearSection = () => {
   return (
-    <section id="spirit-wear" className="py-12 md:py-20 relative overflow-hidden"
+    <section id="spirit-wear" className="relative min-h-[calc(100vh-136px)] scroll-snap-align-start py-12 md:py-20 overflow-hidden flex items-center"
              style={{ background: 'var(--gradient-primary)' }}>
       <div 
         className="absolute inset-0 opacity-15 bg-cover bg-center"
@@ -62,6 +63,7 @@ const SpiritWearSection = () => {
           </p>
         </div>
       </div>
+      <ScrollIndicator />
     </section>
   );
 };
