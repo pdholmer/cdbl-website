@@ -9,9 +9,9 @@ const InHouse = () => {
   const divisions = [
     { name: "T-Ball", ages: "4-6", color: "hsl(0 84% 60%)", team: "Cardinals" },
     { name: "Pinto", ages: "7-8", color: "hsl(201 63% 56%)", team: "Cubs" },
-    { name: "Bronco", ages: "9-10", color: "hsl(215 100% 26%)", team: "Dodgers" },
-    { name: "Pony", ages: "11-12", color: "hsl(24 100% 50%)", team: "Giants" },
-    { name: "Colt", ages: "13-14", color: "hsl(142 76% 36%)", team: "Athletics" },
+    { name: "Mustang", ages: "9-10", color: "hsl(142 76% 36%)", team: "Athletics" },
+    { name: "Bronco", ages: "11-12", color: "hsl(215 100% 26%)", team: "Dodgers" },
+    { name: "Pony", ages: "13-14", color: "hsl(24 100% 50%)", team: "Giants" },
   ];
 
   return (
@@ -186,15 +186,15 @@ const InHouse = () => {
                       <span className="font-bold text-primary">$95</span>
                     </div>
                     <div className="flex justify-between items-center pb-2 border-b">
-                      <span>Bronco (Ages 9-10)</span>
+                      <span>Mustang (Ages 9-10)</span>
                       <span className="font-bold text-primary">$115</span>
                     </div>
                     <div className="flex justify-between items-center pb-2 border-b">
-                      <span>Pony (Ages 11-12)</span>
+                      <span>Bronco (Ages 11-12)</span>
                       <span className="font-bold text-primary">$135</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span>Colt (Ages 13-14)</span>
+                      <span>Pony (Ages 13-14)</span>
                       <span className="font-bold text-primary">$155</span>
                     </div>
                   </div>

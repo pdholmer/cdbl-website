@@ -106,8 +106,37 @@ const InHouseTeams = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Bronco Division</CardTitle>
+                  <CardTitle>Mustang Division</CardTitle>
                   <CardDescription>Ages 9-10 • Player Pitch</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <p className="font-semibold text-sm text-muted-foreground">TEAMS</p>
+                      <p className="text-lg">10 Teams</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
+                      <p className="text-lg">April - June 2026</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
+                      <p className="text-sm">2 practices + 1-2 games/week</p>
+                    </div>
+                    <p className="text-sm text-muted-foreground pt-2">
+                      Player pitch baseball with focus on game strategy, teamwork, and advanced fundamentals. Pitch counts enforced for player safety.
+                    </p>
+                    <Button variant="link" asChild className="p-0 h-auto text-primary">
+                      <Link to="/in-house/rules">View Rules & Policies →</Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Bronco Division</CardTitle>
+                  <CardDescription>Ages 11-12 • Player Pitch</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -136,7 +165,7 @@ const InHouseTeams = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Pony Division</CardTitle>
-                  <CardDescription>Ages 11-12 • Player Pitch</CardDescription>
+                  <CardDescription>Ages 13-14 • Player Pitch</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -162,34 +191,6 @@ const InHouseTeams = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Colt Division</CardTitle>
-                  <CardDescription>Ages 13-14 • Player Pitch</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-semibold text-sm text-muted-foreground">TEAMS</p>
-                      <p className="text-lg">6 Teams</p>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
-                      <p className="text-lg">April - July 2026</p>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
-                      <p className="text-sm">2-3 practices + 2 games/week</p>
-                    </div>
-                    <p className="text-sm text-muted-foreground pt-2">
-                      Preparing players for high school baseball with advanced strategy, conditioning, and competitive play.
-                    </p>
-                    <Button variant="link" asChild className="p-0 h-auto text-primary">
-                      <Link to="/in-house/rules">View Rules & Policies →</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </section>

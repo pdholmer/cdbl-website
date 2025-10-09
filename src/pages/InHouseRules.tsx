@@ -11,9 +11,9 @@ const InHouseRules = () => {
   const leagues = [
     { value: "tball", label: "T-Ball" },
     { value: "pinto", label: "Pinto" },
+    { value: "mustang", label: "Mustang" },
     { value: "bronco", label: "Bronco" },
     { value: "pony", label: "Pony" },
-    { value: "colt", label: "Colt" },
   ];
 
   return (
@@ -55,9 +55,9 @@ const InHouseRules = () => {
               <TabsList className="hidden lg:grid w-full grid-cols-5 mb-8">
                 <TabsTrigger value="tball">T-Ball</TabsTrigger>
                 <TabsTrigger value="pinto">Pinto</TabsTrigger>
+                <TabsTrigger value="mustang">Mustang</TabsTrigger>
                 <TabsTrigger value="bronco">Bronco</TabsTrigger>
                 <TabsTrigger value="pony">Pony</TabsTrigger>
-                <TabsTrigger value="colt">Colt</TabsTrigger>
               </TabsList>
 
               {/* T-Ball Rules */}
@@ -159,12 +159,59 @@ const InHouseRules = () => {
                 </Card>
               </TabsContent>
 
+              {/* Mustang Rules */}
+              <TabsContent value="mustang">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-3xl">Mustang Division Rules</CardTitle>
+                    <p className="text-muted-foreground">Ages 9-10 • Competitive Player Pitch</p>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div>
+                      <h3 className="text-xl font-semibold mb-3">Game Length</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>6 innings, no new inning after 2 hours (1:45 if back-to-back games)</li>
+                        <li>5 run maximum per inning (no max in last inning)</li>
+                        <li>Mercy rules: 15 after 4, 12 after 5 innings</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-semibold mb-3">Pitching Limits</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>75 pitches per game maximum</li>
+                        <li>Required rest: 41-75 pitches = 2 days, 21-40 = 1 day</li>
+                        <li>Pitch counts strictly enforced for player safety</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-semibold mb-3">Playing Time</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>9 defensive players</li>
+                        <li>All players must play 2 innings in infield before end of 5th</li>
+                        <li>No player sits more than one inning in a row</li>
+                      </ul>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-semibold mb-3">Base Running</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>Stealing allowed after ball crosses home plate</li>
+                        <li>No stealing home</li>
+                        <li>Runners may advance one base on overthrows</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
               {/* Bronco Rules */}
               <TabsContent value="bronco">
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-3xl">Bronco Division Rules</CardTitle>
-                    <p className="text-muted-foreground">Ages 9-10 • Competitive Player Pitch</p>
+                    <p className="text-muted-foreground">Ages 11-12 • Competitive Player Pitch</p>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
@@ -211,7 +258,7 @@ const InHouseRules = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-3xl">Pony Division Rules</CardTitle>
-                    <p className="text-muted-foreground">Ages 11-12 • Advanced Competition</p>
+                    <p className="text-muted-foreground">Ages 13-14 • Advanced Competition</p>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div>
@@ -244,43 +291,6 @@ const InHouseRules = () => {
                 </Card>
               </TabsContent>
 
-              {/* Colt Rules */}
-              <TabsContent value="colt">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-3xl">Colt Division Rules</CardTitle>
-                    <p className="text-muted-foreground">Ages 13-14 • High School Preparation</p>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Game Format</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>7 innings, standard high school baseball rules</li>
-                        <li>No time limit except back-to-back games (2 hours 15 minutes)</li>
-                        <li>Mercy rules: 15 after 4, 12 after 5, 10 after 6 innings</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Pitching Limits</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>95 pitches per game maximum</li>
-                        <li>Required rest: 76-95 = 4 days, 61-75 = 3 days, 41-60 = 2 days, 21-40 = 1 day</li>
-                        <li>Players may not catch same day they pitch 41+ pitches</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Equipment</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>Metal cleats permitted</li>
-                        <li>BBCOR certified bats required (2 5/8" barrel)</li>
-                        <li>Standard high school baseball equipment rules</li>
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
             </Tabs>
 
             {/* General Policies */}
