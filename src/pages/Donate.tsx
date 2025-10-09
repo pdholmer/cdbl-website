@@ -12,7 +12,10 @@ const Donate = () => {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-primary via-primary-dark to-primary text-white py-16 md:py-20">
+        <section 
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+          style={{ background: 'var(--gradient-hero)' }}
+        >
           <div className="container">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Support CDBL</h1>
