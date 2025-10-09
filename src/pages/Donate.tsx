@@ -276,15 +276,15 @@ const Donate = () => {
               </div>
 
               {/* Right Column - Zeffy Donation Form */}
-              <div className="lg:sticky lg:top-24 h-fit">
-                <Card>
+              <div className="lg:sticky lg:top-24 h-fit overflow-hidden">
+                <Card className="overflow-hidden">
                   <CardHeader>
                     <CardTitle>Make a Donation</CardTitle>
                     <CardDescription>
                       Secure donation processing powered by Zeffy - 100% of your donation goes to CDBL
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="overflow-hidden">
                     <div className="rounded-lg border border-border overflow-hidden">
                       <iframe 
                         title="Donation form powered by Zeffy" 
@@ -292,7 +292,8 @@ const Donate = () => {
                           border: 0, 
                           width: '100%',
                           height: '900px',
-                          display: 'block'
+                          display: 'block',
+                          overflow: 'hidden'
                         }} 
                         src="https://www.zeffy.com/embed/donation-form/cdbl-test-campaign"
                       />
