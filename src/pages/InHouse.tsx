@@ -55,42 +55,6 @@ const InHouse = () => {
           </div>
         </section>
 
-        {/* MLB Team Identity Section */}
-        <section className="py-16 bg-background">
-          <div className="container">
-            <div className="text-center mb-12">
-              <CircleDot className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your MLB Team</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our in-house teams proudly wear the names of Major League Baseball teams. From the Cardinals to the Yankees, 
-                every player gets to represent their favorite MLB franchise!
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
-              {divisions.map((division) => (
-                <Card key={division.name} className="text-center border-2" style={{ borderColor: division.color }}>
-                  <CardHeader>
-                    <div 
-                      className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center"
-                      style={{ backgroundColor: division.color, opacity: 0.9 }}
-                    >
-                      <CircleDot className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle>{division.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">Ages {division.ages}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm font-semibold" style={{ color: division.color }}>
-                      Example: {division.team}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Why Choose In-House Section */}
         <section className="py-16 bg-muted/30">
           <div className="container">
