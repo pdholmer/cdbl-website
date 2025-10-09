@@ -207,8 +207,10 @@ const Volunteer = () => {
                     <li>• Recognition opportunities available</li>
                     <li>• One-time or recurring options</li>
                   </ul>
-                  <Button size="lg" className="w-full" variant="hero">
-                    Donate Now
+                  <Button size="lg" className="w-full" variant="hero" asChild>
+                    <a href="https://www.zeffy.com/embed/donation-form/cdbl-test-campaign?modal=true" target="_blank" rel="noopener noreferrer">
+                      Donate Now
+                    </a>
                   </Button>
                 </CardContent>
               </Card>
