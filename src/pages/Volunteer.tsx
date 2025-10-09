@@ -208,11 +208,11 @@ const Volunteer = () => {
                     <li>• Recognition opportunities available</li>
                     <li>• One-time or recurring options</li>
                   </ul>
-              <Button size="lg" className="w-full" variant="hero" asChild>
-                <Link to="/donate">
-                  Donate Now
-                </Link>
-              </Button>
+                  <Button size="lg" className="w-full" variant="hero" asChild>
+                    <Link to="/donate">
+                      Donate Now
+                    </Link>
+                  </Button>
                 </CardContent>
               </Card>
 
