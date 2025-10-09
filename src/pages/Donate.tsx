@@ -222,18 +222,14 @@ const Donate = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="relative overflow-hidden rounded-lg border border-border" style={{ minHeight: '450px' }}>
+                    <div className="rounded-lg border border-border overflow-hidden">
                       <iframe 
                         title="Donation form powered by Zeffy" 
                         style={{ 
-                          position: 'absolute', 
                           border: 0, 
-                          top: 0,
-                          left: 0,
-                          bottom: 0,
-                          right: 0,
                           width: '100%',
-                          height: '100%'
+                          height: '900px',
+                          display: 'block'
                         }} 
                         src="https://www.zeffy.com/embed/donation-form/cdbl-test-campaign"
                       />
