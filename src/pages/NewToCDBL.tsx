@@ -276,9 +276,8 @@ const NewToCDBL = () => {
               </Button>
               <Button 
                 size="lg" 
-                variant="outline"
+                variant="secondary"
                 asChild
-                className="border-white text-white hover:bg-white/10"
               >
                 <Link to="/teams">View Programs</Link>
               </Button>
