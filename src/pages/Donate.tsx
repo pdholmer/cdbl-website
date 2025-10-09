@@ -4,8 +4,67 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Heart, Users, Trophy, DollarSign } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const Donate = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const leftColumnRef = useRef<HTMLDivElement>(null);
+  const [isLocked, setIsLocked] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current || !leftColumnRef.current) return;
+
+      const section = sectionRef.current;
+      const leftColumn = leftColumnRef.current;
+      const sectionRect = section.getBoundingClientRect();
+      const leftColumnRect = leftColumn.getBoundingClientRect();
+
+      // Check if section is in viewport
+      const sectionInView = sectionRect.top <= 100 && sectionRect.bottom > window.innerHeight;
+
+      if (sectionInView) {
+        // Check if left column has scrolled to bottom
+        const isAtBottom = leftColumn.scrollHeight - leftColumn.scrollTop <= leftColumn.clientHeight + 10;
+        
+        if (!isAtBottom && !isLocked) {
+          setIsLocked(true);
+          document.body.style.overflow = 'hidden';
+        } else if (isAtBottom && isLocked) {
+          setIsLocked(false);
+          document.body.style.overflow = 'auto';
+        }
+      } else if (isLocked) {
+        setIsLocked(false);
+        document.body.style.overflow = 'auto';
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!isLocked || !leftColumnRef.current) return;
+
+      const leftColumn = leftColumnRef.current;
+      const isAtBottom = leftColumn.scrollHeight - leftColumn.scrollTop <= leftColumn.clientHeight + 10;
+      const isAtTop = leftColumn.scrollTop <= 0;
+
+      if ((e.deltaY > 0 && isAtBottom) || (e.deltaY < 0 && isAtTop)) {
+        setIsLocked(false);
+        document.body.style.overflow = 'auto';
+      } else {
+        e.preventDefault();
+        leftColumn.scrollTop += e.deltaY;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wheel', handleWheel);
+      document.body.style.overflow = 'auto';
+    };
+  }, [isLocked]);
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -27,12 +86,16 @@ const Donate = () => {
         </section>
 
         {/* Main Content */}
-        <section className="py-12 md:py-16">
+        <section ref={sectionRef} className="py-12 md:py-16">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
               
               {/* Left Column - Educational Content */}
-              <div className="space-y-8">
+              <div 
+                ref={leftColumnRef}
+                className="space-y-8 overflow-y-auto"
+                style={{ maxHeight: isLocked ? 'calc(100vh - 200px)' : 'none' }}
+              >
                 
                 {/* Why Donate */}
                 <Card>
