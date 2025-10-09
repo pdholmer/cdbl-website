@@ -57,13 +57,13 @@ const Header = () => {
             <Link to="/shop" className="hidden md:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">
               SHOP
             </Link>
-            <Link to="/volunteer" className="hidden md:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">
+            <Link to="/donate" className="hidden md:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">
               DONATE
             </Link>
 
             {/* Mobile only: Rotating Shop/Donate button */}
             <Link 
-              to={showShop ? "/shop" : "/volunteer"} 
+              to={showShop ? "/shop" : "/donate"} 
               className="md:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase"
               aria-label={showShop ? "Shop" : "Donate"}
             >
@@ -203,6 +203,9 @@ const Header = () => {
                     <CollapsibleContent className="pl-3 pt-2 space-y-1">
                       <Link to="/volunteer" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
                         Volunteer
+                      </Link>
+                      <Link to="/donate" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
+                        Donate
                       </Link>
                       <Link to="/sponsors" className="block text-left text-base font-medium text-foreground hover:text-primary transition-colors py-2 px-3 rounded-md hover:bg-muted" onClick={() => setIsMenuOpen(false)}>
                         Sponsors

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Heart, ClipboardCheck, Megaphone, Wrench, DollarSign } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Link } from "react-router-dom";
 
 const Volunteer = () => {
   return (
@@ -207,11 +208,11 @@ const Volunteer = () => {
                     <li>• Recognition opportunities available</li>
                     <li>• One-time or recurring options</li>
                   </ul>
-                  <Button size="lg" className="w-full" variant="hero" asChild>
-                    <a href="https://www.zeffy.com/embed/donation-form/cdbl-test-campaign?modal=true" target="_blank" rel="noopener noreferrer">
-                      Donate Now
-                    </a>
-                  </Button>
+              <Button size="lg" className="w-full" variant="hero" asChild>
+                <Link to="/donate">
+                  Donate Now
+                </Link>
+              </Button>
                 </CardContent>
               </Card>
 

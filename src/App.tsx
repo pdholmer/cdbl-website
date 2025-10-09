@@ -16,6 +16,7 @@ import Rules from "./pages/Rules";
 import Volunteer from "./pages/Volunteer";
 import Sponsors from "./pages/Sponsors";
 import Contact from "./pages/Contact";
+import Donate from "./pages/Donate";
 import NewToCDBL from "./pages/NewToCDBL";
 import BoardInfo from "./pages/BoardInfo";
 import InHouse from "./pages/InHouse";
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/rules" element={<Rules />} />
           <Route path="/volunteer" element={<Volunteer />} />
+          <Route path="/donate" element={<Donate />} />
           <Route path="/sponsors" element={<Sponsors />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/new-to-cdbl" element={<NewToCDBL />} />

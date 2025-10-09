@@ -129,6 +129,11 @@ const DropdownNav = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
+            <Link to="/donate" className="w-full cursor-pointer">
+              Donate
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <Link to="/sponsors" className="w-full cursor-pointer">
               Sponsors
             </Link>
