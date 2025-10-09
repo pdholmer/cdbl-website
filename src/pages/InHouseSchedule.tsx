@@ -201,16 +201,17 @@ const InHouseSchedule = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 bg-background">
+        <section className="py-16 bg-primary text-primary-foreground">
           <div className="container text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">View Your Team Schedule</h2>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
               Once the season begins, you can view your team's complete schedule, game results, and standings on SportsConnect.
             </p>
             <Button 
-              size="lg" 
-              variant="hero"
+              variant="default" 
+              size="lg"
               onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+              className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
             >
               Access SportsConnect <ExternalLink className="ml-2 h-5 w-5" />
             </Button>

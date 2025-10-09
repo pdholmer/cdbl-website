@@ -242,17 +242,25 @@ const Volunteer = () => {
         </section>
 
         {/* Get Started */}
-        <section className="py-16 bg-muted/30">
-          <div className="container max-w-3xl text-center">
+        <section className="py-16 bg-primary text-primary-foreground">
+          <div className="container text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Get Involved?</h2>
-            <p className="text-muted-foreground mb-8">
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
               Fill out our volunteer interest form and we'll connect you with the right opportunity. Every volunteer makes CDBL better!
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="hero">
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Button 
+                variant="default" 
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+              >
                 Volunteer Interest Form
               </Button>
-              <Button size="lg" variant="outline">
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
+              >
                 Contact Volunteer Coordinator
               </Button>
             </div>

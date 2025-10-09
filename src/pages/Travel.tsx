@@ -284,16 +284,11 @@ const Travel = () => {
         </section>
 
         {/* CTA Section */}
-        <section 
-          className="py-16 text-primary-foreground"
-          style={{ 
-            background: 'linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(201 63% 56%) 100%)'
-          }}
-        >
+        <section className="py-16 bg-primary text-primary-foreground">
           <div className="container text-center">
             <img src={rocketWhite3} alt="CDBL Rockets" className="h-16 w-auto mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Launch Your Baseball Career</h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
               Join the CDBL Rockets and take your game to the next level. Future stars start here.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
