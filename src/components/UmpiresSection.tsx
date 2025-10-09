@@ -2,10 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import slidingAction from "@/assets/sliding-action.jpg";
 import { Sparkles, DollarSign, GraduationCap, Users } from "lucide-react";
-
 const UmpiresSection = () => {
-  return (
-    <section id="umpires" className="py-12 md:py-20 bg-gradient-to-b from-muted/30 to-background">
+  return <section id="umpires" className="py-12 md:py-20 bg-gradient-to-b from-muted/30 to-background">
       <div className="container">
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4">
@@ -65,36 +63,17 @@ const UmpiresSection = () => {
               </div>
             </div>
 
-            <Button 
-              variant="hero" 
-              size="lg" 
-              className="w-full"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-            >
+            <Button variant="hero" size="lg" className="w-full" onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}>
               Sign Up to Learn More
             </Button>
           </div>
           <div className="order-1 md:order-2 md:col-span-2">
-            <img 
-              src={slidingAction} 
-              alt="Baseball action - sliding into base" 
-              className="rounded-xl shadow-[var(--shadow-elevated)] w-full h-auto"
-            />
+            <img src={slidingAction} alt="Baseball action - sliding into base" className="rounded-xl shadow-[var(--shadow-elevated)] w-full h-auto" />
           </div>
         </div>
 
-        <div className="text-center rounded-xl p-6 md:p-8 border-2 border-carolina/30"
-             style={{ background: 'var(--gradient-carolina)' }}>
-          <p className="text-base md:text-lg font-semibold mb-2 text-carolina-foreground">
-            Ages 13-18 • Baseball & Softball • Fox Valley Blues Association
-          </p>
-          <p className="text-sm md:text-base text-white/90">
-            Open to all dedicated young people who want to give back to the game they love
-          </p>
-        </div>
+        
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default UmpiresSection;
