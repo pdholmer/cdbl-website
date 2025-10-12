@@ -5,6 +5,7 @@ import { Trophy, Star } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import rocketLogo from "@/assets/rocket-white-2.png";
+import heroTravelRoster from "@/assets/hero-travel-roster.jpg";
 
 const TravelTeams = () => {
   return (
@@ -13,9 +14,9 @@ const TravelTeams = () => {
       <main>
         {/* Hero Section */}
         <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
           style={{ 
-            background: 'linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(201 63% 56%) 100%)'
+            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelRoster}')`
           }}
         >
           <div className="container">

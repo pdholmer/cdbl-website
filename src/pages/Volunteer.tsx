@@ -4,6 +4,7 @@ import { Users, Heart, ClipboardCheck, Megaphone, Wrench, DollarSign } from "luc
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
+import heroVolunteer from "@/assets/hero-volunteer.jpg";
 
 const Volunteer = () => {
   return (
@@ -12,8 +13,10 @@ const Volunteer = () => {
       <main>
         {/* Hero Section */}
         <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
-          style={{ background: 'var(--gradient-hero)' }}
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
+          style={{ 
+            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroVolunteer}')`
+          }}
         >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Volunteer & Support</h1>

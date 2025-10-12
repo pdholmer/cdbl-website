@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { CircleDot, Users, Trophy, DollarSign, Calendar, Heart } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import heroInhouse from "@/assets/hero-inhouse.jpg";
 
 const InHouse = () => {
   const divisions = [
@@ -20,8 +21,10 @@ const InHouse = () => {
       <main>
         {/* Hero Section */}
         <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
-          style={{ background: 'var(--gradient-hero)' }}
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
+          style={{ 
+            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroInhouse}')`
+          }}
         >
           <div className="container relative z-10">
             <div className="max-w-3xl">

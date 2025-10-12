@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import rocketLogo from "@/assets/rocket-white-2.png";
 import chsLogo from "@/assets/chs-rocket.png";
 import rocketWhite3 from "@/assets/rocket-white-3.png";
+import heroTravelTeams from "@/assets/hero-travel-teams.jpg";
 
 const Travel = () => {
   const teams = [
@@ -22,9 +23,9 @@ const Travel = () => {
       <main>
         {/* Hero Section - Rockets Theme */}
         <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
           style={{ 
-            background: 'linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(201 63% 56%) 100%)'
+            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelTeams}')`
           }}
         >
           <div className="container">

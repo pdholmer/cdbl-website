@@ -2,37 +2,47 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import heroFindProgram from "@/assets/hero-find-program.jpg";
+import heroRegistration from "@/assets/hero-registration.jpg";
+import heroSchedule from "@/assets/hero-schedule.jpg";
+import heroShopGear from "@/assets/hero-shop-gear.jpg";
+import heroVolunteer from "@/assets/hero-volunteer.jpg";
 
 const carouselSlides = [
   {
     title: "Find Your Program",
     subtitle: "In-House MLB teams or Travel Rockets - Choose your path",
     primaryCta: { text: "In-House Baseball", link: "/in-house" },
-    secondaryCta: { text: "Travel Teams", link: "/travel" }
+    secondaryCta: { text: "Travel Teams", link: "/travel" },
+    image: heroFindProgram
   },
   {
     title: "2026 Registration",
     subtitle: "Join CDBL - 38 Years of Youth Baseball Excellence",
     primaryCta: { text: "Register Now", link: "/registration" },
-    secondaryCta: { text: "View Programs", link: "/teams" }
+    secondaryCta: { text: "View Programs", link: "/teams" },
+    image: heroRegistration
   },
   {
     title: "Game Schedule",
     subtitle: "Find game times, field locations, and more",
     primaryCta: { text: "View Schedule", link: "/schedule" },
-    secondaryCta: { text: "Find Fields", link: "/fields" }
+    secondaryCta: { text: "Find Fields", link: "/fields" },
+    image: heroSchedule
   },
   {
     title: "Shop Rockets Gear",
     subtitle: "Official CDBL merchandise and team spirit wear",
     primaryCta: { text: "Shop Now", link: "/shop" },
-    secondaryCta: { text: "View Events", link: "/events" }
+    secondaryCta: { text: "View Events", link: "/events" },
+    image: heroShopGear
   },
   {
     title: "Volunteer With Us",
     subtitle: "Make a difference in youth baseball today",
     primaryCta: { text: "Get Involved", link: "/volunteer" },
-    secondaryCta: { text: "Learn More", link: "/about" }
+    secondaryCta: { text: "Learn More", link: "/about" },
+    image: heroVolunteer
   }
 ];
 
@@ -55,8 +65,10 @@ const Hero = () => {
           {carouselSlides.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
               <section 
-                className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
-                style={{ background: 'var(--gradient-hero)' }}
+                className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
+                style={{ 
+                  backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${slide.image}')`,
+                }}
               >
                 <div className="container relative z-10">
                   <div className="max-w-3xl">
