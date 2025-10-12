@@ -1,1 +1,10 @@
 project_id = "nqywnfgpwqpczesjkwtp"
+
+[functions.programs]
+verify_jwt = false
+
+[functions.support]
+verify_jwt = false
+
+[functions.resources]
+verify_jwt = true
