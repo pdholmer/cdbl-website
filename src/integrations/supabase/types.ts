@@ -14,7 +14,270 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      divisions: {
+        Row: {
+          age_range: string
+          cost: number | null
+          created_at: string | null
+          display_order: number | null
+          features: Json | null
+          id: string
+          name: string
+          program_id: string
+          schedule_notes: string | null
+          season_length: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          age_range: string
+          cost?: number | null
+          created_at?: string | null
+          display_order?: number | null
+          features?: Json | null
+          id?: string
+          name: string
+          program_id: string
+          schedule_notes?: string | null
+          season_length?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          age_range?: string
+          cost?: number | null
+          created_at?: string | null
+          display_order?: number | null
+          features?: Json | null
+          id?: string
+          name?: string
+          program_id?: string
+          schedule_notes?: string | null
+          season_length?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "divisions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      faqs: {
+        Row: {
+          answer: string
+          created_at: string | null
+          display_order: number | null
+          id: string
+          program_id: string | null
+          question: string
+          updated_at: string | null
+        }
+        Insert: {
+          answer: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          program_id?: string | null
+          question: string
+          updated_at?: string | null
+        }
+        Update: {
+          answer?: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          program_id?: string | null
+          question?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faqs_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      programs: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          overview: string | null
+          registration_open: boolean | null
+          registration_url: string | null
+          season_end: string | null
+          season_start: string | null
+          type: Database["public"]["Enums"]["program_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          overview?: string | null
+          registration_open?: boolean | null
+          registration_url?: string | null
+          season_end?: string | null
+          season_start?: string | null
+          type: Database["public"]["Enums"]["program_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          overview?: string | null
+          registration_open?: boolean | null
+          registration_url?: string | null
+          season_end?: string | null
+          season_start?: string | null
+          type?: Database["public"]["Enums"]["program_type"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      resources: {
+        Row: {
+          age_group: string | null
+          category: Database["public"]["Enums"]["resource_category"]
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          file_url: string | null
+          id: string
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          age_group?: string | null
+          category: Database["public"]["Enums"]["resource_category"]
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          file_url?: string | null
+          id?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          age_group?: string | null
+          category?: Database["public"]["Enums"]["resource_category"]
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          file_url?: string | null
+          id?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      rules_policies: {
+        Row: {
+          additional_rules: Json | null
+          applies_to_all: boolean | null
+          batting_rules: string | null
+          created_at: string | null
+          division_id: string | null
+          equipment_requirements: string | null
+          game_length: string | null
+          id: string
+          pitching_rules: string | null
+          safety_rules: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          additional_rules?: Json | null
+          applies_to_all?: boolean | null
+          batting_rules?: string | null
+          created_at?: string | null
+          division_id?: string | null
+          equipment_requirements?: string | null
+          game_length?: string | null
+          id?: string
+          pitching_rules?: string | null
+          safety_rules?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          additional_rules?: Json | null
+          applies_to_all?: boolean | null
+          batting_rules?: string | null
+          created_at?: string | null
+          division_id?: string | null
+          equipment_requirements?: string | null
+          game_length?: string | null
+          id?: string
+          pitching_rules?: string | null
+          safety_rules?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rules_policies_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_options: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          cta_link: string | null
+          cta_text: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          tiers: Json | null
+          title: string
+          type: Database["public"]["Enums"]["support_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          tiers?: Json | null
+          title: string
+          type: Database["public"]["Enums"]["support_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          cta_link?: string | null
+          cta_text?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          tiers?: Json | null
+          title?: string
+          type?: Database["public"]["Enums"]["support_type"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +286,13 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      program_type: "in_house" | "travel"
+      resource_category:
+        | "drill"
+        | "practice_plan"
+        | "safety_guide"
+        | "administrative"
+      support_type: "donation" | "sponsorship" | "volunteer" | "merchandise"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +419,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      program_type: ["in_house", "travel"],
+      resource_category: [
+        "drill",
+        "practice_plan",
+        "safety_guide",
+        "administrative",
+      ],
+      support_type: ["donation", "sponsorship", "volunteer", "merchandise"],
+    },
   },
 } as const
