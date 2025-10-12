@@ -62,6 +62,13 @@ export type Database = {
             referencedRelation: "programs"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_divisions_program"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
         ]
       }
       faqs: {
@@ -95,6 +102,13 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "faqs_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_faqs_program"
             columns: ["program_id"]
             isOneToOne: false
             referencedRelation: "programs"
@@ -224,6 +238,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_rules_division"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "rules_policies_division_id_fkey"
             columns: ["division_id"]
