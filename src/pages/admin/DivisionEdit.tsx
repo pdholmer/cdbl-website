@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -116,8 +117,8 @@ const DivisionEdit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container py-8 max-w-2xl">
+    <AdminLayout>
+      <div className="max-w-2xl">
         <div className="mb-6">
           <Button variant="outline" size="sm" asChild>
             <Link to="/admin/divisions">
@@ -143,13 +144,13 @@ const DivisionEdit = () => {
               </div>
 
               <div>
-                <Label htmlFor="program">Program</Label>
+                <Label htmlFor="program_id">Program</Label>
                 <Select
                   value={formData.program_id}
                   onValueChange={(value) => setFormData({ ...formData, program_id: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select program" />
+                    <SelectValue placeholder="Select a program" />
                   </SelectTrigger>
                   <SelectContent>
                     {programs.map((program) => (
@@ -161,29 +162,27 @@ const DivisionEdit = () => {
                 </Select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="age_range">Age Range</Label>
-                  <Input
-                    id="age_range"
-                    value={formData.age_range}
-                    onChange={(e) => setFormData({ ...formData, age_range: e.target.value })}
-                    placeholder="e.g., 7-8"
-                    required
-                  />
-                </div>
+              <div>
+                <Label htmlFor="age_range">Age Range</Label>
+                <Input
+                  id="age_range"
+                  value={formData.age_range}
+                  onChange={(e) => setFormData({ ...formData, age_range: e.target.value })}
+                  placeholder="e.g., 8-10"
+                  required
+                />
+              </div>
 
-                <div>
-                  <Label htmlFor="cost">Cost ($)</Label>
-                  <Input
-                    id="cost"
-                    type="number"
-                    step="0.01"
-                    value={formData.cost}
-                    onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-                    required
-                  />
-                </div>
+              <div>
+                <Label htmlFor="cost">Cost ($)</Label>
+                <Input
+                  id="cost"
+                  type="number"
+                  step="0.01"
+                  value={formData.cost}
+                  onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
+                  required
+                />
               </div>
 
               <div>
@@ -192,7 +191,7 @@ const DivisionEdit = () => {
                   id="season_length"
                   value={formData.season_length}
                   onChange={(e) => setFormData({ ...formData, season_length: e.target.value })}
-                  placeholder="e.g., 12-16 games"
+                  placeholder="e.g., 12 weeks"
                 />
               </div>
 
@@ -210,29 +209,29 @@ const DivisionEdit = () => {
                 <Label>Features</Label>
                 <div className="space-y-2">
                   {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Input value={feature} readOnly />
+                    <div key={index} className="flex gap-2">
+                      <Input
+                        value={feature}
+                        onChange={(e) => {
+                          const newFeatures = [...features];
+                          newFeatures[index] = e.target.value;
+                          setFeatures(newFeatures);
+                        }}
+                        placeholder="Enter feature"
+                      />
                       <Button
                         type="button"
                         variant="outline"
-                        size="sm"
+                        size="icon"
                         onClick={() => removeFeature(index)}
                       >
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
-                  <div className="flex gap-2">
-                    <Input
-                      value={newFeature}
-                      onChange={(e) => setNewFeature(e.target.value)}
-                      placeholder="Add a feature"
-                      onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())}
-                    />
-                    <Button type="button" variant="outline" onClick={addFeature}>
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Button type="button" variant="outline" onClick={addFeature}>
+                    <Plus className="mr-2 h-4 w-4" /> Add Feature
+                  </Button>
                 </div>
               </div>
 
@@ -242,9 +241,8 @@ const DivisionEdit = () => {
                   id="display_order"
                   type="number"
                   value={formData.display_order}
-                  onChange={(e) =>
-                    setFormData({ ...formData, display_order: parseInt(e.target.value) })
-                  }
+                  onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 0 })}
+                  required
                 />
               </div>
 
@@ -260,7 +258,7 @@ const DivisionEdit = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

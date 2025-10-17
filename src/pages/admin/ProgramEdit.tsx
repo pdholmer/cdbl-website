@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -86,8 +87,8 @@ const ProgramEdit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container py-8 max-w-2xl">
+    <AdminLayout>
+      <div className="max-w-2xl">
         <div className="mb-6">
           <Button variant="outline" size="sm" asChild>
             <Link to="/admin/programs">
@@ -195,7 +196,7 @@ const ProgramEdit = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
