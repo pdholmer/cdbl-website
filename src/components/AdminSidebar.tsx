@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 const adminItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
   { title: "Players", url: "/admin/players", icon: Users },
+  { title: "Teams", url: "/admin/teams", icon: Database },
+  { title: "Coaches", url: "/admin/coaches", icon: Users },
   { title: "Site Content", url: "/admin/site-content", icon: FileText },
   { title: "Programs", url: "/admin/programs", icon: Database },
   { title: "Divisions", url: "/admin/divisions", icon: Users },

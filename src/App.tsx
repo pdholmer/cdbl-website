@@ -34,6 +34,10 @@ import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import Players from "./pages/admin/Players";
 import PlayerEdit from "./pages/admin/PlayerEdit";
+import AdminTeams from "./pages/admin/Teams";
+import TeamEdit from "./pages/admin/TeamEdit";
+import Coaches from "./pages/admin/Coaches";
+import CoachEdit from "./pages/admin/CoachEdit";
 import Programs from "./pages/admin/Programs";
 import Divisions from "./pages/admin/Divisions";
 import FAQs from "./pages/admin/FAQs";
@@ -89,6 +93,12 @@ const App = () => (
             <Route path="/admin/players" element={<ProtectedRoute requireAdmin><Players /></ProtectedRoute>} />
             <Route path="/admin/players/new" element={<ProtectedRoute requireAdmin><PlayerEdit /></ProtectedRoute>} />
             <Route path="/admin/players/:id" element={<ProtectedRoute requireAdmin><PlayerEdit /></ProtectedRoute>} />
+            <Route path="/admin/teams" element={<ProtectedRoute requireAdmin><AdminTeams /></ProtectedRoute>} />
+            <Route path="/admin/teams/new" element={<ProtectedRoute requireAdmin><TeamEdit /></ProtectedRoute>} />
+            <Route path="/admin/teams/:id" element={<ProtectedRoute requireAdmin><TeamEdit /></ProtectedRoute>} />
+            <Route path="/admin/coaches" element={<ProtectedRoute requireAdmin><Coaches /></ProtectedRoute>} />
+            <Route path="/admin/coaches/new" element={<ProtectedRoute requireAdmin><CoachEdit /></ProtectedRoute>} />
+            <Route path="/admin/coaches/:id" element={<ProtectedRoute requireAdmin><CoachEdit /></ProtectedRoute>} />
             <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
           <Route path="/admin/programs/new" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />
           <Route path="/admin/programs/:id" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />

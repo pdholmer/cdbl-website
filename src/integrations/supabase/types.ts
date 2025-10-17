@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      coaches: {
+        Row: {
+          admin_notes: string | null
+          background_check_date: string | null
+          background_check_expiry: string | null
+          background_check_status: string | null
+          certifications: Json | null
+          coaching_experience: string | null
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          phone: string
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          background_check_date?: string | null
+          background_check_expiry?: string | null
+          background_check_status?: string | null
+          certifications?: Json | null
+          coaching_experience?: string | null
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          phone: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          background_check_date?: string | null
+          background_check_expiry?: string | null
+          background_check_status?: string | null
+          certifications?: Json | null
+          coaching_experience?: string | null
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       divisions: {
         Row: {
           age_range: string
@@ -244,6 +298,13 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_players_team"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "players_division_id_fkey"
             columns: ["division_id"]
@@ -568,6 +629,189 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      team_coaches: {
+        Row: {
+          assigned_date: string | null
+          coach_id: string
+          id: string
+          primary_contact: boolean | null
+          removed_date: string | null
+          role: string
+          status: string | null
+          team_id: string
+        }
+        Insert: {
+          assigned_date?: string | null
+          coach_id: string
+          id?: string
+          primary_contact?: boolean | null
+          removed_date?: string | null
+          role: string
+          status?: string | null
+          team_id: string
+        }
+        Update: {
+          assigned_date?: string | null
+          coach_id?: string
+          id?: string
+          primary_contact?: boolean | null
+          removed_date?: string | null
+          role?: string
+          status?: string | null
+          team_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_coaches_coach_id_fkey"
+            columns: ["coach_id"]
+            isOneToOne: false
+            referencedRelation: "coaches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_coaches_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_rosters: {
+        Row: {
+          created_at: string | null
+          id: string
+          jersey_number: string | null
+          joined_date: string | null
+          player_id: string
+          position_primary: string | null
+          position_secondary: string | null
+          removal_reason: string | null
+          removed_date: string | null
+          season_year: number
+          status: string | null
+          team_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          jersey_number?: string | null
+          joined_date?: string | null
+          player_id: string
+          position_primary?: string | null
+          position_secondary?: string | null
+          removal_reason?: string | null
+          removed_date?: string | null
+          season_year: number
+          status?: string | null
+          team_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          jersey_number?: string | null
+          joined_date?: string | null
+          player_id?: string
+          position_primary?: string | null
+          position_secondary?: string | null
+          removal_reason?: string | null
+          removed_date?: string | null
+          season_year?: number
+          status?: string | null
+          team_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_rosters_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_rosters_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          color_primary: string | null
+          color_secondary: string | null
+          created_at: string | null
+          current_roster_count: number | null
+          division_id: string
+          gamechanger_team_id: string | null
+          id: string
+          last_synced_at: string | null
+          logo_url: string | null
+          max_roster_size: number | null
+          name: string
+          nickname: string | null
+          program_id: string
+          season_year: number
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          color_primary?: string | null
+          color_secondary?: string | null
+          created_at?: string | null
+          current_roster_count?: number | null
+          division_id: string
+          gamechanger_team_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          logo_url?: string | null
+          max_roster_size?: number | null
+          name: string
+          nickname?: string | null
+          program_id: string
+          season_year: number
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          color_primary?: string | null
+          color_secondary?: string | null
+          created_at?: string | null
+          current_roster_count?: number | null
+          division_id?: string
+          gamechanger_team_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          logo_url?: string | null
+          max_roster_size?: number | null
+          name?: string
+          nickname?: string | null
+          program_id?: string
+          season_year?: number
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teams_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teams_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
