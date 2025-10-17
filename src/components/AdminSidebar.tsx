@@ -14,7 +14,7 @@ import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, 
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import cdblLogoWhite from "@/assets/cdbl-logo-white.png";
+import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 
 const adminItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
@@ -53,9 +53,9 @@ export function AdminSidebar() {
         <SidebarGroup>
           <Link to="/" className="flex items-center justify-center p-4 hover:opacity-80 transition-opacity">
             <img 
-              src={cdblLogoWhite} 
+              src={cdblSidebarLogo} 
               alt="CDBL Logo" 
-              className={collapsed ? "h-8 w-8 object-contain" : "h-16 w-auto object-contain"}
+              className={collapsed ? "h-8 w-auto object-contain" : "h-20 w-auto object-contain"}
             />
           </Link>
           <SidebarGroupLabel className="text-primary-foreground">
