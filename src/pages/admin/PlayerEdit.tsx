@@ -123,8 +123,22 @@ const PlayerEdit = () => {
       ...playerData
     } = data;
 
-    const submissionData = {
+    // Sanitize numeric fields - convert empty strings to null
+    const sanitizedData = {
       ...playerData,
+      age_at_registration: !playerData.age_at_registration && playerData.age_at_registration !== 0
+        ? null 
+        : Number(playerData.age_at_registration),
+      amount_due: !playerData.amount_due && playerData.amount_due !== 0
+        ? null 
+        : Number(playerData.amount_due),
+      amount_paid: !playerData.amount_paid && playerData.amount_paid !== 0
+        ? null 
+        : Number(playerData.amount_paid),
+    };
+
+    const submissionData = {
+      ...sanitizedData,
       parent_guardian_name: `${data.parent_first_name || ''} ${data.parent_last_name || ''}`.trim(),
     };
 
