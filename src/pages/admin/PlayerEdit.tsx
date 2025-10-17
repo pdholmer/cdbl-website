@@ -75,17 +75,7 @@ const PlayerEdit = () => {
       
       reset({
         ...playerFields,
-        // Explicitly set ALL fields to ensure they're populated
-        program_id: player.program_id || "",
-        division_id: player.division_id || "",
-        team_name: player.team_name || "",
-        gender: player.gender || "",
-        jersey_size: player.jersey_size || "",
-        skill_level: player.skill_level || "",
-        status: player.status || "",
-        payment_status: player.payment_status || "",
-        parent_relationship: player.parent_relationship || "",
-        // Populate second parent fields if they exist
+        // Only explicitly set guardian fields that come from a separate table
         parent2_first_name: secondGuardian?.first_name || "",
         parent2_last_name: secondGuardian?.last_name || "",
         parent2_email: secondGuardian?.email || "",
@@ -771,11 +761,11 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="status">Status</Label>
                   <Select
-                    value={watch("status") || "pending"}
+                    value={watch("status") ?? ""}
                     onValueChange={(value) => setValue("status", value)}
                   >
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="pending">Pending</SelectItem>
@@ -788,7 +778,7 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="payment_status">Payment Status</Label>
                   <Select
-                    value={watch("payment_status") || "unpaid"}
+                    value={watch("payment_status") ?? ""}
                     onValueChange={(value) => setValue("payment_status", value)}
                   >
                     <SelectTrigger>
