@@ -322,6 +322,54 @@ const PlayerEdit = () => {
                 </Select>
               </div>
             </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="jersey_size">Jersey Size</Label>
+                  <Select
+                    value={watch("jersey_size") || ""}
+                    onValueChange={(value) => setValue("jersey_size", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="YXS">Youth XS</SelectItem>
+                      <SelectItem value="YS">Youth S</SelectItem>
+                      <SelectItem value="YM">Youth M</SelectItem>
+                      <SelectItem value="YL">Youth L</SelectItem>
+                      <SelectItem value="AS">Adult S</SelectItem>
+                      <SelectItem value="AM">Adult M</SelectItem>
+                      <SelectItem value="AL">Adult L</SelectItem>
+                      <SelectItem value="AXL">Adult XL</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="skill_level">Skill Level</Label>
+                  <Select
+                    value={watch("skill_level") || ""}
+                    onValueChange={(value) => setValue("skill_level", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select skill level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                      <SelectItem value="not_sure">Not Sure</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="medical_notes">Medical Notes</Label>
+                <Textarea id="medical_notes" {...register("medical_notes")} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="special_requests">Special Requests</Label>
+                <Textarea id="special_requests" {...register("special_requests")} />
+              </div>
             </CardContent>
           </Card>
 
@@ -574,62 +622,6 @@ const PlayerEdit = () => {
                   <Label htmlFor="amount_paid">Amount Paid</Label>
                   <Input id="amount_paid" type="number" step="0.01" {...register("amount_paid")} />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Additional Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="jersey_size">Jersey Size</Label>
-                  <Select
-                    value={watch("jersey_size") || ""}
-                    onValueChange={(value) => setValue("jersey_size", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select size" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="YXS">Youth XS</SelectItem>
-                      <SelectItem value="YS">Youth S</SelectItem>
-                      <SelectItem value="YM">Youth M</SelectItem>
-                      <SelectItem value="YL">Youth L</SelectItem>
-                      <SelectItem value="AS">Adult S</SelectItem>
-                      <SelectItem value="AM">Adult M</SelectItem>
-                      <SelectItem value="AL">Adult L</SelectItem>
-                      <SelectItem value="AXL">Adult XL</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="skill_level">Skill Level</Label>
-                  <Select
-                    value={watch("skill_level") || ""}
-                    onValueChange={(value) => setValue("skill_level", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select skill level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
-                      <SelectItem value="not_sure">Not Sure</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="medical_notes">Medical Notes</Label>
-                <Textarea id="medical_notes" {...register("medical_notes")} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="special_requests">Special Requests</Label>
-                <Textarea id="special_requests" {...register("special_requests")} />
               </div>
             </CardContent>
           </Card>
