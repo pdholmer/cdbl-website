@@ -298,6 +298,154 @@ export type Database = {
           },
         ]
       }
+      message_templates: {
+        Row: {
+          active: boolean | null
+          body: string
+          category: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string
+          subject: string
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          active?: boolean | null
+          body: string
+          category?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name: string
+          subject: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          active?: boolean | null
+          body?: string
+          category?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string
+          subject?: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: []
+      }
+      messages_sent: {
+        Row: {
+          body: string
+          created_at: string | null
+          delivered_count: number | null
+          delivery_method: string | null
+          error_message: string | null
+          failed_count: number | null
+          id: string
+          opened_count: number | null
+          recipient_emails: Json | null
+          recipient_ids: Json | null
+          recipient_type: string
+          sent_at: string | null
+          sent_by: string | null
+          status: string | null
+          subject: string
+          template_id: string | null
+          total_recipients: number | null
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          delivered_count?: number | null
+          delivery_method?: string | null
+          error_message?: string | null
+          failed_count?: number | null
+          id?: string
+          opened_count?: number | null
+          recipient_emails?: Json | null
+          recipient_ids?: Json | null
+          recipient_type: string
+          sent_at?: string | null
+          sent_by?: string | null
+          status?: string | null
+          subject: string
+          template_id?: string | null
+          total_recipients?: number | null
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          delivered_count?: number | null
+          delivery_method?: string | null
+          error_message?: string | null
+          failed_count?: number | null
+          id?: string
+          opened_count?: number | null
+          recipient_emails?: Json | null
+          recipient_ids?: Json | null
+          recipient_type?: string
+          sent_at?: string | null
+          sent_by?: string | null
+          status?: string | null
+          subject?: string
+          template_id?: string | null
+          total_recipients?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_sent_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_configs: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          event_type: string
+          id: string
+          name: string
+          template_id: string | null
+          timing_offset_hours: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          event_type: string
+          id?: string
+          name: string
+          template_id?: string | null
+          timing_offset_hours?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          name?: string
+          template_id?: string | null
+          timing_offset_hours?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_configs_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           address_line1: string | null
