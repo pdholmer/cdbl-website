@@ -32,6 +32,8 @@ import TravelFAQ from "./pages/TravelFAQ";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
+import Players from "./pages/admin/Players";
+import PlayerEdit from "./pages/admin/PlayerEdit";
 import Programs from "./pages/admin/Programs";
 import Divisions from "./pages/admin/Divisions";
 import FAQs from "./pages/admin/FAQs";
@@ -82,9 +84,12 @@ const App = () => (
           <Route path="/travel/schedule" element={<TravelSchedule />} />
           <Route path="/travel/faq" element={<TravelFAQ />} />
           {/* Admin Routes */}
-          <Route path="/admin/login" element={<Login />} />
-          <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
-          <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
+            <Route path="/admin/players" element={<ProtectedRoute requireAdmin><Players /></ProtectedRoute>} />
+            <Route path="/admin/players/new" element={<ProtectedRoute requireAdmin><PlayerEdit /></ProtectedRoute>} />
+            <Route path="/admin/players/:id" element={<ProtectedRoute requireAdmin><PlayerEdit /></ProtectedRoute>} />
+            <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
           <Route path="/admin/programs/new" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />
           <Route path="/admin/programs/:id" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />
           <Route path="/admin/divisions" element={<ProtectedRoute requireAdmin><Divisions /></ProtectedRoute>} />

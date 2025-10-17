@@ -4,7 +4,8 @@ import { Database, Users, HelpCircle, Heart, BookOpen, Shield } from "lucide-rea
 import { AdminLayout } from "@/components/AdminLayout";
 
 const Dashboard = () => {
-  const adminSections = [
+const adminSections = [
+    { title: "Player Registration", description: "Manage player registrations and profiles", icon: Users, path: "/admin/players" },
     { title: "Site Content", description: "Manage all website text content", icon: BookOpen, path: "/admin/site-content" },
     { title: "Programs", description: "Manage In-House and Travel programs", icon: Database, path: "/admin/programs" },
     { title: "Divisions", description: "Manage age groups and divisions", icon: Users, path: "/admin/divisions" },

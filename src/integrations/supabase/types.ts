@@ -116,6 +116,150 @@ export type Database = {
           },
         ]
       }
+      players: {
+        Row: {
+          address_line1: string | null
+          address_line2: string | null
+          age_at_registration: number | null
+          allergies: string | null
+          amount_due: number | null
+          amount_paid: number | null
+          assigned_date: string | null
+          city: string | null
+          created_at: string | null
+          created_by: string | null
+          date_of_birth: string
+          division_id: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          emergency_contact_relationship: string | null
+          first_name: string
+          gender: string | null
+          id: string
+          jersey_number: string | null
+          jersey_size: string | null
+          last_name: string
+          medical_notes: string | null
+          parent_email: string
+          parent_guardian_name: string
+          parent_phone: string
+          payment_date: string | null
+          payment_method: string | null
+          payment_notes: string | null
+          payment_status: string | null
+          previous_divisions_played: string | null
+          previous_experience: boolean | null
+          program_id: string | null
+          registration_date: string | null
+          skill_level: string | null
+          special_requests: string | null
+          state: string | null
+          status: string | null
+          team_id: string | null
+          updated_at: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
+          age_at_registration?: number | null
+          allergies?: string | null
+          amount_due?: number | null
+          amount_paid?: number | null
+          assigned_date?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          date_of_birth: string
+          division_id?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relationship?: string | null
+          first_name: string
+          gender?: string | null
+          id?: string
+          jersey_number?: string | null
+          jersey_size?: string | null
+          last_name: string
+          medical_notes?: string | null
+          parent_email: string
+          parent_guardian_name: string
+          parent_phone: string
+          payment_date?: string | null
+          payment_method?: string | null
+          payment_notes?: string | null
+          payment_status?: string | null
+          previous_divisions_played?: string | null
+          previous_experience?: boolean | null
+          program_id?: string | null
+          registration_date?: string | null
+          skill_level?: string | null
+          special_requests?: string | null
+          state?: string | null
+          status?: string | null
+          team_id?: string | null
+          updated_at?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address_line1?: string | null
+          address_line2?: string | null
+          age_at_registration?: number | null
+          allergies?: string | null
+          amount_due?: number | null
+          amount_paid?: number | null
+          assigned_date?: string | null
+          city?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          date_of_birth?: string
+          division_id?: string | null
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          emergency_contact_relationship?: string | null
+          first_name?: string
+          gender?: string | null
+          id?: string
+          jersey_number?: string | null
+          jersey_size?: string | null
+          last_name?: string
+          medical_notes?: string | null
+          parent_email?: string
+          parent_guardian_name?: string
+          parent_phone?: string
+          payment_date?: string | null
+          payment_method?: string | null
+          payment_notes?: string | null
+          payment_status?: string | null
+          previous_divisions_played?: string | null
+          previous_experience?: boolean | null
+          program_id?: string | null
+          registration_date?: string | null
+          skill_level?: string | null
+          special_requests?: string | null
+          state?: string | null
+          status?: string | null
+          team_id?: string | null
+          updated_at?: string | null
+          zip_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "players_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "players_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       programs: {
         Row: {
           created_at: string | null
@@ -154,6 +298,93 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      registration_submissions: {
+        Row: {
+          admin_notes: string | null
+          birth_certificate_uploaded: boolean | null
+          birth_certificate_url: string | null
+          created_at: string | null
+          form_data: Json | null
+          id: string
+          ip_address: string | null
+          player_id: string | null
+          program_id: string | null
+          proof_of_residency_uploaded: boolean | null
+          proof_of_residency_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          submission_date: string | null
+          updated_at: string | null
+          user_agent: string | null
+          waiver_date: string | null
+          waiver_signature: string | null
+          waiver_signed_by: string | null
+          waivers_signed: boolean | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          birth_certificate_uploaded?: boolean | null
+          birth_certificate_url?: string | null
+          created_at?: string | null
+          form_data?: Json | null
+          id?: string
+          ip_address?: string | null
+          player_id?: string | null
+          program_id?: string | null
+          proof_of_residency_uploaded?: boolean | null
+          proof_of_residency_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          submission_date?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          waiver_date?: string | null
+          waiver_signature?: string | null
+          waiver_signed_by?: string | null
+          waivers_signed?: boolean | null
+        }
+        Update: {
+          admin_notes?: string | null
+          birth_certificate_uploaded?: boolean | null
+          birth_certificate_url?: string | null
+          created_at?: string | null
+          form_data?: Json | null
+          id?: string
+          ip_address?: string | null
+          player_id?: string | null
+          program_id?: string | null
+          proof_of_residency_uploaded?: boolean | null
+          proof_of_residency_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          submission_date?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          waiver_date?: string | null
+          waiver_signature?: string | null
+          waiver_signed_by?: string | null
+          waivers_signed?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registration_submissions_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_submissions_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       resources: {
         Row: {
