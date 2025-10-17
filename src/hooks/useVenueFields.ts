@@ -1,11 +1,18 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import type { Database } from "@/integrations/supabase/types";
 
-type VenueField = Database["public"]["Tables"]["venue_fields"]["Row"];
-type VenueFieldInsert = Database["public"]["Tables"]["venue_fields"]["Insert"];
-type VenueFieldUpdate = Database["public"]["Tables"]["venue_fields"]["Update"];
+export interface VenueField {
+  id: string;
+  venue_id: string;
+  field_number: string;
+  field_name?: string | null;
+  divisions?: string[] | null;
+  status: string;
+  notes?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
 
 export const useVenueFields = (venueId?: string) => {
   return useQuery({
@@ -22,7 +29,7 @@ export const useVenueFields = (venueId?: string) => {
 
       const { data, error } = await query;
       if (error) throw error;
-      return data as VenueField[];
+      return (data || []) as VenueField[];
     },
     enabled: !!venueId,
   });
@@ -33,10 +40,10 @@ export const useVenueFieldMutations = () => {
   const { toast } = useToast();
 
   const createField = useMutation({
-    mutationFn: async (field: VenueFieldInsert) => {
+    mutationFn: async (field: any) => {
       const { data, error } = await supabase
         .from("venue_fields")
-        .insert(field)
+        .insert(field as any)
         .select()
         .single();
       if (error) throw error;
@@ -59,10 +66,10 @@ export const useVenueFieldMutations = () => {
   });
 
   const updateField = useMutation({
-    mutationFn: async ({ id, updates }: { id: string; updates: VenueFieldUpdate }) => {
+    mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
       const { data, error } = await supabase
         .from("venue_fields")
-        .update(updates)
+        .update(updates as any)
         .eq("id", id)
         .select()
         .single();
