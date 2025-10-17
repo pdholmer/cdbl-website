@@ -55,6 +55,24 @@ const PlayerEdit = () => {
     }
   }, [dateOfBirth, setValue]);
 
+  const selectedProgramId = watch("program_id");
+  const selectedDivisionId = watch("division_id");
+  const selectedProgram = programs?.find((p) => p.id === selectedProgramId);
+  
+  // Clear division when program changes
+  useEffect(() => {
+    if (selectedProgramId && selectedDivisionId) {
+      // Check if the current division belongs to the selected program
+      const divisionBelongsToProgram = selectedProgram?.divisions?.some(
+        (d: any) => d.id === selectedDivisionId
+      );
+      
+      if (!divisionBelongsToProgram) {
+        setValue("division_id", "");
+      }
+    }
+  }, [selectedProgramId, selectedProgram, selectedDivisionId, setValue]);
+
   const onSubmit = async (data: PlayerInsert) => {
     if (id) {
       await updatePlayer.mutateAsync({ id, updates: data });
@@ -63,9 +81,6 @@ const PlayerEdit = () => {
     }
     navigate("/admin/players");
   };
-
-  const selectedProgramId = watch("program_id");
-  const selectedProgram = programs.find((p) => p.id === selectedProgramId);
 
   if (isLoading) {
     return (
@@ -164,14 +179,15 @@ const PlayerEdit = () => {
                   <Select
                     value={watch("division_id") || ""}
                     onValueChange={(value) => setValue("division_id", value)}
+                    disabled={!selectedProgramId}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select division" />
+                      <SelectValue placeholder={selectedProgramId ? "Select division" : "Select a program first"} />
                     </SelectTrigger>
                     <SelectContent>
                       {selectedProgram?.divisions?.map((division: any) => (
                         <SelectItem key={division.id} value={division.id}>
-                          {division.name}
+                          {division.name} (Ages {division.age_range})
                         </SelectItem>
                       ))}
                     </SelectContent>
