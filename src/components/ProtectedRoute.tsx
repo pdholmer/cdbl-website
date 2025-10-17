@@ -26,14 +26,13 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
       setIsAuthenticated(true);
 
       if (requireAdmin) {
-        const { data: roles } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .eq('role', 'admin')
-          .single();
+        const { data: hasAdminRole } = await supabase
+          .rpc('has_role', {
+            _user_id: session.user.id,
+            _role: 'admin'
+          });
         
-        setIsAdmin(!!roles);
+        setIsAdmin(!!hasAdminRole);
       }
 
       setIsLoading(false);
