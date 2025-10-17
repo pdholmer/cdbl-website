@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
 
 interface AdminLayoutProps {
@@ -11,10 +11,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       <div className="min-h-screen flex w-full">
         <AdminSidebar />
         <div className="flex-1 flex flex-col">
-          <header className="h-14 border-b flex items-center px-4 bg-background sticky top-0 z-10">
-            <SidebarTrigger />
-            <h1 className="ml-4 text-lg font-semibold">CDBL Admin Panel</h1>
-          </header>
           <main className="flex-1 p-6">
             {children}
           </main>
