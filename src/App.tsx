@@ -30,6 +30,14 @@ import TravelRegistration from "./pages/TravelRegistration";
 import TravelSchedule from "./pages/TravelSchedule";
 import TravelFAQ from "./pages/TravelFAQ";
 import NotFound from "./pages/NotFound";
+import Login from "./pages/admin/Login";
+import Dashboard from "./pages/admin/Dashboard";
+import Programs from "./pages/admin/Programs";
+import Divisions from "./pages/admin/Divisions";
+import FAQs from "./pages/admin/FAQs";
+import Support from "./pages/admin/Support";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ChatAssistant } from "./components/ChatAssistant";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +48,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <ScrollToTop />
+        <ChatAssistant />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/registration" element={<Registration />} />
@@ -66,6 +75,13 @@ const App = () => (
           <Route path="/travel/registration" element={<TravelRegistration />} />
           <Route path="/travel/schedule" element={<TravelSchedule />} />
           <Route path="/travel/faq" element={<TravelFAQ />} />
+          {/* Admin Routes */}
+          <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
+          <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
+          <Route path="/admin/divisions" element={<ProtectedRoute requireAdmin><Divisions /></ProtectedRoute>} />
+          <Route path="/admin/faqs" element={<ProtectedRoute requireAdmin><FAQs /></ProtectedRoute>} />
+          <Route path="/admin/support" element={<ProtectedRoute requireAdmin><Support /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
