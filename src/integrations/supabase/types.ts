@@ -537,6 +537,7 @@ export type Database = {
           parent_guardian_name: string
           parent_last_name: string
           parent_phone: string
+          parent_relationship: string | null
           payment_date: string | null
           payment_method: string | null
           payment_notes: string | null
@@ -582,6 +583,7 @@ export type Database = {
           parent_guardian_name: string
           parent_last_name: string
           parent_phone: string
+          parent_relationship?: string | null
           payment_date?: string | null
           payment_method?: string | null
           payment_notes?: string | null
@@ -627,6 +629,7 @@ export type Database = {
           parent_guardian_name?: string
           parent_last_name?: string
           parent_phone?: string
+          parent_relationship?: string | null
           payment_date?: string | null
           payment_method?: string | null
           payment_notes?: string | null

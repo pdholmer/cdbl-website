@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -64,7 +65,10 @@ const PlayerEdit = () => {
 
   useEffect(() => {
     if (player) {
-      reset(player);
+      reset({
+        ...player,
+        parent_relationship: player.parent_relationship || "",
+      });
     }
   }, [player, reset]);
 
@@ -388,71 +392,82 @@ const PlayerEdit = () => {
             </CardContent>
           </Card>
 
+          {/* Primary Parent/Guardian Card */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle>Parent/Guardian Contact</CardTitle>
+              <div>
+                <CardTitle>Primary Parent/Guardian</CardTitle>
+                <CardDescription className="mt-1">
+                  Primary contact and emergency information
+                </CardDescription>
+              </div>
               {id && <GuardianDialog playerId={id} />}
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-muted-foreground">Primary Parent/Guardian</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="parent_first_name">First Name *</Label>
-                    <Input
-                      id="parent_first_name"
-                      {...register("parent_first_name", { required: true })}
-                      placeholder="First name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="parent_last_name">Last Name *</Label>
-                    <Input
-                      id="parent_last_name"
-                      {...register("parent_last_name", { required: true })}
-                      placeholder="Last name"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="parent_email">Email *</Label>
-                    <Input
-                      id="parent_email"
-                      type="email"
-                      {...register("parent_email", { required: true })}
-                      placeholder="email@example.com"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="parent_phone">Phone *</Label>
-                    <Input
-                      id="parent_phone"
-                      {...register("parent_phone", { required: true })}
-                      placeholder="(555) 123-4567"
-                    />
-                  </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="parent_first_name">First Name *</Label>
+                  <Input
+                    id="parent_first_name"
+                    {...register("parent_first_name", { required: true })}
+                    placeholder="First name"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="parent_relationship">Relationship</Label>
-                  <Select
-                    value={watch("parent_relationship") || ""}
-                    onValueChange={(value) => setValue("parent_relationship", value)}
-                  >
-                    <SelectTrigger id="parent_relationship">
-                      <SelectValue placeholder="Select relationship" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="mother">Mother</SelectItem>
-                      <SelectItem value="father">Father</SelectItem>
-                      <SelectItem value="guardian">Guardian</SelectItem>
-                      <SelectItem value="stepparent">Step-parent</SelectItem>
-                      <SelectItem value="grandparent">Grandparent</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="parent_last_name">Last Name *</Label>
+                  <Input
+                    id="parent_last_name"
+                    {...register("parent_last_name", { required: true })}
+                    placeholder="Last name"
+                  />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="parent_email">Email *</Label>
+                  <Input
+                    id="parent_email"
+                    type="email"
+                    {...register("parent_email", { required: true })}
+                    placeholder="email@example.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="parent_phone">Phone *</Label>
+                  <Input
+                    id="parent_phone"
+                    {...register("parent_phone", { required: true })}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="parent_relationship">Relationship to Player *</Label>
+                <Select
+                  value={watch("parent_relationship") || ""}
+                  onValueChange={(value) => setValue("parent_relationship", value)}
+                >
+                  <SelectTrigger id="parent_relationship">
+                    <SelectValue placeholder="Select relationship" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mother">Mother</SelectItem>
+                    <SelectItem value="father">Father</SelectItem>
+                    <SelectItem value="guardian">Guardian</SelectItem>
+                    <SelectItem value="stepparent">Step-parent</SelectItem>
+                    <SelectItem value="grandparent">Grandparent</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <h4 className="text-sm font-medium">Address</h4>
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="address_line1">Address Line 1</Label>
                     <Input
@@ -470,7 +485,7 @@ const PlayerEdit = () => {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="city">City</Label>
                     <Input
@@ -498,81 +513,98 @@ const PlayerEdit = () => {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
 
-              <div className="space-y-3 pt-3 border-t">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-muted-foreground">Second Parent/Guardian (Optional)</h3>
+          {/* Second Parent/Guardian Card */}
+          <Card className="bg-muted/30">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Second Parent/Guardian</CardTitle>
+                  <CardDescription className="mt-1">
+                    Optional additional contact information
+                  </CardDescription>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="parent2_first_name">First Name</Label>
-                    <Input
-                      id="parent2_first_name"
-                      {...register("parent2_first_name")}
-                      placeholder="First name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="parent2_last_name">Last Name</Label>
-                    <Input
-                      id="parent2_last_name"
-                      {...register("parent2_last_name")}
-                      placeholder="Last name"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="parent2_email">Email</Label>
-                    <Input
-                      id="parent2_email"
-                      type="email"
-                      {...register("parent2_email")}
-                      placeholder="email@example.com"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="parent2_phone">Phone</Label>
-                    <Input
-                      id="parent2_phone"
-                      {...register("parent2_phone")}
-                      placeholder="(555) 123-4567"
-                    />
-                  </div>
+                <span className="text-sm font-normal text-muted-foreground">(Optional)</span>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="parent2_first_name">First Name</Label>
+                  <Input
+                    id="parent2_first_name"
+                    {...register("parent2_first_name")}
+                    placeholder="First name"
+                  />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="parent2_relationship">Relationship</Label>
-                  <Select
-                    value={watch("parent2_relationship") || ""}
-                    onValueChange={(value) => setValue("parent2_relationship", value)}
-                  >
-                    <SelectTrigger id="parent2_relationship">
-                      <SelectValue placeholder="Select relationship" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="mother">Mother</SelectItem>
-                      <SelectItem value="father">Father</SelectItem>
-                      <SelectItem value="guardian">Guardian</SelectItem>
-                      <SelectItem value="stepparent">Step-parent</SelectItem>
-                      <SelectItem value="grandparent">Grandparent</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="parent2_last_name">Last Name</Label>
+                  <Input
+                    id="parent2_last_name"
+                    {...register("parent2_last_name")}
+                    placeholder="Last name"
+                  />
                 </div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label className="text-sm font-medium">Address</Label>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="parent2_email">Email</Label>
+                  <Input
+                    id="parent2_email"
+                    type="email"
+                    {...register("parent2_email")}
+                    placeholder="email@example.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="parent2_phone">Phone</Label>
+                  <Input
+                    id="parent2_phone"
+                    {...register("parent2_phone")}
+                    placeholder="(555) 123-4567"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="parent2_relationship">Relationship to Player</Label>
+                <Select
+                  value={watch("parent2_relationship") || ""}
+                  onValueChange={(value) => setValue("parent2_relationship", value)}
+                >
+                  <SelectTrigger id="parent2_relationship">
+                    <SelectValue placeholder="Select relationship" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="mother">Mother</SelectItem>
+                    <SelectItem value="father">Father</SelectItem>
+                    <SelectItem value="guardian">Guardian</SelectItem>
+                    <SelectItem value="stepparent">Step-parent</SelectItem>
+                    <SelectItem value="grandparent">Grandparent</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <Separator />
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium">Address</h4>
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={copyPrimaryAddress}
-                    className="h-8 gap-2"
                   >
-                    <Copy className="h-3 w-3" />
-                    Use same address as primary
+                    <Copy className="mr-2 h-4 w-4" />
+                    Use same address
                   </Button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="parent2_address_line1">Address Line 1</Label>
                     <Input
@@ -590,7 +622,7 @@ const PlayerEdit = () => {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="parent2_city">City</Label>
                     <Input
