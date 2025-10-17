@@ -98,3 +98,30 @@ export const exportForGameChanger = (players: Player[], teamName: string = "team
   link.click();
   document.body.removeChild(link);
 };
+
+// Generic CSV export function
+export const exportToCSV = (data: any[], filename: string = "export.csv") => {
+  if (data.length === 0) return;
+
+  const headers = Object.keys(data[0]);
+  const rows = data.map((row) =>
+    headers.map((header) => row[header] || "")
+  );
+
+  const csvContent = [
+    headers.join(","),
+    ...rows.map((row) =>
+      row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")
+    ),
+  ].join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};

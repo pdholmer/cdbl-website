@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -20,8 +20,10 @@ const adminItems = [
   { title: "Players", url: "/admin/players", icon: Users },
   { title: "Teams", url: "/admin/teams", icon: Database },
   { title: "Coaches", url: "/admin/coaches", icon: Users },
-  { title: "Schedule", url: "/admin/schedule", icon: Database },
-  { title: "Venues", url: "/admin/venues", icon: Database },
+  { title: "Schedule", url: "/admin/schedule", icon: Calendar },
+  { title: "Venues", url: "/admin/venues", icon: MapPin },
+  { title: "Reports", url: "/admin/reports", icon: BarChart3 },
+  { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
   { title: "Site Content", url: "/admin/site-content", icon: FileText },
   { title: "Programs", url: "/admin/programs", icon: Database },
   { title: "Divisions", url: "/admin/divisions", icon: Users },
