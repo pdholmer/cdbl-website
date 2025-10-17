@@ -17,6 +17,7 @@ import {
 import { usePlayer } from "@/hooks/usePlayers";
 import { usePlayerMutations } from "@/hooks/usePlayerMutations";
 import { usePrograms } from "@/hooks/usePrograms";
+import { GuardianDialog } from "@/components/GuardianDialog";
 import { ArrowLeft } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -74,10 +75,16 @@ const PlayerEdit = () => {
   }, [selectedProgramId, selectedProgram, selectedDivisionId, setValue]);
 
   const onSubmit = async (data: PlayerInsert) => {
+    // Concatenate parent first and last name for backward compatibility
+    const submissionData = {
+      ...data,
+      parent_guardian_name: `${data.parent_first_name || ''} ${data.parent_last_name || ''}`.trim(),
+    };
+    
     if (id) {
-      await updatePlayer.mutateAsync({ id, updates: data });
+      await updatePlayer.mutateAsync({ id, updates: submissionData });
     } else {
-      await createPlayer.mutateAsync(data);
+      await createPlayer.mutateAsync(submissionData);
     }
     navigate("/admin/players");
   };
@@ -253,15 +260,22 @@ const PlayerEdit = () => {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <CardTitle>Parent/Guardian Contact</CardTitle>
+              {id && <GuardianDialog playerId={id} />}
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="parent_guardian_name">Parent/Guardian Name *</Label>
-                <Input id="parent_guardian_name" {...register("parent_guardian_name", { required: true })} />
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="parent_first_name">Parent First Name *</Label>
+                  <Input id="parent_first_name" {...register("parent_first_name", { required: true })} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="parent_last_name">Parent Last Name *</Label>
+                  <Input id="parent_last_name" {...register("parent_last_name", { required: true })} />
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="parent_email">Email *</Label>
                   <Input id="parent_email" type="email" {...register("parent_email", { required: true })} />
@@ -271,15 +285,17 @@ const PlayerEdit = () => {
                   <Input id="parent_phone" {...register("parent_phone", { required: true })} />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="address_line1">Address Line 1</Label>
-                <Input id="address_line1" {...register("address_line1")} />
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="address_line1">Address Line 1</Label>
+                  <Input id="address_line1" {...register("address_line1")} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="address_line2">Address Line 2</Label>
+                  <Input id="address_line2" {...register("address_line2")} />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="address_line2">Address Line 2</Label>
-                <Input id="address_line2" {...register("address_line2")} />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="city">City</Label>
                   <Input id="city" {...register("city")} />

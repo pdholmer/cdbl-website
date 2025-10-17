@@ -446,6 +446,53 @@ export type Database = {
           },
         ]
       }
+      player_guardians: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          is_primary: boolean | null
+          last_name: string
+          phone: string
+          player_id: string
+          relationship: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          is_primary?: boolean | null
+          last_name: string
+          phone: string
+          player_id: string
+          relationship?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          is_primary?: boolean | null
+          last_name?: string
+          phone?: string
+          player_id?: string
+          relationship?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_guardians_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           address_line1: string | null
@@ -471,7 +518,9 @@ export type Database = {
           last_name: string
           medical_notes: string | null
           parent_email: string
+          parent_first_name: string
           parent_guardian_name: string
+          parent_last_name: string
           parent_phone: string
           payment_date: string | null
           payment_method: string | null
@@ -514,7 +563,9 @@ export type Database = {
           last_name: string
           medical_notes?: string | null
           parent_email: string
+          parent_first_name: string
           parent_guardian_name: string
+          parent_last_name: string
           parent_phone: string
           payment_date?: string | null
           payment_method?: string | null
@@ -557,7 +608,9 @@ export type Database = {
           last_name?: string
           medical_notes?: string | null
           parent_email?: string
+          parent_first_name?: string
           parent_guardian_name?: string
+          parent_last_name?: string
           parent_phone?: string
           payment_date?: string | null
           payment_method?: string | null
