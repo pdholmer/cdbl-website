@@ -40,6 +40,8 @@ import ProgramEdit from "./pages/admin/ProgramEdit";
 import DivisionEdit from "./pages/admin/DivisionEdit";
 import FAQEdit from "./pages/admin/FAQEdit";
 import SupportEdit from "./pages/admin/SupportEdit";
+import SiteContent from "./pages/admin/SiteContent";
+import SiteContentEdit from "./pages/admin/SiteContentEdit";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 
@@ -94,6 +96,9 @@ const App = () => (
           <Route path="/admin/support" element={<ProtectedRoute requireAdmin><Support /></ProtectedRoute>} />
           <Route path="/admin/support/new" element={<ProtectedRoute requireAdmin><SupportEdit /></ProtectedRoute>} />
           <Route path="/admin/support/:id" element={<ProtectedRoute requireAdmin><SupportEdit /></ProtectedRoute>} />
+          <Route path="/admin/site-content" element={<ProtectedRoute requireAdmin><SiteContent /></ProtectedRoute>} />
+          <Route path="/admin/site-content/new" element={<ProtectedRoute requireAdmin><SiteContentEdit /></ProtectedRoute>} />
+          <Route path="/admin/site-content/:id" element={<ProtectedRoute requireAdmin><SiteContentEdit /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

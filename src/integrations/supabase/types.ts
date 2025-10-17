@@ -254,6 +254,45 @@ export type Database = {
           },
         ]
       }
+      site_content: {
+        Row: {
+          content_key: string
+          content_type: string
+          content_value: string
+          created_at: string
+          display_order: number
+          id: string
+          notes: string | null
+          page: string
+          section: string
+          updated_at: string
+        }
+        Insert: {
+          content_key: string
+          content_type?: string
+          content_value: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          notes?: string | null
+          page: string
+          section: string
+          updated_at?: string
+        }
+        Update: {
+          content_key?: string
+          content_type?: string
+          content_value?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          notes?: string | null
+          page?: string
+          section?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       support_options: {
         Row: {
           active: boolean | null

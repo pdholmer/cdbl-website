@@ -24,21 +24,44 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch context data
-    const [programsRes, faqsRes] = await Promise.all([
+    const [programsRes, faqsRes, siteContentRes, supportRes] = await Promise.all([
       supabase.from('programs').select('*, divisions(*)'),
-      supabase.from('faqs').select('*').order('display_order')
+      supabase.from('faqs').select('*').order('display_order'),
+      supabase.from('site_content').select('*').order('page, section, display_order'),
+      supabase.from('support_options').select('*').eq('active', true).order('display_order')
     ]);
+
+    // Organize site content by page and section for better context
+    const siteContentByPage = (siteContentRes.data || []).reduce((acc: any, item: any) => {
+      if (!acc[item.page]) acc[item.page] = {};
+      if (!acc[item.page][item.section]) acc[item.page][item.section] = [];
+      acc[item.page][item.section].push({
+        key: item.content_key,
+        value: item.content_value,
+        type: item.content_type
+      });
+      return acc;
+    }, {});
 
     const contextInfo = `
 You are a helpful assistant for Carmel Dads' Baseball League (CDBL). Use this information to answer questions:
 
+WEBSITE CONTENT (organized by page and section):
+${JSON.stringify(siteContentByPage, null, 2)}
+
 PROGRAMS:
 ${JSON.stringify(programsRes.data, null, 2)}
+
+DIVISIONS:
+${programsRes.data?.map((p: any) => p.divisions).flat().map((d: any) => `${d.name}: ${d.age_range}`).join(', ')}
 
 FAQS:
 ${JSON.stringify(faqsRes.data, null, 2)}
 
-Answer questions clearly and concisely. If you're not sure about something, guide users to contact CDBL directly.
+SUPPORT OPTIONS:
+${JSON.stringify(supportRes.data, null, 2)}
+
+Answer questions clearly and concisely using the website content and data above. If you're not sure about something, guide users to contact CDBL directly at the contact information found in the site content.
     `.trim();
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {

@@ -10,13 +10,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, LogOut } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const adminItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
+  { title: "Site Content", url: "/admin/site-content", icon: FileText },
   { title: "Programs", url: "/admin/programs", icon: Database },
   { title: "Divisions", url: "/admin/divisions", icon: Users },
   { title: "FAQs", url: "/admin/faqs", icon: HelpCircle },

@@ -5,11 +5,11 @@ import { AdminLayout } from "@/components/AdminLayout";
 
 const Dashboard = () => {
   const adminSections = [
+    { title: "Site Content", description: "Manage all website text content", icon: BookOpen, path: "/admin/site-content" },
     { title: "Programs", description: "Manage In-House and Travel programs", icon: Database, path: "/admin/programs" },
     { title: "Divisions", description: "Manage age groups and divisions", icon: Users, path: "/admin/divisions" },
     { title: "FAQs", description: "Manage frequently asked questions", icon: HelpCircle, path: "/admin/faqs" },
     { title: "Support Options", description: "Manage donations, sponsors, volunteers", icon: Heart, path: "/admin/support" },
-    { title: "Resources", description: "Manage coach resources", icon: BookOpen, path: "/admin/resources" },
     { title: "Rules & Policies", description: "Manage rules and policies", icon: Shield, path: "/admin/rules" },
   ];
 
