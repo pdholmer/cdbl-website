@@ -4,14 +4,11 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -34,9 +31,7 @@ const adminItems = [
 ];
 
 export function AdminSidebar() {
-  const { state } = useSidebar();
   const navigate = useNavigate();
-  const collapsed = state === "collapsed";
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -49,22 +44,16 @@ export function AdminSidebar() {
       : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground";
 
   return (
-    <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible="icon">
+    <Sidebar className="w-60">
       <SidebarContent className="bg-primary">
         <SidebarGroup>
-          <div className="relative">
-            <SidebarTrigger className="absolute top-2 right-2 text-primary-foreground hover:bg-primary-foreground/10" />
-          </div>
-          <Link to="/" className="flex items-center justify-center p-4 hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex items-center justify-start px-4 py-6 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
               alt="CDBL Logo" 
-              className={collapsed ? "h-8 w-auto object-contain" : "h-20 w-auto object-contain"}
+              className="h-20 w-auto object-contain"
             />
           </Link>
-          <SidebarGroupLabel className="text-primary-foreground">
-            {!collapsed && "CDBL Admin"}
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {adminItems.map((item) => (
@@ -72,7 +61,7 @@ export function AdminSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} end className={getNavClass}>
                       <item.icon className="h-4 w-4" />
-                      {!collapsed && <span className="ml-2">{item.title}</span>}
+                      <span className="ml-2">{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -83,13 +72,23 @@ export function AdminSidebar() {
 
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/admin/profile" className={getNavClass}>
+                    <User className="h-4 w-4" />
+                    <span className="ml-2">Profile</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
             <Button
               variant="ghost"
               onClick={handleLogout}
               className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
             >
               <LogOut className="h-4 w-4" />
-              {!collapsed && <span className="ml-2">Logout</span>}
+              <span className="ml-2">Logout</span>
             </Button>
           </SidebarGroupContent>
         </SidebarGroup>
