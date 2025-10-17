@@ -1,12 +1,26 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AdminLayout } from "@/components/AdminLayout";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const FAQs = () => {
+  const queryClient = useQueryClient();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const { data: faqs, isLoading } = useQuery({
     queryKey: ['admin-faqs'],
     queryFn: async () => {
@@ -20,6 +34,21 @@ const FAQs = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("faqs").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-faqs"] });
+      toast.success("FAQ deleted successfully");
+      setDeleteId(null);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to delete FAQ");
+    },
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -29,8 +58,8 @@ const FAQs = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container py-8">
+    <AdminLayout>
+      <div>
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">Manage FAQs</h1>
@@ -60,7 +89,7 @@ const FAQs = () => {
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => setDeleteId(faq.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -73,13 +102,24 @@ const FAQs = () => {
           ))}
         </div>
 
-        <div className="mt-8">
-          <Button variant="outline" asChild>
-            <Link to="/admin">← Back to Dashboard</Link>
-          </Button>
-        </div>
+        <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete this FAQ. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && deleteMutation.mutate(deleteId)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

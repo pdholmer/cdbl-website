@@ -1,13 +1,27 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AdminLayout } from "@/components/AdminLayout";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const Support = () => {
+  const queryClient = useQueryClient();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const { data: supportOptions, isLoading } = useQuery({
     queryKey: ['admin-support'],
     queryFn: async () => {
@@ -21,6 +35,21 @@ const Support = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("support_options").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-support"] });
+      toast.success("Support option deleted successfully");
+      setDeleteId(null);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to delete support option");
+    },
+  });
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -30,8 +59,8 @@ const Support = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container py-8">
+    <AdminLayout>
+      <div>
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold mb-2">Manage Support Options</h1>
@@ -65,7 +94,7 @@ const Support = () => {
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => setDeleteId(option.id)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -107,13 +136,24 @@ const Support = () => {
           ))}
         </div>
 
-        <div className="mt-8">
-          <Button variant="outline" asChild>
-            <Link to="/admin">← Back to Dashboard</Link>
-          </Button>
-        </div>
+        <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete this support option. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => deleteId && deleteMutation.mutate(deleteId)}>
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
