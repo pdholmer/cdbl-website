@@ -9,13 +9,14 @@ export const usePrograms = () => {
 
       if (error) throw error;
       
-      const inHouseProgram = data?.programs?.find((p: any) => p.type === 'in_house');
-      const travelProgram = data?.programs?.find((p: any) => p.type === 'travel');
+      const programs = (data?.programs || []).filter((p: any) => p.registration_open === true);
+      const inHouseProgram = programs.find((p: any) => p.type === 'in_house');
+      const travelProgram = programs.find((p: any) => p.type === 'travel');
       const inHouseDivisions = inHouseProgram?.divisions || [];
       const travelDivisions = travelProgram?.divisions || [];
 
       return {
-        programs: data?.programs || [],
+        programs,
         inHouseProgram,
         travelProgram,
         inHouseDivisions,

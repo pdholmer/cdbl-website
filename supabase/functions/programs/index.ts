@@ -27,7 +27,7 @@ serve(async (req) => {
         *,
         divisions!divisions_program_id_fkey (
           *,
-          rules_policies (*)
+          rules_policies!fk_rules_division (*)
         ),
         faqs (*)
       `);
