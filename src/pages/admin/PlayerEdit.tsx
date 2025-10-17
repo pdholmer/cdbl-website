@@ -47,7 +47,7 @@ const PlayerEdit = () => {
   const { data: guardians } = useGuardians(id);
   const { programs = [] } = usePrograms();
   const { createPlayer, updatePlayer } = usePlayerMutations();
-  const { createGuardian } = useGuardianMutations();
+  const { createGuardian, updateGuardian } = useGuardianMutations();
 
   const { register, handleSubmit, reset, setValue, watch } = useForm<ExtendedPlayerForm>();
 
@@ -145,6 +145,7 @@ const PlayerEdit = () => {
     // Sanitize numeric fields - convert empty strings to null
     const sanitizedData = {
       ...playerData,
+      gender: playerData.gender || null,
       age_at_registration: !playerData.age_at_registration && playerData.age_at_registration !== 0
         ? null 
         : Number(playerData.age_at_registration),
@@ -165,8 +166,15 @@ const PlayerEdit = () => {
       if (id) {
         await updatePlayer.mutateAsync({ id, updates: submissionData });
         
-        if (parent2_first_name && parent2_last_name && parent2_email && parent2_phone) {
-          await createGuardian.mutateAsync({
+        // Find existing non-primary guardian
+        const existingSecondGuardian = guardians?.find(g => !g.is_primary);
+        
+        // Check if second parent data is provided
+        const hasSecondParentData = parent2_first_name && parent2_last_name && 
+                                     parent2_email && parent2_phone;
+        
+        if (hasSecondParentData) {
+          const guardianData = {
             player_id: id,
             first_name: parent2_first_name,
             last_name: parent2_last_name,
@@ -179,7 +187,18 @@ const PlayerEdit = () => {
             city: parent2_city,
             state: parent2_state,
             zip_code: parent2_zip_code,
-          });
+          };
+          
+          if (existingSecondGuardian) {
+            // Update existing guardian
+            await updateGuardian.mutateAsync({ 
+              id: existingSecondGuardian.id,
+              ...guardianData
+            });
+          } else {
+            // Create new guardian
+            await createGuardian.mutateAsync(guardianData);
+          }
         }
       } else {
         const newPlayer = await createPlayer.mutateAsync(submissionData);
