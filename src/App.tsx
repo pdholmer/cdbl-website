@@ -36,6 +36,8 @@ import Programs from "./pages/admin/Programs";
 import Divisions from "./pages/admin/Divisions";
 import FAQs from "./pages/admin/FAQs";
 import Support from "./pages/admin/Support";
+import ProgramEdit from "./pages/admin/ProgramEdit";
+import DivisionEdit from "./pages/admin/DivisionEdit";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 
@@ -79,7 +81,11 @@ const App = () => (
           <Route path="/admin/login" element={<Login />} />
           <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
           <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
+          <Route path="/admin/programs/new" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />
+          <Route path="/admin/programs/:id" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />
           <Route path="/admin/divisions" element={<ProtectedRoute requireAdmin><Divisions /></ProtectedRoute>} />
+          <Route path="/admin/divisions/new" element={<ProtectedRoute requireAdmin><DivisionEdit /></ProtectedRoute>} />
+          <Route path="/admin/divisions/:id" element={<ProtectedRoute requireAdmin><DivisionEdit /></ProtectedRoute>} />
           <Route path="/admin/faqs" element={<ProtectedRoute requireAdmin><FAQs /></ProtectedRoute>} />
           <Route path="/admin/support" element={<ProtectedRoute requireAdmin><Support /></ProtectedRoute>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

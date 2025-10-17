@@ -12,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Edit } from "lucide-react";
 
 const Programs = () => {
   const queryClient = useQueryClient();
@@ -126,7 +126,14 @@ const Programs = () => {
                     <p><strong>Registration URL:</strong> {program.registration_url || 'Not set'}</p>
                     <p><strong>Season:</strong> {program.season_start || 'TBD'} to {program.season_end || 'TBD'}</p>
                     <p><strong>Registration:</strong> {program.registration_open ? 'Open' : 'Closed'}</p>
-                    <Button onClick={() => setEditingId(program.id)} className="mt-4">Edit</Button>
+                    <div className="flex gap-2 mt-4">
+                      <Button onClick={() => setEditingId(program.id)}>Edit Inline</Button>
+                      <Button variant="outline" asChild>
+                        <Link to={`/admin/programs/${program.id}`}>
+                          <Edit className="mr-2 h-4 w-4" /> Edit Full
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 )}
               </CardContent>
