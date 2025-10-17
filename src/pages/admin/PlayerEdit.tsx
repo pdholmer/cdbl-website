@@ -75,12 +75,15 @@ const PlayerEdit = () => {
       
       reset({
         ...playerFields,
-        // Explicitly set the ID fields to ensure they're populated
+        // Explicitly set ALL fields to ensure they're populated
         program_id: player.program_id || "",
         division_id: player.division_id || "",
+        team_name: player.team_name || "",
         gender: player.gender || "",
         jersey_size: player.jersey_size || "",
         skill_level: player.skill_level || "",
+        status: player.status || "",
+        payment_status: player.payment_status || "",
         parent_relationship: player.parent_relationship || "",
         // Populate second parent fields if they exist
         parent2_first_name: secondGuardian?.first_name || "",
