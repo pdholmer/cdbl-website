@@ -155,7 +155,7 @@ const PlayerEdit = () => {
                   </Select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="program_id">Program</Label>
                   <Select
@@ -193,18 +193,17 @@ const PlayerEdit = () => {
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="team_name">Team</Label>
-                <Select
-                  value={watch("team_name") || ""}
-                  onValueChange={(value) => setValue("team_name", value)}
-                  disabled={!selectedProgramId}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder={selectedProgramId ? "Select team" : "Select a program first"} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
+                <div className="space-y-2">
+                  <Label htmlFor="team_name">Team</Label>
+                  <Select
+                    value={watch("team_name") || ""}
+                    onValueChange={(value) => setValue("team_name", value)}
+                    disabled={!selectedProgramId}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={selectedProgramId ? "Select team" : "Select a program first"} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background z-50">
                     {selectedProgram?.type === 'in_house' ? (
                       <>
                         <SelectItem value="Orioles">Orioles</SelectItem>
@@ -249,6 +248,7 @@ const PlayerEdit = () => {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
             </CardContent>
           </Card>
 
