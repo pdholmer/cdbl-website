@@ -37,6 +37,24 @@ const PlayerEdit = () => {
     }
   }, [player, reset]);
 
+  // Auto-calculate age from date of birth
+  const dateOfBirth = watch("date_of_birth");
+  useEffect(() => {
+    if (dateOfBirth) {
+      const dob = new Date(dateOfBirth);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      
+      // Adjust age if birthday hasn't occurred yet this year
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
+      
+      setValue("age_at_registration", age);
+    }
+  }, [dateOfBirth, setValue]);
+
   const onSubmit = async (data: PlayerInsert) => {
     if (id) {
       await updatePlayer.mutateAsync({ id, updates: data });
@@ -96,7 +114,13 @@ const PlayerEdit = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="age_at_registration">Age</Label>
-                  <Input id="age_at_registration" type="number" {...register("age_at_registration")} />
+                  <Input 
+                    id="age_at_registration" 
+                    type="number" 
+                    {...register("age_at_registration")} 
+                    readOnly
+                    className="bg-muted"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="gender">Gender</Label>
