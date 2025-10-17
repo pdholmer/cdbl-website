@@ -196,10 +196,11 @@ const PlayerEdit = () => {
           };
           
           if (existingSecondGuardian) {
-            // Update existing guardian
+            // Update existing guardian - exclude player_id from updates
+            const { player_id, ...updateData } = guardianData;
             await updateGuardian.mutateAsync({ 
               id: existingSecondGuardian.id,
-              ...guardianData
+              ...updateData
             });
           } else {
             // Create new guardian
