@@ -20,6 +20,8 @@ const adminItems = [
   { title: "Players", url: "/admin/players", icon: Users },
   { title: "Teams", url: "/admin/teams", icon: Database },
   { title: "Coaches", url: "/admin/coaches", icon: Users },
+  { title: "Schedule", url: "/admin/schedule", icon: Database },
+  { title: "Venues", url: "/admin/venues", icon: Database },
   { title: "Site Content", url: "/admin/site-content", icon: FileText },
   { title: "Programs", url: "/admin/programs", icon: Database },
   { title: "Divisions", url: "/admin/divisions", icon: Users },

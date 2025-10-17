@@ -8,6 +8,8 @@ const adminSections = [
     { title: "Player Registration", description: "Manage player registrations and profiles", icon: Users, path: "/admin/players" },
     { title: "Team Management", description: "Manage teams and rosters", icon: Shield, path: "/admin/teams" },
     { title: "Coach Management", description: "Manage coaches and volunteers", icon: Users, path: "/admin/coaches" },
+    { title: "Game Schedule", description: "Manage games and schedules", icon: Database, path: "/admin/schedule" },
+    { title: "Venues", description: "Manage fields and facilities", icon: Database, path: "/admin/venues" },
     { title: "Site Content", description: "Manage all website text content", icon: BookOpen, path: "/admin/site-content" },
     { title: "Programs", description: "Manage In-House and Travel programs", icon: Database, path: "/admin/programs" },
     { title: "Divisions", description: "Manage age groups and divisions", icon: Users, path: "/admin/divisions" },

@@ -170,6 +170,134 @@ export type Database = {
           },
         ]
       }
+      games: {
+        Row: {
+          away_score: number | null
+          away_team_id: string | null
+          cancellation_reason: string | null
+          created_at: string | null
+          created_by: string | null
+          division_id: string | null
+          estimated_duration: number | null
+          field_number: string | null
+          game_date: string
+          game_time: string
+          game_type: string
+          gamechanger_game_id: string | null
+          gamechanger_url: string | null
+          home_score: number | null
+          home_team_id: string | null
+          id: string
+          last_synced_at: string | null
+          notes: string | null
+          notifications_sent: boolean | null
+          reminder_1h_sent: boolean | null
+          reminder_24h_sent: boolean | null
+          rescheduled_from_date: string | null
+          rescheduled_from_time: string | null
+          status: string | null
+          umpire_contact: string | null
+          umpire_fee: number | null
+          umpire_name: string | null
+          updated_at: string | null
+          venue_id: string | null
+          weather_status: string | null
+        }
+        Insert: {
+          away_score?: number | null
+          away_team_id?: string | null
+          cancellation_reason?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          division_id?: string | null
+          estimated_duration?: number | null
+          field_number?: string | null
+          game_date: string
+          game_time: string
+          game_type: string
+          gamechanger_game_id?: string | null
+          gamechanger_url?: string | null
+          home_score?: number | null
+          home_team_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          notes?: string | null
+          notifications_sent?: boolean | null
+          reminder_1h_sent?: boolean | null
+          reminder_24h_sent?: boolean | null
+          rescheduled_from_date?: string | null
+          rescheduled_from_time?: string | null
+          status?: string | null
+          umpire_contact?: string | null
+          umpire_fee?: number | null
+          umpire_name?: string | null
+          updated_at?: string | null
+          venue_id?: string | null
+          weather_status?: string | null
+        }
+        Update: {
+          away_score?: number | null
+          away_team_id?: string | null
+          cancellation_reason?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          division_id?: string | null
+          estimated_duration?: number | null
+          field_number?: string | null
+          game_date?: string
+          game_time?: string
+          game_type?: string
+          gamechanger_game_id?: string | null
+          gamechanger_url?: string | null
+          home_score?: number | null
+          home_team_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          notes?: string | null
+          notifications_sent?: boolean | null
+          reminder_1h_sent?: boolean | null
+          reminder_24h_sent?: boolean | null
+          rescheduled_from_date?: string | null
+          rescheduled_from_time?: string | null
+          status?: string | null
+          umpire_contact?: string | null
+          umpire_fee?: number | null
+          umpire_name?: string | null
+          updated_at?: string | null
+          venue_id?: string | null
+          weather_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "games_away_team_id_fkey"
+            columns: ["away_team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "games_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "games_home_team_id_fkey"
+            columns: ["home_team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "games_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           address_line1: string | null
@@ -317,6 +445,75 @@ export type Database = {
             columns: ["program_id"]
             isOneToOne: false
             referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      practices: {
+        Row: {
+          attendance_count: number | null
+          attendance_notes: string | null
+          cancellation_reason: string | null
+          created_at: string | null
+          end_time: string
+          field_number: string | null
+          id: string
+          notes: string | null
+          practice_date: string
+          practice_type: string | null
+          start_time: string
+          status: string | null
+          team_id: string
+          updated_at: string | null
+          venue_id: string | null
+        }
+        Insert: {
+          attendance_count?: number | null
+          attendance_notes?: string | null
+          cancellation_reason?: string | null
+          created_at?: string | null
+          end_time: string
+          field_number?: string | null
+          id?: string
+          notes?: string | null
+          practice_date: string
+          practice_type?: string | null
+          start_time: string
+          status?: string | null
+          team_id: string
+          updated_at?: string | null
+          venue_id?: string | null
+        }
+        Update: {
+          attendance_count?: number | null
+          attendance_notes?: string | null
+          cancellation_reason?: string | null
+          created_at?: string | null
+          end_time?: string
+          field_number?: string | null
+          id?: string
+          notes?: string | null
+          practice_date?: string
+          practice_type?: string | null
+          start_time?: string
+          status?: string | null
+          team_id?: string
+          updated_at?: string | null
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "practices_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "practices_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
             referencedColumns: ["id"]
           },
         ]
@@ -834,6 +1031,78 @@ export type Database = {
         }
         Relationships: []
       }
+      venues: {
+        Row: {
+          address: string | null
+          available_days: Json | null
+          city: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string | null
+          directions: string | null
+          field_count: number | null
+          has_concessions: boolean | null
+          has_lights: boolean | null
+          has_restrooms: boolean | null
+          id: string
+          name: string
+          parking_info: string | null
+          season_end: string | null
+          season_start: string | null
+          state: string | null
+          status: string | null
+          updated_at: string | null
+          zip_code: string | null
+        }
+        Insert: {
+          address?: string | null
+          available_days?: Json | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          directions?: string | null
+          field_count?: number | null
+          has_concessions?: boolean | null
+          has_lights?: boolean | null
+          has_restrooms?: boolean | null
+          id?: string
+          name: string
+          parking_info?: string | null
+          season_end?: string | null
+          season_start?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          zip_code?: string | null
+        }
+        Update: {
+          address?: string | null
+          available_days?: Json | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          directions?: string | null
+          field_count?: number | null
+          has_concessions?: boolean | null
+          has_lights?: boolean | null
+          has_restrooms?: boolean | null
+          id?: string
+          name?: string
+          parking_info?: string | null
+          season_end?: string | null
+          season_start?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          zip_code?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -841,6 +1110,17 @@ export type Database = {
     Functions: {
       assign_first_user_admin: {
         Args: { _user_id: string }
+        Returns: boolean
+      }
+      check_schedule_conflict: {
+        Args: {
+          p_date: string
+          p_end_time: string
+          p_exclude_game_id?: string
+          p_exclude_practice_id?: string
+          p_start_time: string
+          p_venue_id: string
+        }
         Returns: boolean
       }
       has_role: {
