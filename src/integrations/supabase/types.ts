@@ -448,6 +448,9 @@ export type Database = {
       }
       player_guardians: {
         Row: {
+          address_line1: string | null
+          address_line2: string | null
+          city: string | null
           created_at: string | null
           email: string
           first_name: string
@@ -457,9 +460,14 @@ export type Database = {
           phone: string
           player_id: string
           relationship: string | null
+          state: string | null
           updated_at: string | null
+          zip_code: string | null
         }
         Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
+          city?: string | null
           created_at?: string | null
           email: string
           first_name: string
@@ -469,9 +477,14 @@ export type Database = {
           phone: string
           player_id: string
           relationship?: string | null
+          state?: string | null
           updated_at?: string | null
+          zip_code?: string | null
         }
         Update: {
+          address_line1?: string | null
+          address_line2?: string | null
+          city?: string | null
           created_at?: string | null
           email?: string
           first_name?: string
@@ -481,7 +494,9 @@ export type Database = {
           phone?: string
           player_id?: string
           relationship?: string | null
+          state?: string | null
           updated_at?: string | null
+          zip_code?: string | null
         }
         Relationships: [
           {

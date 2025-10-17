@@ -15,6 +15,11 @@ export const useGuardianMutations = () => {
       phone: string;
       relationship?: string;
       is_primary?: boolean;
+      address_line1?: string;
+      address_line2?: string;
+      city?: string;
+      state?: string;
+      zip_code?: string;
     }) => {
       const { data: result, error } = await supabase
         .from("player_guardians")

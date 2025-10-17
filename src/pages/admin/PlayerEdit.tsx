@@ -30,6 +30,11 @@ interface ExtendedPlayerForm extends PlayerInsert {
   parent2_email?: string;
   parent2_phone?: string;
   parent2_relationship?: string;
+  parent2_address_line1?: string;
+  parent2_address_line2?: string;
+  parent2_city?: string;
+  parent2_state?: string;
+  parent2_zip_code?: string;
 }
 
 const PlayerEdit = () => {
@@ -91,6 +96,11 @@ const PlayerEdit = () => {
       parent2_email,
       parent2_phone,
       parent2_relationship,
+      parent2_address_line1,
+      parent2_address_line2,
+      parent2_city,
+      parent2_state,
+      parent2_zip_code,
       ...playerData
     } = data;
 
@@ -112,6 +122,11 @@ const PlayerEdit = () => {
             phone: parent2_phone,
             relationship: parent2_relationship || 'guardian',
             is_primary: false,
+            address_line1: parent2_address_line1,
+            address_line2: parent2_address_line2,
+            city: parent2_city,
+            state: parent2_state,
+            zip_code: parent2_zip_code,
           });
         }
       } else {
@@ -126,6 +141,11 @@ const PlayerEdit = () => {
             phone: parent2_phone,
             relationship: parent2_relationship || 'guardian',
             is_primary: false,
+            address_line1: parent2_address_line1,
+            address_line2: parent2_address_line2,
+            city: parent2_city,
+            state: parent2_state,
+            zip_code: parent2_zip_code,
           });
         }
       }
@@ -350,6 +370,51 @@ const PlayerEdit = () => {
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="address_line1">Address Line 1</Label>
+                    <Input
+                      id="address_line1"
+                      {...register("address_line1")}
+                      placeholder="Street address"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="address_line2">Address Line 2</Label>
+                    <Input
+                      id="address_line2"
+                      {...register("address_line2")}
+                      placeholder="Apt, suite, etc."
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="city">City</Label>
+                    <Input
+                      id="city"
+                      {...register("city")}
+                      placeholder="City"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="state">State</Label>
+                    <Input
+                      id="state"
+                      {...register("state")}
+                      defaultValue="OH"
+                      placeholder="State"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="zip_code">Zip Code</Label>
+                    <Input
+                      id="zip_code"
+                      {...register("zip_code")}
+                      placeholder="12345"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-3 pt-3 border-t">
@@ -410,51 +475,47 @@ const PlayerEdit = () => {
                     </SelectContent>
                   </Select>
                 </div>
-              </div>
-
-              <div className="space-y-3 pt-3 border-t">
-                <h3 className="text-sm font-semibold text-muted-foreground">Address</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
-                    <Label htmlFor="address_line1">Address Line 1</Label>
+                    <Label htmlFor="parent2_address_line1">Address Line 1</Label>
                     <Input
-                      id="address_line1"
-                      {...register("address_line1")}
+                      id="parent2_address_line1"
+                      {...register("parent2_address_line1")}
                       placeholder="Street address"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="address_line2">Address Line 2</Label>
+                    <Label htmlFor="parent2_address_line2">Address Line 2</Label>
                     <Input
-                      id="address_line2"
-                      {...register("address_line2")}
+                      id="parent2_address_line2"
+                      {...register("parent2_address_line2")}
                       placeholder="Apt, suite, etc."
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
+                    <Label htmlFor="parent2_city">City</Label>
                     <Input
-                      id="city"
-                      {...register("city")}
+                      id="parent2_city"
+                      {...register("parent2_city")}
                       placeholder="City"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="state">State</Label>
+                    <Label htmlFor="parent2_state">State</Label>
                     <Input
-                      id="state"
-                      {...register("state")}
+                      id="parent2_state"
+                      {...register("parent2_state")}
                       defaultValue="OH"
                       placeholder="State"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="zip_code">Zip Code</Label>
+                    <Label htmlFor="parent2_zip_code">Zip Code</Label>
                     <Input
-                      id="zip_code"
-                      {...register("zip_code")}
+                      id="parent2_zip_code"
+                      {...register("parent2_zip_code")}
                       placeholder="12345"
                     />
                   </div>
