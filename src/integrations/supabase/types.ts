@@ -486,6 +486,7 @@ export type Database = {
           state: string | null
           status: string | null
           team_id: string | null
+          team_name: string | null
           updated_at: string | null
           zip_code: string | null
         }
@@ -528,6 +529,7 @@ export type Database = {
           state?: string | null
           status?: string | null
           team_id?: string | null
+          team_name?: string | null
           updated_at?: string | null
           zip_code?: string | null
         }
@@ -570,6 +572,7 @@ export type Database = {
           state?: string | null
           status?: string | null
           team_id?: string | null
+          team_name?: string | null
           updated_at?: string | null
           zip_code?: string | null
         }

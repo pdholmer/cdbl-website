@@ -194,6 +194,61 @@ const PlayerEdit = () => {
                   </Select>
                 </div>
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="team_name">Team</Label>
+                <Select
+                  value={watch("team_name") || ""}
+                  onValueChange={(value) => setValue("team_name", value)}
+                  disabled={!selectedProgramId}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={selectedProgramId ? "Select team" : "Select a program first"} />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    {selectedProgram?.type === 'in_house' ? (
+                      <>
+                        <SelectItem value="Orioles">Orioles</SelectItem>
+                        <SelectItem value="Red Sox">Red Sox</SelectItem>
+                        <SelectItem value="Yankees">Yankees</SelectItem>
+                        <SelectItem value="Rays">Rays</SelectItem>
+                        <SelectItem value="Blue Jays">Blue Jays</SelectItem>
+                        <SelectItem value="White Sox">White Sox</SelectItem>
+                        <SelectItem value="Guardians">Guardians</SelectItem>
+                        <SelectItem value="Tigers">Tigers</SelectItem>
+                        <SelectItem value="Royals">Royals</SelectItem>
+                        <SelectItem value="Twins">Twins</SelectItem>
+                        <SelectItem value="Astros">Astros</SelectItem>
+                        <SelectItem value="Angels">Angels</SelectItem>
+                        <SelectItem value="Athletics">Athletics</SelectItem>
+                        <SelectItem value="Mariners">Mariners</SelectItem>
+                        <SelectItem value="Rangers">Rangers</SelectItem>
+                        <SelectItem value="Braves">Braves</SelectItem>
+                        <SelectItem value="Marlins">Marlins</SelectItem>
+                        <SelectItem value="Mets">Mets</SelectItem>
+                        <SelectItem value="Phillies">Phillies</SelectItem>
+                        <SelectItem value="Nationals">Nationals</SelectItem>
+                        <SelectItem value="Cubs">Cubs</SelectItem>
+                        <SelectItem value="Reds">Reds</SelectItem>
+                        <SelectItem value="Brewers">Brewers</SelectItem>
+                        <SelectItem value="Pirates">Pirates</SelectItem>
+                        <SelectItem value="Cardinals">Cardinals</SelectItem>
+                        <SelectItem value="Diamondbacks">Diamondbacks</SelectItem>
+                        <SelectItem value="Rockies">Rockies</SelectItem>
+                        <SelectItem value="Dodgers">Dodgers</SelectItem>
+                        <SelectItem value="Padres">Padres</SelectItem>
+                        <SelectItem value="Giants">Giants</SelectItem>
+                      </>
+                    ) : selectedProgram?.type === 'travel' ? (
+                      <>
+                        <SelectItem value="Blue">Blue</SelectItem>
+                        <SelectItem value="White">White</SelectItem>
+                        <SelectItem value="Gray">Gray</SelectItem>
+                        <SelectItem value="IHTT">IHTT</SelectItem>
+                      </>
+                    ) : null}
+                  </SelectContent>
+                </Select>
+              </div>
             </CardContent>
           </Card>
 
