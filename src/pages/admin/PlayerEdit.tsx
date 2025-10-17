@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { AdminLayout } from "@/components/AdminLayout";
@@ -19,12 +19,13 @@ import { usePlayerMutations } from "@/hooks/usePlayerMutations";
 import { usePrograms } from "@/hooks/usePrograms";
 import { GuardianDialog } from "@/components/GuardianDialog";
 import { useGuardianMutations } from "@/hooks/useGuardianMutations";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Copy } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
 type PlayerInsert = Database["public"]["Tables"]["players"]["Insert"];
 
 interface ExtendedPlayerForm extends PlayerInsert {
+  parent_relationship?: string;
   parent2_first_name?: string;
   parent2_last_name?: string;
   parent2_email?: string;
@@ -46,6 +47,20 @@ const PlayerEdit = () => {
   const { createGuardian } = useGuardianMutations();
 
   const { register, handleSubmit, reset, setValue, watch } = useForm<ExtendedPlayerForm>();
+
+  const copyPrimaryAddress = () => {
+    const addressLine1 = watch("address_line1");
+    const addressLine2 = watch("address_line2");
+    const city = watch("city");
+    const state = watch("state");
+    const zipCode = watch("zip_code");
+
+    setValue("parent2_address_line1", addressLine1 || "");
+    setValue("parent2_address_line2", addressLine2 || "");
+    setValue("parent2_city", city || "");
+    setValue("parent2_state", state || "OH");
+    setValue("parent2_zip_code", zipCode || "");
+  };
 
   useEffect(() => {
     if (player) {
@@ -418,6 +433,25 @@ const PlayerEdit = () => {
                     />
                   </div>
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="parent_relationship">Relationship</Label>
+                  <Select
+                    value={watch("parent_relationship") || ""}
+                    onValueChange={(value) => setValue("parent_relationship", value)}
+                  >
+                    <SelectTrigger id="parent_relationship">
+                      <SelectValue placeholder="Select relationship" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="mother">Mother</SelectItem>
+                      <SelectItem value="father">Father</SelectItem>
+                      <SelectItem value="guardian">Guardian</SelectItem>
+                      <SelectItem value="stepparent">Step-parent</SelectItem>
+                      <SelectItem value="grandparent">Grandparent</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <Label htmlFor="address_line1">Address Line 1</Label>
@@ -466,7 +500,9 @@ const PlayerEdit = () => {
               </div>
 
               <div className="space-y-3 pt-3 border-t">
-                <h3 className="text-sm font-semibold text-muted-foreground">Second Parent/Guardian (Optional)</h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold text-muted-foreground">Second Parent/Guardian (Optional)</h3>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <Label htmlFor="parent2_first_name">First Name</Label>
@@ -522,6 +558,19 @@ const PlayerEdit = () => {
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium">Address</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={copyPrimaryAddress}
+                    className="h-8 gap-2"
+                  >
+                    <Copy className="h-3 w-3" />
+                    Use same address as primary
+                  </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-2">
