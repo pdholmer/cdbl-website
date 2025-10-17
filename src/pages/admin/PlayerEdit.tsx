@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,6 +51,7 @@ const PlayerEdit = () => {
   const { createGuardian, updateGuardian } = useGuardianMutations();
 
   const { register, handleSubmit, reset, setValue, watch } = useForm<ExtendedPlayerForm>();
+  const queryClient = useQueryClient();
 
   const copyPrimaryAddress = () => {
     const addressLine1 = watch("address_line1");
@@ -275,6 +277,10 @@ const PlayerEdit = () => {
             });
           }
         }
+        
+        // Manually invalidate and refetch before navigating
+        await queryClient.invalidateQueries({ queryKey: ["players"] });
+        await queryClient.refetchQueries({ queryKey: ["players"] });
       }
       navigate("/admin/players");
     } catch (error) {
