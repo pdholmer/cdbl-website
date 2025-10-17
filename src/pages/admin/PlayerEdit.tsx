@@ -20,6 +20,7 @@ import { usePlayerMutations } from "@/hooks/usePlayerMutations";
 import { usePrograms } from "@/hooks/usePrograms";
 import { GuardianDialog } from "@/components/GuardianDialog";
 import { useGuardianMutations } from "@/hooks/useGuardianMutations";
+import { useGuardians } from "@/hooks/useGuardians";
 import { ArrowLeft, Copy } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -43,6 +44,7 @@ const PlayerEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: player, isLoading } = usePlayer(id);
+  const { data: guardians } = useGuardians(id);
   const { programs = [] } = usePrograms();
   const { createPlayer, updatePlayer } = usePlayerMutations();
   const { createGuardian } = useGuardianMutations();
@@ -65,12 +67,29 @@ const PlayerEdit = () => {
 
   useEffect(() => {
     if (player) {
+      // Destructure to remove nested objects from the reset data
+      const { division, program, registration_submissions, ...playerFields } = player;
+      
+      // Find the non-primary guardian (second parent)
+      const secondGuardian = guardians?.find(g => !g.is_primary);
+      
       reset({
-        ...player,
+        ...playerFields,
         parent_relationship: player.parent_relationship || "",
+        // Populate second parent fields if they exist
+        parent2_first_name: secondGuardian?.first_name || "",
+        parent2_last_name: secondGuardian?.last_name || "",
+        parent2_email: secondGuardian?.email || "",
+        parent2_phone: secondGuardian?.phone || "",
+        parent2_relationship: secondGuardian?.relationship || "",
+        parent2_address_line1: secondGuardian?.address_line1 || "",
+        parent2_address_line2: secondGuardian?.address_line2 || "",
+        parent2_city: secondGuardian?.city || "",
+        parent2_state: secondGuardian?.state || "OH",
+        parent2_zip_code: secondGuardian?.zip_code || "",
       });
     }
-  }, [player, reset]);
+  }, [player, guardians, reset]);
 
   // Auto-calculate age from date of birth
   const dateOfBirth = watch("date_of_birth");
