@@ -172,59 +172,106 @@ const PlayerEdit = () => {
       if (id) {
         await updatePlayer.mutateAsync({ id, updates: submissionData });
         
-        // Find existing non-primary guardian
-        const existingSecondGuardian = guardians?.find(g => !g.is_primary);
+        // Handle PRIMARY guardian (from player table fields)
+        const existingPrimaryGuardian = guardians?.find(g => g.is_primary);
+        const primaryGuardianData = {
+          player_id: id,
+          first_name: data.parent_first_name,
+          last_name: data.parent_last_name,
+          email: data.parent_email,
+          phone: data.parent_phone,
+          relationship: data.parent_relationship || 'parent',
+          is_primary: true,
+          address_line1: data.address_line1,
+          address_line2: data.address_line2,
+          city: data.city,
+          state: data.state || 'OH',
+          zip_code: data.zip_code,
+        };
+
+        if (existingPrimaryGuardian) {
+          // Update existing primary guardian
+          const { player_id, ...updateData } = primaryGuardianData;
+          await updateGuardian.mutateAsync({ 
+            id: existingPrimaryGuardian.id,
+            ...updateData
+          });
+        } else {
+          // Create primary guardian
+          await createGuardian.mutateAsync(primaryGuardianData);
+        }
         
-        // Check if second parent data is provided
+        // Handle SECOND guardian
+        const existingSecondGuardian = guardians?.find(g => !g.is_primary);
         const hasSecondParentData = parent2_first_name && parent2_last_name && 
                                      parent2_email && parent2_phone;
         
         if (hasSecondParentData) {
-          const guardianData = {
+          const secondGuardianData = {
             player_id: id,
             first_name: parent2_first_name,
             last_name: parent2_last_name,
             email: parent2_email,
             phone: parent2_phone,
-            relationship: parent2_relationship || 'guardian',
+            relationship: parent2_relationship || 'parent',
             is_primary: false,
             address_line1: parent2_address_line1,
             address_line2: parent2_address_line2,
             city: parent2_city,
-            state: parent2_state,
+            state: parent2_state || 'OH',
             zip_code: parent2_zip_code,
           };
           
           if (existingSecondGuardian) {
-            // Update existing guardian - exclude player_id from updates
-            const { player_id, ...updateData } = guardianData;
+            // Update existing second guardian
+            const { player_id, ...updateData } = secondGuardianData;
             await updateGuardian.mutateAsync({ 
               id: existingSecondGuardian.id,
               ...updateData
             });
           } else {
-            // Create new guardian
-            await createGuardian.mutateAsync(guardianData);
+            // Create second guardian
+            await createGuardian.mutateAsync(secondGuardianData);
           }
         }
       } else {
+        // Creating new player
         const newPlayer = await createPlayer.mutateAsync(submissionData);
         
-        if (newPlayer && parent2_first_name && parent2_last_name && parent2_email && parent2_phone) {
+        if (newPlayer) {
+          // Create primary guardian
           await createGuardian.mutateAsync({
             player_id: newPlayer.id,
-            first_name: parent2_first_name,
-            last_name: parent2_last_name,
-            email: parent2_email,
-            phone: parent2_phone,
-            relationship: parent2_relationship || 'guardian',
-            is_primary: false,
-            address_line1: parent2_address_line1,
-            address_line2: parent2_address_line2,
-            city: parent2_city,
-            state: parent2_state,
-            zip_code: parent2_zip_code,
+            first_name: data.parent_first_name,
+            last_name: data.parent_last_name,
+            email: data.parent_email,
+            phone: data.parent_phone,
+            relationship: data.parent_relationship || 'parent',
+            is_primary: true,
+            address_line1: data.address_line1,
+            address_line2: data.address_line2,
+            city: data.city,
+            state: data.state || 'OH',
+            zip_code: data.zip_code,
           });
+
+          // Create second guardian if provided
+          if (parent2_first_name && parent2_last_name && parent2_email && parent2_phone) {
+            await createGuardian.mutateAsync({
+              player_id: newPlayer.id,
+              first_name: parent2_first_name,
+              last_name: parent2_last_name,
+              email: parent2_email,
+              phone: parent2_phone,
+              relationship: parent2_relationship || 'parent',
+              is_primary: false,
+              address_line1: parent2_address_line1,
+              address_line2: parent2_address_line2,
+              city: parent2_city,
+              state: parent2_state || 'OH',
+              zip_code: parent2_zip_code,
+            });
+          }
         }
       }
       navigate("/admin/players");
