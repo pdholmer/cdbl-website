@@ -14,36 +14,83 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast.error(error.message);
-      setIsLoading(false);
+    
+    // Check if locked out
+    if (lockoutUntil && Date.now() < lockoutUntil) {
+      const remainingMinutes = Math.ceil((lockoutUntil - Date.now()) / 60000);
+      toast.error(`Too many attempts. Please try again in ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}.`);
       return;
     }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    
+    // Password minimum length
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+    
+    setIsLoading(true);
 
-    toast.success("Logged in successfully");
-    navigate("/admin");
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      // Reset attempts on success
+      setLoginAttempts(0);
+      setLockoutUntil(null);
+      toast.success("Logged in successfully");
+      navigate("/admin");
+    } catch (error: any) {
+      // Increment failed attempts
+      const newAttempts = loginAttempts + 1;
+      setLoginAttempts(newAttempts);
+      
+      // Lock out after 5 failed attempts
+      if (newAttempts >= 5) {
+        const lockoutTime = Date.now() + 15 * 60 * 1000; // 15 minutes
+        setLockoutUntil(lockoutTime);
+        toast.error("Too many failed attempts. Account temporarily locked for 15 minutes.");
+      } else {
+        toast.error(error.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address.");
       return;
     }
-
+    
+    // Password strength validation
     if (password.length < 8) {
-      toast.error("Password must be at least 8 characters");
+      toast.error("Password must be at least 8 characters long.");
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
 
