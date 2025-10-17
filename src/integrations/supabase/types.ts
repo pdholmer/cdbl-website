@@ -1342,6 +1342,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_user_email: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
