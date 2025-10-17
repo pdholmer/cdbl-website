@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar } from "lucide-react";
@@ -51,6 +52,9 @@ export function AdminSidebar() {
     <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible="icon">
       <SidebarContent className="bg-primary">
         <SidebarGroup>
+          <div className="relative">
+            <SidebarTrigger className="absolute top-2 right-2 text-primary-foreground hover:bg-primary-foreground/10" />
+          </div>
           <Link to="/" className="flex items-center justify-center p-4 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
