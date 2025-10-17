@@ -14,7 +14,7 @@ export default function Reports() {
   const [selectedProgram, setSelectedProgram] = useState<string>("all");
   const [selectedSeason, setSelectedSeason] = useState<string>(new Date().getFullYear().toString());
 
-  const { data: programs } = useQuery({
+  const { data: programs = [] } = useQuery({
     queryKey: ['programs'],
     queryFn: async () => {
       const { data, error } = await supabase
