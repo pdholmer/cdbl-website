@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { usePlayer } from "@/hooks/usePlayers";
 import { usePlayerMutations } from "@/hooks/usePlayerMutations";
-import { usePrograms } from "@/hooks/usePrograms";
+import { useAllPrograms } from "@/hooks/useAllPrograms";
 import { GuardianDialog } from "@/components/GuardianDialog";
 import { useGuardianMutations } from "@/hooks/useGuardianMutations";
 import { useGuardians } from "@/hooks/useGuardians";
@@ -45,7 +45,7 @@ const PlayerEdit = () => {
   const navigate = useNavigate();
   const { data: player, isLoading } = usePlayer(id);
   const { data: guardians } = useGuardians(id);
-  const { programs = [] } = usePrograms();
+  const { programs = [] } = useAllPrograms();
   const { createPlayer, updatePlayer } = usePlayerMutations();
   const { createGuardian, updateGuardian } = useGuardianMutations();
 
