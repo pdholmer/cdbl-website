@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -17,6 +16,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const Divisions = () => {
   const queryClient = useQueryClient();
@@ -72,57 +79,48 @@ const Divisions = () => {
         </Button>
       </div>
 
-      <div className="grid gap-4">
-        {divisions?.map((division) => (
-          <Card key={division.id}>
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle>{division.name}</CardTitle>
-                  <CardDescription>
-                    {division.programs?.name} • Ages {division.age_range}
-                  </CardDescription>
-                </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to={`/admin/divisions/${division.id}`}>
-                      <Edit className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Trash2 className="h-4 w-4" onClick={() => setDeleteId(division.id)} />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-3 gap-4">
-                <div>
-                  <p className="text-sm font-semibold">Cost</p>
-                  <p className="text-muted-foreground">${division.cost}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">Season Length</p>
-                  <p className="text-muted-foreground">{division.season_length || 'Not set'}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-semibold">Display Order</p>
-                  <p className="text-muted-foreground">{division.display_order}</p>
-                </div>
-              </div>
-              {division.features && Array.isArray(division.features) && division.features.length > 0 && (
-                <div className="mt-4">
-                  <p className="text-sm font-semibold mb-2">Features</p>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    {division.features.map((feature: string, idx: number) => (
-                      <li key={idx}>• {feature}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Program</TableHead>
+              <TableHead>Division Name</TableHead>
+              <TableHead>Age Range</TableHead>
+              <TableHead>Cost</TableHead>
+              <TableHead>Season Length</TableHead>
+              <TableHead className="text-center">Display Order</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {divisions?.map((division) => (
+              <TableRow key={division.id}>
+                <TableCell className="font-medium">{division.programs?.name}</TableCell>
+                <TableCell>{division.name}</TableCell>
+                <TableCell>{division.age_range}</TableCell>
+                <TableCell>${division.cost}</TableCell>
+                <TableCell>{division.season_length || 'Not set'}</TableCell>
+                <TableCell className="text-center">{division.display_order}</TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to={`/admin/divisions/${division.id}`}>
+                        <Edit className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setDeleteId(division.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
