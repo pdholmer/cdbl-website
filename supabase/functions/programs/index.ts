@@ -25,7 +25,7 @@ serve(async (req) => {
       .from('programs')
       .select(`
         *,
-        divisions (
+        divisions!divisions_program_id_fkey (
           *,
           rules_policies (*)
         ),
