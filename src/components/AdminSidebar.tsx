@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,7 @@ import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, 
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import cdblLogoWhite from "@/assets/cdbl-logo-white.png";
 
 const adminItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
@@ -43,14 +44,21 @@ export function AdminSidebar() {
 
   const getNavClass = ({ isActive }: { isActive: boolean }) =>
     isActive
-      ? "bg-primary text-primary-foreground font-medium hover:bg-primary/90"
-      : "hover:bg-muted/50";
+      ? "bg-primary-foreground/20 text-primary-foreground font-medium hover:bg-primary-foreground/30"
+      : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground";
 
   return (
     <Sidebar className={collapsed ? "w-14" : "w-60"} collapsible="icon">
-      <SidebarContent>
+      <SidebarContent className="bg-primary">
         <SidebarGroup>
-          <SidebarGroupLabel>
+          <Link to="/" className="flex items-center justify-center p-4 hover:opacity-80 transition-opacity">
+            <img 
+              src={cdblLogoWhite} 
+              alt="CDBL Logo" 
+              className={collapsed ? "h-8 w-8 object-contain" : "h-16 w-auto object-contain"}
+            />
+          </Link>
+          <SidebarGroupLabel className="text-primary-foreground">
             {!collapsed && "CDBL Admin"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -74,7 +82,7 @@ export function AdminSidebar() {
             <Button
               variant="ghost"
               onClick={handleLogout}
-              className="w-full justify-start"
+              className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
             >
               <LogOut className="h-4 w-4" />
               {!collapsed && <span className="ml-2">Logout</span>}
