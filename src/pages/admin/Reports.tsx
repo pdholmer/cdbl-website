@@ -165,11 +165,11 @@ export default function Reports() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Programs</SelectItem>
-                  {programs?.map(program => (
+                  {Array.isArray(programs) ? programs.map((program: any) => (
                     <SelectItem key={program.id} value={program.id}>
                       {program.name}
                     </SelectItem>
-                  ))}
+                  )) : null}
                 </SelectContent>
               </Select>
             </div>
