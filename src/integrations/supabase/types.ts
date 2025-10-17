@@ -1253,6 +1253,50 @@ export type Database = {
         }
         Relationships: []
       }
+      venue_fields: {
+        Row: {
+          created_at: string | null
+          divisions: string[] | null
+          field_name: string | null
+          field_number: string
+          id: string
+          notes: string | null
+          status: string | null
+          updated_at: string | null
+          venue_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          divisions?: string[] | null
+          field_name?: string | null
+          field_number: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+          updated_at?: string | null
+          venue_id: string
+        }
+        Update: {
+          created_at?: string | null
+          divisions?: string[] | null
+          field_name?: string | null
+          field_number?: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+          updated_at?: string | null
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_fields_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       venues: {
         Row: {
           address: string | null

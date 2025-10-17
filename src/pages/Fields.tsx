@@ -1,10 +1,45 @@
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Navigation, Phone, AlertTriangle } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import WeatherDisplay from "@/components/WeatherDisplay";
+import { MapPin, AlertTriangle, Navigation } from "lucide-react";
+import { useVenues } from "@/hooks/useVenues";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
-const Fields = () => {
+export default function Fields() {
+  const { data: venues = [], isLoading } = useVenues({ status: "active" });
+  
+  const { data: allFields = [] } = useQuery({
+    queryKey: ["all-venue-fields"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("venue_fields")
+        .select("*, venues!inner(name, status)")
+        .eq("venues.status", "active")
+        .order("field_number", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const getFieldsByVenue = (venueId: string) => {
+    return allFields.filter((field) => field.venue_id === venueId);
+  };
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, { variant: "default" | "secondary" | "destructive"; label: string }> = {
+      open: { variant: "default", label: "Open" },
+      closed: { variant: "destructive", label: "Closed" },
+      maintenance: { variant: "secondary", label: "Maintenance" },
+    };
+    const config = variants[status] || variants.open;
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
+
+  const hasClosedFields = allFields.some((field) => field.status !== "open");
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -26,245 +61,133 @@ const Fields = () => {
           </div>
         </section>
 
-        {/* Plato Fields */}
-        <section className="py-16 bg-background">
-          <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12">Plato Fields</h2>
-            
-            <div className="grid lg:grid-cols-2 gap-12 mb-12">
-              <div>
-                <div className="aspect-video bg-muted rounded-lg mb-6 flex items-center justify-center">
-                  <iframe
-                    title="Plato Fields Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d955!2d-88.4235169!3d42.0260302!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880f1909b0af698b%3A0xf49d7e6dea495e0d!2sCentral%20District%20Baseball%20League%20-%20Plato%20Center%20Baseball%20Fields_CDBL!5e0!3m2!1sen!2sus!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0, borderRadius: '0.5rem' }}
-                    allowFullScreen
-                    loading="lazy"
-                  />
+        {/* Status Alert */}
+        {hasClosedFields && (
+          <section className="py-6 bg-background">
+            <div className="container">
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-destructive mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-destructive mb-1">Field Status Alert</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Some fields are currently closed or under maintenance. Please check individual field status below.
+                  </p>
                 </div>
               </div>
-
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      Address
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-lg">Plato Fields</p>
-                    <p className="text-muted-foreground">41 Russell Road</p>
-                    <p className="text-muted-foreground">Elgin, IL 60124</p>
-                    <button
-                      onClick={() => window.open('https://www.google.com/maps/place/Central+District+Baseball+League+-+Plato+Center+Baseball+Fields_CDBL/@42.0260302,-88.4235169,955m/data=!3m1!1e3!4m15!1m8!3m7!1s0x880f1975b98762f7:0x1e26b4da855f5fff!2s41W119+Russell+Rd,+Elgin,+IL+60124!3b1!8m2!3d42.025995!4d-88.417667!16s%2Fg%2F11txhyr6hf!3m5!1s0x880f1909b0af698b:0xf49d7e6dea495e0d!8m2!3d42.0262779!4d-88.4276901!16s%2Fg%2F11dy_7v5_3?entry=ttu', '_blank')}
-                      className="mt-4 text-primary hover:text-primary/80 flex items-center gap-2 font-semibold"
-                    >
-                      <Navigation className="h-4 w-4" />
-                      Get Directions
-                    </button>
-                  </CardContent>
-                </Card>
-              </div>
             </div>
+          </section>
+        )}
 
-            {/* Plato Individual Fields */}
-            <h3 className="text-2xl font-bold mb-6">Field Details</h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Field 1</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Bronco</p>
-                  <p className="text-muted-foreground text-sm">Main Bronco division field at Plato</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Field 2</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Mustang</p>
-                  <p className="text-muted-foreground text-sm">Primary Mustang division field</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Field 3</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Pinto</p>
-                  <p className="text-muted-foreground text-sm">Dedicated Pinto division field</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Field 4</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">T-Ball</p>
-                  <p className="text-muted-foreground text-sm">T-Ball division field</p>
-                </CardContent>
-              </Card>
+        {/* Loading State */}
+        {isLoading && (
+          <section className="py-12 bg-background">
+            <div className="container">
+              <div className="text-center">Loading venue information...</div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        {/* Stonecrest Fields */}
-        <section className="py-16 bg-muted/30">
-          <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12">Stonecrest Fields</h2>
-            
-            <div className="grid lg:grid-cols-2 gap-12 mb-12">
-              <div>
-                <div className="aspect-video bg-muted rounded-lg mb-6 flex items-center justify-center">
-                  <iframe
-                    title="Stonecrest Fields Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d422!2d-88.4039311!3d42.0321119!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x880f1980b7e80c35%3A0x4d067a07a408cab1!2sPlato%20Park%20(Stonecrest)!5e0!3m2!1sen!2sus!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0, borderRadius: '0.5rem' }}
-                    allowFullScreen
-                    loading="lazy"
-                  />
+        {/* Venues */}
+        {venues.map((venue, index) => {
+          const venueFields = getFieldsByVenue(venue.id);
+          const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            `${venue.address}, ${venue.city}, ${venue.state} ${venue.zip_code}`
+          )}`;
+
+          return (
+            <section 
+              key={venue.id} 
+              className={`py-16 ${index % 2 === 0 ? 'bg-background' : 'bg-muted/30'}`}
+            >
+              <div className="container">
+                <h2 className="text-3xl md:text-4xl font-bold mb-12">{venue.name}</h2>
+                
+                <div className="grid lg:grid-cols-2 gap-12 mb-12">
+                  {/* Map */}
+                  <div>
+                    <div className="aspect-video bg-muted rounded-lg mb-6 flex items-center justify-center overflow-hidden">
+                      <iframe
+                        src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(
+                          `${venue.address}, ${venue.city}, ${venue.state} ${venue.zip_code}`
+                        )}`}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={`${venue.name} Location`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <div className="space-y-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <MapPin className="h-5 w-5 text-primary" />
+                          Address
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-lg">{venue.name}</p>
+                        <p className="text-muted-foreground">{venue.address}</p>
+                        <p className="text-muted-foreground">
+                          {venue.city}, {venue.state} {venue.zip_code}
+                        </p>
+
+                        {/* Features */}
+                        <div className="flex gap-2 mt-4 flex-wrap">
+                          {venue.has_lights && <Badge variant="outline">Lights</Badge>}
+                          {venue.has_restrooms && <Badge variant="outline">Restrooms</Badge>}
+                          {venue.has_concessions && <Badge variant="outline">Concessions</Badge>}
+                        </div>
+
+                        <button
+                          onClick={() => window.open(googleMapsUrl, '_blank')}
+                          className="mt-4 text-primary hover:text-primary/80 flex items-center gap-2 font-semibold"
+                        >
+                          <Navigation className="h-4 w-4" />
+                          Get Directions
+                        </button>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
+
+                {/* Fields */}
+                {venueFields.length > 0 && (
+                  <>
+                    <h3 className="text-2xl font-bold mb-6">Field Details</h3>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      {venueFields.map((field) => (
+                        <Card key={field.id}>
+                          <CardHeader>
+                            <CardTitle className="flex items-center justify-between">
+                              {field.field_name || `Field ${field.field_number}`}
+                              {getStatusBadge(field.status)}
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            {field.divisions && field.divisions.length > 0 && (
+                              <p className="text-lg font-semibold mb-2">
+                                {field.divisions.join(" / ")}
+                              </p>
+                            )}
+                            {field.notes && field.status !== "open" && (
+                              <p className="text-sm text-destructive mt-2">{field.notes}</p>
+                            )}
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
-
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      Address
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-lg">Stonecrest Fields</p>
-                    <p className="text-muted-foreground">4W400 Stonecrest Drive</p>
-                    <p className="text-muted-foreground">Elgin, IL 60124</p>
-                    <button
-                      onClick={() => window.open('https://www.google.com/maps/place/Plato+Park+(Stonecrest)/@42.0321119,-88.4039311,422m/data=!3m1!1e3!4m10!1m2!2m1!1sstonecrest+Fields!3m6!1s0x880f1980b7e80c35:0x4d067a07a408cab1!8m2!3d42.031945!4d-88.4027598!15sChFzdG9uZWNyZXN0IEZpZWxkc1oTIhFzdG9uZWNyZXN0IGZpZWxkc5IBDmJhc2ViYWxsX2ZpZWxkmgEjQ2haRFNVaE5NRzluUzBWSlEwRm5TVVJQTWw5WGJsaFJFQUWqAVEQASoVIhFzdG9uZWNyZXN0IGZpZWxkcygAMh8QASIbpzNIfuXOKQIl-LCdc_3D1Q7F_18-9fQVdqsdMhUQAiIRc3RvbmVjcmVzdCBmaWVsZHPgAQD6AQQIABBL!16s%2Fg%2F119wfd2s9?entry=ttu', '_blank')}
-                      className="mt-4 text-primary hover:text-primary/80 flex items-center gap-2 font-semibold"
-                    >
-                      <Navigation className="h-4 w-4" />
-                      Get Directions
-                    </button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Stonecrest Individual Fields */}
-            <h3 className="text-2xl font-bold mb-6">Field Details</h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Field 1</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Bronco</p>
-                  <p className="text-muted-foreground text-sm">Bronco division field at Stonecrest</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Field 2</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Mustang</p>
-                  <p className="text-muted-foreground text-sm">Mustang division field</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Field 4</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Pony / Colt</p>
-                  <p className="text-muted-foreground text-sm">Shared field for Pony and Colt divisions</p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Burlington Fields */}
-        <section className="py-16 bg-background">
-          <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12">Burlington Fields</h2>
-            
-            <div className="grid lg:grid-cols-2 gap-12 mb-12">
-              <div>
-                <div className="aspect-video bg-muted rounded-lg mb-6 flex items-center justify-center">
-                  <iframe
-                    title="Burlington Fields Map"
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3024.5!2d-88.5!3d42.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2z12N475%20Park%20St%2CBurlington%2CIL%2060109!5e0!3m2!1sen!2sus!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0, borderRadius: '0.5rem' }}
-                    allowFullScreen
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5 text-primary" />
-                      Address
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-lg">Burlington Fields</p>
-                    <p className="text-muted-foreground">12N475 Park St</p>
-                    <p className="text-muted-foreground">Burlington, IL 60109</p>
-                    <button
-                      onClick={() => window.open('http://maps.google.com/maps?q=12N475%20Park%20St,Burlington,Illinois,United%20States,60109', '_blank')}
-                      className="mt-4 text-primary hover:text-primary/80 flex items-center gap-2 font-semibold"
-                    >
-                      <Navigation className="h-4 w-4" />
-                      Get Directions
-                    </button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            {/* Burlington Individual Fields */}
-            <h3 className="text-2xl font-bold mb-6">Field Details</h3>
-            <div className="grid md:grid-cols-2 gap-6 max-w-2xl">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Burlington Upper</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Mustang / Pinto</p>
-                  <p className="text-muted-foreground text-sm">Upper field for Mustang and Pinto divisions</p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Burlington Lower</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mb-2">Bronco</p>
-                  <p className="text-muted-foreground text-sm">Lower field for Bronco division</p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+            </section>
+          );
+        })}
 
         {/* Visitor Information */}
         <section className="py-16 bg-muted/30">
@@ -285,8 +208,8 @@ const Fields = () => {
           </div>
         </section>
 
-        {/* Coach Resources - Field Status Reporting */}
-        <section className="py-16 bg-muted/30">
+        {/* Coach Resources */}
+        <section className="py-16 bg-background">
           <div className="container max-w-3xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">For Coaches</h2>
             
@@ -323,6 +246,4 @@ const Fields = () => {
       <Footer />
     </div>
   );
-};
-
-export default Fields;
+}

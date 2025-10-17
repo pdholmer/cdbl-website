@@ -40,6 +40,7 @@ import Coaches from "./pages/admin/Coaches";
 import CoachEdit from "./pages/admin/CoachEdit";
 import AdminSchedule from "./pages/admin/Schedule";
 import Venues from "./pages/admin/Venues";
+import VenueEdit from "./pages/admin/VenueEdit";
 import AdminReports from "./pages/admin/Reports";
 import GameChangerSync from "./pages/admin/GameChangerSync";
 import Programs from "./pages/admin/Programs";
@@ -105,6 +106,8 @@ const App = () => (
             <Route path="/admin/coaches/:id" element={<ProtectedRoute requireAdmin><CoachEdit /></ProtectedRoute>} />
             <Route path="/admin/schedule" element={<ProtectedRoute requireAdmin><AdminSchedule /></ProtectedRoute>} />
             <Route path="/admin/venues" element={<ProtectedRoute requireAdmin><Venues /></ProtectedRoute>} />
+            <Route path="/admin/venues/new" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
+            <Route path="/admin/venues/:id" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
             <Route path="/admin/reports" element={<ProtectedRoute requireAdmin><AdminReports /></ProtectedRoute>} />
             <Route path="/admin/gamechanger" element={<ProtectedRoute requireAdmin><GameChangerSync /></ProtectedRoute>} />
             <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
