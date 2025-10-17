@@ -2,18 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export const useFAQs = (programId?: string) => {
-  return useQuery({
+  const query = useQuery({
     queryKey: ['faqs', programId],
     queryFn: async () => {
-      let query = supabase.from('faqs').select('*').order('display_order');
+      let queryBuilder = supabase.from('faqs').select('*').order('display_order');
       
       if (programId) {
-        query = query.eq('program_id', programId);
+        queryBuilder = queryBuilder.eq('program_id', programId);
       }
 
-      const { data, error } = await query;
+      const { data, error } = await queryBuilder;
       if (error) throw error;
       return data;
     },
   });
+
+  return {
+    faqs: query.data,
+    isLoading: query.isLoading,
+    error: query.error,
+  };
 };

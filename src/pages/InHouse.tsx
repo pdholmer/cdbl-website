@@ -5,15 +5,11 @@ import { CircleDot, Users, Trophy, DollarSign, Calendar, Heart } from "lucide-re
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import heroInhouse from "@/assets/hero-inhouse.jpg";
+import { usePrograms } from "@/hooks/usePrograms";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const InHouse = () => {
-  const divisions = [
-    { name: "T-Ball", ages: "4-6", color: "hsl(0 84% 60%)", team: "Cardinals" },
-    { name: "Pinto", ages: "7-8", color: "hsl(201 63% 56%)", team: "Cubs" },
-    { name: "Mustang", ages: "9-10", color: "hsl(142 76% 36%)", team: "Athletics" },
-    { name: "Bronco", ages: "11-12", color: "hsl(215 100% 26%)", team: "Dodgers" },
-    { name: "Pony", ages: "13-14", color: "hsl(24 100% 50%)", team: "Giants" },
-  ];
+  const { inHouseProgram, inHouseDivisions, isLoading } = usePrograms();
 
   return (
     <div className="min-h-screen">
@@ -133,29 +129,48 @@ const InHouse = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">What to Expect</h2>
             
             <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Season Structure</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="font-semibold">Season Dates</span>
-                    <span className="text-muted-foreground">April - June/July 2026</span>
-                  </div>
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="font-semibold">Number of Games</span>
-                    <span className="text-muted-foreground">12-18 games (varies by division)</span>
-                  </div>
-                  <div className="flex justify-between items-center pb-2 border-b">
-                    <span className="font-semibold">Practices</span>
-                    <span className="text-muted-foreground">1-2 per week</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">Time Commitment</span>
-                    <span className="text-muted-foreground">3-5 hours per week</span>
-                  </div>
-                </CardContent>
-              </Card>
+              {isLoading ? (
+                <Card>
+                  <CardHeader>
+                    <Skeleton className="h-6 w-32" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Season Structure</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {inHouseProgram?.season_start && (
+                      <div className="flex justify-between items-center pb-2 border-b">
+                        <span className="font-semibold">Season Dates</span>
+                        <span className="text-muted-foreground">
+                          {new Date(inHouseProgram.season_start).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} - {new Date(inHouseProgram.season_end || '').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                        </span>
+                      </div>
+                    )}
+                    {inHouseDivisions?.[0]?.season_length && (
+                      <div className="flex justify-between items-center pb-2 border-b">
+                        <span className="font-semibold">Season Length</span>
+                        <span className="text-muted-foreground">{inHouseDivisions[0].season_length}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center pb-2 border-b">
+                      <span className="font-semibold">Practices</span>
+                      <span className="text-muted-foreground">1-2 per week</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold">Time Commitment</span>
+                      <span className="text-muted-foreground">3-5 hours per week</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
               <Card>
                 <CardHeader>
@@ -174,38 +189,37 @@ const InHouse = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Registration Fees</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span>T-Ball (Ages 4-6)</span>
-                      <span className="font-bold text-primary">$75</span>
+              {isLoading ? (
+                <Card>
+                  <CardHeader>
+                    <Skeleton className="h-6 w-32" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Registration Fees</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {inHouseDivisions?.map((division) => (
+                        <div key={division.id} className="flex justify-between items-center pb-2 border-b last:border-0">
+                          <span>{division.name} (Ages {division.age_range})</span>
+                          <span className="font-bold text-primary">${division.cost}</span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span>Pinto (Ages 7-8)</span>
-                      <span className="font-bold text-primary">$95</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span>Mustang (Ages 9-10)</span>
-                      <span className="font-bold text-primary">$115</span>
-                    </div>
-                    <div className="flex justify-between items-center pb-2 border-b">
-                      <span>Bronco (Ages 11-12)</span>
-                      <span className="font-bold text-primary">$135</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Pony (Ages 13-14)</span>
-                      <span className="font-bold text-primary">$155</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-4">
-                    Family discounts and financial assistance available.
-                  </p>
-                </CardContent>
-              </Card>
+                    <p className="text-sm text-muted-foreground mt-4">
+                      Family discounts and financial assistance available.
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             <div className="mt-12 text-center">

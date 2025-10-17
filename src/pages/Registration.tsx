@@ -5,8 +5,16 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import heroRegistration from "@/assets/hero-registration.jpg";
+import { usePrograms } from "@/hooks/usePrograms";
+import { useFAQs } from "@/hooks/useFAQs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Registration = () => {
+  const { inHouseProgram, travelProgram, inHouseDivisions, isLoading: programsLoading } = usePrograms();
+  const { faqs, isLoading: faqsLoading } = useFAQs();
+
+  const isLoading = programsLoading || faqsLoading;
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -35,54 +43,83 @@ const Registration = () => {
         {/* Key Information Cards */}
         <section className="py-16 bg-background">
           <div className="container">
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              <Card>
-                <CardHeader>
-                  <Calendar className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle>Important Dates</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li><strong>Early Registration:</strong> December 1, 2025</li>
-                    <li><strong>Regular Registration:</strong> January 15, 2026</li>
-                    <li><strong>Late Registration:</strong> March 1, 2026</li>
-                    <li><strong>Season Starts:</strong> April 2026</li>
-                  </ul>
-                </CardContent>
-              </Card>
+            {isLoading ? (
+              <div className="grid md:grid-cols-3 gap-6 mb-12">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i}>
+                    <CardHeader>
+                      <Skeleton className="h-8 w-8 mb-2" />
+                      <Skeleton className="h-6 w-32" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-6 mb-12">
+                <Card>
+                  <CardHeader>
+                    <Calendar className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>Important Dates</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-muted-foreground">
+                      {inHouseProgram?.season_start && (
+                        <li><strong>Season Starts:</strong> {new Date(inHouseProgram.season_start).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</li>
+                      )}
+                      {inHouseProgram?.season_end && (
+                        <li><strong>Season Ends:</strong> {new Date(inHouseProgram.season_end).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</li>
+                      )}
+                      <li><strong>Status:</strong> {inHouseProgram?.registration_open ? 'Registration Open' : 'Registration Closed'}</li>
+                    </ul>
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader>
-                  <DollarSign className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle>Registration Fees</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li><strong>T-Ball (Ages 4-6):</strong> $75</li>
-                    <li><strong>Pinto (Ages 7-8):</strong> $95</li>
-                    <li><strong>Bronco (Ages 9-10):</strong> $115</li>
-                    <li><strong>Pony (Ages 11-12):</strong> $135</li>
-                    <li><strong>Colt (Ages 13-14):</strong> $155</li>
-                  </ul>
-                </CardContent>
-              </Card>
+                <Card>
+                  <CardHeader>
+                    <DollarSign className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>Registration Fees</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-muted-foreground">
+                      {inHouseDivisions?.map((division) => (
+                        <li key={division.id}>
+                          <strong>{division.name} (Ages {division.age_range}):</strong> ${division.cost}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader>
-                  <Users className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle>What's Included</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li>• Official CDBL jersey</li>
-                    <li>• Team hat</li>
-                    <li>• 12-16 game season</li>
-                    <li>• Professional coaching</li>
-                    <li>• Tournament opportunities</li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
+                <Card>
+                  <CardHeader>
+                    <Users className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>What's Included</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-muted-foreground">
+                      {inHouseDivisions?.[0]?.features && Array.isArray(inHouseDivisions[0].features) ? (
+                        inHouseDivisions[0].features.map((feature: string, idx: number) => (
+                          <li key={idx}>• {feature}</li>
+                        ))
+                      ) : (
+                        <>
+                          <li>• Official CDBL jersey</li>
+                          <li>• Team hat</li>
+                          <li>• 12-16 game season</li>
+                          <li>• Professional coaching</li>
+                          <li>• Tournament opportunities</li>
+                        </>
+                      )}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
         </section>
 
@@ -171,49 +208,37 @@ const Registration = () => {
           <div className="container max-w-4xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
             
-            <div className="space-y-6">
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">Are scholarships or financial assistance available?</h3>
-                <p className="text-muted-foreground">
-                  Yes! CDBL is committed to making baseball accessible to all families. We offer need-based scholarships and payment plans. Contact our Treasurer, Sarah Johnson, at treasurer@cdbl.org or (555) 123-4567 for confidential assistance.
-                </p>
+            {isLoading ? (
+              <div className="space-y-6">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i}>
+                    <CardContent className="p-6">
+                      <Skeleton className="h-6 w-3/4 mb-2" />
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-full" />
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">Do you offer sibling discounts or family caps?</h3>
-                <p className="text-muted-foreground">
-                  Yes! Families registering multiple children receive a 10% discount on the second child and 15% on additional children. Maximum family fee is capped at $400 for in-house programs (excluding travel).
-                </p>
+            ) : faqs && faqs.length > 0 ? (
+              <div className="space-y-6">
+                {faqs.map((faq) => (
+                  <div key={faq.id} className="p-6 bg-card rounded-lg border">
+                    <h3 className="font-bold text-lg mb-2">{faq.question}</h3>
+                    <p className="text-muted-foreground">{faq.answer}</p>
+                  </div>
+                ))}
               </div>
-
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">What is your refund policy?</h3>
-                <p className="text-muted-foreground">
-                  Full refunds are available before March 1, 2026. After March 1, a 50% refund is available until the first game. No refunds after the season starts, except for documented medical reasons.
-                </p>
+            ) : (
+              <div className="space-y-6">
+                <div className="p-6 bg-card rounded-lg border">
+                  <h3 className="font-bold text-lg mb-2">Are scholarships or financial assistance available?</h3>
+                  <p className="text-muted-foreground">
+                    Yes! CDBL is committed to making baseball accessible to all families. Contact us for more information.
+                  </p>
+                </div>
               </div>
-
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">What equipment does my child need?</h3>
-                <p className="text-muted-foreground">
-                  CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet with face guard (ages 4-12), cleats (no metal under age 13), athletic cup (required for catchers and recommended for all), and water bottle. Catchers gear is provided by the league.
-                </p>
-              </div>
-
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">What volunteer commitments are required?</h3>
-                <p className="text-muted-foreground">
-                  All families are asked to volunteer for 2 concession stand shifts per season and help with one league event (opening day, field cleanup, etc.). Coaching and assistant coaching positions are always welcome but not required.
-                </p>
-              </div>
-
-              <div className="p-6 bg-card rounded-lg border">
-                <h3 className="font-bold text-lg mb-2">When are evaluations and the draft?</h3>
-                <p className="text-muted-foreground">
-                  Player evaluations are held March 8-9, 2026. The draft takes place March 15, 2026. Teams are formed by the player agent to ensure balanced, competitive play. Travel team tryouts are also March 8-9.
-                </p>
-              </div>
-            </div>
+            )}
           </div>
         </section>
 
