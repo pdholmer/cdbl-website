@@ -114,17 +114,20 @@ const PlayerEdit = () => {
   
   // Clear division when program changes
   useEffect(() => {
-    if (selectedProgramId && selectedDivisionId) {
-      // Check if the current division belongs to the selected program
-      const divisionBelongsToProgram = selectedProgram?.divisions?.some(
-        (d: any) => d.id === selectedDivisionId
-      );
-      
-      if (!divisionBelongsToProgram) {
-        setValue("division_id", "");
-      }
+    // Only validate division after programs have loaded and both values are present
+    if (!selectedProgramId || !selectedDivisionId) return;
+
+    const programFound = programs?.find((p: any) => p.id === selectedProgramId);
+    if (!programFound) return; // wait until programs are available
+
+    const divisionBelongsToProgram = programFound?.divisions?.some(
+      (d: any) => d.id === selectedDivisionId
+    );
+
+    if (divisionBelongsToProgram === false) {
+      setValue("division_id", "");
     }
-  }, [selectedProgramId, selectedProgram, selectedDivisionId, setValue]);
+  }, [selectedProgramId, selectedDivisionId, programs, setValue]);
 
   const onSubmit = async (data: ExtendedPlayerForm) => {
     const {
