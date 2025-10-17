@@ -141,19 +141,25 @@ const PlayerEdit = () => {
       ...playerData
     } = data;
 
-    // Sanitize numeric fields - convert empty strings to null
+    // Sanitize fields - convert empty strings to null for optional fields and coerce numbers
     const sanitizedData = {
       ...playerData,
+      program_id: playerData.program_id || null,
+      division_id: playerData.division_id || null,
+      team_name: playerData.team_name || null,
+      jersey_size: playerData.jersey_size || null,
+      skill_level: playerData.skill_level || null,
+      status: playerData.status || null,
+      payment_status: playerData.payment_status || null,
       gender: playerData.gender || null,
-      age_at_registration: !playerData.age_at_registration && playerData.age_at_registration !== 0
-        ? null 
-        : Number(playerData.age_at_registration),
-      amount_due: !playerData.amount_due && playerData.amount_due !== 0
-        ? null 
-        : Number(playerData.amount_due),
-      amount_paid: !playerData.amount_paid && playerData.amount_paid !== 0
-        ? null 
-        : Number(playerData.amount_paid),
+      age_at_registration:
+        !playerData.age_at_registration && playerData.age_at_registration !== 0
+          ? null
+          : Number(playerData.age_at_registration),
+      amount_due:
+        !playerData.amount_due && playerData.amount_due !== 0 ? null : Number(playerData.amount_due),
+      amount_paid:
+        !playerData.amount_paid && playerData.amount_paid !== 0 ? null : Number(playerData.amount_paid),
     };
 
     const submissionData = {
@@ -331,7 +337,7 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="gender">Gender</Label>
                   <Select
-                    value={watch("gender") || ""}
+                    value={watch("gender") ?? ""}
                     onValueChange={(value) => setValue("gender", value)}
                   >
                     <SelectTrigger>
@@ -350,7 +356,7 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="program_id">Program</Label>
                   <Select
-                    value={watch("program_id") || ""}
+                    value={watch("program_id") ?? ""}
                     onValueChange={(value) => setValue("program_id", value)}
                   >
                     <SelectTrigger>
@@ -368,7 +374,7 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="division_id">Division</Label>
                   <Select
-                    value={watch("division_id") || ""}
+                    value={watch("division_id") ?? ""}
                     onValueChange={(value) => setValue("division_id", value)}
                     disabled={!selectedProgramId}
                   >
@@ -387,7 +393,7 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="team_name">Team</Label>
                   <Select
-                    value={watch("team_name") || ""}
+                    value={watch("team_name") ?? ""}
                     onValueChange={(value) => setValue("team_name", value)}
                     disabled={!selectedProgramId}
                   >
@@ -444,7 +450,7 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="jersey_size">Jersey Size</Label>
                   <Select
-                    value={watch("jersey_size") || ""}
+                    value={watch("jersey_size") ?? ""}
                     onValueChange={(value) => setValue("jersey_size", value)}
                   >
                     <SelectTrigger>
@@ -465,7 +471,7 @@ const PlayerEdit = () => {
                 <div className="space-y-2">
                   <Label htmlFor="skill_level">Skill Level</Label>
                   <Select
-                    value={watch("skill_level") || ""}
+                    value={watch("skill_level") ?? ""}
                     onValueChange={(value) => setValue("skill_level", value)}
                   >
                     <SelectTrigger>
