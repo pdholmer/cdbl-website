@@ -25,11 +25,7 @@ serve(async (req) => {
       .from('programs')
       .select(`
         *,
-        divisions!divisions_program_id_fkey (
-          *,
-          rules_policies!fk_rules_division (*)
-        ),
-        faqs (*)
+        divisions!divisions_program_id_fkey (*)
       `);
 
     if (programType) {
