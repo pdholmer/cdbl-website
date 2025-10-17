@@ -18,10 +18,19 @@ import { usePlayer } from "@/hooks/usePlayers";
 import { usePlayerMutations } from "@/hooks/usePlayerMutations";
 import { usePrograms } from "@/hooks/usePrograms";
 import { GuardianDialog } from "@/components/GuardianDialog";
+import { useGuardianMutations } from "@/hooks/useGuardianMutations";
 import { ArrowLeft } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
 type PlayerInsert = Database["public"]["Tables"]["players"]["Insert"];
+
+interface ExtendedPlayerForm extends PlayerInsert {
+  parent2_first_name?: string;
+  parent2_last_name?: string;
+  parent2_email?: string;
+  parent2_phone?: string;
+  parent2_relationship?: string;
+}
 
 const PlayerEdit = () => {
   const { id } = useParams();
@@ -29,8 +38,9 @@ const PlayerEdit = () => {
   const { data: player, isLoading } = usePlayer(id);
   const { programs = [] } = usePrograms();
   const { createPlayer, updatePlayer } = usePlayerMutations();
+  const { createGuardian } = useGuardianMutations();
 
-  const { register, handleSubmit, reset, setValue, watch } = useForm<PlayerInsert>();
+  const { register, handleSubmit, reset, setValue, watch } = useForm<ExtendedPlayerForm>();
 
   useEffect(() => {
     if (player) {
@@ -74,19 +84,55 @@ const PlayerEdit = () => {
     }
   }, [selectedProgramId, selectedProgram, selectedDivisionId, setValue]);
 
-  const onSubmit = async (data: PlayerInsert) => {
-    // Concatenate parent first and last name for backward compatibility
+  const onSubmit = async (data: ExtendedPlayerForm) => {
+    const {
+      parent2_first_name,
+      parent2_last_name,
+      parent2_email,
+      parent2_phone,
+      parent2_relationship,
+      ...playerData
+    } = data;
+
     const submissionData = {
-      ...data,
+      ...playerData,
       parent_guardian_name: `${data.parent_first_name || ''} ${data.parent_last_name || ''}`.trim(),
     };
-    
-    if (id) {
-      await updatePlayer.mutateAsync({ id, updates: submissionData });
-    } else {
-      await createPlayer.mutateAsync(submissionData);
+
+    try {
+      if (id) {
+        await updatePlayer.mutateAsync({ id, updates: submissionData });
+        
+        if (parent2_first_name && parent2_last_name && parent2_email && parent2_phone) {
+          await createGuardian.mutateAsync({
+            player_id: id,
+            first_name: parent2_first_name,
+            last_name: parent2_last_name,
+            email: parent2_email,
+            phone: parent2_phone,
+            relationship: parent2_relationship || 'guardian',
+            is_primary: false,
+          });
+        }
+      } else {
+        const newPlayer = await createPlayer.mutateAsync(submissionData);
+        
+        if (newPlayer && parent2_first_name && parent2_last_name && parent2_email && parent2_phone) {
+          await createGuardian.mutateAsync({
+            player_id: newPlayer.id,
+            first_name: parent2_first_name,
+            last_name: parent2_last_name,
+            email: parent2_email,
+            phone: parent2_phone,
+            relationship: parent2_relationship || 'guardian',
+            is_primary: false,
+          });
+        }
+      }
+      navigate("/admin/players");
+    } catch (error) {
+      console.error("Error saving player:", error);
     }
-    navigate("/admin/players");
   };
 
   if (isLoading) {
@@ -264,49 +310,154 @@ const PlayerEdit = () => {
               <CardTitle>Parent/Guardian Contact</CardTitle>
               {id && <GuardianDialog playerId={id} />}
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="parent_first_name">Parent First Name *</Label>
-                  <Input id="parent_first_name" {...register("parent_first_name", { required: true })} />
+            <CardContent className="space-y-6">
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground">Primary Parent/Guardian</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_first_name">First Name *</Label>
+                    <Input
+                      id="parent_first_name"
+                      {...register("parent_first_name", { required: true })}
+                      placeholder="First name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_last_name">Last Name *</Label>
+                    <Input
+                      id="parent_last_name"
+                      {...register("parent_last_name", { required: true })}
+                      placeholder="Last name"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="parent_last_name">Parent Last Name *</Label>
-                  <Input id="parent_last_name" {...register("parent_last_name", { required: true })} />
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_email">Email *</Label>
+                    <Input
+                      id="parent_email"
+                      type="email"
+                      {...register("parent_email", { required: true })}
+                      placeholder="email@example.com"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent_phone">Phone *</Label>
+                    <Input
+                      id="parent_phone"
+                      {...register("parent_phone", { required: true })}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="parent_email">Email *</Label>
-                  <Input id="parent_email" type="email" {...register("parent_email", { required: true })} />
+
+              <div className="space-y-3 pt-3 border-t">
+                <h3 className="text-sm font-semibold text-muted-foreground">Second Parent/Guardian (Optional)</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="parent2_first_name">First Name</Label>
+                    <Input
+                      id="parent2_first_name"
+                      {...register("parent2_first_name")}
+                      placeholder="First name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent2_last_name">Last Name</Label>
+                    <Input
+                      id="parent2_last_name"
+                      {...register("parent2_last_name")}
+                      placeholder="Last name"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="parent2_email">Email</Label>
+                    <Input
+                      id="parent2_email"
+                      type="email"
+                      {...register("parent2_email")}
+                      placeholder="email@example.com"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="parent2_phone">Phone</Label>
+                    <Input
+                      id="parent2_phone"
+                      {...register("parent2_phone")}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="parent_phone">Phone *</Label>
-                  <Input id="parent_phone" {...register("parent_phone", { required: true })} />
+                  <Label htmlFor="parent2_relationship">Relationship</Label>
+                  <Select
+                    value={watch("parent2_relationship") || ""}
+                    onValueChange={(value) => setValue("parent2_relationship", value)}
+                  >
+                    <SelectTrigger id="parent2_relationship">
+                      <SelectValue placeholder="Select relationship" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="mother">Mother</SelectItem>
+                      <SelectItem value="father">Father</SelectItem>
+                      <SelectItem value="guardian">Guardian</SelectItem>
+                      <SelectItem value="stepparent">Step-parent</SelectItem>
+                      <SelectItem value="grandparent">Grandparent</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="address_line1">Address Line 1</Label>
-                  <Input id="address_line1" {...register("address_line1")} />
+
+              <div className="space-y-3 pt-3 border-t">
+                <h3 className="text-sm font-semibold text-muted-foreground">Address</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="address_line1">Address Line 1</Label>
+                    <Input
+                      id="address_line1"
+                      {...register("address_line1")}
+                      placeholder="Street address"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="address_line2">Address Line 2</Label>
+                    <Input
+                      id="address_line2"
+                      {...register("address_line2")}
+                      placeholder="Apt, suite, etc."
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address_line2">Address Line 2</Label>
-                  <Input id="address_line2" {...register("address_line2")} />
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input id="city" {...register("city")} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State</Label>
-                  <Input id="state" {...register("state")} defaultValue="OH" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="zip_code">Zip Code</Label>
-                  <Input id="zip_code" {...register("zip_code")} />
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="city">City</Label>
+                    <Input
+                      id="city"
+                      {...register("city")}
+                      placeholder="City"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="state">State</Label>
+                    <Input
+                      id="state"
+                      {...register("state")}
+                      defaultValue="OH"
+                      placeholder="State"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="zip_code">Zip Code</Label>
+                    <Input
+                      id="zip_code"
+                      {...register("zip_code")}
+                      placeholder="12345"
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>
