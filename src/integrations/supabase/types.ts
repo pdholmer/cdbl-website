@@ -446,6 +446,50 @@ export type Database = {
           },
         ]
       }
+      player_data_access_log: {
+        Row: {
+          access_type: string
+          accessed_by: string
+          accessed_by_email: string
+          accessed_fields: Json | null
+          created_at: string
+          id: string
+          ip_address: string | null
+          player_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          access_type: string
+          accessed_by: string
+          accessed_by_email: string
+          accessed_fields?: Json | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          player_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          access_type?: string
+          accessed_by?: string
+          accessed_by_email?: string
+          accessed_fields?: Json | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          player_id?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_data_access_log_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       player_guardians: {
         Row: {
           address_line1: string | null
@@ -1374,10 +1418,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      assign_first_user_admin: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
+      assign_first_user_admin: { Args: { _user_id: string }; Returns: boolean }
       check_schedule_conflict: {
         Args: {
           p_date: string
@@ -1389,16 +1430,21 @@ export type Database = {
         }
         Returns: boolean
       }
-      get_user_email: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      get_user_email: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      log_player_access: {
+        Args: {
+          _access_type: string
+          _accessed_fields?: Json
+          _player_id: string
+        }
+        Returns: undefined
       }
     }
     Enums: {
