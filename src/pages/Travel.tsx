@@ -8,26 +8,31 @@ import rocketLogo from "@/assets/rocket-white-2.png";
 import chsLogo from "@/assets/chs-rocket.png";
 import rocketWhite3 from "@/assets/rocket-white-3.png";
 import heroTravelTeams from "@/assets/hero-travel-teams.jpg";
-
 const Travel = () => {
-  const teams = [
-    { age: "8U", record: "Regional Champions 2025", coach: "Mike Stevens" },
-    { age: "10U", record: "State Tournament Qualifier", coach: "Jennifer Martinez" },
-    { age: "12U", record: "Conference Champions", coach: "Robert Chen" },
-    { age: "14U", record: "Elite Division Finalists", coach: "David Thompson" },
-  ];
-
-  return (
-    <div className="min-h-screen">
+  const teams = [{
+    age: "8U",
+    record: "Regional Champions 2025",
+    coach: "Mike Stevens"
+  }, {
+    age: "10U",
+    record: "State Tournament Qualifier",
+    coach: "Jennifer Martinez"
+  }, {
+    age: "12U",
+    record: "Conference Champions",
+    coach: "Robert Chen"
+  }, {
+    age: "14U",
+    record: "Elite Division Finalists",
+    coach: "David Thompson"
+  }];
+  return <div className="min-h-screen">
       <Header />
       <main>
         {/* Hero Section - Rockets Theme */}
-        <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
-          style={{ 
-            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelTeams}')`
-          }}
-        >
+        <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]" style={{
+        backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelTeams}')`
+      }}>
           <div className="container">
             <div className="flex items-center gap-4 mb-6">
               <div>
@@ -38,20 +43,10 @@ const Travel = () => {
             </div>
             <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
             <div className="flex flex-wrap gap-4">
-              <Button 
-                variant="default" 
-                size="lg"
-                asChild
-                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
-              >
+              <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
                 <Link to="/registration#travel">Tryout Information</Link>
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                asChild
-                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
-              >
+              <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
                 <Link to="/teams#travel">View Rosters</Link>
               </Button>
             </div>
@@ -71,8 +66,7 @@ const Travel = () => {
             </div>
 
             <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {teams.map((team) => (
-                <Card key={team.age} className="text-center border-2 border-primary/20 hover:border-primary transition-colors">
+              {teams.map(team => <Card key={team.age} className="text-center border-2 border-primary/20 hover:border-primary transition-colors">
                   <CardHeader>
                     <div className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center bg-gradient-to-br from-primary to-accent">
                       <Star className="h-8 w-8 text-white" />
@@ -83,8 +77,7 @@ const Travel = () => {
                     <p className="text-sm font-semibold text-primary">{team.record}</p>
                     <p className="text-xs text-muted-foreground">Coach: {team.coach}</p>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
           </div>
         </section>
@@ -140,9 +133,7 @@ const Travel = () => {
                   <Award className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Competitive Schedule</h3>
-                <p className="text-muted-foreground">
-                  50+ games per season including 8-15 weekend tournaments against top regional competition. March through August season.
-                </p>
+                <p className="text-muted-foreground">40-50 games per season including 5-8 weekend tournaments. April through July season.</p>
               </div>
 
               <div className="text-center">
@@ -272,12 +263,7 @@ const Travel = () => {
             </div>
 
             <div className="mt-12 text-center">
-              <Button 
-                variant="default" 
-                size="lg"
-                asChild
-                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
-              >
+              <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
                 <Link to="/registration#travel">Register for Tryouts</Link>
               </Button>
             </div>
@@ -293,20 +279,10 @@ const Travel = () => {
               Join the CDBL Rockets and take your game to the next level. Future stars start here.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button 
-                variant="default" 
-                size="lg"
-                asChild
-                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
-              >
+              <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
                 <Link to="/registration#travel">Register for Tryouts</Link>
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                asChild
-                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
-              >
+              <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
                 <Link to="/teams#travel">Meet the Teams</Link>
               </Button>
             </div>
@@ -314,8 +290,6 @@ const Travel = () => {
         </section>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Travel;
