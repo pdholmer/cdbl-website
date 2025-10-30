@@ -155,30 +155,18 @@ const Travel = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Tryout Information</h2>
             
             <div className="space-y-6">
-              <Card className="border-2 border-primary/20">
+              <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
                 <CardHeader>
-                  <CardTitle>2026 Tryout Dates</CardTitle>
+                  <CardTitle className="text-2xl">2027 Season Tryouts</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="font-semibold">Primary Tryouts</p>
-                      <p className="text-muted-foreground">March 8-9, 2026</p>
+                <CardContent className="space-y-4">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center flex-shrink-0">
+                      <Calendar className="h-6 w-6 text-white" />
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-primary" />
                     <div>
-                      <p className="font-semibold">Callback Sessions</p>
-                      <p className="text-muted-foreground">March 9, 2026 (by invitation)</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-primary" />
-                    <div>
-                      <p className="font-semibold">Team Announcements</p>
-                      <p className="text-muted-foreground">March 10, 2026</p>
+                      <p className="text-lg font-semibold mb-1">Tryouts for the 2027 season will take place in July 2026.</p>
+                      <p className="text-muted-foreground">Specific dates and registration information will be announced in early 2026. Check back for updates!</p>
                     </div>
                   </div>
                 </CardContent>
