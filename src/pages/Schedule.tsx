@@ -217,39 +217,63 @@ const Schedule = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
-              <Button 
-                size="lg" 
-                className="w-full bg-white text-primary hover:bg-white/90 font-heading font-semibold"
-                onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-              >
-                <ExternalLink className="mr-2 h-5 w-5" />
-                SportsConnect
-              </Button>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 md:p-8 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-white/20 mb-4">
+                    <ExternalLink className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-heading font-bold mb-3 text-white">SportsConnect</h3>
+                  <p className="text-white/90 mb-6 font-sans">
+                    Access team schedules, standings, and game results in real-time.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-white text-primary hover:bg-white/90 font-heading font-semibold"
+                    onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+                  >
+                    Open SportsConnect
+                  </Button>
+                </CardContent>
+              </Card>
               
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="w-full border-2 border-white text-white hover:bg-white/20 font-heading font-semibold"
-                asChild
-              >
-                <Link to="/fields">
-                  <MapPin className="mr-2 h-5 w-5" />
-                  View Fields & Maps
-                </Link>
-              </Button>
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 md:p-8 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-white/20 mb-4">
+                    <MapPin className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-heading font-bold mb-3 text-white">Fields & Maps</h3>
+                  <p className="text-white/90 mb-6 font-sans">
+                    Find field locations, directions, and parking information.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-white text-primary hover:bg-white/90 font-heading font-semibold"
+                    asChild
+                  >
+                    <Link to="/fields">View All Fields</Link>
+                  </Button>
+                </CardContent>
+              </Card>
               
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="w-full border-2 border-white text-white hover:bg-white/20 font-heading font-semibold"
-                asChild
-              >
-                <Link to="/volunteer">
-                  <HandHeart className="mr-2 h-5 w-5" />
-                  Volunteer for Game Day
-                </Link>
-              </Button>
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 md:p-8 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-white/20 mb-4">
+                    <HandHeart className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-heading font-bold mb-3 text-white">Volunteer</h3>
+                  <p className="text-white/90 mb-6 font-sans">
+                    Help make game day special by volunteering for various roles.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-white text-primary hover:bg-white/90 font-heading font-semibold"
+                    asChild
+                  >
+                    <Link to="/volunteer">Get Involved</Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
