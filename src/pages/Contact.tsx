@@ -7,27 +7,24 @@ import { Mail, Phone, MapPin, Facebook, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
 const Contact = () => {
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
       title: "Message sent!",
-      description: "We'll get back to you as soon as possible.",
+      description: "We'll get back to you as soon as possible."
     });
   };
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Header />
       <main>
         {/* Hero Section */}
-        <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
-          style={{ background: 'var(--gradient-hero)' }}
-        >
+        <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden" style={{
+        background: 'var(--gradient-hero)'
+      }}>
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Contact Us</h1>
             <p className="text-xl max-w-2xl">Have questions? We're here to help! Reach out to the CDBL team anytime.</p>
@@ -46,49 +43,27 @@ const Contact = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
                         <Label htmlFor="name">Name *</Label>
-                        <Input 
-                          id="name" 
-                          placeholder="Your name" 
-                          required 
-                        />
+                        <Input id="name" placeholder="Your name" required />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="email">Email *</Label>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          placeholder="your.email@example.com" 
-                          required 
-                        />
+                        <Input id="email" type="email" placeholder="your.email@example.com" required />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="phone">Phone</Label>
-                        <Input 
-                          id="phone" 
-                          type="tel" 
-                          placeholder="(555) 123-4567" 
-                        />
+                        <Input id="phone" type="tel" placeholder="(555) 123-4567" />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject *</Label>
-                        <Input 
-                          id="subject" 
-                          placeholder="What is this regarding?" 
-                          required 
-                        />
+                        <Input id="subject" placeholder="What is this regarding?" required />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="message">Message *</Label>
-                        <Textarea 
-                          id="message" 
-                          placeholder="Tell us how we can help..."
-                          rows={5}
-                          required 
-                        />
+                        <Textarea id="message" placeholder="Tell us how we can help..." rows={5} required />
                       </div>
 
                       <Button type="submit" size="lg" className="w-full">
@@ -112,10 +87,7 @@ const Contact = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <a 
-                        href="mailto:info@cdbaseball.org" 
-                        className="text-lg text-primary hover:text-primary/80"
-                      >
+                      <a href="mailto:info@cdbaseball.org" className="text-lg text-primary hover:text-primary/80">
                         info@cdbaseball.org
                       </a>
                       <p className="text-sm text-muted-foreground mt-2">
@@ -137,10 +109,7 @@ const Contact = () => {
                       <p className="text-sm text-muted-foreground mt-2">
                         For field status and cancellations
                       </p>
-                      <button
-                        onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')}
-                        className="mt-3 text-primary hover:text-primary/80 font-semibold underline text-sm"
-                      >
+                      <button onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')} className="mt-3 text-primary hover:text-primary/80 font-semibold underline text-sm">
                         Check Field Status Online →
                       </button>
                     </CardContent>
@@ -156,10 +125,7 @@ const Contact = () => {
                     <CardContent>
                       <p className="text-lg font-semibold">CDBL Baseball Complex</p>
                       <p className="text-muted-foreground">Burlington, IL 60109</p>
-                      <button
-                        onClick={() => window.open('https://maps.google.com/?q=Burlington+IL+baseball', '_blank')}
-                        className="mt-3 text-primary hover:text-primary/80 font-semibold"
-                      >
+                      <button onClick={() => window.open('https://maps.google.com/?q=Burlington+IL+baseball', '_blank')} className="mt-3 text-primary hover:text-primary/80 font-semibold">
                         Get Directions →
                       </button>
                     </CardContent>
@@ -171,21 +137,11 @@ const Contact = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="flex gap-4">
-                        <a
-                          href="https://facebook.com/cdbl"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:text-primary/80"
-                        >
+                        <a href="https://facebook.com/cdbl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:text-primary/80">
                           <Facebook className="h-5 w-5" />
                           <span>Facebook</span>
                         </a>
-                        <a
-                          href="https://instagram.com/cdbl"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-primary hover:text-primary/80"
-                        >
+                        <a href="https://instagram.com/cdbl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:text-primary/80">
                           <Instagram className="h-5 w-5" />
                           <span>Instagram</span>
                         </a>
@@ -209,7 +165,7 @@ const Contact = () => {
                   <CardTitle>President</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-semibold text-lg">John Smith</p>
+                  <p className="font-semibold text-lg">Jason Taylor</p>
                   <a href="mailto:president@cdbaseball.org" className="text-primary text-sm">
                     president@cdbaseball.org
                   </a>
@@ -221,7 +177,7 @@ const Contact = () => {
                   <CardTitle>Vice President</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-semibold text-lg">Lisa Davis</p>
+                  <p className="font-semibold text-lg">Carrie Wolak</p>
                   <a href="mailto:vp@cdbaseball.org" className="text-primary text-sm">
                     vp@cdbaseball.org
                   </a>
@@ -233,55 +189,33 @@ const Contact = () => {
                   <CardTitle>Treasurer</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-semibold text-lg">Sarah Johnson</p>
+                  <p className="font-semibold text-lg">Todd Weachter</p>
                   <a href="mailto:treasurer@cdbaseball.org" className="text-primary text-sm">
                     treasurer@cdbaseball.org
                   </a>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Player Agent</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-semibold text-lg">Mike Chen</p>
-                  <a href="mailto:playeragent@cdbaseball.org" className="text-primary text-sm">
-                    playeragent@cdbaseball.org
-                  </a>
-                </CardContent>
-              </Card>
+              
 
               <Card>
                 <CardHeader>
                   <CardTitle>Travel Coordinator</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="font-semibold text-lg">Dave Martinez</p>
+                  <p className="font-semibold text-lg">Bobby Rogers & Carrie Wolak</p>
                   <a href="mailto:travel@cdbaseball.org" className="text-primary text-sm">
                     travel@cdbaseball.org
                   </a>
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Sponsorship</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="font-semibold text-lg">Amy Wilson</p>
-                  <a href="mailto:sponsors@cdbaseball.org" className="text-primary text-sm">
-                    sponsors@cdbaseball.org
-                  </a>
-                </CardContent>
-              </Card>
+              
             </div>
           </div>
         </section>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Contact;
