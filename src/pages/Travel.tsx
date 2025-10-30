@@ -44,10 +44,10 @@ const Travel = () => {
             <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
             <div className="flex flex-wrap gap-4">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/registration#travel">Tryout Information</Link>
+                <Link to="/in-house-registration">Register for In-House Season</Link>
               </Button>
               <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
-                <Link to="/teams#travel">View Rosters</Link>
+                <Link to="/in-house">Learn About In-House</Link>
               </Button>
             </div>
           </div>
@@ -251,8 +251,8 @@ const Travel = () => {
             </div>
 
             <div className="mt-12 text-center">
-              <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/registration#travel">Register for Tryouts</Link>
+              <Button variant="default" size="lg" asChild className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg font-semibold">
+                <Link to="/in-house-registration">Register for In-House Season</Link>
               </Button>
             </div>
           </div>
@@ -268,10 +268,10 @@ const Travel = () => {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/registration#travel">Register for Tryouts</Link>
+                <Link to="/in-house-registration">Register for In-House Season</Link>
               </Button>
               <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
-                <Link to="/teams#travel">Meet the Teams</Link>
+                <Link to="/in-house">Learn About In-House</Link>
               </Button>
             </div>
           </div>
