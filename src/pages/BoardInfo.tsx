@@ -4,17 +4,14 @@ import { Calendar, FileText, Users, Vote, Mail, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
 const BoardInfo = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Header />
       <main>
         {/* Hero Section */}
-        <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
-          style={{ background: 'var(--gradient-hero)' }}
-        >
+        <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden" style={{
+        background: 'var(--gradient-hero)'
+      }}>
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Board of Directors</h1>
             <p className="text-xl max-w-2xl">
@@ -46,7 +43,7 @@ const BoardInfo = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Humberto Camacho</CardTitle>
+                  <CardTitle>Carrie Wolak</CardTitle>
                   <p className="text-sm text-primary font-semibold">Vice President</p>
                 </CardHeader>
                 <CardContent>
@@ -76,7 +73,7 @@ const BoardInfo = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Carrie Wolak</CardTitle>
+                  <CardTitle>Danae Wezdecki</CardTitle>
                   <p className="text-sm text-primary font-semibold">Secretary</p>
                 </CardHeader>
                 <CardContent>
@@ -471,8 +468,6 @@ const BoardInfo = () => {
         </section>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default BoardInfo;
