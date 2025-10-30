@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -65,17 +66,14 @@ const Events = () => {
                   <Calendar className="mr-2 h-5 w-5" />
                   View Full Calendar
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  onClick={() => {
-                    // Placeholder for sync functionality
-                    console.log('Sync to device');
-                  }}
-                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-heading font-semibold"
-                >
-                  Sync to Device
-                </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                asChild
+                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-heading font-semibold"
+              >
+                <Link to="/schedule">View Team Calendar</Link>
+              </Button>
               </div>
             </div>
           </div>
