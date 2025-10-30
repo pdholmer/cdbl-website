@@ -76,7 +76,7 @@ export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected }: FindMyTe
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px] max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">Find My Team 🧢</DialogTitle>
+          <DialogTitle className="text-xl font-bold">Find My Team</DialogTitle>
         </DialogHeader>
         
         <div className="flex-1 overflow-y-auto space-y-4 py-4 px-1">
