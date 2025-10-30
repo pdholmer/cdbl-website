@@ -9,7 +9,6 @@ import Registration from "./pages/Registration";
 import Teams from "./pages/Teams";
 import Schedule from "./pages/Schedule";
 import Fields from "./pages/Fields";
-import { Navigate } from "react-router-dom";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
 import Rules from "./pages/Rules";
@@ -72,7 +71,6 @@ const App = () => (
           <Route path="/teams" element={<Teams />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/fields" element={<Fields />} />
-          <Route path="/events" element={<Navigate to="/schedule" replace />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/about" element={<About />} />
           <Route path="/rules" element={<Rules />} />
