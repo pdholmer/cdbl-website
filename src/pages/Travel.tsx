@@ -214,10 +214,10 @@ const Travel = () => {
                   <div>
                     <p className="font-semibold mb-2">Time Commitment</p>
                     <ul className="text-muted-foreground space-y-1 ml-4">
-                      <li>• 2-3 practices per week (weeknights)</li>
-                      <li>• 2-3 games per week during season</li>
-                      <li>• 8-15 weekend tournaments (overnight travel)</li>
-                      <li>• Season: March - August (6 months)</li>
+                      <li>• 1-2 practices per week (weeknights)</li>
+                      <li>• 1-2 games per week during season</li>
+                      <li>• 5-8 weekend tournaments (possible overnight travel)</li>
+                      <li>• Season: January - March (Training), April - July (Games/Tournaments)</li>
                     </ul>
                   </div>
                   <div>
