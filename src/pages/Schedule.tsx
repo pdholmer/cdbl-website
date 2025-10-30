@@ -195,21 +195,13 @@ const Schedule = () => {
                   Find My Team
                 </Button>
                 <Button 
-                  variant="default" 
+                  variant="secondary" 
                   size="lg"
                   onClick={scrollToSchedule}
-                  className="bg-white text-primary hover:bg-white/90 shadow-lg font-heading font-semibold"
+                  className="font-heading font-semibold"
                 >
                   <Calendar className="mr-2 h-5 w-5" />
                   View Calendar
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  asChild
-                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-heading font-semibold"
-                >
-                  <Link to="/fields">View Fields</Link>
                 </Button>
               </div>
             </div>
