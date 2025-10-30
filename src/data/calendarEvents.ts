@@ -42,6 +42,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "field-maintenance",
     description: "Volunteer event to prepare fields for winter and maintain league facilities. All families welcome!",
     icon: Hammer,
+    league: 'both',
   },
 
   // November 2025
@@ -66,6 +67,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "registration",
     description: "In-House registration for the 2026 season opens online. Register early for best team placement!",
     icon: ClipboardList,
+    league: 'in-house',
   },
   {
     id: "dec-16-board",
@@ -89,6 +91,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "training",
     description: "Indoor training sessions begin for travel teams at Elburn facility.",
     icon: Users,
+    league: 'travel',
   },
   {
     id: "jan-11-travel-practices",
@@ -99,6 +102,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "practices-start",
     description: "Travel team practices begin at Campton Hills High School gymnasium.",
     icon: Users,
+    league: 'travel',
   },
   {
     id: "jan-15-uniform-tryon",
@@ -110,6 +114,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "uniform-event",
     description: "Try on uniforms to ensure proper sizing before the season begins.",
     icon: Shirt,
+    league: 'in-house',
   },
   {
     id: "jan-20-board",
@@ -132,6 +137,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "uniform-event",
     description: "Uniform fitting event for travel teams.",
     icon: Shirt,
+    league: 'travel',
   },
 
   // February 2026
@@ -156,6 +162,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "clinic",
     description: "Skills clinic for in-house players at the Elburn indoor facility.",
     icon: Star,
+    league: 'in-house',
   },
   {
     id: "feb-24-board",
@@ -178,6 +185,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "registration",
     description: "Final day to register for in-house baseball. Late registration may be available with a fee.",
     icon: ClipboardList,
+    league: 'in-house',
   },
   {
     id: "mar-08-clinic",
@@ -189,6 +197,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "clinic",
     description: "Skills clinic for in-house players.",
     icon: Star,
+    league: 'in-house',
   },
   {
     id: "mar-10-board",
@@ -211,6 +220,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "draft",
     description: "In-House draft day where teams are formed. Division coordinators and managers required.",
     icon: Users,
+    league: 'in-house',
   },
   {
     id: "mar-15-umpire-training",
@@ -222,6 +232,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "training",
     description: "Umpire training session for the upcoming season.",
     icon: BadgeCheck,
+    league: 'both',
   },
   {
     id: "mar-16-travel-pictures",
@@ -234,6 +245,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "pictures",
     description: "Team photo day for all travel teams.",
     icon: Camera,
+    league: 'travel',
   },
   {
     id: "mar-21-spring-field",
@@ -246,6 +258,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "field-maintenance",
     description: "Volunteer event to prepare fields for the upcoming season. All families encouraged to help!",
     icon: Hammer,
+    league: 'both',
   },
   {
     id: "mar-24-board",
@@ -269,6 +282,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "practices-start",
     description: "In-House team practices begin at assigned fields. Check your team schedule for details.",
     icon: Users,
+    league: 'in-house',
   },
   {
     id: "apr-07-board",
@@ -302,6 +316,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "ceremony",
     description: "Opening Day celebration with parade and ceremony marking the official start of the 2026 season!",
     icon: Star,
+    league: 'both',
   },
   {
     id: "apr-27-games-begin",
@@ -312,6 +327,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "games-start",
     description: "In-House game season officially begins! Check your team schedule for game times.",
     icon: Trophy,
+    league: 'in-house',
   },
   {
     id: "apr-30-rocket-night",
@@ -323,6 +339,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "special-event",
     description: "Special event for future rockets (younger players).",
     icon: Star,
+    league: 'both',
   },
 
   // May 2026
@@ -337,6 +354,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "pictures",
     description: "Team and individual photos for all in-house players.",
     icon: Camera,
+    league: 'in-house',
   },
   {
     id: "may-05-board",
@@ -371,6 +389,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "tournament",
     description: "Annual CDBL Memorial Day Tournament featuring teams from across the region.",
     icon: Trophy,
+    league: 'both',
   },
   {
     id: "may-28-awards",
@@ -382,6 +401,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "ceremony",
     description: "Celebration honoring graduating senior players.",
     icon: Gift,
+    league: 'both',
   },
 
   // June 2026
@@ -393,6 +413,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "registration",
     description: "Registration opens for the 2027 travel baseball season.",
     icon: ClipboardList,
+    league: 'travel',
   },
   {
     id: "jun-05-league-tournament",
@@ -405,6 +426,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "tournament",
     description: "CDBL teams compete in league tournament in Bettendorf, Iowa.",
     icon: Trophy,
+    league: 'both',
   },
   {
     id: "jun-09-board",
@@ -427,6 +449,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "ceremony",
     description: "Annual event celebrating all players and families. Rain date: June 17th.",
     icon: Star,
+    league: 'both',
   },
   {
     id: "jun-18-fathers-day",
@@ -439,6 +462,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "tournament",
     description: "Annual Father's Day tournament featuring competitive baseball over the holiday weekend.",
     icon: Trophy,
+    league: 'both',
   },
   {
     id: "jun-20-mlb-outing",
@@ -450,6 +474,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "special-event",
     description: "League outing to a minor league baseball game.",
     icon: Star,
+    league: 'both',
   },
   {
     id: "jun-23-board",
@@ -473,6 +498,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "tournament",
     description: "CDBL Mid-Summer Classic Tournament.",
     icon: Trophy,
+    league: 'both',
   },
   {
     id: "jun-27-inhouse-tournament",
@@ -484,6 +510,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "tournament",
     description: "End-of-season in-house tournament.",
     icon: Trophy,
+    league: 'in-house',
   },
   {
     id: "jun-29-championship",
@@ -495,6 +522,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "games-start",
     description: "Championship games for in-house divisions.",
     icon: Trophy,
+    league: 'in-house',
   },
 
   // July 2026
@@ -508,6 +536,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "board-meeting",
     description: "Important board meeting including vote for travel coaches for the 2027 season.",
     icon: Building2,
+    league: 'travel',
   },
   {
     id: "jul-13-banana-ball",
@@ -519,6 +548,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "special-event",
     description: "Special Banana Ball exhibition game at Plato Fields!",
     icon: Star,
+    league: 'both',
   },
   {
     id: "jul-14-tryouts",
@@ -531,6 +561,7 @@ export const calendarEvents: CalendarEvent[] = [
     type: "tryouts",
     description: "Travel team tryouts for the 2027 season. Check website for age group schedules.",
     icon: Users,
+    league: 'travel',
   },
 
   // August 2026
@@ -544,5 +575,6 @@ export const calendarEvents: CalendarEvent[] = [
     type: "fundraiser",
     description: "Annual golf outing fundraiser supporting CDBL programs.",
     icon: DollarSign,
+    league: 'both',
   },
 ];
