@@ -6,8 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarGrid } from "@/components/CalendarGrid";
 import { EventDetailModal } from "@/components/EventDetailModal";
 import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
+import { EventsNavigation } from "@/components/EventsNavigation";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
-import { Calendar, Trophy, Users, Heart, HandHeart, DollarSign } from "lucide-react";
+import { Calendar, Trophy, Users, Heart, HandHeart, DollarSign, Facebook, Twitter, Instagram } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import heroImage from "@/assets/hero-events.jpg";
 
 const Events = () => {
@@ -33,8 +35,9 @@ const Events = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-16 md:pb-0">
       <Header />
+      <EventsNavigation />
       
       <main className="flex-grow">
         {/* Hero Section */}
@@ -87,25 +90,25 @@ const Events = () => {
         />
 
         {/* Calendar Section */}
-        <section id="calendar-section" className="py-16 bg-background">
+        <section id="calendar-section" className="py-12 md:py-16 bg-background">
           <div className="container mx-auto px-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-12">
-                <TabsTrigger value="all" className="flex items-center gap-2">
+              <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-8 md:mb-12 h-auto">
+                <TabsTrigger value="all" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
                   <Calendar className="h-4 w-4" />
-                  <span className="hidden sm:inline">All</span>
+                  <span className="text-xs md:text-sm">All</span>
                 </TabsTrigger>
-                <TabsTrigger value="event" className="flex items-center gap-2">
+                <TabsTrigger value="event" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
                   <Calendar className="h-4 w-4" />
-                  <span className="hidden sm:inline">Events</span>
+                  <span className="text-xs md:text-sm">Events</span>
                 </TabsTrigger>
-                <TabsTrigger value="practice" className="flex items-center gap-2">
+                <TabsTrigger value="practice" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
                   <Users className="h-4 w-4" />
-                  <span className="hidden sm:inline">Practices</span>
+                  <span className="text-xs md:text-sm">Practices</span>
                 </TabsTrigger>
-                <TabsTrigger value="game" className="flex items-center gap-2">
+                <TabsTrigger value="game" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
                   <Trophy className="h-4 w-4" />
-                  <span className="hidden sm:inline">Games</span>
+                  <span className="text-xs md:text-sm">Games</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -124,105 +127,171 @@ const Events = () => {
             </Tabs>
 
             {/* Stats Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-4xl mx-auto">
-              <div className="text-center p-6 rounded-xl bg-card border hover:shadow-lg transition-shadow">
-                <div className="inline-flex p-3 rounded-full bg-event-gold/10 mb-3">
-                  <Calendar className="h-8 w-8 text-event-gold" />
-                </div>
-                <p className="text-3xl font-heading font-bold mb-1">
-                  {calendarEvents.filter(e => e.category === 'event').length}
-                </p>
-                <p className="text-muted-foreground font-sans">Total League Events</p>
-              </div>
-              <div className="text-center p-6 rounded-xl bg-card border hover:shadow-lg transition-shadow">
-                <div className="inline-flex p-3 rounded-full bg-event-practice/10 mb-3">
-                  <Users className="h-8 w-8 text-event-practice" />
-                </div>
-                <p className="text-3xl font-heading font-bold mb-1">
-                  {calendarEvents.filter(e => e.category === 'practice').length}
-                </p>
-                <p className="text-muted-foreground font-sans">Practice Sessions</p>
-              </div>
-              <div className="text-center p-6 rounded-xl bg-card border hover:shadow-lg transition-shadow">
-                <div className="inline-flex p-3 rounded-full bg-event-game/10 mb-3">
-                  <Trophy className="h-8 w-8 text-event-game" />
-                </div>
-                <p className="text-3xl font-heading font-bold mb-1">
-                  {calendarEvents.filter(e => e.category === 'game').length}
-                </p>
-                <p className="text-muted-foreground font-sans">Game Days</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-12 md:mt-16 max-w-4xl mx-auto">
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6">
+                  <div className="inline-flex p-3 rounded-full bg-event-gold/10 mb-3 animate-pulse">
+                    <Calendar className="h-8 w-8 text-event-gold" />
+                  </div>
+                  <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
+                    {calendarEvents.filter(e => e.category === 'event').length}
+                  </p>
+                  <p className="text-sm md:text-base text-muted-foreground font-sans">Total League Events</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6">
+                  <div className="inline-flex p-3 rounded-full bg-event-practice/10 mb-3 animate-pulse" style={{ animationDelay: '0.2s' }}>
+                    <Users className="h-8 w-8 text-event-practice" />
+                  </div>
+                  <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
+                    {calendarEvents.filter(e => e.category === 'practice').length}
+                  </p>
+                  <p className="text-sm md:text-base text-muted-foreground font-sans">Practice Sessions</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6">
+                  <div className="inline-flex p-3 rounded-full bg-event-game/10 mb-3 animate-pulse" style={{ animationDelay: '0.4s' }}>
+                    <Trophy className="h-8 w-8 text-event-game" />
+                  </div>
+                  <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
+                    {calendarEvents.filter(e => e.category === 'game').length}
+                  </p>
+                  <p className="text-sm md:text-base text-muted-foreground font-sans">Game Days</p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
         {/* Stay in the Loop Section */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-heading font-bold mb-4">Stay in the Loop</h2>
-            <p className="text-muted-foreground font-sans mb-8 max-w-2xl mx-auto">
-              Follow us on social media for real-time updates, weather alerts, and schedule changes.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="outline" size="lg" asChild className="font-heading">
-                <a href="https://facebook.com/cdbl" target="_blank" rel="noopener noreferrer">
-                  Facebook
-                </a>
-              </Button>
-              <Button variant="outline" size="lg" asChild className="font-heading">
-                <a href="https://twitter.com/cdbl" target="_blank" rel="noopener noreferrer">
-                  Twitter
-                </a>
-              </Button>
-              <Button variant="outline" size="lg" asChild className="font-heading">
-                <a href="https://instagram.com/cdbl" target="_blank" rel="noopener noreferrer">
-                  Instagram
-                </a>
-              </Button>
+        <section className="py-12 md:py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Stay in the Loop</h2>
+              <p className="text-base md:text-lg text-muted-foreground font-sans max-w-2xl mx-auto">
+                Follow us on social media for real-time updates, weather alerts, and schedule changes.
+              </p>
+            </div>
+            
+            {/* Social Media Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
+                    <Facebook className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="font-heading font-bold mb-2">Facebook</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Daily updates & photos</p>
+                  <Button variant="outline" size="sm" asChild className="w-full font-heading">
+                    <a href="https://facebook.com/cdbl" target="_blank" rel="noopener noreferrer">
+                      Follow
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
+                    <Twitter className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="font-heading font-bold mb-2">Twitter</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Live game scores</p>
+                  <Button variant="outline" size="sm" asChild className="w-full font-heading">
+                    <a href="https://twitter.com/cdbl" target="_blank" rel="noopener noreferrer">
+                      Follow
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-primary/10 mb-4">
+                    <Instagram className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="font-heading font-bold mb-2">Instagram</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Behind the scenes</p>
+                  <Button variant="outline" size="sm" asChild className="w-full font-heading">
+                    <a href="https://instagram.com/cdbl" target="_blank" rel="noopener noreferrer">
+                      Follow
+                    </a>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* Footer CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-primary to-primary-light text-white">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-4xl font-heading font-bold mb-4">Get Involved with CDBL</h2>
-            <p className="text-lg mb-10 max-w-2xl mx-auto opacity-90">
-              Join our community and help make a difference in youth baseball.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-white text-primary hover:bg-white/90 font-heading"
-                asChild
-              >
-                <a href="/volunteer">
-                  <HandHeart className="mr-2 h-5 w-5" />
-                  Volunteer
-                </a>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-white text-white hover:bg-white/20 font-heading"
-                asChild
-              >
-                <a href="/donate">
-                  <Heart className="mr-2 h-5 w-5" />
-                  Donate
-                </a>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-white text-white hover:bg-white/20 font-heading"
-                asChild
-              >
-                <a href="/registration">
-                  <DollarSign className="mr-2 h-5 w-5" />
-                  Register
-                </a>
-              </Button>
+        {/* Get Involved CTA Section */}
+        <section className="py-16 md:py-20 bg-gradient-to-br from-primary to-primary-light text-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-10 md:mb-12">
+              <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4">Get Involved with CDBL</h2>
+              <p className="text-base md:text-xl max-w-2xl mx-auto opacity-95 font-sans leading-relaxed">
+                Join our community and help make a difference in youth baseball. Every contribution matters.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 md:p-8 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-white/20 mb-4">
+                    <HandHeart className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-heading font-bold mb-3 text-white">Volunteer</h3>
+                  <p className="text-white/90 mb-6 font-sans">
+                    Coach, umpire, or help with events. Make an impact on young athletes.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-white text-primary hover:bg-white/90 font-heading font-semibold"
+                    asChild
+                  >
+                    <a href="/volunteer">Get Started</a>
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 md:p-8 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-white/20 mb-4">
+                    <Heart className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-heading font-bold mb-3 text-white">Donate</h3>
+                  <p className="text-white/90 mb-6 font-sans">
+                    Support equipment, field maintenance, and scholarships for families.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-white text-primary hover:bg-white/90 font-heading font-semibold"
+                    asChild
+                  >
+                    <a href="/donate">Donate Now</a>
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6 md:p-8 text-center">
+                  <div className="inline-flex p-4 rounded-full bg-white/20 mb-4">
+                    <Users className="h-10 w-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-heading font-bold mb-3 text-white">Register</h3>
+                  <p className="text-white/90 mb-6 font-sans">
+                    Sign up your player for the 2026 season. In-House or Travel teams.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-white text-primary hover:bg-white/90 font-heading font-semibold"
+                    asChild
+                  >
+                    <a href="/registration">Register Now</a>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>

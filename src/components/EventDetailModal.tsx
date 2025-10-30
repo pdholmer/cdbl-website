@@ -101,15 +101,15 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
           {/* Location */}
           {event.location && (
             <div className="flex items-start gap-3">
-              <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <MapPin className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
               <div className="flex-1">
                 <button
                   onClick={openInMaps}
-                  className="text-left font-semibold hover:text-primary transition-colors"
+                  className="text-left font-semibold hover:text-primary transition-colors hover:underline"
                 >
                   {event.location}
                 </button>
-                <p className="text-sm text-muted-foreground">Click to view in maps</p>
+                <p className="text-sm text-muted-foreground">Tap to open in maps</p>
               </div>
             </div>
           )}
