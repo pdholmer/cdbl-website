@@ -246,7 +246,7 @@ const Travel = () => {
                 <li>✓ Financial investment fits family budget</li>
               </ul>
               <p className="text-muted-foreground mt-4">
-                <strong>Questions?</strong> Contact our Travel Coordinator at travel@cdbl.org
+                <strong>Questions?</strong> Contact our Travel Coordinator at travel@cdbaseball.org
               </p>
             </div>
 
