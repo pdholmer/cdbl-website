@@ -2,6 +2,7 @@ import cdblInHouseLogo from "@/assets/cdbl-inhouse-logo.png";
 import rocketsTravelLogo from "@/assets/rockets-travel-logo.png";
 import cdblSeal from "@/assets/cdbl-seal.png";
 import { CalendarEvent } from "@/data/calendarEvents";
+import { getTeamById } from "@/data/teamData";
 
 export const getEventCategoryImage = (event: CalendarEvent) => {
   // Board meetings and league-wide events use the seal
@@ -39,4 +40,25 @@ export const getEventCategoryImage = (event: CalendarEvent) => {
     alt: "CDBL",
     bgClass: "bg-white border border-border"
   };
+};
+
+export const getGameMatchupDisplay = (event: CalendarEvent) => {
+  if (event.category === 'game' && event.homeTeam && event.awayTeam) {
+    const homeTeamData = getTeamById(event.homeTeam);
+    const awayTeamData = getTeamById(event.awayTeam);
+    
+    if (!homeTeamData || !awayTeamData) {
+      return { isMatchup: false };
+    }
+    
+    return {
+      isMatchup: true,
+      homeTeam: homeTeamData,
+      awayTeam: awayTeamData,
+      homeImage: getEventCategoryImage({ ...event, league: homeTeamData.league }),
+      awayImage: getEventCategoryImage({ ...event, league: awayTeamData.league })
+    };
+  }
+  
+  return { isMatchup: false };
 };
