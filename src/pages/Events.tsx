@@ -112,12 +112,6 @@ const Events = () => {
                 <CalendarGrid 
                   events={filteredEvents}
                   onEventClick={handleEventClick}
-                  onTodayClick={() => {
-                    document.getElementById('calendar-section')?.scrollIntoView({ 
-                      behavior: 'smooth',
-                      block: 'start'
-                    });
-                  }}
                 />
               </TabsContent>
             </Tabs>

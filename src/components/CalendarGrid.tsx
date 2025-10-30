@@ -9,10 +9,9 @@ import { Badge } from "@/components/ui/badge";
 interface CalendarGridProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
-  onTodayClick?: () => void;
 }
 
-export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGridProps) => {
+export const CalendarGrid = ({ events, onEventClick }: CalendarGridProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const monthStart = startOfMonth(currentMonth);
@@ -45,13 +44,6 @@ export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGri
     }
   };
 
-  const handleTodayClick = () => {
-    setCurrentMonth(new Date());
-    if (onTodayClick) {
-      onTodayClick();
-    }
-  };
-
   // Get events for list view (current month)
   const monthEvents = events.filter(event => {
     const eventDate = parseISO(event.date);
@@ -65,35 +57,24 @@ export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGri
   return (
     <div className="w-full">
       {/* Month Navigation */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setCurrentMonth(prev => subMonths(prev, 1))}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <h2 className="text-2xl font-heading font-bold min-w-[200px] text-center">
-            {format(currentMonth, 'MMMM yyyy')}
-          </h2>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setCurrentMonth(prev => addMonths(prev, 1))}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="default"
-            onClick={handleTodayClick}
-            className="font-heading"
-          >
-            Today
-          </Button>
-        </div>
+      <div className="flex items-center justify-center gap-2 mb-8">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setCurrentMonth(prev => subMonths(prev, 1))}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <h2 className="text-2xl font-heading font-bold min-w-[200px] text-center">
+          {format(currentMonth, 'MMMM yyyy')}
+        </h2>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setCurrentMonth(prev => addMonths(prev, 1))}
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
       </div>
 
       {/* Grid View - Desktop/Tablet Only */}
