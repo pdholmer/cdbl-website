@@ -10,8 +10,10 @@ import { DivisionScheduleTable } from "@/components/DivisionScheduleTable";
 import { EventDetailModal } from "@/components/EventDetailModal";
 import { CalendarGrid } from "@/components/CalendarGrid";
 import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
+import { FindMyTeamModal } from "@/components/FindMyTeamModal";
+import { TeamFilterBanner } from "@/components/TeamFilterBanner";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
-import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List } from "lucide-react";
+import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound } from "lucide-react";
 import { isAfter, parseISO, startOfToday } from "date-fns";
 import heroImage from "@/assets/hero-schedule.jpg";
 
@@ -20,6 +22,10 @@ const Schedule = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const [viewMode, setViewMode] = useState<"calendar" | "list">("list");
+  const [teamModalOpen, setTeamModalOpen] = useState(false);
+  const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
+  const [selectedTeamName, setSelectedTeamName] = useState<string | null>(null);
+  const [selectedLeague, setSelectedLeague] = useState<'in-house' | 'travel' | null>(null);
 
   // Get upcoming events (future events only)
   const upcomingEvents = useMemo(() => {
@@ -37,15 +43,42 @@ const Schedule = () => {
       .slice(0, 5);
   }, []);
 
-  // Filter events by category
+  // Filter events by category and team
   const filteredEvents = useMemo(() => {
-    if (activeTab === "all") return calendarEvents;
-    return calendarEvents.filter(event => event.category === activeTab);
-  }, [activeTab]);
+    let events = calendarEvents;
+    
+    // Filter by category tab
+    if (activeTab !== "all") {
+      events = events.filter(event => event.category === activeTab);
+    }
+    
+    // Filter by selected team (matches event title, location, or description)
+    if (selectedTeamId && selectedTeamName) {
+      events = events.filter(event => 
+        event.title.toLowerCase().includes(selectedTeamName.toLowerCase()) ||
+        event.location?.toLowerCase().includes(selectedTeamName.toLowerCase()) ||
+        event.description?.toLowerCase().includes(selectedTeamName.toLowerCase())
+      );
+    }
+    
+    return events;
+  }, [activeTab, selectedTeamId, selectedTeamName]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setModalOpen(true);
+  };
+
+  const handleTeamSelected = (teamId: string, teamName: string, league: 'in-house' | 'travel') => {
+    setSelectedTeamId(teamId);
+    setSelectedTeamName(teamName);
+    setSelectedLeague(league);
+  };
+
+  const handleClearFilter = () => {
+    setSelectedTeamId(null);
+    setSelectedTeamName(null);
+    setSelectedLeague(null);
   };
 
   const scrollToSchedule = () => {
@@ -81,6 +114,15 @@ const Schedule = () => {
                 <Button 
                   variant="default" 
                   size="lg"
+                  onClick={() => setTeamModalOpen(true)}
+                  className="bg-white text-primary hover:bg-white/90 shadow-lg font-heading font-semibold hover:scale-105 transition-all"
+                >
+                  <UsersRound className="mr-2 h-5 w-5" />
+                  Find My Team 🧢
+                </Button>
+                <Button 
+                  variant="default" 
+                  size="lg"
                   onClick={scrollToSchedule}
                   className="bg-white text-primary hover:bg-white/90 shadow-lg font-heading font-semibold"
                 >
@@ -109,6 +151,16 @@ const Schedule = () => {
         {/* Interactive Schedule Section */}
         <section id="schedule-section" className="py-12 md:py-16 bg-background">
           <div className="container mx-auto px-4">
+            {selectedTeamName && selectedLeague && (
+              <div className="mb-6">
+                <TeamFilterBanner
+                  teamName={selectedTeamName}
+                  leagueType={selectedLeague === 'in-house' ? 'In-House League' : 'Travel League'}
+                  onClear={handleClearFilter}
+                />
+              </div>
+            )}
+            
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 md:mb-0">Interactive Schedule</h2>
               
@@ -167,10 +219,25 @@ const Schedule = () => {
                 
                 {viewMode === "list" || viewMode === "calendar" ? (
                   <div className={viewMode === "calendar" ? "md:hidden" : ""}>
-                    <DivisionScheduleTable 
-                      events={filteredEvents}
-                      onEventClick={handleEventClick}
-                    />
+                    {filteredEvents.length === 0 ? (
+                      <Card className="p-12 text-center">
+                        <div className="flex flex-col items-center gap-4">
+                          <Calendar className="h-16 w-16 text-muted-foreground/50" />
+                          <div>
+                            <h3 className="text-xl font-semibold mb-2">No upcoming events for this team yet</h3>
+                            <p className="text-muted-foreground mb-4">Check back soon!</p>
+                            <Button variant="outline" onClick={handleClearFilter}>
+                              View Full Schedule
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ) : (
+                      <DivisionScheduleTable 
+                        events={filteredEvents}
+                        onEventClick={handleEventClick}
+                      />
+                    )}
                   </div>
                 ) : null}
               </TabsContent>
@@ -329,6 +396,13 @@ const Schedule = () => {
         event={selectedEvent}
         open={modalOpen}
         onOpenChange={setModalOpen}
+      />
+      
+      {/* Find My Team Modal */}
+      <FindMyTeamModal
+        open={teamModalOpen}
+        onOpenChange={setTeamModalOpen}
+        onTeamSelected={handleTeamSelected}
       />
     </div>
   );
