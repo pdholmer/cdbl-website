@@ -5,19 +5,14 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import heroAbout from "@/assets/hero-about.jpg";
-
 const About = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Header />
       <main>
         {/* Hero Section */}
-        <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
-          style={{ 
-            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroAbout}')`
-          }}
-        >
+        <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]" style={{
+        backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroAbout}')`
+      }}>
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">About CDBL</h1>
             <p className="text-xl max-w-2xl">38 years of building character, skills, and community through youth baseball.</p>
@@ -38,11 +33,7 @@ const About = () => {
                 </p>
               </div>
               <div className="flex justify-center">
-                <img 
-                  src={cdblSeal} 
-                  alt="CDBL Seal" 
-                  className="w-full max-w-md h-auto drop-shadow-2xl"
-                />
+                <img src={cdblSeal} alt="CDBL Seal" className="w-full max-w-md h-auto drop-shadow-2xl" />
               </div>
             </div>
           </div>
@@ -216,7 +207,7 @@ const About = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Humberto Camacho</CardTitle>
+                  <CardTitle>Carrie Wolak</CardTitle>
                   <p className="text-sm text-primary font-semibold">Vice President</p>
                 </CardHeader>
                 <CardContent>
@@ -240,7 +231,7 @@ const About = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Carrie Wolak</CardTitle>
+                  <CardTitle>Danae Wezdecki</CardTitle>
                   <p className="text-sm text-primary font-semibold">Secretary</p>
                 </CardHeader>
                 <CardContent>
@@ -254,8 +245,6 @@ const About = () => {
         </section>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
