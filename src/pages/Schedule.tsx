@@ -8,8 +8,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UpcomingMatchCard } from "@/components/UpcomingMatchCard";
 import { DivisionScheduleTable } from "@/components/DivisionScheduleTable";
 import { EventDetailModal } from "@/components/EventDetailModal";
+import { CalendarGrid } from "@/components/CalendarGrid";
+import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
-import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter } from "lucide-react";
+import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List } from "lucide-react";
 import { isAfter, parseISO, startOfToday } from "date-fns";
 import heroImage from "@/assets/hero-schedule.jpg";
 
@@ -17,6 +19,7 @@ const Schedule = () => {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
+  const [viewMode, setViewMode] = useState<"calendar" | "list">("list");
 
   // Get upcoming events (future events only)
   const upcomingEvents = useMemo(() => {
@@ -31,20 +34,13 @@ const Schedule = () => {
         const dateB = parseISO(b.date);
         return dateA.getTime() - dateB.getTime();
       })
-      .slice(0, 6);
+      .slice(0, 5);
   }, []);
 
-  // Filter events by division/category
+  // Filter events by category
   const filteredEvents = useMemo(() => {
     if (activeTab === "all") return calendarEvents;
-    
-    // Filter by category
-    return calendarEvents.filter(event => {
-      if (activeTab === "practices") return event.category === "practice";
-      if (activeTab === "games") return event.category === "game";
-      if (activeTab === "events") return event.category === "event";
-      return true;
-    });
+    return calendarEvents.filter(event => event.category === activeTab);
   }, [activeTab]);
 
   const handleEventClick = (event: CalendarEvent) => {
@@ -77,19 +73,19 @@ const Schedule = () => {
                 League Schedule
               </h1>
               
-              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95 font-sans">
-                View practices, games, and upcoming matchups across all CDBL divisions.
+              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95">
+                Your one-stop view of practices, games, and league events.
               </p>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                 <Button 
                   variant="default" 
                   size="lg"
                   onClick={scrollToSchedule}
                   className="bg-white text-primary hover:bg-white/90 shadow-lg font-heading font-semibold"
                 >
-                  <Filter className="mr-2 h-4 w-4" />
-                  <span className="hidden sm:inline">Filter</span>
+                  <Calendar className="mr-2 h-5 w-5" />
+                  View Calendar
                 </Button>
                 <Button 
                   variant="outline" 
@@ -97,56 +93,47 @@ const Schedule = () => {
                   asChild
                   className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-heading font-semibold"
                 >
-                  <Link to="/events">Full Calendar</Link>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  asChild
-                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-heading font-semibold col-span-2 md:col-span-1"
-                >
                   <Link to="/fields">View Fields</Link>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
-                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-heading font-semibold col-span-2 md:col-span-1"
-                >
-                  SportsConnect
                 </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Upcoming Matches Section */}
-        <section className="py-12 md:py-16 bg-background">
+        {/* Featured Upcoming Section */}
+        <FeaturedEventsCarousel 
+          events={calendarEvents}
+          onEventClick={handleEventClick}
+        />
+
+        {/* Interactive Schedule Section */}
+        <section id="schedule-section" className="py-12 md:py-16 bg-background">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-8 text-center">Upcoming Events</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcomingEvents.map((event) => (
-                <UpcomingMatchCard
-                  key={event.id}
-                  event={event}
-                  onViewDetails={handleEventClick}
-                />
-              ))}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 md:mb-0">Interactive Schedule</h2>
+              
+              {/* View Mode Toggle - Desktop Only */}
+              <div className="hidden md:flex gap-2">
+                <Button
+                  variant={viewMode === "calendar" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("calendar")}
+                  className="font-heading"
+                >
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Calendar View
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setViewMode("list")}
+                  className="font-heading"
+                >
+                  <List className="mr-2 h-4 w-4" />
+                  List View
+                </Button>
+              </div>
             </div>
-
-            {upcomingEvents.length === 0 && (
-              <Card className="p-12 text-center">
-                <p className="text-muted-foreground text-lg">No upcoming events scheduled at this time.</p>
-              </Card>
-            )}
-          </div>
-        </section>
-
-        {/* Division Schedule Tabs */}
-        <section id="schedule-section" className="py-12 md:py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-8 text-center">Schedule by Type</h2>
             
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-8 md:mb-12 h-auto">
@@ -154,27 +141,83 @@ const Schedule = () => {
                   <Calendar className="h-4 w-4" />
                   <span className="text-xs md:text-sm">All</span>
                 </TabsTrigger>
-                <TabsTrigger value="games" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
-                  <Users className="h-4 w-4" />
-                  <span className="text-xs md:text-sm">Games</span>
+                <TabsTrigger value="event" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
+                  <Calendar className="h-4 w-4" />
+                  <span className="text-xs md:text-sm">Events</span>
                 </TabsTrigger>
-                <TabsTrigger value="practices" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
+                <TabsTrigger value="practice" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
                   <Users className="h-4 w-4" />
                   <span className="text-xs md:text-sm">Practices</span>
                 </TabsTrigger>
-                <TabsTrigger value="events" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-xs md:text-sm">Events</span>
+                <TabsTrigger value="game" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
+                  <Trophy className="h-4 w-4" />
+                  <span className="text-xs md:text-sm">Games</span>
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value={activeTab} className="mt-0">
-                <DivisionScheduleTable 
-                  events={filteredEvents}
-                  onEventClick={handleEventClick}
-                />
+                {viewMode === "calendar" ? (
+                  <div className="hidden md:block">
+                    <CalendarGrid 
+                      events={filteredEvents}
+                      onEventClick={handleEventClick}
+                    />
+                  </div>
+                ) : null}
+                
+                {viewMode === "list" || viewMode === "calendar" ? (
+                  <div className={viewMode === "calendar" ? "md:hidden" : ""}>
+                    <DivisionScheduleTable 
+                      events={filteredEvents}
+                      onEventClick={handleEventClick}
+                    />
+                  </div>
+                ) : null}
               </TabsContent>
             </Tabs>
+          </div>
+        </section>
+
+        {/* League Stats Summary */}
+        <section className="py-12 md:py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-8 md:mb-12 text-center">League Activity</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6">
+                  <div className="inline-flex p-3 rounded-full bg-event-game/10 mb-3 animate-pulse">
+                    <Trophy className="h-8 w-8 text-event-game" />
+                  </div>
+                  <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
+                    {calendarEvents.filter(e => e.category === 'game').length}
+                  </p>
+                  <p className="text-sm md:text-base text-muted-foreground font-sans">Total Games</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6">
+                  <div className="inline-flex p-3 rounded-full bg-event-practice/10 mb-3 animate-pulse" style={{ animationDelay: '0.2s' }}>
+                    <Users className="h-8 w-8 text-event-practice" />
+                  </div>
+                  <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
+                    {calendarEvents.filter(e => e.category === 'practice').length}
+                  </p>
+                  <p className="text-sm md:text-base text-muted-foreground font-sans">Practice Sessions</p>
+                </CardContent>
+              </Card>
+              <Card className="text-center hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <CardContent className="p-6">
+                  <div className="inline-flex p-3 rounded-full bg-event-gold/10 mb-3 animate-pulse" style={{ animationDelay: '0.4s' }}>
+                    <Calendar className="h-8 w-8 text-event-gold" />
+                  </div>
+                  <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
+                    {calendarEvents.filter(e => e.category === 'event').length}
+                  </p>
+                  <p className="text-sm md:text-base text-muted-foreground font-sans">League Events</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </section>
 

@@ -34,7 +34,7 @@ const carouselSlides = [
     title: "Shop Rockets Gear",
     subtitle: "Official CDBL merchandise and team spirit wear",
     primaryCta: { text: "Shop Now", link: "/shop" },
-    secondaryCta: { text: "View Events", link: "/events" },
+    secondaryCta: { text: "View Calendar", link: "/schedule" },
     image: heroShopGear
   },
   {

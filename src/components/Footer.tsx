@@ -55,8 +55,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/events" className="opacity-80 hover:opacity-100 transition-opacity">
-                  Events
+                <Link to="/schedule" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Calendar
                 </Link>
               </li>
             </ul>
