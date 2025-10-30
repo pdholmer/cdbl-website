@@ -12,6 +12,10 @@ export interface CalendarEvent {
   type: 'board-meeting' | 'field-maintenance' | 'tournament' | 'registration' | 'clinic' | 'ceremony' | 'pictures' | 'fundraiser' | 'special-event' | 'tryouts' | 'practices-start' | 'games-start' | 'uniform-event' | 'draft' | 'training';
   description: string;
   icon: LucideIcon;
+  league?: 'in-house' | 'travel' | 'both'; // 'both' for league-wide events
+  team?: string; // Team identifier matching teamData.ts IDs
+  homeTeam?: string; // For games
+  awayTeam?: string; // For games
 }
 
 export const calendarEvents: CalendarEvent[] = [

@@ -12,7 +12,9 @@ import { CalendarGrid } from "@/components/CalendarGrid";
 import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
 import { FindMyTeamModal } from "@/components/FindMyTeamModal";
 import { TeamFilterBanner } from "@/components/TeamFilterBanner";
+import { ScheduleFilterToolbar } from "@/components/ScheduleFilterToolbar";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
+import { teamData, getTeamsByLeague } from "@/data/teamData";
 import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound } from "lucide-react";
 import { isAfter, parseISO, startOfToday } from "date-fns";
 import heroImage from "@/assets/hero-schedule.jpg";
@@ -26,6 +28,8 @@ const Schedule = () => {
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [selectedTeamName, setSelectedTeamName] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<'in-house' | 'travel' | null>(null);
+  const [leagueFilter, setLeagueFilter] = useState<'in-house' | 'travel' | 'all'>('all');
+  const [teamFilter, setTeamFilter] = useState<string | 'all'>('all');
 
   // Get upcoming events (future events only)
   const upcomingEvents = useMemo(() => {
@@ -43,7 +47,15 @@ const Schedule = () => {
       .slice(0, 5);
   }, []);
 
-  // Filter events by category and team
+  // Dynamic team list based on league filter
+  const availableTeams = useMemo(() => {
+    if (leagueFilter === 'all') {
+      return teamData;
+    }
+    return getTeamsByLeague(leagueFilter);
+  }, [leagueFilter]);
+
+  // Filter events by category, league, and team
   const filteredEvents = useMemo(() => {
     let events = calendarEvents;
     
@@ -52,9 +64,31 @@ const Schedule = () => {
       events = events.filter(event => event.category === activeTab);
     }
     
-    // Filter by selected team (matches event title, location, or description)
+    // Filter by league
+    if (leagueFilter !== 'all') {
+      events = events.filter(event => 
+        !event.league || // Show events without league specified
+        event.league === leagueFilter ||
+        event.league === 'both' // Show league-wide events
+      );
+    }
+    
+    // Filter by team
+    if (teamFilter !== 'all') {
+      events = events.filter(event => 
+        !event.team || // Show events without team specified
+        event.team === teamFilter ||
+        event.homeTeam === teamFilter ||
+        event.awayTeam === teamFilter
+      );
+    }
+    
+    // Legacy "Find My Team" filter (maintain backward compatibility)
     if (selectedTeamId && selectedTeamName) {
       events = events.filter(event => 
+        event.team === selectedTeamId ||
+        event.homeTeam === selectedTeamId ||
+        event.awayTeam === selectedTeamId ||
         event.title.toLowerCase().includes(selectedTeamName.toLowerCase()) ||
         event.location?.toLowerCase().includes(selectedTeamName.toLowerCase()) ||
         event.description?.toLowerCase().includes(selectedTeamName.toLowerCase())
@@ -62,7 +96,7 @@ const Schedule = () => {
     }
     
     return events;
-  }, [activeTab, selectedTeamId, selectedTeamName]);
+  }, [activeTab, leagueFilter, teamFilter, selectedTeamId, selectedTeamName]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
@@ -80,6 +114,20 @@ const Schedule = () => {
     setSelectedTeamName(null);
     setSelectedLeague(null);
   };
+
+  const handleClearAllFilters = () => {
+    setLeagueFilter('all');
+    setTeamFilter('all');
+    setSelectedTeamId(null);
+    setSelectedTeamName(null);
+    setSelectedLeague(null);
+  };
+
+  const hasActiveFilters = useMemo(() => {
+    return leagueFilter !== 'all' || 
+           teamFilter !== 'all' || 
+           selectedTeamId !== null;
+  }, [leagueFilter, teamFilter, selectedTeamId]);
 
   const scrollToSchedule = () => {
     document.getElementById('schedule-section')?.scrollIntoView({ 
@@ -161,30 +209,21 @@ const Schedule = () => {
               </div>
             )}
             
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 md:mb-0">Interactive Schedule</h2>
+            <div className="mb-8">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">Interactive Schedule</h2>
               
-              {/* View Mode Toggle - Desktop Only */}
-              <div className="hidden md:flex gap-2">
-                <Button
-                  variant={viewMode === "calendar" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("calendar")}
-                  className="font-heading"
-                >
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Calendar View
-                </Button>
-                <Button
-                  variant={viewMode === "list" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setViewMode("list")}
-                  className="font-heading"
-                >
-                  <List className="mr-2 h-4 w-4" />
-                  List View
-                </Button>
-              </div>
+              {/* Filter Toolbar with View Toggle Icons */}
+              <ScheduleFilterToolbar
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
+                selectedLeague={leagueFilter}
+                onLeagueChange={setLeagueFilter}
+                selectedTeam={teamFilter}
+                onTeamChange={setTeamFilter}
+                availableTeams={availableTeams}
+                hasActiveFilters={hasActiveFilters}
+                onClearFilters={handleClearAllFilters}
+              />
             </div>
             
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
