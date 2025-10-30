@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
 import { MapPin } from "lucide-react";
+import { getEventCategoryImage } from "@/utils/eventImageHelper";
 
 interface DivisionScheduleTableProps {
   events: CalendarEvent[];
@@ -83,7 +84,7 @@ export const DivisionScheduleTable = ({ events, onEventClick }: DivisionSchedule
       <div className="md:hidden space-y-3">
         {events.map((event) => {
           const eventDate = parseISO(event.date);
-          const Icon = event.icon;
+          const categoryImage = getEventCategoryImage(event);
           
           return (
             <Card
@@ -92,16 +93,13 @@ export const DivisionScheduleTable = ({ events, onEventClick }: DivisionSchedule
               onClick={() => onEventClick(event)}
             >
               <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-lg flex-shrink-0 ${
-                  event.category === 'event' ? 'bg-event-gold/10' :
-                  event.category === 'practice' ? 'bg-event-practice/10' :
-                  'bg-event-game/10'
-                }`}>
-                  <Icon className={`h-5 w-5 ${
-                    event.category === 'event' ? 'text-event-gold' :
-                    event.category === 'practice' ? 'text-event-practice' :
-                    'text-event-game'
-                  }`} />
+                <div className={`p-2 rounded-lg flex-shrink-0 ${categoryImage.bgClass} flex items-center justify-center`}>
+                  <img 
+                    src={categoryImage.src} 
+                    alt={categoryImage.alt}
+                    className="h-8 w-8 object-contain"
+                    loading="lazy"
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">

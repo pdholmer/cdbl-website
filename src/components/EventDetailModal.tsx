@@ -5,6 +5,7 @@ import { CalendarEvent } from "@/data/calendarEvents";
 import { Calendar, MapPin, Clock, Download, Share2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
+import { getEventCategoryImage } from "@/utils/eventImageHelper";
 
 interface EventDetailModalProps {
   event: CalendarEvent | null;
@@ -17,6 +18,7 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
 
   const eventDate = parseISO(event.date);
   const endDate = event.endDate ? parseISO(event.endDate) : null;
+  const categoryImage = getEventCategoryImage(event);
 
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -69,8 +71,13 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <div className="flex items-start gap-3">
-            <div className="p-3 rounded-lg bg-primary/10 mt-1">
-              <event.icon className="h-7 w-7 text-primary" />
+            <div className={`p-3 rounded-lg ${categoryImage.bgClass} mt-1 flex items-center justify-center`}>
+              <img 
+                src={categoryImage.src} 
+                alt={categoryImage.alt}
+                className="h-14 w-14 object-contain"
+                loading="lazy"
+              />
             </div>
             <div className="flex-1">
               <DialogTitle className="text-2xl font-heading font-bold mb-2">
@@ -79,6 +86,11 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
               <Badge className={getCategoryColor(event.category)}>
                 {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
               </Badge>
+              {event.league && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {event.league === 'in-house' ? 'In-House' : event.league === 'travel' ? 'Travel' : 'League'}
+                </p>
+              )}
             </div>
           </div>
         </DialogHeader>

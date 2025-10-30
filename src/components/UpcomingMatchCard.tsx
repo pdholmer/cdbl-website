@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarEvent } from "@/data/calendarEvents";
 import { MapPin, Clock, Calendar } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { getEventCategoryImage } from "@/utils/eventImageHelper";
 
 interface UpcomingMatchCardProps {
   event: CalendarEvent;
@@ -12,7 +13,7 @@ interface UpcomingMatchCardProps {
 
 export const UpcomingMatchCard = ({ event, onViewDetails }: UpcomingMatchCardProps) => {
   const eventDate = parseISO(event.date);
-  const Icon = event.icon;
+  const categoryImage = getEventCategoryImage(event);
   
   const getCategoryColor = (category: string) => {
     switch (category) {
@@ -37,21 +38,23 @@ export const UpcomingMatchCard = ({ event, onViewDetails }: UpcomingMatchCardPro
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${
-              event.category === 'practice' ? 'bg-event-practice/10' :
-              event.category === 'game' ? 'bg-event-game/10' :
-              'bg-event-gold/10'
-            }`}>
-              <Icon className={`h-6 w-6 ${
-                event.category === 'practice' ? 'text-event-practice' :
-                event.category === 'game' ? 'text-event-game' :
-                'text-event-gold'
-              }`} />
+            <div className={`p-2 rounded-lg ${categoryImage.bgClass} flex items-center justify-center`}>
+              <img 
+                src={categoryImage.src} 
+                alt={categoryImage.alt}
+                className="h-12 w-12 object-contain"
+                loading="lazy"
+              />
             </div>
             <div>
               <Badge className={getCategoryColor(event.category)}>
                 {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
               </Badge>
+              {event.league && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {event.league === 'in-house' ? 'In-House' : event.league === 'travel' ? 'Travel' : 'League'}
+                </p>
+              )}
             </div>
           </div>
         </div>
