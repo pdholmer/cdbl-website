@@ -23,7 +23,7 @@ const BoardInfo = () => {
         {/* Current Board Officers */}
         <section className="py-16 bg-background">
           <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">2024-2025 Board of Directors</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">2025/2026 Board of Directors</h2>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto mb-16">
               <Card>
