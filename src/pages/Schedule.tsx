@@ -19,11 +19,14 @@ import { isAfter, parseISO, startOfToday } from "date-fns";
 import heroImage from "@/assets/hero-schedule.jpg";
 
 const Schedule = () => {
+  // State management for modals and UI
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("all");
   const [viewMode, setViewMode] = useState<"calendar" | "list">("list");
   const [teamModalOpen, setTeamModalOpen] = useState(false);
+  
+  // Filter state - Program > Division > Team hierarchy
   const [programFilter, setProgramFilter] = useState<string | 'all'>('all');
   const [divisionFilter, setDivisionFilter] = useState<string | 'all'>('all');
   const [teamFilter, setTeamFilter] = useState<string | 'all'>('all');
