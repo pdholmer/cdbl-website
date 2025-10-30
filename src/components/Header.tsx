@@ -75,9 +75,9 @@ const Header = () => {
 
       {/* White Header - Baseball Season Specific */}
       <div className="bg-background border-b border-border">
-        <div className="container flex h-16 items-center px-4 gap-4 lg:gap-8">
+        <div className="container flex h-16 items-center px-4 gap-6 lg:gap-8">
           {/* Search Bar - Persistent across all views */}
-          <div className="relative max-w-md lg:max-w-lg">
+          <div className="relative flex-1 max-w-3xl">
             <input
               type="search"
               placeholder="Search..."
@@ -100,9 +100,6 @@ const Header = () => {
               </button>
             )}
           </div>
-
-          {/* Spacer */}
-          <div className="flex-1" />
 
           {/* Right: Navigation */}
           <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
