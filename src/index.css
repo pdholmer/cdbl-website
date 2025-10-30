@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom animations */
+@keyframes highlight-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 rgba(0, 61, 165, 0);
+  }
+  50% { 
+    box-shadow: 0 0 20px 10px rgba(0, 61, 165, 0.2);
+  }
+}
+
+.highlight-pulse {
+  animation: highlight-pulse 2s ease-out;
+}
+
+/* Hide scrollbar for mobile pills */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

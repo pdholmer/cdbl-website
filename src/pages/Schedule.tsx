@@ -11,8 +11,7 @@ import { EventDetailModal } from "@/components/EventDetailModal";
 import { CalendarGrid } from "@/components/CalendarGrid";
 import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
 import { FindMyTeamModal } from "@/components/FindMyTeamModal";
-import { TeamFilterBanner } from "@/components/TeamFilterBanner";
-import { ScheduleFilterToolbar } from "@/components/ScheduleFilterToolbar";
+import { UnifiedScheduleToolbar } from "@/components/UnifiedScheduleToolbar";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
 import { teamData, getTeamsByLeague } from "@/data/teamData";
 import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound } from "lucide-react";
@@ -104,23 +103,35 @@ const Schedule = () => {
   };
 
   const handleTeamSelected = (teamId: string, teamName: string, league: 'in-house' | 'travel') => {
+    // Update all filter states to match selection
+    setLeagueFilter(league);
+    setTeamFilter(teamId);
+    setActiveTab('all');
     setSelectedTeamId(teamId);
     setSelectedTeamName(teamName);
     setSelectedLeague(league);
   };
 
-  const handleClearFilter = () => {
-    setSelectedTeamId(null);
-    setSelectedTeamName(null);
-    setSelectedLeague(null);
-  };
-
   const handleClearAllFilters = () => {
+    setActiveTab('all');
     setLeagueFilter('all');
     setTeamFilter('all');
     setSelectedTeamId(null);
     setSelectedTeamName(null);
     setSelectedLeague(null);
+  };
+
+  const handleLeagueChange = (league: 'in-house' | 'travel' | 'all') => {
+    setLeagueFilter(league);
+    
+    // If current team doesn't belong to new league, reset team filter
+    if (teamFilter !== 'all') {
+      const newTeams = league === 'all' ? teamData : getTeamsByLeague(league);
+      const teamExists = newTeams.some(t => t.id === teamFilter);
+      if (!teamExists) {
+        setTeamFilter('all');
+      }
+    }
   };
 
   const hasActiveFilters = useMemo(() => {
@@ -130,10 +141,25 @@ const Schedule = () => {
   }, [leagueFilter, teamFilter, selectedTeamId]);
 
   const scrollToSchedule = () => {
-    document.getElementById('schedule-section')?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    });
+    const scheduleSection = document.getElementById('schedule-section');
+    if (scheduleSection) {
+      scheduleSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+      
+      // Add focus for accessibility
+      setTimeout(() => {
+        scheduleSection.setAttribute('tabindex', '-1');
+        scheduleSection.focus({ preventScroll: true });
+        
+        // Add highlight animation
+        scheduleSection.classList.add('highlight-pulse');
+        setTimeout(() => {
+          scheduleSection.classList.remove('highlight-pulse');
+        }, 2000);
+      }, 600);
+    }
   };
 
   return (
@@ -197,54 +223,33 @@ const Schedule = () => {
         />
 
         {/* Interactive Schedule Section */}
-        <section id="schedule-section" className="py-12 md:py-16 bg-background">
+        <section id="schedule-section" className="py-12 md:py-16 bg-background" tabIndex={-1}>
           <div className="container mx-auto px-4">
-            {selectedTeamName && selectedLeague && (
-              <div className="mb-6">
-                <TeamFilterBanner
-                  teamName={selectedTeamName}
-                  leagueType={selectedLeague === 'in-house' ? 'In-House League' : 'Travel League'}
-                  onClear={handleClearFilter}
-                />
-              </div>
-            )}
-            
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">Interactive Schedule</h2>
               
-              {/* Filter Toolbar with View Toggle Icons */}
-              <ScheduleFilterToolbar
+              {/* Unified Filter Toolbar */}
+              <UnifiedScheduleToolbar
+                activeCategory={activeTab as 'all' | 'event' | 'practice' | 'game'}
+                onCategoryChange={(category) => setActiveTab(category)}
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}
                 selectedLeague={leagueFilter}
-                onLeagueChange={setLeagueFilter}
+                onLeagueChange={handleLeagueChange}
                 selectedTeam={teamFilter}
                 onTeamChange={setTeamFilter}
                 availableTeams={availableTeams}
                 hasActiveFilters={hasActiveFilters}
                 onClearFilters={handleClearAllFilters}
+                activeFilterText={
+                  selectedTeamName 
+                    ? `${selectedTeamName} (${selectedLeague === 'in-house' ? 'In-House' : 'Travel'} League)`
+                    : undefined
+                }
               />
             </div>
             
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-8 md:mb-12 h-auto">
-                <TabsTrigger value="all" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-xs md:text-sm">All</span>
-                </TabsTrigger>
-                <TabsTrigger value="event" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
-                  <Calendar className="h-4 w-4" />
-                  <span className="text-xs md:text-sm">Events</span>
-                </TabsTrigger>
-                <TabsTrigger value="practice" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
-                  <Users className="h-4 w-4" />
-                  <span className="text-xs md:text-sm">Practices</span>
-                </TabsTrigger>
-                <TabsTrigger value="game" className="flex flex-col md:flex-row items-center gap-1 md:gap-2 py-2 md:py-3">
-                  <Trophy className="h-4 w-4" />
-                  <span className="text-xs md:text-sm">Games</span>
-                </TabsTrigger>
-              </TabsList>
 
               <TabsContent value={activeTab} className="mt-0">
                 {viewMode === "calendar" ? (
@@ -263,11 +268,23 @@ const Schedule = () => {
                         <div className="flex flex-col items-center gap-4">
                           <Calendar className="h-16 w-16 text-muted-foreground/50" />
                           <div>
-                            <h3 className="text-xl font-semibold mb-2">No upcoming events for this team yet</h3>
-                            <p className="text-muted-foreground mb-4">Check back soon!</p>
-                            <Button variant="outline" onClick={handleClearFilter}>
-                              View Full Schedule
-                            </Button>
+                            <h3 className="text-xl font-semibold mb-2">
+                              {hasActiveFilters 
+                                ? "No events match your filters"
+                                : "No upcoming events scheduled"
+                              }
+                            </h3>
+                            <p className="text-muted-foreground mb-4">
+                              {hasActiveFilters
+                                ? "Try adjusting your league, team, or event type filters"
+                                : "Check back soon for the latest schedule updates"
+                              }
+                            </p>
+                            {hasActiveFilters && (
+                              <Button variant="outline" onClick={handleClearAllFilters}>
+                                Clear All Filters
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </Card>
@@ -442,6 +459,7 @@ const Schedule = () => {
         open={teamModalOpen}
         onOpenChange={setTeamModalOpen}
         onTeamSelected={handleTeamSelected}
+        onScrollToSchedule={scrollToSchedule}
       />
     </div>
   );

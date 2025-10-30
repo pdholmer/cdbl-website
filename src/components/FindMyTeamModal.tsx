@@ -10,11 +10,12 @@ interface FindMyTeamModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onTeamSelected: (teamId: string, teamName: string, league: 'in-house' | 'travel') => void;
+  onScrollToSchedule?: () => void;
 }
 
 type Step = 'welcome' | 'league-selection' | 'team-selection' | 'confirmation';
 
-export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected }: FindMyTeamModalProps) => {
+export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected, onScrollToSchedule }: FindMyTeamModalProps) => {
   const [step, setStep] = useState<Step>('welcome');
   const [selectedLeague, setSelectedLeague] = useState<'in-house' | 'travel' | null>(null);
   const [selectedTeam, setSelectedTeam] = useState<TeamOption | null>(null);
@@ -65,6 +66,7 @@ export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected }: FindMyTe
       
       setTimeout(() => {
         onTeamSelected(team.id, team.name, team.league);
+        onScrollToSchedule?.();
         onOpenChange(false);
       }, 1200);
     }, 800);
