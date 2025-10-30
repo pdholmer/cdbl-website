@@ -5,14 +5,19 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import heroVolunteer from "@/assets/hero-volunteer.jpg";
+
 const Volunteer = () => {
-  return <div className="min-h-screen">
+  return (
+    <div className="min-h-screen">
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]" style={{
-        backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroVolunteer}')`
-      }}>
+        <section 
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
+          style={{ 
+            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroVolunteer}')`
+          }}
+        >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Volunteer & Support</h1>
             <p className="text-xl max-w-2xl">CDBL runs on community support. Join our team of dedicated volunteers making a difference!</p>
@@ -173,7 +178,7 @@ const Volunteer = () => {
                   </p>
                   <ul className="space-y-2 text-sm text-muted-foreground mb-4">
                     <li>• President, VP, Treasurer, Secretary</li>
-                    
+                    <li>• Player Agent</li>
                     <li>• Division Coordinators</li>
                     <li>• Committee chairs</li>
                   </ul>
@@ -247,10 +252,18 @@ const Volunteer = () => {
               Fill out our volunteer interest form and we'll connect you with the right opportunity. Every volunteer makes CDBL better!
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button variant="default" size="lg" className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
+              <Button 
+                variant="default" 
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+              >
                 Volunteer Interest Form
               </Button>
-              <Button variant="outline" size="lg" className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
+              <Button 
+                variant="outline" 
+                size="lg"
+                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
+              >
                 Contact Volunteer Coordinator
               </Button>
             </div>
@@ -258,6 +271,8 @@ const Volunteer = () => {
         </section>
       </main>
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Volunteer;
