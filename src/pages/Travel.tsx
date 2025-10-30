@@ -181,9 +181,9 @@ const Travel = () => {
                     <li>✓ Baseball glove</li>
                     <li>✓ Bat (or use team bats provided)</li>
                     <li>✓ Batting helmet</li>
-                    <li>✓ Cleats (turf shoes for indoor tryouts)</li>
+                    <li>✓ Cleats</li>
                     <li>✓ Athletic wear and water bottle</li>
-                    <li>✓ Completed registration form</li>
+                    
                   </ul>
                 </CardContent>
               </Card>
