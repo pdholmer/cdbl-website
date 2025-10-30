@@ -171,16 +171,16 @@ const Schedule = () => {
         <section 
           className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
           style={{
-            backgroundImage: `linear-gradient(to right, hsla(217, 100%, 32%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url(${heroImage})`,
+            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url(${heroImage})`,
           }}
         >
           <div className="container relative z-10">
             <div className="max-w-3xl">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 md:mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight line-clamp-1">
                 League Schedule
               </h1>
               
-              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95">
+              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95 line-clamp-2">
                 Your one-stop view of practices, games, and league events.
               </p>
 
@@ -189,16 +189,16 @@ const Schedule = () => {
                   variant="default" 
                   size="lg"
                   onClick={() => setTeamModalOpen(true)}
-                  className="bg-white text-primary hover:bg-white/90 shadow-lg font-heading font-semibold hover:scale-105 transition-all"
+                  className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
                 >
                   <UsersRound className="mr-2 h-5 w-5" />
                   Find My Team
                 </Button>
                 <Button 
-                  variant="secondary" 
+                  variant="outline" 
                   size="lg"
                   onClick={scrollToSchedule}
-                  className="font-heading font-semibold"
+                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
                 >
                   <Calendar className="mr-2 h-5 w-5" />
                   View Calendar
