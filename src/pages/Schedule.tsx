@@ -13,7 +13,7 @@ import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
 import { FindMyTeamModal } from "@/components/FindMyTeamModal";
 import { UnifiedScheduleToolbar } from "@/components/UnifiedScheduleToolbar";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
-import { teamData, getTeamsByLeague } from "@/data/teamData";
+import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
 import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound } from "lucide-react";
 import { isAfter, parseISO, startOfToday } from "date-fns";
 import heroImage from "@/assets/hero-schedule.jpg";
@@ -24,11 +24,17 @@ const Schedule = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [viewMode, setViewMode] = useState<"calendar" | "list">("list");
   const [teamModalOpen, setTeamModalOpen] = useState(false);
-  const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
-  const [selectedTeamName, setSelectedTeamName] = useState<string | null>(null);
-  const [selectedLeague, setSelectedLeague] = useState<'in-house' | 'travel' | null>(null);
-  const [leagueFilter, setLeagueFilter] = useState<'in-house' | 'travel' | 'all'>('all');
+  const [programFilter, setProgramFilter] = useState<string | 'all'>('all');
+  const [divisionFilter, setDivisionFilter] = useState<string | 'all'>('all');
   const [teamFilter, setTeamFilter] = useState<string | 'all'>('all');
+
+  // Get hierarchical team data
+  const { 
+    programs, 
+    getDivisionsByProgram, 
+    getTeamsByDivision,
+    getAllTeams 
+  } = useTeamHierarchy();
 
   // Get upcoming events (future events only)
   const upcomingEvents = useMemo(() => {
@@ -46,15 +52,23 @@ const Schedule = () => {
       .slice(0, 5);
   }, []);
 
-  // Dynamic team list based on league filter
-  const availableTeams = useMemo(() => {
-    if (leagueFilter === 'all') {
-      return teamData;
+  // Dynamic divisions based on program filter
+  const availableDivisions = useMemo(() => {
+    if (programFilter === 'all') {
+      return programs?.flatMap(p => p.divisions || []) || [];
     }
-    return getTeamsByLeague(leagueFilter);
-  }, [leagueFilter]);
+    return getDivisionsByProgram(programFilter);
+  }, [programFilter, programs, getDivisionsByProgram]);
 
-  // Filter events by category, league, and team
+  // Dynamic teams based on division filter
+  const availableTeams = useMemo(() => {
+    if (divisionFilter === 'all') {
+      return availableDivisions.flatMap(d => d.teams || []);
+    }
+    return getTeamsByDivision(divisionFilter);
+  }, [divisionFilter, availableDivisions, getTeamsByDivision]);
+
+  // Filter events by category, program, division, and team
   const filteredEvents = useMemo(() => {
     let events = calendarEvents;
     
@@ -63,82 +77,96 @@ const Schedule = () => {
       events = events.filter(event => event.category === activeTab);
     }
     
-    // Filter by league
-    if (leagueFilter !== 'all') {
+    // Filter by program
+    if (programFilter !== 'all') {
       events = events.filter(event => 
-        !event.league || // Show events without league specified
-        event.league === leagueFilter ||
-        event.league === 'both' // Show league-wide events
+        !event.programId || // Show events without program specified (league-wide)
+        event.programId === programFilter
+      );
+    }
+    
+    // Filter by division
+    if (divisionFilter !== 'all') {
+      events = events.filter(event => 
+        !event.divisionId || // Show events without division specified
+        event.divisionId === divisionFilter
       );
     }
     
     // Filter by team
     if (teamFilter !== 'all') {
       events = events.filter(event => 
-        !event.team || // Show events without team specified
-        event.team === teamFilter ||
-        event.homeTeam === teamFilter ||
-        event.awayTeam === teamFilter
-      );
-    }
-    
-    // Legacy "Find My Team" filter (maintain backward compatibility)
-    if (selectedTeamId && selectedTeamName) {
-      events = events.filter(event => 
-        event.team === selectedTeamId ||
-        event.homeTeam === selectedTeamId ||
-        event.awayTeam === selectedTeamId ||
-        event.title.toLowerCase().includes(selectedTeamName.toLowerCase()) ||
-        event.location?.toLowerCase().includes(selectedTeamName.toLowerCase()) ||
-        event.description?.toLowerCase().includes(selectedTeamName.toLowerCase())
+        !event.teamId || // Show events without team specified
+        event.teamId === teamFilter ||
+        event.homeTeamId === teamFilter ||
+        event.awayTeamId === teamFilter
       );
     }
     
     return events;
-  }, [activeTab, leagueFilter, teamFilter, selectedTeamId, selectedTeamName]);
+  }, [activeTab, programFilter, divisionFilter, teamFilter]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
     setModalOpen(true);
   };
 
-  const handleTeamSelected = (teamId: string, teamName: string, league: 'in-house' | 'travel') => {
+  const handleTeamSelected = (teamId: string, teamName: string, divisionId: string, programId: string) => {
     // Update all filter states to match selection
-    setLeagueFilter(league);
+    setProgramFilter(programId);
+    setDivisionFilter(divisionId);
     setTeamFilter(teamId);
     setActiveTab('all');
-    setSelectedTeamId(teamId);
-    setSelectedTeamName(teamName);
-    setSelectedLeague(league);
   };
 
   const handleClearAllFilters = () => {
     setActiveTab('all');
-    setLeagueFilter('all');
+    setProgramFilter('all');
+    setDivisionFilter('all');
     setTeamFilter('all');
-    setSelectedTeamId(null);
-    setSelectedTeamName(null);
-    setSelectedLeague(null);
   };
 
-  const handleLeagueChange = (league: 'in-house' | 'travel' | 'all') => {
-    setLeagueFilter(league);
-    
-    // If current team doesn't belong to new league, reset team filter
-    if (teamFilter !== 'all') {
-      const newTeams = league === 'all' ? teamData : getTeamsByLeague(league);
-      const teamExists = newTeams.some(t => t.id === teamFilter);
-      if (!teamExists) {
-        setTeamFilter('all');
-      }
-    }
+  const handleProgramChange = (programId: string | 'all') => {
+    setProgramFilter(programId);
+    setDivisionFilter('all');
+    setTeamFilter('all');
+  };
+
+  const handleDivisionChange = (divisionId: string | 'all') => {
+    setDivisionFilter(divisionId);
+    setTeamFilter('all');
   };
 
   const hasActiveFilters = useMemo(() => {
-    return leagueFilter !== 'all' || 
-           teamFilter !== 'all' || 
-           selectedTeamId !== null;
-  }, [leagueFilter, teamFilter, selectedTeamId]);
+    return programFilter !== 'all' || 
+           divisionFilter !== 'all' || 
+           teamFilter !== 'all';
+  }, [programFilter, divisionFilter, teamFilter]);
+
+  const activeFilterText = useMemo(() => {
+    const parts: string[] = [];
+    
+    if (programFilter !== 'all') {
+      const program = programs?.find(p => p.id === programFilter);
+      if (program) parts.push(program.name);
+    }
+    
+    if (divisionFilter !== 'all') {
+      const division = availableDivisions.find(d => d.id === divisionFilter);
+      if (division) parts.push(division.name);
+    }
+    
+    if (teamFilter !== 'all') {
+      const team = availableTeams.find(t => t.id === teamFilter);
+      if (team) parts.push(team.name);
+    }
+    
+    if (activeTab !== 'all') {
+      parts.push(activeTab + 's');
+    }
+    
+    return parts.length > 0 ? parts.join(' → ') : undefined;
+  }, [programFilter, divisionFilter, teamFilter, activeTab, programs, availableDivisions, availableTeams]);
 
   const scrollToSchedule = () => {
     const scheduleSection = document.getElementById('schedule-section');
@@ -219,25 +247,24 @@ const Schedule = () => {
           <div className="container mx-auto px-4">
             <div className="mb-8">
               <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">Interactive Schedule</h2>
-              
               {/* Unified Filter Toolbar */}
               <UnifiedScheduleToolbar
                 activeCategory={activeTab as 'all' | 'event' | 'practice' | 'game'}
                 onCategoryChange={(category) => setActiveTab(category)}
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}
-                selectedLeague={leagueFilter}
-                onLeagueChange={handleLeagueChange}
+                selectedProgram={programFilter}
+                onProgramChange={handleProgramChange}
+                availablePrograms={programs || []}
+                selectedDivision={divisionFilter}
+                onDivisionChange={handleDivisionChange}
+                availableDivisions={availableDivisions}
                 selectedTeam={teamFilter}
                 onTeamChange={setTeamFilter}
                 availableTeams={availableTeams}
                 hasActiveFilters={hasActiveFilters}
                 onClearFilters={handleClearAllFilters}
-                activeFilterText={
-                  selectedTeamName 
-                    ? `${selectedTeamName} (${selectedLeague === 'in-house' ? 'In-House' : 'Travel'} League)`
-                    : undefined
-                }
+                activeFilterText={activeFilterText}
               />
             </div>
             

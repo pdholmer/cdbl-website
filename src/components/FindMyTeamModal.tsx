@@ -3,55 +3,70 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { ChatBubble } from "@/components/ChatBubble";
 import { TypingIndicator } from "@/components/TypingIndicator";
-import { getTeamsByLeague, TeamOption } from "@/data/teamData";
+import { useTeamHierarchy, Program, Division, Team } from "@/hooks/useTeamHierarchy";
 import { Check } from "lucide-react";
 
 interface FindMyTeamModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onTeamSelected: (teamId: string, teamName: string, league: 'in-house' | 'travel') => void;
+  onTeamSelected: (teamId: string, teamName: string, divisionId: string, programId: string) => void;
   onScrollToSchedule?: () => void;
 }
 
-type Step = 'welcome' | 'league-selection' | 'team-selection' | 'confirmation';
+type Step = 'welcome' | 'program-selection' | 'division-selection' | 'team-selection' | 'confirmation';
 
 export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected, onScrollToSchedule }: FindMyTeamModalProps) => {
   const [step, setStep] = useState<Step>('welcome');
-  const [selectedLeague, setSelectedLeague] = useState<'in-house' | 'travel' | null>(null);
-  const [selectedTeam, setSelectedTeam] = useState<TeamOption | null>(null);
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [selectedDivision, setSelectedDivision] = useState<Division | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [showTyping, setShowTyping] = useState(false);
   const [messages, setMessages] = useState<Array<{ text: string; type: 'bot' | 'user' }>>([]);
+  
+  const { programs, getDivisionsByProgram, getTeamsByDivision } = useTeamHierarchy();
 
   useEffect(() => {
     if (open) {
       // Reset state when modal opens
       setStep('welcome');
-      setSelectedLeague(null);
+      setSelectedProgram(null);
+      setSelectedDivision(null);
       setSelectedTeam(null);
       setMessages([]);
       
       // Show welcome message after brief delay
       setTimeout(() => {
-        setMessages([{ text: "Hi there! Which league is your team in?", type: 'bot' }]);
-        setStep('league-selection');
+        setMessages([{ text: "Hi there! Which program is your team in?", type: 'bot' }]);
+        setStep('program-selection');
       }, 300);
     }
   }, [open]);
 
-  const handleLeagueSelect = (league: 'in-house' | 'travel') => {
-    setSelectedLeague(league);
-    const leagueName = league === 'in-house' ? 'In-House League' : 'Travel League';
-    setMessages(prev => [...prev, { text: leagueName, type: 'user' }]);
+  const handleProgramSelect = (program: Program) => {
+    setSelectedProgram(program);
+    setMessages(prev => [...prev, { text: program.name, type: 'user' }]);
     
     setShowTyping(true);
     setTimeout(() => {
       setShowTyping(false);
-      setMessages(prev => [...prev, { text: "Great! Which team are you looking for?", type: 'bot' }]);
+      setMessages(prev => [...prev, { text: "Great! Which division are you in?", type: 'bot' }]);
+      setStep('division-selection');
+    }, 800);
+  };
+
+  const handleDivisionSelect = (division: Division) => {
+    setSelectedDivision(division);
+    setMessages(prev => [...prev, { text: division.name, type: 'user' }]);
+    
+    setShowTyping(true);
+    setTimeout(() => {
+      setShowTyping(false);
+      setMessages(prev => [...prev, { text: "Perfect! Which team are you looking for?", type: 'bot' }]);
       setStep('team-selection');
     }, 800);
   };
 
-  const handleTeamSelect = (team: TeamOption) => {
+  const handleTeamSelect = (team: Team) => {
     setSelectedTeam(team);
     setMessages(prev => [...prev, { text: team.name, type: 'user' }]);
     
@@ -65,14 +80,17 @@ export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected, onScrollTo
       setStep('confirmation');
       
       setTimeout(() => {
-        onTeamSelected(team.id, team.name, team.league);
-        onScrollToSchedule?.();
-        onOpenChange(false);
+        if (selectedProgram && selectedDivision) {
+          onTeamSelected(team.id, team.name, selectedDivision.id, selectedProgram.id);
+          onScrollToSchedule?.();
+          onOpenChange(false);
+        }
       }, 1200);
     }, 800);
   };
 
-  const availableTeams = selectedLeague ? getTeamsByLeague(selectedLeague) : [];
+  const availableDivisions = selectedProgram ? getDivisionsByProgram(selectedProgram.id) : [];
+  const availableTeams = selectedDivision ? getTeamsByDivision(selectedDivision.id) : [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -88,31 +106,41 @@ export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected, onScrollTo
           
           {showTyping && <TypingIndicator />}
           
-          {step === 'league-selection' && !showTyping && (
+          {step === 'program-selection' && !showTyping && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 animate-fade-in">
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => handleLeagueSelect('in-house')}
-                className="h-auto py-4 px-6 flex flex-col items-center gap-2 hover:bg-primary/10 hover:border-primary transition-all"
-              >
-                <span className="text-2xl">🧢</span>
-                <span className="font-semibold">In-House League</span>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => handleLeagueSelect('travel')}
-                className="h-auto py-4 px-6 flex flex-col items-center gap-2 hover:bg-primary/10 hover:border-primary transition-all"
-              >
-                <span className="text-2xl">🚀</span>
-                <span className="font-semibold">Travel League</span>
-              </Button>
+              {programs?.map((program) => (
+                <Button
+                  key={program.id}
+                  size="lg"
+                  variant="outline"
+                  onClick={() => handleProgramSelect(program)}
+                  className="h-auto py-4 px-6 flex flex-col items-center gap-2 hover:bg-primary/10 hover:border-primary transition-all"
+                >
+                  <span className="text-2xl">{program.type === 'in_house' ? '🧢' : '🚀'}</span>
+                  <span className="font-semibold">{program.name}</span>
+                </Button>
+              ))}
+            </div>
+          )}
+          
+          {step === 'division-selection' && !showTyping && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 animate-fade-in">
+              {availableDivisions.map((division) => (
+                <Button
+                  key={division.id}
+                  size="lg"
+                  variant="outline"
+                  onClick={() => handleDivisionSelect(division)}
+                  className="h-auto py-3 justify-start hover:bg-primary/10 hover:border-primary transition-all"
+                >
+                  <span className="font-semibold">{division.name}</span>
+                </Button>
+              ))}
             </div>
           )}
           
           {step === 'team-selection' && !showTyping && (
-            <div className="grid grid-cols-1 gap-2 pt-2 animate-fade-in">
+            <div className="grid grid-cols-1 gap-2 pt-2 animate-fade-in max-h-[300px] overflow-y-auto">
               {availableTeams.map((team) => (
                 <Button
                   key={team.id}
@@ -122,9 +150,6 @@ export const FindMyTeamModal = ({ open, onOpenChange, onTeamSelected, onScrollTo
                   className="h-auto py-3 justify-start hover:bg-primary/10 hover:border-primary transition-all"
                 >
                   <span className="font-semibold">{team.name}</span>
-                  {team.division && (
-                    <span className="text-xs text-muted-foreground ml-2">({team.division})</span>
-                  )}
                 </Button>
               ))}
             </div>

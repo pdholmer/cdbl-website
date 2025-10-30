@@ -6,6 +6,7 @@ import { Calendar, MapPin, Clock, Download, Share2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
 import { getEventCategoryImage } from "@/utils/eventImageHelper";
+import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
 
 interface EventDetailModalProps {
   event: CalendarEvent | null;
@@ -14,11 +15,13 @@ interface EventDetailModalProps {
 }
 
 export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModalProps) => {
+  const { programs } = useTeamHierarchy();
+  
   if (!event) return null;
 
   const eventDate = parseISO(event.date);
   const endDate = event.endDate ? parseISO(event.endDate) : null;
-  const categoryImage = getEventCategoryImage(event);
+  const categoryImage = getEventCategoryImage(event, programs);
 
   const getCategoryColor = (category: string) => {
     switch (category) {

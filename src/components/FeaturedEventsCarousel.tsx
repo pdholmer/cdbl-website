@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 import { getEventCategoryImage, getGameMatchupDisplay } from "@/utils/eventImageHelper";
+import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
 import { format, parseISO } from "date-fns";
 import {
   Carousel,
@@ -18,8 +19,11 @@ interface FeaturedEventsCarouselProps {
 }
 
 export const FeaturedEventsCarousel = ({ events, onEventClick }: FeaturedEventsCarouselProps) => {
+  const { programs, getAllTeams } = useTeamHierarchy();
+  const allTeams = getAllTeams();
+  
   const renderCardHeader = (event: CalendarEvent) => {
-    const matchup = getGameMatchupDisplay(event);
+    const matchup = getGameMatchupDisplay(event, allTeams, programs);
     
     if (matchup.isMatchup) {
       return (
@@ -59,7 +63,7 @@ export const FeaturedEventsCarousel = ({ events, onEventClick }: FeaturedEventsC
       );
     }
     
-    const categoryImage = getEventCategoryImage(event);
+    const categoryImage = getEventCategoryImage(event, programs);
     
     return (
       <div className={`h-32 flex items-center justify-center ${categoryImage.bgClass}`}>

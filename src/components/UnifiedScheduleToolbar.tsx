@@ -1,21 +1,27 @@
 import { Home, Trophy, Users, Calendar as CalendarIcon, Calendar, List, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TeamOption } from "@/data/teamData";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Program, Division, Team } from "@/hooks/useTeamHierarchy";
 
 interface UnifiedScheduleToolbarProps {
   // Event type filtering (was tabs)
   activeCategory: 'all' | 'event' | 'practice' | 'game';
   onCategoryChange: (category: 'all' | 'event' | 'practice' | 'game') => void;
   
-  // League & Team filtering
-  selectedLeague: 'in-house' | 'travel' | 'all';
-  onLeagueChange: (league: 'in-house' | 'travel' | 'all') => void;
+  // Program, Division & Team filtering (new hierarchy)
+  selectedProgram: string | 'all';
+  onProgramChange: (programId: string | 'all') => void;
+  availablePrograms: Program[];
+  
+  selectedDivision: string | 'all';
+  onDivisionChange: (divisionId: string | 'all') => void;
+  availableDivisions: Division[];
+  
   selectedTeam: string | 'all';
   onTeamChange: (teamId: string | 'all') => void;
-  availableTeams: TeamOption[];
+  availableTeams: Team[];
   
   // View mode toggle
   viewMode: 'calendar' | 'list';
@@ -39,8 +45,12 @@ const categoryOptions = [
 export const UnifiedScheduleToolbar = ({
   activeCategory,
   onCategoryChange,
-  selectedLeague,
-  onLeagueChange,
+  selectedProgram,
+  onProgramChange,
+  availablePrograms,
+  selectedDivision,
+  onDivisionChange,
+  availableDivisions,
   selectedTeam,
   onTeamChange,
   availableTeams,
@@ -50,6 +60,17 @@ export const UnifiedScheduleToolbar = ({
   onClearFilters,
   activeFilterText,
 }: UnifiedScheduleToolbarProps) => {
+  // Cascading filter handlers
+  const handleProgramChange = (programId: string | 'all') => {
+    onProgramChange(programId);
+    onDivisionChange('all');
+    onTeamChange('all');
+  };
+
+  const handleDivisionChange = (divisionId: string | 'all') => {
+    onDivisionChange(divisionId);
+    onTeamChange('all');
+  };
   return (
     <div className="space-y-4">
       {/* Active Filter Badge - Shows when filters are applied */}
@@ -99,15 +120,33 @@ export const UnifiedScheduleToolbar = ({
         {/* Divider */}
         <div className="h-8 w-px bg-border" />
 
-        {/* League Dropdown */}
-        <Select value={selectedLeague} onValueChange={onLeagueChange}>
-          <SelectTrigger className="w-[160px] rounded-2xl border-2 hover:border-accent transition-colors" aria-label="Filter by League">
-            <SelectValue placeholder="All Leagues" />
+        {/* Program Dropdown */}
+        <Select value={selectedProgram} onValueChange={handleProgramChange}>
+          <SelectTrigger className="w-[180px] rounded-2xl border-2 hover:border-accent transition-colors" aria-label="Filter by Program">
+            <SelectValue placeholder="All Programs" />
           </SelectTrigger>
-          <SelectContent className="z-50">
-            <SelectItem value="all">All Leagues</SelectItem>
-            <SelectItem value="in-house">🧢 In-House</SelectItem>
-            <SelectItem value="travel">🚀 Travel</SelectItem>
+          <SelectContent className="z-50 bg-background">
+            <SelectItem value="all">All Programs</SelectItem>
+            {availablePrograms.map((program) => (
+              <SelectItem key={program.id} value={program.id}>
+                {program.type === 'in_house' ? '🧢' : '🚀'} {program.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Division Dropdown */}
+        <Select value={selectedDivision} onValueChange={handleDivisionChange}>
+          <SelectTrigger className="w-[160px] rounded-2xl border-2 hover:border-accent transition-colors" aria-label="Filter by Division">
+            <SelectValue placeholder="All Divisions" />
+          </SelectTrigger>
+          <SelectContent className="z-50 bg-background max-h-[300px]">
+            <SelectItem value="all">All Divisions</SelectItem>
+            {availableDivisions.map((division) => (
+              <SelectItem key={division.id} value={division.id}>
+                {division.name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
@@ -116,7 +155,7 @@ export const UnifiedScheduleToolbar = ({
           <SelectTrigger className="w-[200px] rounded-2xl border-2 hover:border-accent transition-colors" aria-label="Filter by Team">
             <SelectValue placeholder="All Teams" />
           </SelectTrigger>
-          <SelectContent className="z-50 max-h-[300px]">
+          <SelectContent className="z-50 bg-background max-h-[300px]">
             <SelectItem value="all">All Teams</SelectItem>
             {availableTeams.map((team) => (
               <SelectItem key={team.id} value={team.id}>
@@ -203,24 +242,44 @@ export const UnifiedScheduleToolbar = ({
           </div>
         </div>
 
-        {/* Row 2: League & Team Dropdowns - Full Width */}
+        {/* Row 2: Program & Division Dropdowns - Full Width */}
         <div className="grid grid-cols-2 gap-3">
-          <Select value={selectedLeague} onValueChange={onLeagueChange}>
-            <SelectTrigger className="w-full h-11 rounded-2xl border-2" aria-label="Filter by League">
-              <SelectValue placeholder="League" />
+          <Select value={selectedProgram} onValueChange={handleProgramChange}>
+            <SelectTrigger className="w-full h-11 rounded-2xl border-2" aria-label="Filter by Program">
+              <SelectValue placeholder="Program" />
             </SelectTrigger>
-            <SelectContent className="z-50">
+            <SelectContent className="z-50 bg-background">
               <SelectItem value="all">All</SelectItem>
-              <SelectItem value="in-house">In-House</SelectItem>
-              <SelectItem value="travel">Travel</SelectItem>
+              {availablePrograms.map((program) => (
+                <SelectItem key={program.id} value={program.id}>
+                  {program.type === 'in_house' ? 'In-House' : 'Travel'}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
+          <Select value={selectedDivision} onValueChange={handleDivisionChange}>
+            <SelectTrigger className="w-full h-11 rounded-2xl border-2" aria-label="Filter by Division">
+              <SelectValue placeholder="Division" />
+            </SelectTrigger>
+            <SelectContent className="z-50 bg-background max-h-[300px]">
+              <SelectItem value="all">All</SelectItem>
+              {availableDivisions.map((division) => (
+                <SelectItem key={division.id} value={division.id}>
+                  {division.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Row 3: Team Dropdown - Full Width */}
+        <div className="w-full">
           <Select value={selectedTeam} onValueChange={onTeamChange}>
             <SelectTrigger className="w-full h-11 rounded-2xl border-2" aria-label="Filter by Team">
               <SelectValue placeholder="Team" />
             </SelectTrigger>
-            <SelectContent className="z-50 max-h-[300px]">
+            <SelectContent className="z-50 bg-background max-h-[300px]">
               <SelectItem value="all">All Teams</SelectItem>
               {availableTeams.map((team) => (
                 <SelectItem key={team.id} value={team.id}>
@@ -231,7 +290,7 @@ export const UnifiedScheduleToolbar = ({
           </Select>
         </div>
 
-        {/* Row 3: View Toggle & Clear Filters */}
+        {/* Row 4: View Toggle & Clear Filters */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex gap-2">
             <button

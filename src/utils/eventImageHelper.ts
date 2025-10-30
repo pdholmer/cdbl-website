@@ -2,35 +2,36 @@ import cdblInHouseLogo from "@/assets/cdbl-inhouse-logo.png";
 import rocketsTravelLogo from "@/assets/rockets-travel-logo.png";
 import cdblSeal from "@/assets/cdbl-seal.png";
 import { CalendarEvent } from "@/data/calendarEvents";
-import { getTeamById } from "@/data/teamData";
+import { Program, Team } from "@/hooks/useTeamHierarchy";
 
-export const getEventCategoryImage = (event: CalendarEvent) => {
-  // Board meetings and league-wide events use the seal
-  if (event.type === 'board-meeting' || 
-      event.league === 'both' || 
-      !event.league) {
+export const getEventCategoryImage = (event: CalendarEvent, programs?: Program[]) => {
+  // If programId is specified, use it to determine the image
+  if (event.programId && programs) {
+    const program = programs.find(p => p.id === event.programId);
+    
+    if (program?.type === 'travel') {
+      return {
+        src: rocketsTravelLogo,
+        alt: "CDBL Travel Rockets",
+        bgClass: "bg-primary"
+      };
+    }
+    
+    if (program?.type === 'in_house') {
+      return {
+        src: cdblInHouseLogo,
+        alt: "CDBL In-House",
+        bgClass: "bg-black"
+      };
+    }
+  }
+  
+  // Board meetings and league-wide events use the seal (no programId)
+  if (event.type === 'board-meeting' || !event.programId) {
     return {
       src: cdblSeal,
       alt: "CDBL League Seal",
       bgClass: "bg-white border border-border"
-    };
-  }
-  
-  // Travel events use the white rockets on blue
-  if (event.league === 'travel') {
-    return {
-      src: rocketsTravelLogo,
-      alt: "CDBL Travel Rockets",
-      bgClass: "bg-primary"
-    };
-  }
-  
-  // In-House events use the CDBL logo on black
-  if (event.league === 'in-house') {
-    return {
-      src: cdblInHouseLogo,
-      alt: "CDBL In-House",
-      bgClass: "bg-black"
     };
   }
   
@@ -42,21 +43,21 @@ export const getEventCategoryImage = (event: CalendarEvent) => {
   };
 };
 
-export const getGameMatchupDisplay = (event: CalendarEvent) => {
-  if (event.category === 'game' && event.homeTeam && event.awayTeam) {
-    const homeTeamData = getTeamById(event.homeTeam);
-    const awayTeamData = getTeamById(event.awayTeam);
+export const getGameMatchupDisplay = (event: CalendarEvent, teams?: Team[], programs?: Program[]) => {
+  if (event.category === 'game' && event.homeTeamId && event.awayTeamId && teams) {
+    const homeTeam = teams.find(t => t.id === event.homeTeamId);
+    const awayTeam = teams.find(t => t.id === event.awayTeamId);
     
-    if (!homeTeamData || !awayTeamData) {
+    if (!homeTeam || !awayTeam) {
       return { isMatchup: false };
     }
     
     return {
       isMatchup: true,
-      homeTeam: homeTeamData,
-      awayTeam: awayTeamData,
-      homeImage: getEventCategoryImage({ ...event, league: homeTeamData.league }),
-      awayImage: getEventCategoryImage({ ...event, league: awayTeamData.league })
+      homeTeam,
+      awayTeam,
+      homeImage: getEventCategoryImage({ ...event, programId: homeTeam.program_id }, programs),
+      awayImage: getEventCategoryImage({ ...event, programId: awayTeam.program_id }, programs)
     };
   }
   
