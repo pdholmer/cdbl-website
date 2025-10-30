@@ -109,10 +109,10 @@ const BoardInfo = () => {
                     <p><strong>Playing Surfaces:</strong> Jim Patano / Larry Rigler</p>
                     <p><strong>Equipment Repair/Upkeep:</strong> Jake Lind / Larry Rigler</p>
                     <p><strong>Garbage & Port-o-Potties:</strong> Chuck Sanders</p>
-                    <p><strong>Turface & Chalk:</strong> Brian Gentzle / Billy Hardin</p>
-                    <p><strong>Shed Upkeep:</strong> Brian Gentzle</p>
-                    <p><strong>Weed & Mosquito Control:</strong> Dillon Wiback</p>
-                    <p><strong>Grass Edging & Trimming:</strong> Dillon Wiback / Zimmerman</p>
+                    <p><strong>Turface & Chalk:</strong> Billy Hardin</p>
+                    <p><strong>Shed Upkeep:</strong> Rob Holtz / Nick Thompson</p>
+                    <p><strong>Weed & Mosquito Control:</strong> Nick Thompson</p>
+                    <p><strong>Grass Edging & Trimming:</strong> Rob Holtz</p>
                   </CardContent>
                 </Card>
 
@@ -140,9 +140,7 @@ const BoardInfo = () => {
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
                     <p><strong>Committee Chair:</strong> John Lawrence</p>
-                    <p><strong>Committee Members:</strong> Dan Cikauskas / Brian Currey / Jim Patano / Larry Rigler / JP Maurer</p>
                     <p><strong>Plato:</strong> Dan Cikauskas / Larry Rigler</p>
-                    <p><strong>Stonecrest:</strong> Brian Currey*</p>
                     <p><strong>Burlington Fields:</strong> Toby Simmons</p>
                   </CardContent>
                 </Card>
@@ -152,7 +150,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">PR / Social Media</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Stephan Holm</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Paul Holmer / Danae Wezdecki / Stephan Holms</p>
                   </CardContent>
                 </Card>
 
@@ -161,7 +159,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Website</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Humberto Camacho / Jen Rigler / JP Maurer</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Humberto Camacho / Jen Rigler / Paul Holmer / JP Maurer</p>
                   </CardContent>
                 </Card>
 
@@ -170,7 +168,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Registration & Background Checks</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Beto Camacho / Jen Rigler</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Humberto Camacho / Jen Rigler / Mike DesEfants / Paul Holmer</p>
                   </CardContent>
                 </Card>
 
@@ -188,8 +186,8 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Travel Coordinator</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
-                    <p><strong>Travel (General)/Tryouts/Draft:</strong> Bobby Rogers / Carrie Wolak / Alex Turk</p>
-                    <p><strong>Trainers/Player Development Training Facility:</strong> Billy Hardin / Brandon Murphy</p>
+                    <p><strong>Travel (General)/Tryouts/Draft:</strong> Bobby Rogers / Carrie Wolak / Alex Turk / Jen Rigler</p>
+                    <p><strong>Trainers/Player Development Training Facility:</strong> Brandon Murphy / Jeff Larson / Toby Simmons</p>
                   </CardContent>
                 </Card>
 
@@ -207,7 +205,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Ratings / Draft Day</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Pat McGrath / Ryan Keeton</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Jen Rigler / Paul Holmer</p>
                   </CardContent>
                 </Card>
 
@@ -216,7 +214,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Baseball Equipment</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Kevin Barrow</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> TBD</p>
                   </CardContent>
                 </Card>
 
@@ -226,7 +224,7 @@ const BoardInfo = () => {
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
                     <p><strong>In-House:</strong> Eric Bohn / Jen Rigler</p>
-                    <p><strong>Travel:</strong> Justin Stull</p>
+                    <p><strong>Travel:</strong> Justin Stull / Paul Holmer / Erica Holtz</p>
                   </CardContent>
                 </Card>
 
@@ -235,11 +233,11 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">CDBL Tournaments</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
-                    <p><strong>Committee Chair:</strong> Alex Traficanti / Jason Carte*</p>
+                    <p><strong>Committee Chair:</strong> Alex Traficanti / Jason Carte* / Nick Thompson</p>
                     <p><strong>Committee Members:</strong> Josh Rowoldt</p>
                     <p><strong>Field Maintenance:</strong> Vinnie D'Antonio</p>
-                    <p><strong>Memorial Day (B-Travel/IHTT):</strong> Brian Gentzle / John Lawrence / Josh Rowoldt / Alex Traficanti</p>
-                    <p><strong>Fathers Day (Travel):</strong> Brian Gentzle / Billy Hardin</p>
+                    <p><strong>Memorial Day (B-Travel/IHTT):</strong> Josh Rowoldt / Alex Traficanti</p>
+                    <p><strong>Fathers Day (Travel):</strong> Billy Hardin</p>
                     <p><strong>Mid-Summer Classic (IHTT):</strong> Josh Rowoldt / Jason Taylor</p>
                   </CardContent>
                 </Card>
@@ -249,7 +247,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Safety: First Aid & AED</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Danae Wezdecki</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Danae Wezdecki / Josh Rowoldt</p>
                   </CardContent>
                 </Card>
 
@@ -258,8 +256,8 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Sponsorship/Fundraising</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
-                    <p><strong>Committee Chair:</strong> Chuck Barham / Stephan Holm</p>
-                    <p><strong>Golf Fundraiser:</strong> Joe Daniels / Ryan Keeton / Alex Turk / Chris Sobey</p>
+                    <p><strong>Committee Chair:</strong> Stephan Holm / Joe Daniels</p>
+                    <p><strong>Golf Fundraiser:</strong> Joe Dobeck / Alex Turk</p>
                   </CardContent>
                 </Card>
 
@@ -268,10 +266,10 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Concessions</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
-                    <p><strong>Committee Chair:</strong> Chris Manczko</p>
-                    <p><strong>Product Inventory & Equipment:</strong> Joe Daniels / Jamison Rayner / Chris Sauceda</p>
-                    <p><strong>Staff Scheduling:</strong> Danae Wezdecki</p>
-                    <p><strong>General Support / Deliveries:</strong> Joe Daniels / Jason Flanagan / Jamison Rayner / Chris Sauceda</p>
+                    <p><strong>Committee Chair:</strong> Chris Manczko / Co-Chair Joe Daniels</p>
+                    <p><strong>Product Inventory & Equipment:</strong> Jamison Rayner / Chris Sauceda</p>
+                    <p><strong>Staff Scheduling:</strong> Danae Wezdecki / Jen Mihm</p>
+                    <p><strong>General Support / Deliveries:</strong> Jamison Rayner / Chris Sauceda / Belfiore Enzo</p>
                   </CardContent>
                 </Card>
 
@@ -280,7 +278,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Spirit Wear</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Jordan Mansk</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Stephan Holm / Erica Holtz / Paul Holmer</p>
                   </CardContent>
                 </Card>
 
@@ -289,7 +287,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Player & Coach Development</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Brandon Murphy / Toby Simmons / Chuck Barham</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Toby Simmons / Chuck Barham / Jesse Mendoza</p>
                   </CardContent>
                 </Card>
 
@@ -299,9 +297,9 @@ const BoardInfo = () => {
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
                     <p><strong>T-Ball:</strong> Eric Bohn</p>
-                    <p><strong>Pinto:</strong> Ryan Keeton</p>
-                    <p><strong>Mustang:</strong> Josh Rowoldt</p>
-                    <p><strong>Bronco:</strong> Todd Weachter</p>
+                    <p><strong>Pinto:</strong> Josh Rowoldt</p>
+                    <p><strong>Mustang:</strong> TBD</p>
+                    <p><strong>Bronco:</strong> TBD</p>
                     <p><strong>Pony / Colt:</strong> Vinny D'Antonio / Chris Sauceda</p>
                   </CardContent>
                 </Card>
@@ -311,7 +309,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Umpires</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Brian Gentzle / Jen Rigler</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Jen Rigler / TBD</p>
                   </CardContent>
                 </Card>
 
@@ -330,7 +328,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Awards</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Alex Traficanti / Eric Bohn / Jordan Mansk</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Alex Traficanti / Eric Bohn / Carrie Wolak</p>
                   </CardContent>
                 </Card>
 
@@ -339,8 +337,8 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Scholarship</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
-                    <p><strong>Committee Chair:</strong> Chad Rakow</p>
-                    <p><strong>Committee Members:</strong> Ryan Keeton / Vinny D'Antonio</p>
+                    <p><strong>Committee Chair:</strong> Jason Carte / Justin Stull / Jen Mihm</p>
+                    <p><strong>Committee Members:</strong> Vinny D'Antonio</p>
                   </CardContent>
                 </Card>
 
@@ -349,11 +347,11 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Player Advocacy</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-1 text-sm">
-                    <p><strong>Opening Day Ceremonies:</strong> CDBL Board</p>
+                    <p><strong>Opening Day Ceremonies:</strong> All Members</p>
                     <p><strong>Picture Day:</strong> Joe Dobek (In-House) / Carrie Wolak (Travel)</p>
-                    <p><strong>Player Appreciation Day (PAD):</strong> Billy Hardin / Brandon Murphy / Chad Rakow / Coordinators</p>
+                    <p><strong>Player Appreciation Day (PAD):</strong> Billy Hardin / Brandon Murphy / Jesse Mendoza / John Lawrence</p>
                     <p><strong>CDBL Minor League Game:</strong> Stephan Holm</p>
-                    <p><strong>Banana Ball:</strong> Brandon Murphy / Toby Simmons / Justin Stull</p>
+                    <p><strong>Banana Ball:</strong> Brandon Murphy / Toby Simmons / Justin Stull / Jesse Mendoza</p>
                   </CardContent>
                 </Card>
 
