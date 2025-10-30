@@ -39,40 +39,43 @@ const Events = () => {
       <main className="flex-grow">
         {/* Hero Section */}
         <section 
-          className="relative h-[500px] flex items-center justify-center text-white"
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
           style={{
-            backgroundImage: `linear-gradient(135deg, rgba(1, 56, 130, 0.9), rgba(75, 156, 211, 0.9)), url(${heroImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundImage: `linear-gradient(to right, hsla(217, 100%, 32%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url(${heroImage})`,
           }}
         >
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <h1 className="text-5xl md:text-6xl font-heading font-bold mb-6">
-              CDBL Calendar
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto font-sans">
-              Stay up to date on upcoming events, practices, and games across the Central District Baseball League.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                onClick={scrollToCalendar}
-                className="bg-white text-primary hover:bg-white/90 font-heading"
-              >
-                <Calendar className="mr-2 h-5 w-5" />
-                View Full Calendar
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-white text-white hover:bg-white/20 font-heading"
-                onClick={() => {
-                  // Placeholder for sync functionality
-                  console.log('Sync to device');
-                }}
-              >
-                Sync to Device
-              </Button>
+          <div className="container relative z-10">
+            <div className="max-w-3xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 md:mb-6 leading-tight">
+                CDBL Calendar
+              </h1>
+              
+              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95">
+                Stay up to date on upcoming events, practices, and games across the Central District Baseball League.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <Button 
+                  variant="default" 
+                  size="lg"
+                  onClick={scrollToCalendar}
+                  className="bg-white text-primary hover:bg-white/90 shadow-lg font-heading font-semibold"
+                >
+                  <Calendar className="mr-2 h-5 w-5" />
+                  View Full Calendar
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => {
+                    // Placeholder for sync functionality
+                    console.log('Sync to device');
+                  }}
+                  className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-heading font-semibold"
+                >
+                  Sync to Device
+                </Button>
+              </div>
             </div>
           </div>
         </section>
