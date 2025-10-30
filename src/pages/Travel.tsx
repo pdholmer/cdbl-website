@@ -223,10 +223,10 @@ const Travel = () => {
                   <div>
                     <p className="font-semibold mb-2">Financial Investment</p>
                     <ul className="text-muted-foreground space-y-1 ml-4">
-                      <li>• Registration fee: ~$600</li>
-                      <li>• Tournament fees: $1,500-$2,500</li>
-                      <li>• Travel expenses: Hotels, meals, gas</li>
-                      <li>• Total typical cost: $2,500-$3,500 per season</li>
+                      <li>• Registration fee: ~$400</li>
+                      <li>• Uniforms: $100 - $2500</li>
+                      <li>• Total typical cost: $1,500-$3,000 per season (depends on the team)</li>
+                      <li>• Additional Expenses (possible): Travel, hotel, meals and gas</li>
                     </ul>
                   </div>
                 </CardContent>
