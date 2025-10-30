@@ -118,7 +118,7 @@ const Schedule = () => {
                   className="bg-white text-primary hover:bg-white/90 shadow-lg font-heading font-semibold hover:scale-105 transition-all"
                 >
                   <UsersRound className="mr-2 h-5 w-5" />
-                  Find My Team 🧢
+                  Find My Team
                 </Button>
                 <Button 
                   variant="default" 
