@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarGrid } from "@/components/CalendarGrid";
 import { EventDetailModal } from "@/components/EventDetailModal";
 import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
-import { EventsNavigation } from "@/components/EventsNavigation";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
 import { Calendar, Trophy, Users, Heart, HandHeart, DollarSign, Facebook, Twitter, Instagram } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,7 +36,6 @@ const Events = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <EventsNavigation />
       
       <main className="flex-grow">
         {/* Hero Section */}
