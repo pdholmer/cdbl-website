@@ -199,7 +199,7 @@ const Travel = () => {
                   <ul className="space-y-2 text-muted-foreground">
                     <li>• <strong>Hitting:</strong> Bat speed, contact consistency, power potential</li>
                     <li>• <strong>Fielding:</strong> Hands, footwork, arm strength, accuracy</li>
-                    <li>• <strong>Speed:</strong> 60-yard dash, base running instincts</li>
+                    <li>• <strong>Speed:</strong> Base running instincts</li>
                     <li>• <strong>Throwing:</strong> Velocity, accuracy from position</li>
                     <li>• <strong>Game Awareness:</strong> Baseball IQ, coachability, attitude</li>
                   </ul>
