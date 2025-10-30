@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Montserrat', 'system-ui', 'sans-serif'],
+        sans: ['Raleway', 'system-ui', 'sans-serif'],
+        heading: ['Montserrat', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -34,6 +35,15 @@ export default {
         carolina: {
           DEFAULT: "hsl(var(--carolina-blue))",
           foreground: "hsl(var(--carolina-blue-foreground))",
+        },
+        silver: {
+          DEFAULT: "hsl(var(--silver))",
+          foreground: "hsl(var(--silver-foreground))",
+        },
+        event: {
+          practice: "hsl(var(--event-practice))",
+          game: "hsl(var(--event-game))",
+          gold: "hsl(var(--event-gold))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",

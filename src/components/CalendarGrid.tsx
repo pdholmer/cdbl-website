@@ -1,163 +1,160 @@
-import { useState, useMemo } from "react";
+import { CalendarEvent } from "@/data/calendarEvents";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, isToday, parseISO } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CalendarEvent } from "@/data/calendarEvents";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, addMonths, subMonths, parseISO } from "date-fns";
-import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 interface CalendarGridProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
+  onTodayClick?: () => void;
 }
 
-export const CalendarGrid = ({ events, onEventClick }: CalendarGridProps) => {
+export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGridProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
-  
-  const calendarDays = useMemo(() => {
-    const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
-    const startDay = monthStart.getDay();
-    const paddingDays = Array(startDay).fill(null);
-    return [...paddingDays, ...days];
-  }, [monthStart, monthEnd]);
+  const startDate = startOfWeek(monthStart);
+  const endDate = endOfWeek(monthEnd);
 
-  const eventsForDay = (day: Date | null) => {
-    if (!day) return [];
+  const calendarDays = eachDayOfInterval({ start: startDate, end: endDate });
+
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const getDayEvents = (day: Date) => {
     return events.filter(event => {
-      const eventStart = parseISO(event.date);
-      const eventEnd = event.endDate ? parseISO(event.endDate) : eventStart;
-      return day >= eventStart && day <= eventEnd;
+      const eventDate = parseISO(event.date);
+      const endDate = event.endDate ? parseISO(event.endDate) : eventDate;
+      return day >= eventDate && day <= endDate;
     });
   };
 
-  const getCategoryColor = (category: string) => {
+  const getEventDotColor = (category: string) => {
     switch (category) {
-      case 'event':
-        return 'bg-primary';
       case 'practice':
-        return 'bg-green-500';
+        return 'bg-event-practice';
       case 'game':
-        return 'bg-orange-500';
+        return 'bg-event-game';
+      case 'event':
+        return 'bg-event-gold';
       default:
         return 'bg-primary';
     }
   };
 
+  const handleTodayClick = () => {
+    setCurrentMonth(new Date());
+    if (onTodayClick) {
+      onTodayClick();
+    }
+  };
+
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full">
       {/* Month Navigation */}
-      <div className="flex items-center justify-between mb-6 px-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setCurrentMonth(prev => subMonths(prev, 1))}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <h2 className="text-2xl font-heading font-bold min-w-[200px] text-center">
+            {format(currentMonth, 'MMMM yyyy')}
+          </h2>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setCurrentMonth(prev => addMonths(prev, 1))}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
+        </div>
         <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-          className="h-10 w-10"
+          variant="default"
+          onClick={handleTodayClick}
+          className="min-w-[100px] font-heading"
         >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-        
-        <h2 className="text-3xl font-bold">
-          {format(currentMonth, 'MMMM yyyy')}
-        </h2>
-        
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-          className="h-10 w-10"
-        >
-          <ChevronRight className="h-5 w-5" />
+          Today
         </Button>
       </div>
 
       {/* Weekday Headers */}
-      <div className="grid grid-cols-7 gap-2 mb-2 px-4">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="text-center font-semibold text-muted-foreground py-2">
+      <div className="grid grid-cols-7 gap-2 mb-2">
+        {weekDays.map(day => (
+          <div key={day} className="text-center font-heading font-semibold text-sm text-muted-foreground py-2">
             {day}
           </div>
         ))}
       </div>
 
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-2 px-4">
-        {calendarDays.map((day, index) => {
-          if (!day) {
-            return <div key={`empty-${index}`} className="aspect-square" />;
-          }
-
-          const dayEvents = eventsForDay(day);
-          const hasEvents = dayEvents.length > 0;
-          const isCurrentDay = isToday(day);
+      {/* Calendar Days */}
+      <div className="grid grid-cols-7 gap-2">
+        {calendarDays.map((day, idx) => {
+          const dayEvents = getDayEvents(day);
           const isCurrentMonth = isSameMonth(day, currentMonth);
+          const isCurrentDay = isToday(day);
+          const hasEvents = dayEvents.length > 0;
 
           return (
-            <button
-              key={day.toISOString()}
-              onClick={() => {
-                if (dayEvents.length === 1) {
-                  onEventClick(dayEvents[0]);
-                } else if (dayEvents.length > 1) {
-                  onEventClick(dayEvents[0]); // Show first event, could enhance to show list
-                }
-              }}
-              disabled={!hasEvents}
-              className={cn(
-                "aspect-square p-2 rounded-lg border transition-all duration-200",
-                "flex flex-col items-start justify-start",
-                isCurrentDay && "border-primary border-2 bg-primary/5",
-                !isCurrentMonth && "opacity-40",
-                hasEvents && "hover:shadow-lg hover:scale-105 cursor-pointer bg-card",
-                !hasEvents && "cursor-default"
-              )}
+            <Card
+              key={idx}
+              className={`
+                min-h-[100px] p-2 transition-all
+                ${isCurrentMonth ? 'opacity-100' : 'opacity-40'}
+                ${isCurrentDay ? 'ring-2 ring-primary bg-primary/5' : ''}
+                ${hasEvents ? 'cursor-pointer hover:shadow-lg hover:scale-105' : 'cursor-default'}
+              `}
+              onClick={() => hasEvents && dayEvents[0] && onEventClick(dayEvents[0])}
             >
-              <span className={cn(
-                "text-sm font-semibold mb-1",
-                isCurrentDay && "text-primary"
-              )}>
-                {format(day, 'd')}
-              </span>
-              
-              {/* Event Indicators */}
-              {hasEvents && (
-                <div className="flex flex-wrap gap-1 w-full">
-                  {dayEvents.slice(0, 3).map((event, idx) => (
-                    <div
-                      key={idx}
-                      className={cn(
-                        "h-1.5 flex-1 rounded-full",
-                        getCategoryColor(event.category)
-                      )}
-                      title={event.title}
-                    />
-                  ))}
-                  {dayEvents.length > 3 && (
-                    <span className="text-xs text-muted-foreground">
-                      +{dayEvents.length - 3}
-                    </span>
-                  )}
+              <div className="flex flex-col h-full">
+                <div className={`text-right text-sm font-semibold mb-2 ${isCurrentDay ? 'text-primary' : ''}`}>
+                  {format(day, 'd')}
                 </div>
-              )}
-            </button>
+                {hasEvents && (
+                  <div className="flex-1 flex flex-col items-center justify-center gap-1">
+                    {/* Color-coded dots for event types */}
+                    <div className="flex gap-1 flex-wrap justify-center">
+                      {Array.from(new Set(dayEvents.map(e => e.category))).map((category, i) => (
+                        <div
+                          key={i}
+                          className={`w-2 h-2 rounded-full ${getEventDotColor(category)}`}
+                          title={category}
+                        />
+                      ))}
+                    </div>
+                    {/* Event count badge */}
+                    {dayEvents.length > 0 && (
+                      <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                        {dayEvents.length}
+                      </Badge>
+                    )}
+                  </div>
+                )}
+              </div>
+            </Card>
           );
         })}
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-6 mt-6 px-4">
+      <div className="mt-8 flex flex-wrap gap-6 justify-center items-center">
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-primary" />
-          <span className="text-sm text-muted-foreground">Events</span>
+          <div className="w-3 h-3 rounded-full bg-event-practice" />
+          <span className="text-sm font-medium font-sans">Practices</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-green-500" />
-          <span className="text-sm text-muted-foreground">Practices</span>
+          <div className="w-3 h-3 rounded-full bg-event-game" />
+          <span className="text-sm font-medium font-sans">Games</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-orange-500" />
-          <span className="text-sm text-muted-foreground">Games</span>
+          <div className="w-3 h-3 rounded-full bg-event-gold" />
+          <span className="text-sm font-medium font-sans">Events</span>
         </div>
       </div>
     </div>

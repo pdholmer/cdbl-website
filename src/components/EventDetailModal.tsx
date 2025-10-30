@@ -2,8 +2,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CalendarEvent } from "@/data/calendarEvents";
-import { Calendar, MapPin, Clock, Download } from "lucide-react";
+import { Calendar, MapPin, Clock, Download, Share2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { toast } from "sonner";
 
 interface EventDetailModalProps {
   event: CalendarEvent | null;
@@ -20,13 +21,32 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'event':
-        return 'bg-primary text-primary-foreground';
+        return 'bg-event-gold text-white';
       case 'practice':
-        return 'bg-green-500 text-white';
+        return 'bg-event-practice text-white';
       case 'game':
-        return 'bg-orange-500 text-white';
+        return 'bg-event-game text-white';
       default:
         return 'bg-primary text-primary-foreground';
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share && event) {
+      try {
+        await navigator.share({
+          title: event.title,
+          text: `${event.title} - ${formatEventDate()}`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Share cancelled or failed');
+      }
+    } else {
+      // Fallback: copy to clipboard
+      const shareText = `${event?.title} - ${formatEventDate()} - ${window.location.href}`;
+      navigator.clipboard.writeText(shareText);
+      toast.success('Event link copied to clipboard!');
     }
   };
 
@@ -49,11 +69,11 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 mt-1">
-              <event.icon className="h-6 w-6 text-primary" />
+            <div className="p-3 rounded-lg bg-primary/10 mt-1">
+              <event.icon className="h-7 w-7 text-primary" />
             </div>
             <div className="flex-1">
-              <DialogTitle className="text-2xl font-bold mb-2">
+              <DialogTitle className="text-2xl font-heading font-bold mb-2">
                 {event.title}
               </DialogTitle>
               <Badge className={getCategoryColor(event.category)}>
@@ -100,19 +120,26 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
           </DialogDescription>
 
           {/* Actions */}
-          <div className="flex gap-2 pt-4">
+          <div className="grid grid-cols-2 gap-2 pt-4">
             <Button
               variant="outline"
-              className="flex-1"
               onClick={() => {
                 // Placeholder for ICS export functionality
                 console.log('Add to calendar:', event);
+                toast.success('Calendar export coming soon!');
               }}
             >
               <Download className="h-4 w-4 mr-2" />
               Add to Calendar
             </Button>
-            <Button onClick={() => onOpenChange(false)} className="flex-1">
+            <Button
+              variant="outline"
+              onClick={handleShare}
+            >
+              <Share2 className="h-4 w-4 mr-2" />
+              Share
+            </Button>
+            <Button onClick={() => onOpenChange(false)} className="col-span-2">
               Close
             </Button>
           </div>

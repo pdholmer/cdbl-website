@@ -17,16 +17,25 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
 
-    /* CDBL Blue #013882 */
-    --primary: 215 100% 26%;
+    /* CDBL Royal Blue #003DA5 */
+    --primary: 217 100% 32%;
     --primary-foreground: 0 0% 100%;
     
     /* Lighter blue for accents */
-    --primary-light: 215 90% 45%;
+    --primary-light: 217 90% 50%;
     
     /* Carolina Blue #4B9CD3 */
     --carolina-blue: 201 63% 56%;
     --carolina-blue-foreground: 0 0% 100%;
+    
+    /* Silver #C0C0C0 */
+    --silver: 0 0% 75%;
+    --silver-foreground: 0 0% 20%;
+    
+    /* Calendar event type colors */
+    --event-practice: 217 100% 32%; /* Blue for practices */
+    --event-game: 142 76% 36%; /* Green for games */
+    --event-gold: 45 100% 50%; /* Gold for events */
     
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 0%;
@@ -42,18 +51,18 @@ All colors MUST be HSL.
 
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 215 100% 26%;
+    --ring: 217 100% 32%;
 
     --radius: 0.5rem;
     
     /* Enhanced Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(201 63% 56%) 100%);
-    --gradient-primary: linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(215 90% 35%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(217 100% 32%) 0%, hsl(201 63% 56%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(217 100% 32%) 0%, hsl(217 90% 40%) 100%);
     --gradient-carolina: linear-gradient(135deg, hsl(201 63% 56%) 0%, hsl(201 70% 65%) 100%);
     --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
     
     /* Enhanced Shadows */
-    --shadow-strong: 0 10px 40px -10px hsl(215 100% 26% / 0.4);
+    --shadow-strong: 0 10px 40px -10px hsl(217 100% 32% / 0.4);
     --shadow-carolina: 0 8px 32px -8px hsl(201 63% 56% / 0.3);
     --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.08);
     --shadow-elevated: 0 8px 32px hsl(0 0% 0% / 0.12);
@@ -68,7 +77,7 @@ All colors MUST be HSL.
     /* Rocket accent colors for travel program */
     --rocket-red: 4 90% 58%;
     --rocket-orange: 24 100% 50%;
-    --rocket-gradient: linear-gradient(135deg, hsl(215 100% 26%) 0%, hsl(4 90% 58%) 100%);
+    --rocket-gradient: linear-gradient(135deg, hsl(217 100% 32%) 0%, hsl(4 90% 58%) 100%);
 
     --sidebar-background: 0 0% 98%;
 
