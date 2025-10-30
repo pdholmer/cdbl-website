@@ -13,6 +13,7 @@ export interface Division {
   id: string;
   name: string;
   age_range: string;
+  program_id: string;
   teams?: Team[];
 }
 
@@ -27,39 +28,35 @@ export const useTeamHierarchy = () => {
   const { data: programs, isLoading, error } = useQuery({
     queryKey: ['team-hierarchy'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('programs')
-        .select(`
-          id,
-          name,
-          type,
-          divisions (
-            id,
-            name,
-            age_range,
-            teams (
-              id,
-              name,
-              status,
-              program_id,
-              division_id
-            )
-          )
-        `)
-        .order('type');
+      // Fetch programs, divisions and teams separately to avoid ambiguous embedded relationships
+      const [progRes, divRes, teamRes] = await Promise.all([
+        supabase.from('programs').select('id, name, type').order('type'),
+        supabase.from('divisions').select('id, name, age_range, program_id').order('name'),
+        supabase.from('teams').select('id, name, status, program_id, division_id').order('name'),
+      ]);
 
-      if (error) throw error;
-      
-      // Filter out inactive teams and sort
-      const processedPrograms = data?.map(program => ({
-        ...program,
-        divisions: program.divisions?.map((division: any) => ({
-          ...division,
-          teams: division.teams
-            ?.filter((team: Team) => team.status === 'active')
-            .sort((a: Team, b: Team) => a.name.localeCompare(b.name))
-        })).sort((a: Division, b: Division) => a.name.localeCompare(b.name))
-      }));
+      if (progRes.error) throw progRes.error;
+      if (divRes.error) throw divRes.error;
+      if (teamRes.error) throw teamRes.error;
+
+      const programs = (progRes.data || []) as Program[];
+      const divisions = (divRes.data || []) as Division[];
+      const teams = (teamRes.data || []) as Team[];
+
+      // Attach divisions and teams
+      const processedPrograms = programs.map((program) => {
+        const programDivisions = divisions
+          .filter((d) => d.program_id === program.id)
+          .map((division) => ({
+            ...division,
+            teams: teams
+              .filter((t) => t.division_id === division.id && t.status === 'active')
+              .sort((a, b) => a.name.localeCompare(b.name)),
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        return { ...program, divisions: programDivisions } as Program;
+      });
 
       return processedPrograms as Program[];
     }

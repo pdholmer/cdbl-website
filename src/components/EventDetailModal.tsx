@@ -96,6 +96,7 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
               )}
             </div>
           </div>
+          <DialogDescription className="sr-only">Detailed information about the selected event</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-4">
