@@ -159,7 +159,7 @@ const BoardInfo = () => {
                     <CardTitle className="text-lg">Website</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm"><strong>Committee Chair:</strong> Humberto Camacho / Jen Rigler / Paul Holmer / JP Maurer</p>
+                    <p className="text-sm"><strong>Committee Chair:</strong> Paul Holmer / Humberto Camacho / Jen Rigler / JP Maurer</p>
                   </CardContent>
                 </Card>
 
