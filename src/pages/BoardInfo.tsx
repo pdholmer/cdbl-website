@@ -383,9 +383,7 @@ const BoardInfo = () => {
                   <CardTitle>Upcoming Meetings</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Board meetings are held monthly and are open to all CDBL members. Meetings typically occur on the third Tuesday of each month at 7:00 PM.
-                  </p>
+                  <p className="text-muted-foreground mb-4">Board meetings are held monthly and are open to all CDBL members. Meetings typically occur on the third Tuesday of each month at 8:00 PM.</p>
                   <p className="text-sm text-muted-foreground">
                     For information about upcoming board meetings, please contact the board at board@cdbaseball.org or check our Sports Connect portal.
                   </p>
