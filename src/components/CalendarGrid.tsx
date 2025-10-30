@@ -1,11 +1,10 @@
 import { CalendarEvent } from "@/data/calendarEvents";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, isToday, parseISO, isAfter, isBefore } from "date-fns";
-import { ChevronLeft, ChevronRight, Grid3x3, List } from "lucide-react";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, addMonths, subMonths, startOfWeek, endOfWeek, isToday, parseISO, isBefore } from "date-fns";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 interface CalendarGridProps {
   events: CalendarEvent[];
@@ -15,7 +14,6 @@ interface CalendarGridProps {
 
 export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGridProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
@@ -88,25 +86,6 @@ export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGri
           </Button>
         </div>
         <div className="flex items-center gap-2">
-          {/* View Toggle - Mobile Only */}
-          <div className="flex md:hidden border rounded-lg p-1">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-              className="h-8"
-            >
-              <Grid3x3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-              className="h-8"
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
           <Button
             variant="default"
             onClick={handleTodayClick}
@@ -117,17 +96,16 @@ export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGri
         </div>
       </div>
 
-      {/* Grid View */}
-      {viewMode === 'grid' && (
-        <>
-          {/* Weekday Headers */}
-          <div className="hidden md:grid grid-cols-7 gap-2 mb-2">
-            {weekDays.map(day => (
-              <div key={day} className="text-center font-heading font-semibold text-sm text-muted-foreground py-2">
-                {day}
-              </div>
-            ))}
-          </div>
+      {/* Grid View - Desktop/Tablet Only */}
+      <>
+        {/* Weekday Headers */}
+        <div className="hidden md:grid grid-cols-7 gap-2 mb-2">
+          {weekDays.map(day => (
+            <div key={day} className="text-center font-heading font-semibold text-sm text-muted-foreground py-2">
+              {day}
+            </div>
+          ))}
+        </div>
 
           {/* Calendar Days - Desktop/Tablet */}
           <div className="hidden md:grid grid-cols-7 gap-3">
@@ -208,49 +186,10 @@ export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGri
               );
             })}
           </div>
-
-          {/* Mobile Grid - Simplified */}
-          <div className="md:hidden grid grid-cols-7 gap-1">
-            {calendarDays.map((day, idx) => {
-              const dayEvents = getDayEvents(day);
-              const isCurrentMonth = isSameMonth(day, currentMonth);
-              const isCurrentDay = isToday(day);
-              const hasEvents = dayEvents.length > 0;
-
-              return (
-                <button
-                  key={idx}
-                  className={`
-                    aspect-square p-1 rounded-lg transition-all relative
-                    ${isCurrentMonth ? 'opacity-100' : 'opacity-30'}
-                    ${isCurrentDay ? 'ring-2 ring-primary bg-primary/10' : 'bg-card'}
-                    ${hasEvents ? 'hover:shadow-md' : ''}
-                  `}
-                  onClick={() => hasEvents && dayEvents[0] && onEventClick(dayEvents[0])}
-                >
-                  <div className={`text-xs font-semibold ${isCurrentDay ? 'text-primary' : ''}`}>
-                    {format(day, 'd')}
-                  </div>
-                  {hasEvents && (
-                    <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex gap-0.5">
-                      {Array.from(new Set(dayEvents.map(e => e.category))).slice(0, 3).map((category, i) => (
-                        <div
-                          key={i}
-                          className={`w-1 h-1 rounded-full ${getEventDotColor(category)}`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
         </>
-      )}
 
-      {/* List View - Mobile */}
-      {viewMode === 'list' && (
-        <div className="md:hidden space-y-3">
+      {/* List View - Mobile Only */}
+      <div className="md:hidden space-y-3">
           {monthEvents.length === 0 ? (
             <Card className="p-8 text-center">
               <p className="text-muted-foreground">No events this month</p>
@@ -303,7 +242,6 @@ export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGri
             })
           )}
         </div>
-      )}
 
       {/* Legend */}
       <div className="mt-8 flex flex-wrap gap-6 justify-center items-center">
