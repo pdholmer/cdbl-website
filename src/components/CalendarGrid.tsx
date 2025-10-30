@@ -129,46 +129,77 @@ export const CalendarGrid = ({ events, onEventClick, onTodayClick }: CalendarGri
             ))}
           </div>
 
-          {/* Calendar Days */}
-          <div className="hidden md:grid grid-cols-7 gap-2">
+          {/* Calendar Days - Desktop/Tablet */}
+          <div className="hidden md:grid grid-cols-7 gap-3">
             {calendarDays.map((day, idx) => {
               const dayEvents = getDayEvents(day);
               const isCurrentMonth = isSameMonth(day, currentMonth);
               const isCurrentDay = isToday(day);
               const hasEvents = dayEvents.length > 0;
+              const maxVisibleEvents = 3;
+              const visibleEvents = dayEvents.slice(0, maxVisibleEvents);
+              const remainingCount = dayEvents.length - maxVisibleEvents;
 
               return (
                 <Card
                   key={idx}
                   className={`
-                    min-h-[100px] p-2 transition-all
+                    min-h-[120px] p-2 transition-all overflow-hidden
                     ${isCurrentMonth ? 'opacity-100' : 'opacity-40'}
-                    ${isCurrentDay ? 'ring-2 ring-primary bg-primary/5' : ''}
-                    ${hasEvents ? 'cursor-pointer hover:shadow-lg hover:scale-105' : 'cursor-default'}
+                    ${isCurrentDay ? 'ring-2 ring-primary bg-primary/5' : 'bg-card'}
+                    ${hasEvents ? 'hover:shadow-lg hover:border-primary/50' : ''}
                   `}
-                  onClick={() => hasEvents && dayEvents[0] && onEventClick(dayEvents[0])}
                 >
-                  <div className="flex flex-col h-full">
-                    <div className={`text-right text-sm font-semibold mb-2 ${isCurrentDay ? 'text-primary' : ''}`}>
+                  <div className="flex flex-col h-full gap-1">
+                    {/* Day number */}
+                    <div className={`text-sm font-semibold ${
+                      isCurrentDay 
+                        ? 'bg-primary text-primary-foreground w-7 h-7 rounded-full flex items-center justify-center' 
+                        : 'text-muted-foreground'
+                    }`}>
                       {format(day, 'd')}
                     </div>
+                    
+                    {/* Event list */}
                     {hasEvents && (
-                      <div className="flex-1 flex flex-col items-center justify-center gap-1">
-                        {/* Color-coded dots for event types */}
-                        <div className="flex gap-1 flex-wrap justify-center">
-                          {Array.from(new Set(dayEvents.map(e => e.category))).map((category, i) => (
-                            <div
-                              key={i}
-                              className={`w-2 h-2 rounded-full ${getEventDotColor(category)}`}
-                              title={category}
-                            />
-                          ))}
-                        </div>
-                        {/* Event count badge */}
-                        {dayEvents.length > 0 && (
-                          <Badge variant="secondary" className="text-xs px-1.5 py-0">
-                            {dayEvents.length}
-                          </Badge>
+                      <div className="flex-1 space-y-1 overflow-hidden">
+                        {visibleEvents.map((event, eventIdx) => (
+                          <button
+                            key={eventIdx}
+                            onClick={() => onEventClick(event)}
+                            className={`
+                              w-full text-left px-1.5 py-1 rounded text-xs
+                              transition-colors hover:brightness-90
+                              ${
+                                event.category === 'event' 
+                                  ? 'bg-event-gold text-white' 
+                                  : event.category === 'practice'
+                                  ? 'bg-event-practice text-white'
+                                  : 'bg-event-game text-white'
+                              }
+                            `}
+                          >
+                            <div className="flex items-center gap-1">
+                              {event.time && (
+                                <span className="font-medium opacity-90 text-[10px]">
+                                  {event.time.split(' ')[0]}
+                                </span>
+                              )}
+                              <span className="truncate font-medium">
+                                {event.title}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                        
+                        {/* "X more" indicator */}
+                        {remainingCount > 0 && (
+                          <button
+                            onClick={() => dayEvents[maxVisibleEvents] && onEventClick(dayEvents[maxVisibleEvents])}
+                            className="w-full text-left px-1.5 py-1 text-xs text-primary hover:text-primary/80 font-semibold transition-colors"
+                          >
+                            +{remainingCount} more
+                          </button>
                         )}
                       </div>
                     )}
