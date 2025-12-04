@@ -42,7 +42,10 @@ serve(async (req) => {
     // Check rate limit
     if (!checkRateLimit(ip)) {
       return new Response(
-        JSON.stringify({ error: 'Rate limit exceeded. Please try again in an hour.' }),
+        JSON.stringify({ 
+          error: 'rate_limited',
+          message: 'You\'ve sent too many requests. Please try again in an hour.' 
+        }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -114,9 +117,31 @@ Answer questions clearly and concisely using the website content and data above.
       }),
     });
 
+    // Handle specific error codes from AI Gateway
     if (!response.ok) {
       const errorText = await response.text();
       console.error('AI Gateway error:', response.status, errorText);
+      
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'credits_exhausted',
+            message: 'The AI assistant is temporarily unavailable. Please visit our FAQ page or contact us directly for help.'
+          }),
+          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'gateway_rate_limited',
+            message: 'The AI service is experiencing high demand. Please try again in a few minutes.'
+          }),
+          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       throw new Error('AI Gateway request failed');
     }
 
@@ -131,7 +156,10 @@ Answer questions clearly and concisely using the website content and data above.
     console.error('AI Assistant error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: message }),
+      JSON.stringify({ 
+        error: 'server_error',
+        message: 'Something went wrong. Please try again or visit our Contact page for assistance.'
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

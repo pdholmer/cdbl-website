@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 interface Message {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'error';
   content: string;
+  errorType?: 'credits_exhausted' | 'rate_limited' | 'gateway_rate_limited' | 'server_error';
 }
 
 export const ChatAssistant = () => {
@@ -37,15 +38,57 @@ export const ChatAssistant = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('ai-assistant', {
-        body: { messages: [...messages, { role: 'user', content: userMessage }] }
+        body: { messages: [...messages.filter(m => m.role !== 'error'), { role: 'user', content: userMessage }] }
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle FunctionsHttpError which contains the response
+        const errorBody = error.context?.body ? JSON.parse(error.context.body) : null;
+        if (errorBody?.error) {
+          setMessages(prev => [...prev, { 
+            role: 'error', 
+            content: errorBody.message,
+            errorType: errorBody.error
+          }]);
+          return;
+        }
+        throw error;
+      }
+
+      if (data?.error) {
+        setMessages(prev => [...prev, { 
+          role: 'error', 
+          content: data.message,
+          errorType: data.error
+        }]);
+        return;
+      }
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
-      toast.error('Failed to get response. Please try again.');
+      
+      // Try to parse error response
+      let errorMessage = 'Something went wrong. Please try again or visit our Contact page for assistance.';
+      let errorType: Message['errorType'] = 'server_error';
+      
+      try {
+        if (error?.message) {
+          const parsed = JSON.parse(error.message);
+          if (parsed.error) {
+            errorType = parsed.error;
+            errorMessage = parsed.message;
+          }
+        }
+      } catch {
+        // Use default error message
+      }
+      
+      setMessages(prev => [...prev, { 
+        role: 'error', 
+        content: errorMessage,
+        errorType
+      }]);
     } finally {
       setIsLoading(false);
     }
@@ -56,6 +99,47 @@ export const ChatAssistant = () => {
     "When does registration open?",
     "How much does it cost to join?"
   ];
+
+  const renderMessage = (msg: Message, idx: number) => {
+    if (msg.role === 'error') {
+      return (
+        <div key={idx} className="flex justify-start">
+          <div className="max-w-[90%] rounded-lg p-3 bg-destructive/10 border border-destructive/20">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 text-destructive mt-0.5 flex-shrink-0" />
+              <div className="space-y-2">
+                <p className="text-sm text-destructive">{msg.content}</p>
+                <div className="flex flex-wrap gap-2">
+                  <Link to="/contact">
+                    <Button variant="outline" size="sm" className="h-7 text-xs">
+                      Contact Us
+                    </Button>
+                  </Link>
+                  <Link to="/registration">
+                    <Button variant="outline" size="sm" className="h-7 text-xs">
+                      View FAQ
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+        <div className={`max-w-[80%] rounded-lg p-3 ${
+          msg.role === 'user' 
+            ? 'bg-primary text-primary-foreground' 
+            : 'bg-muted'
+        }`}>
+          {msg.content}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -80,17 +164,7 @@ export const ChatAssistant = () => {
 
           <ScrollArea className="flex-1 p-4" ref={scrollRef}>
             <div className="space-y-4">
-              {messages.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] rounded-lg p-3 ${
-                    msg.role === 'user' 
-                      ? 'bg-primary text-primary-foreground' 
-                      : 'bg-muted'
-                  }`}>
-                    {msg.content}
-                  </div>
-                </div>
-              ))}
+              {messages.map((msg, idx) => renderMessage(msg, idx))}
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-lg p-3">
