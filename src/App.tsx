@@ -54,8 +54,12 @@ import SiteContent from "./pages/admin/SiteContent";
 import SiteContentEdit from "./pages/admin/SiteContentEdit";
 import Drafts from "./pages/admin/Drafts";
 import DraftEdit from "./pages/admin/DraftEdit";
+import DraftLive from "./pages/admin/DraftLive";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
+import { CoachLayout } from "./components/CoachLayout";
+import CoachDashboard from "./pages/coach/Dashboard";
+import CoachDraftRoom from "./pages/coach/DraftRoom";
 
 const queryClient = new QueryClient();
 
@@ -128,6 +132,12 @@ const App = () => (
           <Route path="/admin/drafts" element={<ProtectedRoute requireAdmin><Drafts /></ProtectedRoute>} />
           <Route path="/admin/drafts/new" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts/:id" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
+          <Route path="/admin/drafts/:id/live" element={<ProtectedRoute requireAdmin><DraftLive /></ProtectedRoute>} />
+          {/* Coach Routes */}
+          <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
+            <Route index element={<CoachDashboard />} />
+            <Route path="drafts/:id" element={<CoachDraftRoom />} />
+          </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

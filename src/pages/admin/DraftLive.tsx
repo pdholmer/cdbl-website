@@ -10,30 +10,35 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { calculateCurrentTeamOrder, getTotalPicks } from "@/utils/draftUtils";
-import { ArrowLeft, Users, Play, Pause } from "lucide-react";
+import { ArrowLeft, Users, Play } from "lucide-react";
 
 const DraftLive = () => {
   const { id: draftId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const { draft, picks, draftTeams, availablePlayers, isLoading, isConnected, refetch } = useRealtimeDraft(draftId);
+  const { draft, picks, draftTeams, availablePlayers, isLoading, isConnected } = useRealtimeDraft(draftId);
   const { updateDraft, makePick } = useDraftMutations();
+
+  // Filter teams with valid team data for display
+  const validDraftTeams = useMemo(() => {
+    return draftTeams.filter(t => t.team !== null) as Array<typeof draftTeams[0] & { team: NonNullable<typeof draftTeams[0]['team']> }>;
+  }, [draftTeams]);
 
   // Get current team on the clock
   const onTheClockTeam = useMemo(() => {
-    if (!draft || !draftTeams.length) return null;
+    if (!draft || !validDraftTeams.length) return null;
     
     const currentTeamOrder = calculateCurrentTeamOrder(
       draft.current_pick,
-      draftTeams.length,
+      validDraftTeams.length,
       (draft.draft_type as 'snake' | 'linear') || 'snake'
     );
     
-    return draftTeams.find(t => t.draft_order === currentTeamOrder) || null;
-  }, [draft, draftTeams]);
+    const team = validDraftTeams.find(t => t.draft_order === currentTeamOrder);
+    return team || null;
+  }, [draft, validDraftTeams]);
 
   // Handle pause/resume
   const handlePause = async () => {
@@ -68,7 +73,7 @@ const DraftLive = () => {
       await updateDraft.mutateAsync({
         id: draft.id,
         status: 'completed',
-        completedAt: new Date().toISOString()
+        completed_at: new Date().toISOString()
       });
       toast({ title: "Draft Completed" });
     } catch (error) {
@@ -82,14 +87,14 @@ const DraftLive = () => {
     
     try {
       await makePick.mutateAsync({
-        draftId: draft.id,
-        draftTeamId: onTheClockTeam.id,
-        playerId,
-        roundNumber: Math.ceil(draft.current_pick / draftTeams.length),
-        pickNumber: draft.current_pick,
-        pickInRound: ((draft.current_pick - 1) % draftTeams.length) + 1,
-        isAutoPick: true,
-        timeSpent: null
+        draft_id: draft.id,
+        draft_team_id: onTheClockTeam.id,
+        player_id: playerId,
+        round_number: Math.ceil(draft.current_pick / draftTeams.length),
+        pick_number: draft.current_pick,
+        pick_in_round: ((draft.current_pick - 1) % draftTeams.length) + 1,
+        is_auto_pick: true,
+        time_spent: undefined
       });
       
       toast({ title: "Pick Made", description: "Pick recorded successfully" });
@@ -105,7 +110,7 @@ const DraftLive = () => {
       await updateDraft.mutateAsync({
         id: draft.id,
         status: 'in_progress',
-        actualStart: new Date().toISOString()
+        actual_start: new Date().toISOString()
       });
       toast({ title: "Draft Started!" });
     } catch (error) {
@@ -269,7 +274,7 @@ const DraftLive = () => {
                             style={{ backgroundColor: team.team?.color_primary || '#ccc' }}
                           />
                           <span className="text-xs font-medium truncate">
-                            {team.team?.nickname || team.team?.name}
+                            {team.team?.nickname || team.team?.name || 'Unknown'}
                           </span>
                           <span className="text-xs text-muted-foreground ml-auto">
                             {teamPicks.length}/{draft.total_rounds}
@@ -285,7 +290,7 @@ const DraftLive = () => {
             {/* Center - Draft Board */}
             <div className="col-span-7 min-h-0 overflow-hidden">
               <DraftBoard
-                draftTeams={draftTeams}
+                draftTeams={validDraftTeams}
                 picks={picks}
                 totalRounds={draft.total_rounds}
                 currentRound={Math.ceil(draft.current_pick / draftTeams.length)}
