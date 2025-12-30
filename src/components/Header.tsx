@@ -6,6 +6,7 @@ import { Menu, ChevronDown, X } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
 import DropdownNav from "@/components/DropdownNav";
 import SearchTray from "@/components/SearchTray";
+import UserMenu from "@/components/UserMenu";
 import {
   Collapsible,
   CollapsibleContent,
@@ -113,6 +114,10 @@ const Header = () => {
             >
               Schedule
             </Link>
+            
+            <span className="text-muted-foreground">|</span>
+            
+            <UserMenu variant="desktop" />
           </div>
 
           {/* Mobile Menu */}
@@ -228,7 +233,10 @@ const Header = () => {
                   </Collapsible>
                 </nav>
 
-                {/* SportsConnect Button - Mobile */}
+                {/* User Account Section - Mobile */}
+                <div className="border-t border-border pt-4 mt-2">
+                  <UserMenu variant="mobile" onMenuAction={() => setIsMenuOpen(false)} />
+                </div>
               </div>
             </SheetContent>
           </Sheet>
