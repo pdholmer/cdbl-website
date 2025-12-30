@@ -53,7 +53,7 @@ export default function CommissionerCoaches() {
   const { data: assignments } = useCommissionerAssignments();
   const { data: coaches, isLoading: coachesLoading } = useCoaches();
   const { data: invitations, isLoading: invitationsLoading } = useCoachInvitations();
-  const { data: programs } = usePrograms();
+  const { programs } = usePrograms();
   const createInvitation = useCreateCoachInvitation();
   const cancelInvitation = useCancelCoachInvitation();
   const resendInvitation = useResendCoachInvitation();

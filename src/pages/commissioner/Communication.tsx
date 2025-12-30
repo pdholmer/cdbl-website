@@ -20,7 +20,7 @@ import { toast } from "sonner";
 
 export default function CommissionerCommunication() {
   const { data: assignments } = useCommissionerAssignments();
-  const { data: programs } = usePrograms();
+  const { programs } = usePrograms();
   
   const [recipientType, setRecipientType] = useState<string>("all_coaches");
   const [subject, setSubject] = useState("");

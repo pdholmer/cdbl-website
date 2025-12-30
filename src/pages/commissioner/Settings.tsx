@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 export default function CommissionerSettings() {
   const { data: assignments } = useCommissionerAssignments();
-  const { data: programs } = usePrograms();
+  const { programs } = usePrograms();
   
   const [isSaving, setIsSaving] = useState(false);
   
