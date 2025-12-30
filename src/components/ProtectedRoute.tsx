@@ -6,12 +6,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
+  requireCoach?: boolean;
 }
 
-export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
+export const ProtectedRoute = ({ 
+  children, 
+  requireAdmin = false,
+  requireCoach = false 
+}: ProtectedRouteProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isCoach, setIsCoach] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -35,6 +41,24 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
         setIsAdmin(!!hasAdminRole);
       }
 
+      if (requireCoach) {
+        // Check for coach role
+        const { data: hasCoachRole } = await supabase
+          .rpc('has_role', {
+            _user_id: session.user.id,
+            _role: 'coach'
+          });
+        
+        // Also check for admin role (admins can access coach pages)
+        const { data: hasAdminRole } = await supabase
+          .rpc('has_role', {
+            _user_id: session.user.id,
+            _role: 'admin'
+          });
+        
+        setIsCoach(!!hasCoachRole || !!hasAdminRole);
+      }
+
       setIsLoading(false);
     };
 
@@ -45,7 +69,7 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     });
 
     return () => subscription.unsubscribe();
-  }, [requireAdmin]);
+  }, [requireAdmin, requireCoach]);
 
   if (isLoading) {
     return (
@@ -60,6 +84,10 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
   }
 
   if (requireAdmin && !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (requireCoach && !isCoach) {
     return <Navigate to="/" replace />;
   }
 

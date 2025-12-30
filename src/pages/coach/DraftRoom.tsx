@@ -25,7 +25,7 @@ const CoachDraftRoom = () => {
   const [myTeamId, setMyTeamId] = useState<string | null>(null);
   const [pickStartTime, setPickStartTime] = useState<Date | null>(null);
   
-  const { draft, picks, draftTeams, availablePlayers, isLoading, isConnected, refetch } = useRealtimeDraft(draftId);
+  const { draft, picks, draftTeams, availablePlayers, isLoading, isConnected } = useRealtimeDraft(draftId);
   const { makePick } = useDraftMutations();
   const { data: queuedPlayers } = useDraftPlayerQueue(myDraftTeamId || undefined);
   const { addToQueue, removeFromQueue, reorderQueue, clearQueue } = useDraftPlayerQueueMutations();
@@ -54,32 +54,37 @@ const CoachDraftRoom = () => {
     loadMyTeam();
   }, [draftId]);
 
+  // Filter teams with valid team data for display
+  const validDraftTeams = useMemo(() => {
+    return draftTeams.filter(t => t.team !== null) as Array<typeof draftTeams[0] & { team: NonNullable<typeof draftTeams[0]['team']> }>;
+  }, [draftTeams]);
+
   // Calculate if it's my turn
   const isMyTurn = useMemo(() => {
-    if (!draft || !draftTeams.length || !myDraftTeamId) return false;
+    if (!draft || !validDraftTeams.length || !myDraftTeamId) return false;
     
     const currentTeamOrder = calculateCurrentTeamOrder(
       draft.current_pick,
-      draftTeams.length,
+      validDraftTeams.length,
       (draft.draft_type as 'snake' | 'linear') || 'snake'
     );
     
     const myTeam = draftTeams.find(t => t.id === myDraftTeamId);
     return myTeam?.draft_order === currentTeamOrder;
-  }, [draft, draftTeams, myDraftTeamId]);
+  }, [draft, draftTeams, validDraftTeams.length, myDraftTeamId]);
 
   // Get current team on the clock
   const onTheClockTeam = useMemo(() => {
-    if (!draft || !draftTeams.length) return null;
+    if (!draft || !validDraftTeams.length) return null;
     
     const currentTeamOrder = calculateCurrentTeamOrder(
       draft.current_pick,
-      draftTeams.length,
+      validDraftTeams.length,
       (draft.draft_type as 'snake' | 'linear') || 'snake'
     );
     
-    return draftTeams.find(t => t.draft_order === currentTeamOrder) || null;
-  }, [draft, draftTeams]);
+    return validDraftTeams.find(t => t.draft_order === currentTeamOrder) || null;
+  }, [draft, validDraftTeams]);
 
   // Reset timer when pick changes
   useEffect(() => {
@@ -115,14 +120,14 @@ const CoachDraftRoom = () => {
 
     try {
       await makePick.mutateAsync({
-        draftId: draft.id,
-        draftTeamId: myDraftTeamId,
-        playerId,
-        roundNumber: Math.ceil(draft.current_pick / draftTeams.length),
-        pickNumber: draft.current_pick,
-        pickInRound: ((draft.current_pick - 1) % draftTeams.length) + 1,
-        isAutoPick: false,
-        timeSpent: pickStartTime ? Math.floor((Date.now() - pickStartTime.getTime()) / 1000) : null
+        draft_id: draft.id,
+        draft_team_id: myDraftTeamId,
+        player_id: playerId,
+        round_number: Math.ceil(draft.current_pick / draftTeams.length),
+        pick_number: draft.current_pick,
+        pick_in_round: ((draft.current_pick - 1) % draftTeams.length) + 1,
+        is_auto_pick: false,
+        time_spent: pickStartTime ? Math.floor((Date.now() - pickStartTime.getTime()) / 1000) : undefined
       });
 
       toast({
@@ -145,42 +150,45 @@ const CoachDraftRoom = () => {
     
     const nextOrder = (queuedPlayers?.length || 0) + 1;
     await addToQueue.mutateAsync({
-      draftTeamId: myDraftTeamId,
-      playerId,
-      queueOrder: nextOrder
+      draft_team_id: myDraftTeamId,
+      player_id: playerId,
+      queue_order: nextOrder
     });
   }, [myDraftTeamId, queuedPlayers, addToQueue]);
 
   // Handle queue operations
   const handleRemoveFromQueue = useCallback(async (queueId: string) => {
-    await removeFromQueue.mutateAsync(queueId);
-  }, [removeFromQueue]);
+    if (!myDraftTeamId) return;
+    await removeFromQueue.mutateAsync({ id: queueId, draftTeamId: myDraftTeamId });
+  }, [myDraftTeamId, removeFromQueue]);
 
   const handleMoveUp = useCallback(async (queueId: string) => {
-    if (!queuedPlayers) return;
+    if (!queuedPlayers || !myDraftTeamId) return;
     const index = queuedPlayers.findIndex(qp => qp.id === queueId);
     if (index <= 0) return;
     
     const newOrder = [...queuedPlayers];
     [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
     
-    await reorderQueue.mutateAsync(
-      newOrder.map((qp, i) => ({ id: qp.id, queueOrder: i + 1 }))
-    );
-  }, [queuedPlayers, reorderQueue]);
+    await reorderQueue.mutateAsync({
+      draft_team_id: myDraftTeamId,
+      player_ids: newOrder.map(qp => qp.player.id)
+    });
+  }, [queuedPlayers, myDraftTeamId, reorderQueue]);
 
   const handleMoveDown = useCallback(async (queueId: string) => {
-    if (!queuedPlayers) return;
+    if (!queuedPlayers || !myDraftTeamId) return;
     const index = queuedPlayers.findIndex(qp => qp.id === queueId);
     if (index < 0 || index >= queuedPlayers.length - 1) return;
     
     const newOrder = [...queuedPlayers];
     [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
     
-    await reorderQueue.mutateAsync(
-      newOrder.map((qp, i) => ({ id: qp.id, queueOrder: i + 1 }))
-    );
-  }, [queuedPlayers, reorderQueue]);
+    await reorderQueue.mutateAsync({
+      draft_team_id: myDraftTeamId,
+      player_ids: newOrder.map(qp => qp.player.id)
+    });
+  }, [queuedPlayers, myDraftTeamId, reorderQueue]);
 
   const handleClearQueue = useCallback(async () => {
     if (!myDraftTeamId) return;
@@ -273,7 +281,7 @@ const CoachDraftRoom = () => {
           {/* Center Column - Draft Board */}
           <div className="col-span-6 min-h-0 overflow-hidden">
             <DraftBoard
-              draftTeams={draftTeams}
+              draftTeams={validDraftTeams}
               picks={picks}
               totalRounds={draft.total_rounds}
               currentRound={Math.ceil(draft.current_pick / draftTeams.length)}
