@@ -125,6 +125,280 @@ export type Database = {
           },
         ]
       }
+      draft_picks: {
+        Row: {
+          created_at: string | null
+          draft_id: string
+          draft_team_id: string
+          id: string
+          is_auto_pick: boolean | null
+          pick_in_round: number
+          pick_number: number
+          picked_at: string | null
+          player_id: string
+          round_number: number
+          time_spent: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          draft_id: string
+          draft_team_id: string
+          id?: string
+          is_auto_pick?: boolean | null
+          pick_in_round: number
+          pick_number: number
+          picked_at?: string | null
+          player_id: string
+          round_number: number
+          time_spent?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          draft_id?: string
+          draft_team_id?: string
+          id?: string
+          is_auto_pick?: boolean | null
+          pick_in_round?: number
+          pick_number?: number
+          picked_at?: string | null
+          player_id?: string
+          round_number?: number
+          time_spent?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_picks_draft_id_fkey"
+            columns: ["draft_id"]
+            isOneToOne: false
+            referencedRelation: "drafts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_picks_draft_team_id_fkey"
+            columns: ["draft_team_id"]
+            isOneToOne: false
+            referencedRelation: "draft_teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_picks_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      draft_player_pool: {
+        Row: {
+          created_at: string | null
+          draft_id: string
+          draft_notes: string | null
+          id: string
+          is_available: boolean | null
+          player_id: string
+          skill_rating: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          draft_id: string
+          draft_notes?: string | null
+          id?: string
+          is_available?: boolean | null
+          player_id: string
+          skill_rating?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          draft_id?: string
+          draft_notes?: string | null
+          id?: string
+          is_available?: boolean | null
+          player_id?: string
+          skill_rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_player_pool_draft_id_fkey"
+            columns: ["draft_id"]
+            isOneToOne: false
+            referencedRelation: "drafts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_player_pool_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      draft_player_queues: {
+        Row: {
+          created_at: string | null
+          draft_team_id: string
+          id: string
+          player_id: string
+          queue_order: number
+        }
+        Insert: {
+          created_at?: string | null
+          draft_team_id: string
+          id?: string
+          player_id: string
+          queue_order: number
+        }
+        Update: {
+          created_at?: string | null
+          draft_team_id?: string
+          id?: string
+          player_id?: string
+          queue_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_player_queues_draft_team_id_fkey"
+            columns: ["draft_team_id"]
+            isOneToOne: false
+            referencedRelation: "draft_teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_player_queues_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      draft_teams: {
+        Row: {
+          auto_pick_enabled: boolean | null
+          coach_user_id: string | null
+          created_at: string | null
+          draft_id: string
+          draft_order: number
+          id: string
+          is_ready: boolean | null
+          team_id: string
+        }
+        Insert: {
+          auto_pick_enabled?: boolean | null
+          coach_user_id?: string | null
+          created_at?: string | null
+          draft_id: string
+          draft_order: number
+          id?: string
+          is_ready?: boolean | null
+          team_id: string
+        }
+        Update: {
+          auto_pick_enabled?: boolean | null
+          coach_user_id?: string | null
+          created_at?: string | null
+          draft_id?: string
+          draft_order?: number
+          id?: string
+          is_ready?: boolean | null
+          team_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draft_teams_draft_id_fkey"
+            columns: ["draft_id"]
+            isOneToOne: false
+            referencedRelation: "drafts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_teams_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drafts: {
+        Row: {
+          actual_start: string | null
+          auto_pick_enabled: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          current_pick: number | null
+          current_round: number | null
+          division_id: string | null
+          draft_type: string | null
+          id: string
+          name: string
+          pick_time_limit: number | null
+          program_id: string | null
+          scheduled_start: string | null
+          season_year: number
+          status: string | null
+          total_rounds: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          actual_start?: string | null
+          auto_pick_enabled?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_pick?: number | null
+          current_round?: number | null
+          division_id?: string | null
+          draft_type?: string | null
+          id?: string
+          name: string
+          pick_time_limit?: number | null
+          program_id?: string | null
+          scheduled_start?: string | null
+          season_year: number
+          status?: string | null
+          total_rounds?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          actual_start?: string | null
+          auto_pick_enabled?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_pick?: number | null
+          current_round?: number | null
+          division_id?: string | null
+          draft_type?: string | null
+          id?: string
+          name?: string
+          pick_time_limit?: number | null
+          program_id?: string | null
+          scheduled_start?: string | null
+          season_year?: number
+          status?: string | null
+          total_rounds?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drafts_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drafts_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       faqs: {
         Row: {
           answer: string
@@ -1430,6 +1704,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_current_pick_team: { Args: { draft_id: string }; Returns: string }
       get_user_email: { Args: never; Returns: string }
       has_role: {
         Args: {
@@ -1448,7 +1723,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "admin" | "moderator" | "user" | "coach"
       program_type: "in_house" | "travel"
       resource_category:
         | "drill"
@@ -1583,7 +1858,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["admin", "moderator", "user", "coach"],
       program_type: ["in_house", "travel"],
       resource_category: [
         "drill",
