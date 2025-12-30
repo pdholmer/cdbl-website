@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ const adminItems = [
   { title: "Players", url: "/admin/players", icon: Users },
   { title: "Teams", url: "/admin/teams", icon: Database },
   { title: "Coaches", url: "/admin/coaches", icon: Users },
+  { title: "Drafts", url: "/admin/drafts", icon: ClipboardList },
   { title: "Schedule", url: "/admin/schedule", icon: Calendar },
   { title: "Venues", url: "/admin/venues", icon: MapPin },
   { title: "Reports", url: "/admin/reports", icon: BarChart3 },
