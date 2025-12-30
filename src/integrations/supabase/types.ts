@@ -14,6 +14,79 @@ export type Database = {
   }
   public: {
     Tables: {
+      coach_invitations: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          division_id: string | null
+          email: string
+          expires_at: string | null
+          first_name: string
+          id: string
+          invited_by: string | null
+          last_name: string
+          phone: string | null
+          program_id: string | null
+          status: string | null
+          team_id: string | null
+          token: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          division_id?: string | null
+          email: string
+          expires_at?: string | null
+          first_name: string
+          id?: string
+          invited_by?: string | null
+          last_name: string
+          phone?: string | null
+          program_id?: string | null
+          status?: string | null
+          team_id?: string | null
+          token?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          division_id?: string | null
+          email?: string
+          expires_at?: string | null
+          first_name?: string
+          id?: string
+          invited_by?: string | null
+          last_name?: string
+          phone?: string | null
+          program_id?: string | null
+          status?: string | null
+          team_id?: string | null
+          token?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_invitations_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_invitations_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_invitations_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coaches: {
         Row: {
           admin_notes: string | null
@@ -67,6 +140,51 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      commissioner_assignments: {
+        Row: {
+          assigned_by: string | null
+          created_at: string | null
+          division_id: string | null
+          id: string
+          program_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_by?: string | null
+          created_at?: string | null
+          division_id?: string | null
+          id?: string
+          program_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_by?: string | null
+          created_at?: string | null
+          division_id?: string | null
+          id?: string
+          program_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissioner_assignments_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissioner_assignments_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       divisions: {
         Row: {
@@ -1713,6 +1831,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_commissioner_for: {
+        Args: { _division_id?: string; _program_id: string; _user_id: string }
+        Returns: boolean
+      }
       log_player_access: {
         Args: {
           _access_type: string
@@ -1723,7 +1845,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user" | "coach"
+      app_role: "admin" | "moderator" | "user" | "coach" | "commissioner"
       program_type: "in_house" | "travel"
       resource_category:
         | "drill"
@@ -1858,7 +1980,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user", "coach"],
+      app_role: ["admin", "moderator", "user", "coach", "commissioner"],
       program_type: ["in_house", "travel"],
       resource_category: [
         "drill",
