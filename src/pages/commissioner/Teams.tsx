@@ -29,7 +29,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useTeams, useCreateTeam } from "@/hooks/useTeams";
+import { useTeams } from "@/hooks/useTeams";
+import { useTeamMutations } from "@/hooks/useTeamMutations";
 import { useCommissionerAssignments } from "@/hooks/useCommissionerAssignments";
 import { usePrograms } from "@/hooks/usePrograms";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,8 +40,8 @@ export default function CommissionerTeams() {
   const navigate = useNavigate();
   const { data: assignments } = useCommissionerAssignments();
   const { data: teams, isLoading } = useTeams();
-  const { data: programs } = usePrograms();
-  const createTeam = useCreateTeam();
+  const { programs } = usePrograms();
+  const { createTeam } = useTeamMutations();
   
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");

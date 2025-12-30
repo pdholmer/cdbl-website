@@ -28,7 +28,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { usePlayers, useUpdatePlayer } from "@/hooks/usePlayers";
+import { usePlayers } from "@/hooks/usePlayers";
+import { usePlayerMutations } from "@/hooks/usePlayerMutations";
 import { useCommissionerAssignments } from "@/hooks/useCommissionerAssignments";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
@@ -37,7 +38,7 @@ import { toast } from "sonner";
 export default function CommissionerRegistrations() {
   const { data: assignments } = useCommissionerAssignments();
   const { data: players, isLoading } = usePlayers();
-  const updatePlayer = useUpdatePlayer();
+  const { updatePlayer } = usePlayerMutations();
   
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("pending");
@@ -63,7 +64,7 @@ export default function CommissionerRegistrations() {
     try {
       await updatePlayer.mutateAsync({
         id: playerId,
-        status: 'registered',
+        updates: { status: 'registered' },
       });
       toast.success("Registration approved");
     } catch (error) {
@@ -75,7 +76,7 @@ export default function CommissionerRegistrations() {
     try {
       await updatePlayer.mutateAsync({
         id: playerId,
-        status: 'rejected',
+        updates: { status: 'rejected' },
       });
       toast.success("Registration rejected");
     } catch (error) {

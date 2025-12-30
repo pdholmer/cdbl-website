@@ -158,7 +158,7 @@ export default function CommissionerDrafts() {
                         : 'Not scheduled'}
                     </TableCell>
                     <TableCell>
-                      {draft.draft_teams?.length || 0} teams
+                      <span className="text-muted-foreground">View details</span>
                     </TableCell>
                     <TableCell>{getStatusBadge(draft.status || 'setup')}</TableCell>
                     <TableCell className="text-right">

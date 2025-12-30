@@ -40,7 +40,7 @@ export default function CommissionerStandings() {
   const { data: assignments } = useCommissionerAssignments();
   const { data: teams, isLoading: teamsLoading } = useTeams();
   const { data: games, isLoading: gamesLoading } = useGames();
-  const { data: programs } = usePrograms();
+  const { programs } = usePrograms();
   
   const [selectedDivision, setSelectedDivision] = useState<string>("all");
 
