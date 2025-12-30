@@ -64,7 +64,7 @@ export default function DraftEdit() {
 
   const { data: draft, isLoading: draftLoading } = useDraft(isNew ? undefined : id);
   const { programs } = usePrograms();
-  const hierarchy = useTeamHierarchy();
+  const { getDivisionsByProgram, getTeamsByDivision, isLoading: hierarchyLoading } = useTeamHierarchy();
   const { createDraft, updateDraft } = useDraftMutations();
   const { data: draftTeams } = useDraftTeams(isNew ? undefined : id);
   const { addTeam, removeTeam, randomizeOrder } = useDraftTeamMutations();
@@ -114,14 +114,10 @@ export default function DraftEdit() {
     }
   }, [draft, form]);
 
-  const divisions = hierarchy
-    ?.find((p) => p.id === selectedProgramId)
-    ?.divisions || [];
+  const divisions = getDivisionsByProgram(selectedProgramId);
 
-  const availableTeams = hierarchy
-    ?.find((p) => p.id === selectedProgramId)
-    ?.divisions?.find((d) => d.id === selectedDivisionId)
-    ?.teams?.filter((t) => !draftTeams?.some((dt) => dt.team_id === t.id)) || [];
+  const availableTeams = getTeamsByDivision(selectedDivisionId)
+    ?.filter((t) => !draftTeams?.some((dt) => dt.team_id === t.id)) || [];
 
   const playersNotInPool = divisionPlayers?.filter(
     (p) => !playerPool?.some((pp) => pp.player_id === p.id)
