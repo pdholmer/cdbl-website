@@ -73,7 +73,7 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-auto pl-[25px]">
+        <SidebarGroup className="mt-auto pl-[25px] pb-6">
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
