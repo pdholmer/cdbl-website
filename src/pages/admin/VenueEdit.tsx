@@ -89,7 +89,7 @@ export default function VenueEdit() {
               notes: field.notes,
             });
           });
-          navigate("/admin/venues");
+          navigate("/admin/facilities");
         },
       });
     } else if (id) {
@@ -121,7 +121,7 @@ export default function VenueEdit() {
                 });
               }
             });
-            navigate("/admin/venues");
+    navigate("/admin/facilities");
           },
         }
       );
@@ -176,10 +176,10 @@ export default function VenueEdit() {
     <AdminLayout>
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/venues")}>
+          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/facilities")}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-3xl font-bold">{isNew ? "Add New Venue" : "Edit Venue"}</h1>
+          <h1 className="text-3xl font-bold">{isNew ? "Add New Facility" : "Edit Facility"}</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -190,7 +190,7 @@ export default function VenueEdit() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2">
-                  <Label htmlFor="name">Venue Name *</Label>
+                  <Label htmlFor="name">Facility Name *</Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -424,8 +424,8 @@ export default function VenueEdit() {
           </Card>
 
           <div className="flex gap-4">
-            <Button type="submit">Save Venue</Button>
-            <Button type="button" variant="outline" onClick={() => navigate("/admin/venues")}>
+            <Button type="submit">Save Facility</Button>
+            <Button type="button" variant="outline" onClick={() => navigate("/admin/facilities")}>
               Cancel
             </Button>
           </div>

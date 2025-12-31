@@ -23,8 +23,8 @@ export const useVenueMutations = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["venues"] });
       toast({
-        title: "Venue created",
-        description: "Venue has been added successfully.",
+        title: "Facility created",
+        description: "Facility has been added successfully.",
       });
     },
     onError: (error: Error) => {
@@ -51,8 +51,8 @@ export const useVenueMutations = () => {
       queryClient.invalidateQueries({ queryKey: ["venues"] });
       queryClient.invalidateQueries({ queryKey: ["venue"] });
       toast({
-        title: "Venue updated",
-        description: "Venue information has been updated.",
+        title: "Facility updated",
+        description: "Facility information has been updated.",
       });
     },
     onError: (error: Error) => {
@@ -72,8 +72,8 @@ export const useVenueMutations = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["venues"] });
       toast({
-        title: "Venue deleted",
-        description: "Venue has been removed.",
+        title: "Facility deleted",
+        description: "Facility has been removed.",
       });
     },
     onError: (error: Error) => {

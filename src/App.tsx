@@ -117,9 +117,9 @@ const App = () => (
             <Route path="/admin/coaches/new" element={<ProtectedRoute requireAdmin><CoachEdit /></ProtectedRoute>} />
             <Route path="/admin/coaches/:id" element={<ProtectedRoute requireAdmin><CoachEdit /></ProtectedRoute>} />
             <Route path="/admin/schedule" element={<ProtectedRoute requireAdmin><AdminSchedule /></ProtectedRoute>} />
-            <Route path="/admin/venues" element={<ProtectedRoute requireAdmin><Venues /></ProtectedRoute>} />
-            <Route path="/admin/venues/new" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
-            <Route path="/admin/venues/:id" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
+            <Route path="/admin/facilities" element={<ProtectedRoute requireAdmin><Venues /></ProtectedRoute>} />
+            <Route path="/admin/facilities/new" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
+            <Route path="/admin/facilities/:id" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
             <Route path="/admin/reports" element={<ProtectedRoute requireAdmin><AdminReports /></ProtectedRoute>} />
             <Route path="/admin/gamechanger" element={<ProtectedRoute requireAdmin><GameChangerSync /></ProtectedRoute>} />
             <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />

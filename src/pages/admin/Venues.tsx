@@ -46,13 +46,13 @@ const Venues = () => {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Venue Management</h1>
-            <p className="text-muted-foreground">Manage fields and facilities</p>
+            <h1 className="text-3xl font-bold">Facility Management</h1>
+            <p className="text-muted-foreground">Manage fields and locations</p>
           </div>
-          <Link to="/admin/venues/new">
+          <Link to="/admin/facilities/new">
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Add Venue
+              Add Facility
             </Button>
           </Link>
         </div>
@@ -60,7 +60,7 @@ const Venues = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Venues</CardTitle>
+              <CardTitle className="text-sm font-medium">Total Facilities</CardTitle>
               <MapPin className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -69,7 +69,7 @@ const Venues = () => {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Venues</CardTitle>
+              <CardTitle className="text-sm font-medium">Active Facilities</CardTitle>
               <MapPin className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -81,7 +81,7 @@ const Venues = () => {
         <Card>
           <CardHeader>
             <CardTitle>Filters</CardTitle>
-            <CardDescription>Search and filter venues</CardDescription>
+            <CardDescription>Search and filter facilities</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -136,7 +136,7 @@ const Venues = () => {
               ) : venues.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center">
-                    No venues found
+                    No facilities found
                   </TableCell>
                 </TableRow>
               ) : (
@@ -160,7 +160,7 @@ const Venues = () => {
                     </TableCell>
                     <TableCell>{getStatusBadge(venue.status)}</TableCell>
                     <TableCell>
-                      <Link to={`/admin/venues/${venue.id}`}>
+                      <Link to={`/admin/facilities/${venue.id}`}>
                         <Button variant="outline" size="sm">
                           Edit
                         </Button>
