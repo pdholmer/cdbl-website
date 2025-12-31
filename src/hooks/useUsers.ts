@@ -35,9 +35,14 @@ const getAuthHeaders = async () => {
 
 const fetchUsers = async (): Promise<UserProfile[]> => {
   const headers = await getAuthHeaders();
-  const { data } = await supabase.functions.invoke('admin-users', {
+  const { data, error } = await supabase.functions.invoke('admin-users', {
     headers,
+    body: { action: 'list' },
   });
+  
+  if (error) {
+    throw new Error(error.message || 'Failed to fetch users');
+  }
   
   if (data?.error) {
     throw new Error(data.error);
@@ -48,9 +53,14 @@ const fetchUsers = async (): Promise<UserProfile[]> => {
 
 const fetchUser = async (userId: string): Promise<UserDetail> => {
   const headers = await getAuthHeaders();
-  const { data } = await supabase.functions.invoke(`admin-users/${userId}`, {
+  const { data, error } = await supabase.functions.invoke('admin-users', {
     headers,
+    body: { action: 'get', userId },
   });
+  
+  if (error) {
+    throw new Error(error.message || 'Failed to fetch user');
+  }
   
   if (data?.error) {
     throw new Error(data.error);
@@ -84,11 +94,14 @@ export const useUpdateUser = () => {
       display_name?: string;
     }) => {
       const headers = await getAuthHeaders();
-      const { data } = await supabase.functions.invoke(`admin-users/${userId}`, {
-        method: 'PATCH',
+      const { data, error } = await supabase.functions.invoke('admin-users', {
         headers,
-        body: { roles, display_name },
+        body: { action: 'update', userId, roles, display_name },
       });
+      
+      if (error) {
+        throw new Error(error.message || 'Failed to update user');
+      }
       
       if (data?.error) {
         throw new Error(data.error);
@@ -108,10 +121,14 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: async (userId: string) => {
       const headers = await getAuthHeaders();
-      const { data } = await supabase.functions.invoke(`admin-users/${userId}`, {
-        method: 'DELETE',
+      const { data, error } = await supabase.functions.invoke('admin-users', {
         headers,
+        body: { action: 'delete', userId },
       });
+      
+      if (error) {
+        throw new Error(error.message || 'Failed to delete user');
+      }
       
       if (data?.error) {
         throw new Error(data.error);
@@ -131,11 +148,14 @@ export const useInviteUser = () => {
   return useMutation({
     mutationFn: async ({ email, roles }: { email: string; roles?: string[] }) => {
       const headers = await getAuthHeaders();
-      const { data } = await supabase.functions.invoke('admin-users', {
-        method: 'POST',
+      const { data, error } = await supabase.functions.invoke('admin-users', {
         headers,
-        body: { email, roles },
+        body: { action: 'invite', email, roles },
       });
+      
+      if (error) {
+        throw new Error(error.message || 'Failed to invite user');
+      }
       
       if (data?.error) {
         throw new Error(data.error);

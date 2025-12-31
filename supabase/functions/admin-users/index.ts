@@ -56,63 +56,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    const url = new URL(req.url);
-    const pathParts = url.pathname.split('/').filter(Boolean);
-    const userId = pathParts.length > 1 ? pathParts[pathParts.length - 1] : null;
-
-    // GET - List all users or get single user
-    if (req.method === 'GET') {
-      if (userId && userId !== 'admin-users') {
-        // Get single user
-        const { data: authUser, error: userError } = await supabaseAdmin.auth.admin.getUserById(userId);
-        
-        if (userError || !authUser.user) {
-          return new Response(JSON.stringify({ error: 'User not found' }), {
-            status: 404,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          });
-        }
-
-        const { data: profile } = await supabaseAdmin
-          .from('profiles')
-          .select('*')
-          .eq('id', userId)
-          .maybeSingle();
-
-        const { data: roles } = await supabaseAdmin
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', userId);
-
-        const { count: feedbackCount } = await supabaseAdmin
-          .from('platform_feedback')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', userId);
-
-        const { data: feedback } = await supabaseAdmin
-          .from('platform_feedback')
-          .select('*')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: false });
-
-        return new Response(JSON.stringify({
-          user: {
-            id: authUser.user.id,
-            email: authUser.user.email,
-            display_name: profile?.display_name || authUser.user.email?.split('@')[0],
-            avatar_url: profile?.avatar_url,
-            created_at: authUser.user.created_at,
-            last_sign_in_at: authUser.user.last_sign_in_at,
-            roles: roles?.map(r => r.role) || [],
-            feedback_count: feedbackCount || 0,
-            feedback: feedback || [],
-          }
-        }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+    // Parse body - all requests come as POST from supabase.functions.invoke
+    let body: Record<string, unknown> = {};
+    try {
+      const text = await req.text();
+      if (text) {
+        body = JSON.parse(text);
       }
+    } catch {
+      // Empty body is fine for some actions
+    }
 
-      // List all users
+    const action = (body.action as string) || 'list';
+    const userId = body.userId as string | undefined;
+
+    console.log(`Action: ${action}, UserId: ${userId || 'N/A'}`);
+
+    // LIST - Get all users
+    if (action === 'list') {
       const { data: authUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers();
       
       if (listError) {
@@ -166,8 +127,72 @@ Deno.serve(async (req) => {
       });
     }
 
+    // GET - Get single user
+    if (action === 'get') {
+      if (!userId) {
+        return new Response(JSON.stringify({ error: 'userId is required' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const { data: authUser, error: userError } = await supabaseAdmin.auth.admin.getUserById(userId);
+      
+      if (userError || !authUser.user) {
+        return new Response(JSON.stringify({ error: 'User not found' }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+      const { data: roles } = await supabaseAdmin
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
+
+      const { count: feedbackCount } = await supabaseAdmin
+        .from('platform_feedback')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+
+      const { data: feedback } = await supabaseAdmin
+        .from('platform_feedback')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      return new Response(JSON.stringify({
+        user: {
+          id: authUser.user.id,
+          email: authUser.user.email,
+          display_name: profile?.display_name || authUser.user.email?.split('@')[0],
+          avatar_url: profile?.avatar_url,
+          created_at: authUser.user.created_at,
+          last_sign_in_at: authUser.user.last_sign_in_at,
+          roles: roles?.map(r => r.role) || [],
+          feedback_count: feedbackCount || 0,
+          feedback: feedback || [],
+        }
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     // DELETE - Delete a user
-    if (req.method === 'DELETE' && userId) {
+    if (action === 'delete') {
+      if (!userId) {
+        return new Response(JSON.stringify({ error: 'userId is required' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       // Prevent self-deletion
       if (userId === user.id) {
         return new Response(JSON.stringify({ error: 'Cannot delete your own account' }), {
@@ -192,10 +217,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    // POST - Invite new user
-    if (req.method === 'POST') {
-      const body = await req.json();
-      const { email, roles: newRoles } = body;
+    // INVITE - Invite new user
+    if (action === 'invite') {
+      const email = body.email as string;
+      const newRoles = body.roles as string[] | undefined;
 
       if (!email) {
         return new Response(JSON.stringify({ error: 'Email is required' }), {
@@ -230,10 +255,17 @@ Deno.serve(async (req) => {
       });
     }
 
-    // PATCH - Update user roles
-    if (req.method === 'PATCH' && userId) {
-      const body = await req.json();
-      const { roles: newRoles, display_name } = body;
+    // UPDATE - Update user roles/display_name
+    if (action === 'update') {
+      if (!userId) {
+        return new Response(JSON.stringify({ error: 'userId is required' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      const newRoles = body.roles as string[] | undefined;
+      const display_name = body.display_name as string | undefined;
 
       // Update profile if display_name provided
       if (display_name !== undefined) {
@@ -271,8 +303,8 @@ Deno.serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
+    return new Response(JSON.stringify({ error: 'Invalid action' }), {
+      status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
