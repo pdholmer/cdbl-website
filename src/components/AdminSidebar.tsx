@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 
 const adminItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
+  { title: "Users", url: "/admin/users", icon: UserCog },
   { title: "Players", url: "/admin/players", icon: Users },
   { title: "Teams", url: "/admin/teams", icon: Database },
   { title: "Coaches", url: "/admin/coaches", icon: Users },

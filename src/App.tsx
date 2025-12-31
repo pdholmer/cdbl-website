@@ -57,6 +57,8 @@ import DraftEdit from "./pages/admin/DraftEdit";
 import DraftLive from "./pages/admin/DraftLive";
 import Commissioner from "./pages/admin/Commissioner";
 import Feedback from "./pages/admin/Feedback";
+import Users from "./pages/admin/Users";
+import UserEdit from "./pages/admin/UserEdit";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 import { CoachLayout } from "./components/CoachLayout";
@@ -142,6 +144,8 @@ const App = () => (
           <Route path="/admin/drafts/:id/live" element={<ProtectedRoute requireAdmin><DraftLive /></ProtectedRoute>} />
           <Route path="/admin/commissioner" element={<ProtectedRoute requireAdmin><Commissioner /></ProtectedRoute>} />
           <Route path="/admin/feedback" element={<ProtectedRoute requireAdmin><Feedback /></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute requireAdmin><Users /></ProtectedRoute>} />
+          <Route path="/admin/users/:id" element={<ProtectedRoute requireAdmin><UserEdit /></ProtectedRoute>} />
           {/* Coach Routes */}
           <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
             <Route index element={<CoachDashboard />} />
