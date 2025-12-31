@@ -36,20 +36,25 @@ export const CoachLayout = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-background">
-        <Sidebar>
-          <SidebarHeader className="p-4">
-            <img src={logo} alt="CDBL Logo" className="h-12 w-auto" />
-            <span className="text-sm font-medium text-muted-foreground mt-2">
-              Coach Portal
-            </span>
+        <Sidebar className="w-60">
+          <SidebarHeader className="border-b p-4">
+            <div className="flex items-center gap-3">
+              <img src={logo} alt="CDBL Logo" className="h-10 w-auto" />
+              <div>
+                <h2 className="font-semibold text-foreground">Coach</h2>
+                <p className="text-xs text-muted-foreground">Portal</p>
+              </div>
+            </div>
           </SidebarHeader>
 
           <SidebarContent className="px-2">
-            <SidebarMenu>
+            <SidebarMenu className="gap-1 py-2">
               {coachItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className={getNavClass}>
+                    <NavLink to={item.url} end className={({ isActive }) =>
+                      `flex items-center gap-3 ${getNavClass({ isActive })}`
+                    }>
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </NavLink>
@@ -59,19 +64,30 @@ export const CoachLayout = () => {
             </SidebarMenu>
           </SidebarContent>
 
-          <div className="mt-auto p-4 border-t space-y-2">
-            <NavLink to="/coach/profile" className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-sm">
-              <User className="h-4 w-4" />
-              <span>My Profile</span>
-            </NavLink>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={handleLogout}
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
+          <div className="mt-auto border-t p-4">
+            <SidebarMenu className="gap-1">
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/coach/profile" className={({ isActive }) =>
+                    `flex items-center gap-3 ${getNavClass({ isActive })}`
+                  }>
+                    <User className="h-4 w-4" />
+                    <span>My Profile</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
           </div>
         </Sidebar>
 
