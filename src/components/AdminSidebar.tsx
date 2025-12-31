@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, Trophy, Megaphone, Settings } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -24,22 +24,12 @@ const adminItems = [
   { title: "Venues", url: "/admin/venues", icon: MapPin },
   { title: "Reports", url: "/admin/reports", icon: BarChart3 },
   { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
+  { title: "Commissioner", url: "/admin/commissioner", icon: UsersRound },
   { title: "Site Content", url: "/admin/site-content", icon: FileText },
   { title: "Programs", url: "/admin/programs", icon: Database },
   { title: "Divisions", url: "/admin/divisions", icon: Users },
   { title: "FAQs", url: "/admin/faqs", icon: HelpCircle },
   { title: "Support", url: "/admin/support", icon: Heart },
-];
-
-const commissionerItems = [
-  { title: "Registrations", url: "/admin/commissioner/registrations", icon: ClipboardList },
-  { title: "Commissioner Teams", url: "/admin/commissioner/teams", icon: UsersRound },
-  { title: "Commissioner Coaches", url: "/admin/commissioner/coaches", icon: Users },
-  { title: "Commissioner Drafts", url: "/admin/commissioner/drafts", icon: ClipboardList },
-  { title: "Commissioner Schedule", url: "/admin/commissioner/schedule", icon: Calendar },
-  { title: "Standings", url: "/admin/commissioner/standings", icon: Trophy },
-  { title: "Communication", url: "/admin/commissioner/communication", icon: Megaphone },
-  { title: "Commissioner Settings", url: "/admin/commissioner/settings", icon: Settings },
 ];
 
 export function AdminSidebar() {
@@ -71,26 +61,6 @@ export function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {adminItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className={getNavClass}>
-                      <item.icon className="h-4 w-4" />
-                      <span className="ml-2">{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup className="pl-[25px]">
-          <div className="px-2 py-2 text-xs font-semibold text-primary-foreground/60 uppercase tracking-wider">
-            Commissioner
-          </div>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {commissionerItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink to={item.url} end className={getNavClass}>
