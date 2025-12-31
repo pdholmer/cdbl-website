@@ -47,8 +47,8 @@ export function AdminSidebar() {
   return (
     <Sidebar className="w-60">
       <SidebarContent className="bg-primary">
-        <SidebarGroup>
-          <Link to="/" className="flex items-center justify-start px-4 py-6 hover:opacity-80 transition-opacity">
+        <SidebarGroup className="pl-[50px]">
+          <Link to="/" className="flex items-center justify-start pr-4 py-6 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
               alt="CDBL Logo" 
@@ -71,7 +71,7 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-auto">
+        <SidebarGroup className="mt-auto pl-[50px]">
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
