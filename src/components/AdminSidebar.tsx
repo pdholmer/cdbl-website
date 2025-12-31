@@ -25,7 +25,6 @@ const adminItems = [
   { title: "Reports", url: "/admin/reports", icon: BarChart3 },
   { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
   { title: "Commissioner", url: "/admin/commissioner", icon: UsersRound },
-  { title: "Feedback", url: "/admin/feedback", icon: MessageSquare },
   { title: "Site Content", url: "/admin/site-content", icon: FileText },
   { title: "Programs", url: "/admin/programs", icon: Database },
   { title: "Divisions", url: "/admin/divisions", icon: Users },
@@ -78,6 +77,14 @@ export function AdminSidebar() {
         <SidebarGroup className="mt-auto pl-[25px] pb-6">
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/admin/feedback" className={getNavClass}>
+                    <MessageSquare className="h-4 w-4" />
+                    <span className="ml-2">Feedback</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/admin/profile" className={getNavClass}>
