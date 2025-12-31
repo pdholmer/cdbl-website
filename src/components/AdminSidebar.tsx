@@ -47,7 +47,7 @@ export function AdminSidebar() {
   return (
     <Sidebar className="w-60">
       <SidebarContent className="bg-primary">
-        <SidebarGroup className="pl-[25px]">
+        <div className="pl-[15px]">
           <Link to="/" className="flex items-center justify-start pr-4 py-6 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
@@ -55,6 +55,8 @@ export function AdminSidebar() {
               className="h-20 w-auto object-contain"
             />
           </Link>
+        </div>
+        <SidebarGroup className="pl-[25px]">
           <SidebarGroupContent>
             <SidebarMenu>
               {adminItems.map((item) => (
