@@ -27,9 +27,9 @@ const getAuthHeaders = async () => {
   if (!session?.access_token) {
     throw new Error('Not authenticated');
   }
+  // Only pass Authorization header - let Supabase handle Content-Type for body serialization
   return {
     'Authorization': `Bearer ${session.access_token}`,
-    'Content-Type': 'application/json',
   };
 };
 
