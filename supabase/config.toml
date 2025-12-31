@@ -11,3 +11,9 @@ verify_jwt = true
 
 [functions.register-player]
 verify_jwt = false
+
+[functions.ai-assistant]
+verify_jwt = false
+
+[functions.generate-feedback-prompt]
+verify_jwt = true

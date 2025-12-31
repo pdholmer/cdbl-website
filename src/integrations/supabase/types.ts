@@ -838,6 +838,66 @@ export type Database = {
           },
         ]
       }
+      platform_feedback: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          description: string
+          feature_module: string | null
+          feedback_type: string
+          id: string
+          priority: string | null
+          prompt_generated_at: string | null
+          rating: number | null
+          recommended_prompt: string | null
+          screenshot_url: string | null
+          source_module: string | null
+          source_page: string | null
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          description: string
+          feature_module?: string | null
+          feedback_type: string
+          id?: string
+          priority?: string | null
+          prompt_generated_at?: string | null
+          rating?: number | null
+          recommended_prompt?: string | null
+          screenshot_url?: string | null
+          source_module?: string | null
+          source_page?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string
+          feature_module?: string | null
+          feedback_type?: string
+          id?: string
+          priority?: string | null
+          prompt_generated_at?: string | null
+          rating?: number | null
+          recommended_prompt?: string | null
+          screenshot_url?: string | null
+          source_module?: string | null
+          source_page?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       player_data_access_log: {
         Row: {
           access_type: string
