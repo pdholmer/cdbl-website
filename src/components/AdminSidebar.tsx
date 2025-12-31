@@ -52,7 +52,7 @@ export function AdminSidebar() {
             <img 
               src={cdblSidebarLogo} 
               alt="CDBL Logo" 
-              className="h-16 w-auto object-contain"
+              className="h-14 w-auto object-contain"
             />
           </Link>
         </div>
