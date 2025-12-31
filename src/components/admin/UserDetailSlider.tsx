@@ -38,7 +38,8 @@ interface UserDetailSliderProps {
 
 export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderProps) {
   const { toast } = useToast();
-  const { data: user, isLoading, error } = useUser(userId || undefined);
+  // Only enable the query when slider is open AND we have a valid userId
+  const { data: user, isLoading, error, refetch } = useUser(isOpen && userId ? userId : undefined);
   const updateUser = useUpdateUser();
   const deleteUser = useDeleteUser();
 
@@ -104,6 +105,19 @@ export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderPr
     }
   };
 
+  // If slider is open but no userId provided, show a neutral state
+  if (isOpen && !userId) {
+    return (
+      <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
+          <div className="flex flex-col items-center justify-center h-full gap-4">
+            <p className="text-muted-foreground">Select a user to view details.</p>
+          </div>
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
@@ -111,9 +125,17 @@ export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderPr
           <div className="flex items-center justify-center h-full">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
-        ) : error || !user ? (
+        ) : error ? (
           <div className="flex flex-col items-center justify-center h-full gap-4">
-            <p className="text-destructive">{error?.message || 'User not found'}</p>
+            <p className="text-destructive">{error?.message || 'Failed to load user'}</p>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => refetch()}>Retry</Button>
+              <Button variant="outline" onClick={onClose}>Close</Button>
+            </div>
+          </div>
+        ) : !user ? (
+          <div className="flex flex-col items-center justify-center h-full gap-4">
+            <p className="text-muted-foreground">User not found</p>
             <Button variant="outline" onClick={onClose}>Close</Button>
           </div>
         ) : (
