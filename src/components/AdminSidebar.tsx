@@ -46,18 +46,21 @@ export function AdminSidebar() {
 
   return (
     <Sidebar className="w-60">
-      <SidebarContent className="bg-primary">
+      <SidebarContent 
+        className="bg-primary"
+        style={{
+          '--sidebar-foreground': 'hsl(0 0% 100%)',
+          '--sidebar-accent': 'hsl(0 0% 100% / 0.1)',
+          '--sidebar-accent-foreground': 'hsl(0 0% 100%)',
+        } as React.CSSProperties}
+      >
         <SidebarGroup>
-          <Link to="/" className="flex items-center gap-3 p-4 hover:opacity-80 transition-opacity">
+          <Link to="/" className="block px-4 py-4 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
               alt="CDBL Logo" 
-              className="h-10 w-auto object-contain"
+              className="h-8 w-auto object-contain"
             />
-            <div>
-              <h2 className="font-semibold text-primary-foreground">Admin</h2>
-              <p className="text-xs text-primary-foreground/70">Management</p>
-            </div>
           </Link>
           <SidebarGroupContent className="px-2">
             <SidebarMenu className="gap-1">
