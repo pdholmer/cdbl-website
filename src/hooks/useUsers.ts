@@ -66,7 +66,11 @@ const fetchUser = async (userId: string): Promise<UserDetail> => {
     throw new Error(data.error);
   }
   
-  return data?.user;
+  if (!data?.user) {
+    throw new Error('User not found');
+  }
+  
+  return data.user;
 };
 
 export const useUsers = () => {
