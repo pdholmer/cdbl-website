@@ -56,22 +56,28 @@ import Drafts from "./pages/admin/Drafts";
 import DraftEdit from "./pages/admin/DraftEdit";
 import DraftLive from "./pages/admin/DraftLive";
 import Commissioner from "./pages/admin/Commissioner";
+import Feedback from "./pages/admin/Feedback";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 import { CoachLayout } from "./components/CoachLayout";
 import CoachDashboard from "./pages/coach/Dashboard";
 import CoachDraftRoom from "./pages/coach/DraftRoom";
+import { FeedbackProvider } from "./contexts/FeedbackContext";
+import { FeedbackFAB, FeedbackSlider } from "./components/feedback";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <ScrollToTop />
-        <ChatAssistant />
+      <FeedbackProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <ScrollToTop />
+          <ChatAssistant />
+          <FeedbackFAB />
+          <FeedbackSlider />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/registration" element={<Registration />} />
@@ -135,6 +141,7 @@ const App = () => (
           <Route path="/admin/drafts/:id" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts/:id/live" element={<ProtectedRoute requireAdmin><DraftLive /></ProtectedRoute>} />
           <Route path="/admin/commissioner" element={<ProtectedRoute requireAdmin><Commissioner /></ProtectedRoute>} />
+          <Route path="/admin/feedback" element={<ProtectedRoute requireAdmin><Feedback /></ProtectedRoute>} />
           {/* Coach Routes */}
           <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
             <Route index element={<CoachDashboard />} />
@@ -143,7 +150,8 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </FeedbackProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
