@@ -56,13 +56,13 @@ const AdminSchedule = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold">Game Schedule</h1>
-            <p className="text-muted-foreground">Manage game schedules and venues</p>
+            <p className="text-muted-foreground">Manage game schedules and facilities</p>
           </div>
           <div className="flex gap-2">
-            <Link to="/admin/venues">
+            <Link to="/admin/facilities">
               <Button variant="outline">
                 <MapPin className="mr-2 h-4 w-4" />
-                Venues
+                Facilities
               </Button>
             </Link>
             <Button variant="outline" onClick={() => exportForGameChangerSchedule(games)}>
@@ -181,7 +181,7 @@ const AdminSchedule = () => {
                 <TableHead>Date & Time</TableHead>
                 <TableHead>Home Team</TableHead>
                 <TableHead>Away Team</TableHead>
-                <TableHead>Venue</TableHead>
+                <TableHead>Facility</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Score</TableHead>

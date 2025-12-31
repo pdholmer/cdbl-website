@@ -18,7 +18,7 @@ const adminItems = [
   { title: "Coaches", url: "/admin/coaches", icon: Users },
   { title: "Drafts", url: "/admin/drafts", icon: ClipboardList },
   { title: "Schedule", url: "/admin/schedule", icon: Calendar },
-  { title: "Venues", url: "/admin/venues", icon: MapPin },
+  { title: "Facilities", url: "/admin/facilities", icon: MapPin },
   { title: "Reports", url: "/admin/reports", icon: BarChart3 },
   { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
   { title: "Commissioner", url: "/admin/commissioner", icon: UsersRound },

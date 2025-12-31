@@ -12,7 +12,7 @@ export const exportScheduleToCSV = (games: Game[], filename: string = "schedule.
     "Time",
     "Home Team",
     "Away Team",
-    "Venue",
+    "Facility",
     "City",
     "Field",
     "Game Type",

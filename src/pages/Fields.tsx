@@ -82,7 +82,7 @@ export default function Fields() {
         {isLoading && (
           <section className="py-12 bg-background">
             <div className="container">
-              <div className="text-center">Loading venue information...</div>
+              <div className="text-center">Loading facility information...</div>
             </div>
           </section>
         )}
