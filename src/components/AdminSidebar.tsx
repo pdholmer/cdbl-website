@@ -8,15 +8,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, LogOut, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog } from "lucide-react";
 import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 
 const adminItems = [
   { title: "Dashboard", url: "/admin", icon: Home },
-  { title: "Users", url: "/admin/users", icon: UserCog },
   { title: "Players", url: "/admin/players", icon: Users },
   { title: "Teams", url: "/admin/teams", icon: Database },
   { title: "Coaches", url: "/admin/coaches", icon: Users },
@@ -34,13 +30,6 @@ const adminItems = [
 ];
 
 export function AdminSidebar() {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/admin/login");
-  };
-
   const getNavClass = ({ isActive }: { isActive: boolean }) =>
     isActive
       ? "bg-primary-foreground/20 text-primary-foreground font-medium hover:bg-primary-foreground/30"
@@ -88,18 +77,18 @@ export function AdminSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NavLink to="/admin/profile" className={getNavClass}>
-                    <User className="h-4 w-4" />
-                    <span className="ml-2">Profile</span>
+                  <NavLink to="/admin/users" className={getNavClass}>
+                    <UserCog className="h-4 w-4" />
+                    <span className="ml-2">Users</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <button onClick={handleLogout} className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground w-full">
-                    <LogOut className="h-4 w-4" />
-                    <span className="ml-2">Logout</span>
-                  </button>
+                  <NavLink to="/admin/profile" className={getNavClass}>
+                    <User className="h-4 w-4" />
+                    <span className="ml-2">Profile</span>
+                  </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
