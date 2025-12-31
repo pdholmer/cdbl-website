@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.generate-feedback-prompt]
 verify_jwt = true
+
+[functions.admin-users]
+verify_jwt = false
