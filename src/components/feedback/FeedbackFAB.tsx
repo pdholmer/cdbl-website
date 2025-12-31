@@ -12,7 +12,7 @@ export function FeedbackFAB() {
         <Button
           onClick={openSlider}
           size="icon"
-          className="feedback-fab fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90"
+          className="feedback-fab fixed bottom-24 right-6 z-50 h-14 w-14 rounded-full bg-destructive text-destructive-foreground shadow-lg hover:bg-destructive/90"
         >
           <MessageSquarePlus className="h-6 w-6" />
         </Button>
