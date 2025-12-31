@@ -85,6 +85,8 @@ export const useUser = (userId: string | undefined) => {
     queryKey: ['users', userId],
     queryFn: () => fetchUser(userId!),
     enabled: !!userId,
+    staleTime: 0,
+    retry: 1,
   });
 };
 

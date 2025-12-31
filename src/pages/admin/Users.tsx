@@ -94,7 +94,8 @@ export default function Users() {
 
   const handleSliderClose = () => {
     setSliderOpen(false);
-    setSelectedUserId(null);
+    // Delay clearing userId to prevent query cancellation during close animation
+    setTimeout(() => setSelectedUserId(null), 300);
   };
 
   if (error) {
