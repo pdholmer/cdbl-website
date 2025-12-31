@@ -46,32 +46,23 @@ export function AdminSidebar() {
 
   return (
     <Sidebar className="w-60">
-      <SidebarContent 
-        className="bg-primary"
-        style={{
-          '--sidebar-foreground': 'hsl(0 0% 100%)',
-          '--sidebar-accent': 'hsl(0 0% 100% / 0.1)',
-          '--sidebar-accent-foreground': 'hsl(0 0% 100%)',
-        } as React.CSSProperties}
-      >
+      <SidebarContent className="bg-primary">
         <SidebarGroup>
-          <Link to="/" className="block px-4 py-4 hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex items-center justify-start px-4 py-6 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
               alt="CDBL Logo" 
-              className="h-8 w-auto object-contain"
+              className="h-20 w-auto object-contain"
             />
           </Link>
-          <SidebarGroupContent className="px-2">
-            <SidebarMenu className="gap-1">
+          <SidebarGroupContent>
+            <SidebarMenu>
               {adminItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className={({ isActive }) =>
-                      `flex items-center gap-3 ${getNavClass({ isActive })}`
-                    }>
+                    <NavLink to={item.url} end className={getNavClass}>
                       <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
+                      <span className="ml-2">{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -80,31 +71,26 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-auto border-t border-primary-foreground/10">
-          <SidebarGroupContent className="px-2 py-4">
-            <SidebarMenu className="gap-1">
+        <SidebarGroup className="mt-auto">
+          <SidebarGroupContent>
+            <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NavLink to="/admin/profile" className={({ isActive }) =>
-                    `flex items-center gap-3 ${getNavClass({ isActive })}`
-                  }>
+                  <NavLink to="/admin/profile" className={getNavClass}>
                     <User className="h-4 w-4" />
-                    <span>Profile</span>
+                    <span className="ml-2">Profile</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <button
-                    onClick={handleLogout}
-                    className="flex w-full items-center gap-3 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>Logout</span>
-                  </button>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
+            <Button
+              variant="ghost"
+              onClick={handleLogout}
+              className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+            >
+              <LogOut className="h-4 w-4" />
+              <span className="ml-2">Logout</span>
+            </Button>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
