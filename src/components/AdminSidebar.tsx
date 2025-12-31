@@ -48,21 +48,27 @@ export function AdminSidebar() {
     <Sidebar className="w-60">
       <SidebarContent className="bg-primary">
         <SidebarGroup>
-          <Link to="/" className="flex items-center justify-start px-4 py-6 hover:opacity-80 transition-opacity">
+          <Link to="/" className="flex items-center gap-3 p-4 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
               alt="CDBL Logo" 
-              className="h-20 w-auto object-contain"
+              className="h-10 w-auto object-contain"
             />
+            <div>
+              <h2 className="font-semibold text-primary-foreground">Admin</h2>
+              <p className="text-xs text-primary-foreground/70">Management</p>
+            </div>
           </Link>
-          <SidebarGroupContent>
-            <SidebarMenu>
+          <SidebarGroupContent className="px-2">
+            <SidebarMenu className="gap-1">
               {adminItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className={getNavClass}>
+                    <NavLink to={item.url} end className={({ isActive }) =>
+                      `flex items-center gap-3 ${getNavClass({ isActive })}`
+                    }>
                       <item.icon className="h-4 w-4" />
-                      <span className="ml-2">{item.title}</span>
+                      <span>{item.title}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -71,26 +77,31 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-auto">
-          <SidebarGroupContent>
-            <SidebarMenu>
+        <SidebarGroup className="mt-auto border-t border-primary-foreground/10">
+          <SidebarGroupContent className="px-2 py-4">
+            <SidebarMenu className="gap-1">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NavLink to="/admin/profile" className={getNavClass}>
+                  <NavLink to="/admin/profile" className={({ isActive }) =>
+                    `flex items-center gap-3 ${getNavClass({ isActive })}`
+                  }>
                     <User className="h-4 w-4" />
-                    <span className="ml-2">Profile</span>
+                    <span>Profile</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <button
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="ml-2">Logout</span>
-            </Button>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
