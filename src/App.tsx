@@ -55,22 +55,12 @@ import SiteContentEdit from "./pages/admin/SiteContentEdit";
 import Drafts from "./pages/admin/Drafts";
 import DraftEdit from "./pages/admin/DraftEdit";
 import DraftLive from "./pages/admin/DraftLive";
+import Commissioner from "./pages/admin/Commissioner";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 import { CoachLayout } from "./components/CoachLayout";
 import CoachDashboard from "./pages/coach/Dashboard";
 import CoachDraftRoom from "./pages/coach/DraftRoom";
-
-// Commissioner pages (now under /admin/commissioner)
-import CommissionerDashboard from "./pages/commissioner/Dashboard";
-import CommissionerCoaches from "./pages/commissioner/Coaches";
-import CommissionerCommunication from "./pages/commissioner/Communication";
-import CommissionerDrafts from "./pages/commissioner/Drafts";
-import CommissionerRegistrations from "./pages/commissioner/Registrations";
-import CommissionerSchedule from "./pages/commissioner/Schedule";
-import CommissionerSettings from "./pages/commissioner/Settings";
-import CommissionerStandings from "./pages/commissioner/Standings";
-import CommissionerTeams from "./pages/commissioner/Teams";
 
 const queryClient = new QueryClient();
 
@@ -144,16 +134,7 @@ const App = () => (
           <Route path="/admin/drafts/new" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts/:id" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts/:id/live" element={<ProtectedRoute requireAdmin><DraftLive /></ProtectedRoute>} />
-          {/* Commissioner Routes (under Admin) */}
-          <Route path="/admin/commissioner" element={<ProtectedRoute requireAdmin><CommissionerDashboard /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/registrations" element={<ProtectedRoute requireAdmin><CommissionerRegistrations /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/teams" element={<ProtectedRoute requireAdmin><CommissionerTeams /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/coaches" element={<ProtectedRoute requireAdmin><CommissionerCoaches /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/drafts" element={<ProtectedRoute requireAdmin><CommissionerDrafts /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/schedule" element={<ProtectedRoute requireAdmin><CommissionerSchedule /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/standings" element={<ProtectedRoute requireAdmin><CommissionerStandings /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/communication" element={<ProtectedRoute requireAdmin><CommissionerCommunication /></ProtectedRoute>} />
-          <Route path="/admin/commissioner/settings" element={<ProtectedRoute requireAdmin><CommissionerSettings /></ProtectedRoute>} />
+          <Route path="/admin/commissioner" element={<ProtectedRoute requireAdmin><Commissioner /></ProtectedRoute>} />
           {/* Coach Routes */}
           <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
             <Route index element={<CoachDashboard />} />
