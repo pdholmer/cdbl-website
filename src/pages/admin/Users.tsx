@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Users as UsersIcon, Shield, UserCog, Search, Plus, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { AdminLayout } from '@/components/AdminLayout';
@@ -14,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { useUsers, useInviteUser, UserProfile } from '@/hooks/useUsers';
+import { UserDetailSlider } from '@/components/admin/UserDetailSlider';
 
 const AVAILABLE_ROLES = ['admin', 'moderator', 'user', 'coach', 'commissioner'];
 
@@ -31,7 +31,6 @@ const getRoleBadgeVariant = (role: string) => {
 };
 
 export default function Users() {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const { data: users, isLoading, error } = useUsers();
   const inviteUser = useInviteUser();
@@ -41,6 +40,10 @@ export default function Users() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRoles, setInviteRoles] = useState<string[]>([]);
+  
+  // Slider state
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [sliderOpen, setSliderOpen] = useState(false);
 
   const filteredUsers = users?.filter((user: UserProfile) => {
     const matchesSearch = 
@@ -82,6 +85,16 @@ export default function Users() {
         ? prev.filter(r => r !== role)
         : [...prev, role]
     );
+  };
+
+  const handleRowClick = (userId: string) => {
+    setSelectedUserId(userId);
+    setSliderOpen(true);
+  };
+
+  const handleSliderClose = () => {
+    setSliderOpen(false);
+    setSelectedUserId(null);
   };
 
   if (error) {
@@ -264,7 +277,7 @@ export default function Users() {
                     <TableRow
                       key={user.id}
                       className="cursor-pointer hover:bg-muted/50"
-                      onClick={() => navigate(`/admin/users/${user.id}`)}
+                      onClick={() => handleRowClick(user.id)}
                     >
                       <TableCell>
                         <div>
@@ -309,6 +322,13 @@ export default function Users() {
           </CardContent>
         </Card>
       </div>
+
+      {/* User Detail Slider */}
+      <UserDetailSlider 
+        userId={selectedUserId}
+        isOpen={sliderOpen}
+        onClose={handleSliderClose}
+      />
     </AdminLayout>
   );
 }
