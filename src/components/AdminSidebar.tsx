@@ -47,7 +47,7 @@ export function AdminSidebar() {
   return (
     <Sidebar className="w-60">
       <SidebarContent className="bg-primary">
-        <div className="pl-[15px]">
+        <div className="pl-[10px]">
           <Link to="/" className="flex items-center justify-start pr-4 py-6 hover:opacity-80 transition-opacity">
             <img 
               src={cdblSidebarLogo} 
@@ -84,15 +84,15 @@ export function AdminSidebar() {
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <button onClick={handleLogout} className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground w-full">
+                    <LogOut className="h-4 w-4" />
+                    <span className="ml-2">Logout</span>
+                  </button>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="w-full justify-start text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-            >
-              <LogOut className="h-4 w-4" />
-              <span className="ml-2">Logout</span>
-            </Button>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
