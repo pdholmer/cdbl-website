@@ -52,11 +52,14 @@ const fetchUsers = async (): Promise<UserProfile[]> => {
 };
 
 const fetchUser = async (userId: string): Promise<UserDetail> => {
+  console.log('[fetchUser] Fetching user details for:', userId);
   const headers = await getAuthHeaders();
   const { data, error } = await supabase.functions.invoke('admin-users', {
     headers,
     body: { action: 'get', userId },
   });
+  
+  console.log('[fetchUser] Response:', { data, error });
   
   if (error) {
     throw new Error(error.message || 'Failed to fetch user');
@@ -64,6 +67,11 @@ const fetchUser = async (userId: string): Promise<UserDetail> => {
   
   if (data?.error) {
     throw new Error(data.error);
+  }
+  
+  // Check for unexpected response shape (got list instead of single user)
+  if (data?.users && !data?.user) {
+    throw new Error('Unexpected response: received user list instead of single user. Check if action/userId was sent correctly.');
   }
   
   if (!data?.user) {

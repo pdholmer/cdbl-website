@@ -136,20 +136,44 @@ Deno.serve(async (req) => {
         });
       }
 
+      console.log(`[GET] Fetching user ${userId}`);
+
       const { data: authUser, error: userError } = await supabaseAdmin.auth.admin.getUserById(userId);
       
       if (userError || !authUser.user) {
+        console.error(`[GET] Auth user not found for ${userId}:`, userError);
         return new Response(JSON.stringify({ error: 'User not found' }), {
           status: 404,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
 
-      const { data: profile } = await supabaseAdmin
+      // Check if profile exists, create if missing
+      let { data: profile } = await supabaseAdmin
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
+
+      if (!profile) {
+        console.log(`[GET] Profile missing for ${userId}, creating...`);
+        const { data: newProfile, error: createError } = await supabaseAdmin
+          .from('profiles')
+          .insert({
+            id: userId,
+            email: authUser.user.email || '',
+            display_name: authUser.user.email?.split('@')[0] || 'User',
+          })
+          .select()
+          .single();
+        
+        if (createError) {
+          console.error(`[GET] Failed to create profile for ${userId}:`, createError);
+        } else {
+          profile = newProfile;
+          console.log(`[GET] Profile created for ${userId}`);
+        }
+      }
 
       const { data: roles } = await supabaseAdmin
         .from('user_roles')
@@ -167,6 +191,7 @@ Deno.serve(async (req) => {
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
+      console.log(`[GET] Returning user ${userId} with ${roles?.length || 0} roles`);
       return new Response(JSON.stringify({
         user: {
           id: authUser.user.id,

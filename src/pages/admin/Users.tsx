@@ -41,9 +41,9 @@ export default function Users() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRoles, setInviteRoles] = useState<string[]>([]);
   
-  // Slider state
+  // Slider state - selectedUserId is the single source of truth
+  // Slider is open whenever a user is selected
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [sliderOpen, setSliderOpen] = useState(false);
 
   const filteredUsers = users?.filter((user: UserProfile) => {
     const matchesSearch = 
@@ -89,13 +89,10 @@ export default function Users() {
 
   const handleRowClick = (userId: string) => {
     setSelectedUserId(userId);
-    setSliderOpen(true);
   };
 
   const handleSliderClose = () => {
-    setSliderOpen(false);
-    // Delay clearing userId to prevent query cancellation during close animation
-    setTimeout(() => setSelectedUserId(null), 300);
+    setSelectedUserId(null);
   };
 
   if (error) {
@@ -327,7 +324,7 @@ export default function Users() {
       {/* User Detail Slider */}
       <UserDetailSlider 
         userId={selectedUserId}
-        isOpen={sliderOpen}
+        isOpen={selectedUserId !== null}
         onClose={handleSliderClose}
       />
     </AdminLayout>
