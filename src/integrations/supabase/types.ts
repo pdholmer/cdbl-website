@@ -1914,6 +1914,7 @@ export type Database = {
       }
       get_current_pick_team: { Args: { draft_id: string }; Returns: string }
       get_user_email: { Args: never; Returns: string }
+      has_admin_access: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1935,7 +1936,13 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user" | "coach" | "commissioner"
+      app_role:
+        | "admin"
+        | "moderator"
+        | "user"
+        | "coach"
+        | "commissioner"
+        | "board_member"
       program_type: "in_house" | "travel"
       resource_category:
         | "drill"
@@ -2070,7 +2077,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user", "coach", "commissioner"],
+      app_role: [
+        "admin",
+        "moderator",
+        "user",
+        "coach",
+        "commissioner",
+        "board_member",
+      ],
       program_type: ["in_house", "travel"],
       resource_category: [
         "drill",

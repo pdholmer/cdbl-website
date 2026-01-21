@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
       auth: { autoRefreshToken: false, persistSession: false }
     });
 
-    // Verify the caller is authenticated and is an admin
+    // Verify the caller is authenticated and has admin access
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
@@ -40,17 +40,26 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Check if user is admin
-    const { data: roleData, error: roleError } = await supabaseAdmin
+    // Check if user has admin or board_member role for general access
+    const { data: userRoles, error: roleError } = await supabaseAdmin
       .from('user_roles')
       .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'admin')
-      .maybeSingle();
+      .eq('user_id', user.id);
 
-    if (roleError || !roleData) {
+    if (roleError) {
       console.error('Role check error:', roleError);
-      return new Response(JSON.stringify({ error: 'Unauthorized - Admin access required' }), {
+      return new Response(JSON.stringify({ error: 'Failed to check user roles' }), {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const roles = userRoles?.map(r => r.role) || [];
+    const isAdmin = roles.includes('admin');
+    const isBoardMember = roles.includes('board_member');
+    
+    if (!isAdmin && !isBoardMember) {
+      return new Response(JSON.stringify({ error: 'Unauthorized - Admin or Board Member access required' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -70,7 +79,7 @@ Deno.serve(async (req) => {
     const action = (body.action as string) || 'list';
     const userId = body.userId as string | undefined;
 
-    console.log(`Action: ${action}, UserId: ${userId || 'N/A'}`);
+    console.log(`Action: ${action}, UserId: ${userId || 'N/A'}, CallerIsAdmin: ${isAdmin}`);
 
     // LIST - Get all users
     if (action === 'list') {
@@ -175,7 +184,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      const { data: roles } = await supabaseAdmin
+      const { data: targetUserRoles } = await supabaseAdmin
         .from('user_roles')
         .select('role')
         .eq('user_id', userId);
@@ -191,7 +200,7 @@ Deno.serve(async (req) => {
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
 
-      console.log(`[GET] Returning user ${userId} with ${roles?.length || 0} roles`);
+      console.log(`[GET] Returning user ${userId} with ${targetUserRoles?.length || 0} roles`);
       return new Response(JSON.stringify({
         user: {
           id: authUser.user.id,
@@ -200,7 +209,7 @@ Deno.serve(async (req) => {
           avatar_url: profile?.avatar_url,
           created_at: authUser.user.created_at,
           last_sign_in_at: authUser.user.last_sign_in_at,
-          roles: roles?.map(r => r.role) || [],
+          roles: targetUserRoles?.map(r => r.role) || [],
           feedback_count: feedbackCount || 0,
           feedback: feedback || [],
         }
@@ -209,8 +218,15 @@ Deno.serve(async (req) => {
       });
     }
 
-    // DELETE - Delete a user
+    // DELETE - Delete a user (admin only)
     if (action === 'delete') {
+      if (!isAdmin) {
+        return new Response(JSON.stringify({ error: 'Only admins can delete users' }), {
+          status: 403,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       if (!userId) {
         return new Response(JSON.stringify({ error: 'userId is required' }), {
           status: 400,
@@ -242,7 +258,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // INVITE - Invite new user
+    // INVITE - Invite new user (admin only for assigning admin role)
     if (action === 'invite') {
       const email = body.email as string;
       const newRoles = body.roles as string[] | undefined;
@@ -250,6 +266,14 @@ Deno.serve(async (req) => {
       if (!email) {
         return new Response(JSON.stringify({ error: 'Email is required' }), {
           status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // Only admins can assign the admin role
+      if (newRoles?.includes('admin') && !isAdmin) {
+        return new Response(JSON.stringify({ error: 'Only admins can assign the admin role' }), {
+          status: 403,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
@@ -264,9 +288,11 @@ Deno.serve(async (req) => {
         });
       }
 
-      // Add roles if specified
-      if (newRoles && newRoles.length > 0 && inviteData.user) {
-        for (const role of newRoles) {
+      // Add roles if specified, otherwise assign board_member by default
+      const rolesToAssign = newRoles && newRoles.length > 0 ? newRoles : ['board_member'];
+      
+      if (inviteData.user) {
+        for (const role of rolesToAssign) {
           await supabaseAdmin.from('user_roles').insert({
             user_id: inviteData.user.id,
             role: role,
@@ -274,7 +300,7 @@ Deno.serve(async (req) => {
         }
       }
 
-      console.log(`User ${email} invited by ${user.email}`);
+      console.log(`User ${email} invited by ${user.email} with roles: ${rolesToAssign.join(', ')}`);
       return new Response(JSON.stringify({ success: true, user: inviteData.user }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -302,10 +328,34 @@ Deno.serve(async (req) => {
 
       // Update roles if provided
       if (newRoles !== undefined) {
+        // Only admins can assign the admin role
+        if (newRoles.includes('admin') && !isAdmin) {
+          return new Response(JSON.stringify({ error: 'Only admins can assign the admin role' }), {
+            status: 403,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
         // Prevent removing own admin role
-        if (userId === user.id && !newRoles.includes('admin')) {
+        if (userId === user.id && isAdmin && !newRoles.includes('admin')) {
           return new Response(JSON.stringify({ error: 'Cannot remove your own admin role' }), {
             status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        // Check if target user currently has admin role
+        const { data: targetCurrentRoles } = await supabaseAdmin
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId);
+        
+        const targetHasAdmin = targetCurrentRoles?.some(r => r.role === 'admin');
+        
+        // Only admins can remove admin role from other admins
+        if (targetHasAdmin && !newRoles.includes('admin') && !isAdmin) {
+          return new Response(JSON.stringify({ error: 'Only admins can remove the admin role' }), {
+            status: 403,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
         }
