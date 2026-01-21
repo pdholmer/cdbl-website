@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { Loader2, Save, Trash2, MessageSquare, X } from 'lucide-react';
+import { Loader2, Save, Trash2, MessageSquare, Lock } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,12 +15,14 @@ import { useUser, useUpdateUser, useDeleteUser } from '@/hooks/useUsers';
 import { FeedbackStatusBadge } from '@/components/feedback/FeedbackStatusBadge';
 import { FeedbackTypeBadge } from '@/components/feedback/FeedbackTypeBadge';
 
-const AVAILABLE_ROLES = ['admin', 'moderator', 'user', 'coach', 'commissioner'];
+const ALL_ROLES = ['admin', 'board_member', 'moderator', 'user', 'coach', 'commissioner'];
 
 const getRoleBadgeVariant = (role: string) => {
   switch (role) {
     case 'admin':
       return 'destructive';
+    case 'board_member':
+      return 'default';
     case 'commissioner':
       return 'default';
     case 'coach':
@@ -34,9 +36,10 @@ interface UserDetailSliderProps {
   userId: string | null;
   isOpen: boolean;
   onClose: () => void;
+  isCurrentUserAdmin?: boolean;
 }
 
-export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderProps) {
+export function UserDetailSlider({ userId, isOpen, onClose, isCurrentUserAdmin = false }: UserDetailSliderProps) {
   const { toast } = useToast();
   // Only enable the query when slider is open AND we have a valid userId
   const { data: user, isLoading, error, refetch } = useUser(isOpen && userId ? userId : undefined);
@@ -46,6 +49,11 @@ export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderPr
   const [displayName, setDisplayName] = useState<string>('');
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [hasChanges, setHasChanges] = useState(false);
+
+  // Available roles based on current user's permissions
+  const availableRoles = isCurrentUserAdmin 
+    ? ALL_ROLES 
+    : ALL_ROLES.filter(role => role !== 'admin');
 
   // Reset form when user changes
   useEffect(() => {
@@ -64,6 +72,11 @@ export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderPr
   }, [isOpen]);
 
   const handleRoleToggle = (role: string) => {
+    // Don't allow non-admins to modify admin role
+    if (role === 'admin' && !isCurrentUserAdmin) {
+      return;
+    }
+    
     setSelectedRoles(prev => 
       prev.includes(role) 
         ? prev.filter(r => r !== role)
@@ -149,7 +162,7 @@ export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderPr
                 {user.roles.length > 0 ? (
                   user.roles.map(role => (
                     <Badge key={role} variant={getRoleBadgeVariant(role)} className="capitalize">
-                      {role}
+                      {role.replace('_', ' ')}
                     </Badge>
                   ))
                 ) : (
@@ -202,22 +215,37 @@ export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderPr
                   Roles
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {AVAILABLE_ROLES.map(role => (
-                    <div key={role} className="flex items-center space-x-3">
-                      <Checkbox
-                        id={`role-${role}`}
-                        checked={selectedRoles.includes(role)}
-                        onCheckedChange={() => handleRoleToggle(role)}
-                      />
-                      <label
-                        htmlFor={`role-${role}`}
-                        className="text-sm font-medium capitalize cursor-pointer flex-1"
-                      >
-                        {role}
-                      </label>
-                    </div>
-                  ))}
+                  {ALL_ROLES.map(role => {
+                    const isAdminRole = role === 'admin';
+                    const canModify = !isAdminRole || isCurrentUserAdmin;
+                    const isChecked = selectedRoles.includes(role);
+                    
+                    return (
+                      <div key={role} className="flex items-center space-x-3">
+                        <Checkbox
+                          id={`role-${role}`}
+                          checked={isChecked}
+                          onCheckedChange={() => handleRoleToggle(role)}
+                          disabled={!canModify}
+                        />
+                        <label
+                          htmlFor={`role-${role}`}
+                          className={`text-sm font-medium capitalize cursor-pointer flex-1 flex items-center gap-1 ${!canModify ? 'text-muted-foreground' : ''}`}
+                        >
+                          {role.replace('_', ' ')}
+                          {isAdminRole && !isCurrentUserAdmin && (
+                            <Lock className="h-3 w-3 text-muted-foreground" />
+                          )}
+                        </label>
+                      </div>
+                    );
+                  })}
                 </div>
+                {!isCurrentUserAdmin && (
+                  <p className="text-xs text-muted-foreground">
+                    Note: Only admins can assign or remove the admin role.
+                  </p>
+                )}
               </div>
 
               <Separator />
@@ -267,41 +295,47 @@ export function UserDetailSlider({ userId, isOpen, onClose }: UserDetailSliderPr
 
               <Separator />
 
-              {/* Danger Zone */}
-              <div className="space-y-4">
-                <h3 className="font-semibold text-sm uppercase tracking-wide text-destructive">
-                  Danger Zone
-                </h3>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm">
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete User
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This will permanently delete the user account for <strong>{user.email}</strong>.
-                        This action cannot be undone. All user data including feedback will be removed.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={handleDelete}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                      >
-                        {deleteUser.isPending ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : null}
-                        Delete User
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
+              {/* Danger Zone - Only show to admins */}
+              {isCurrentUserAdmin && (
+                <>
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-sm uppercase tracking-wide text-destructive">
+                      Danger Zone
+                    </h3>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm">
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete User
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete the user account for <strong>{user.email}</strong>.
+                            This action cannot be undone. All user data including feedback will be removed.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleDelete}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            {deleteUser.isPending ? (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : null}
+                            Delete User
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+
+                  <Separator />
+                </>
+              )}
 
               {/* Action Buttons */}
               <div className="flex justify-end gap-3 pt-4 border-t">

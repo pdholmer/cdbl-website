@@ -6,17 +6,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
+  requireBoardMember?: boolean;
   requireCoach?: boolean;
 }
 
 export const ProtectedRoute = ({ 
   children, 
   requireAdmin = false,
+  requireBoardMember = false,
   requireCoach = false 
 }: ProtectedRouteProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isBoardMember, setIsBoardMember] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
 
   useEffect(() => {
@@ -31,14 +34,27 @@ export const ProtectedRoute = ({
 
       setIsAuthenticated(true);
 
-      if (requireAdmin) {
-        const { data: hasAdminRole } = await supabase
+      // Check for admin role
+      const { data: hasAdminRole } = await supabase
+        .rpc('has_role', {
+          _user_id: session.user.id,
+          _role: 'admin'
+        });
+      
+      setIsAdmin(!!hasAdminRole);
+
+      // If user is admin, they have board member access too
+      if (hasAdminRole) {
+        setIsBoardMember(true);
+      } else if (requireBoardMember) {
+        // Check for board_member role
+        const { data: hasBoardMemberRole } = await supabase
           .rpc('has_role', {
             _user_id: session.user.id,
-            _role: 'admin'
+            _role: 'board_member'
           });
         
-        setIsAdmin(!!hasAdminRole);
+        setIsBoardMember(!!hasBoardMemberRole);
       }
 
       if (requireCoach) {
@@ -49,13 +65,7 @@ export const ProtectedRoute = ({
             _role: 'coach'
           });
         
-        // Also check for admin role (admins can access coach pages)
-        const { data: hasAdminRole } = await supabase
-          .rpc('has_role', {
-            _user_id: session.user.id,
-            _role: 'admin'
-          });
-        
+        // Admins can also access coach pages
         setIsCoach(!!hasCoachRole || !!hasAdminRole);
       }
 
@@ -69,7 +79,7 @@ export const ProtectedRoute = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [requireAdmin, requireCoach]);
+  }, [requireAdmin, requireBoardMember, requireCoach]);
 
   if (isLoading) {
     return (
@@ -84,6 +94,10 @@ export const ProtectedRoute = ({
   }
 
   if (requireAdmin && !isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+
+  if (requireBoardMember && !isBoardMember) {
     return <Navigate to="/" replace />;
   }
 

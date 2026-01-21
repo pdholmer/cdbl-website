@@ -105,35 +105,41 @@ const App = () => (
           <Route path="/travel/schedule" element={<TravelSchedule />} />
           <Route path="/travel/faq" element={<TravelFAQ />} />
           {/* Admin Routes */}
-            <Route path="/admin/login" element={<Login />} />
-            <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
-            <Route path="/admin/players" element={<ProtectedRoute requireAdmin><Players /></ProtectedRoute>} />
-            <Route path="/admin/players/new" element={<ProtectedRoute requireAdmin><PlayerEdit /></ProtectedRoute>} />
-            <Route path="/admin/players/:id" element={<ProtectedRoute requireAdmin><PlayerEdit /></ProtectedRoute>} />
-            <Route path="/admin/teams" element={<ProtectedRoute requireAdmin><AdminTeams /></ProtectedRoute>} />
-            <Route path="/admin/teams/new" element={<ProtectedRoute requireAdmin><TeamEdit /></ProtectedRoute>} />
-            <Route path="/admin/teams/:id" element={<ProtectedRoute requireAdmin><TeamEdit /></ProtectedRoute>} />
-            <Route path="/admin/coaches" element={<ProtectedRoute requireAdmin><Coaches /></ProtectedRoute>} />
-            <Route path="/admin/coaches/new" element={<ProtectedRoute requireAdmin><CoachEdit /></ProtectedRoute>} />
-            <Route path="/admin/coaches/:id" element={<ProtectedRoute requireAdmin><CoachEdit /></ProtectedRoute>} />
-            <Route path="/admin/schedule" element={<ProtectedRoute requireAdmin><AdminSchedule /></ProtectedRoute>} />
-            <Route path="/admin/facilities" element={<ProtectedRoute requireAdmin><Venues /></ProtectedRoute>} />
-            <Route path="/admin/facilities/new" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
-            <Route path="/admin/facilities/:id" element={<ProtectedRoute requireAdmin><VenueEdit /></ProtectedRoute>} />
-            <Route path="/admin/reports" element={<ProtectedRoute requireAdmin><AdminReports /></ProtectedRoute>} />
-            <Route path="/admin/gamechanger" element={<ProtectedRoute requireAdmin><GameChangerSync /></ProtectedRoute>} />
-            <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
+          <Route path="/admin/login" element={<Login />} />
+          
+          {/* Board Member Routes - accessible by admin OR board_member */}
+          <Route path="/admin" element={<ProtectedRoute requireBoardMember><Dashboard /></ProtectedRoute>} />
+          <Route path="/admin/players" element={<ProtectedRoute requireBoardMember><Players /></ProtectedRoute>} />
+          <Route path="/admin/players/new" element={<ProtectedRoute requireBoardMember><PlayerEdit /></ProtectedRoute>} />
+          <Route path="/admin/players/:id" element={<ProtectedRoute requireBoardMember><PlayerEdit /></ProtectedRoute>} />
+          <Route path="/admin/teams" element={<ProtectedRoute requireBoardMember><AdminTeams /></ProtectedRoute>} />
+          <Route path="/admin/teams/new" element={<ProtectedRoute requireBoardMember><TeamEdit /></ProtectedRoute>} />
+          <Route path="/admin/teams/:id" element={<ProtectedRoute requireBoardMember><TeamEdit /></ProtectedRoute>} />
+          <Route path="/admin/coaches" element={<ProtectedRoute requireBoardMember><Coaches /></ProtectedRoute>} />
+          <Route path="/admin/coaches/new" element={<ProtectedRoute requireBoardMember><CoachEdit /></ProtectedRoute>} />
+          <Route path="/admin/coaches/:id" element={<ProtectedRoute requireBoardMember><CoachEdit /></ProtectedRoute>} />
+          <Route path="/admin/schedule" element={<ProtectedRoute requireBoardMember><AdminSchedule /></ProtectedRoute>} />
+          <Route path="/admin/facilities" element={<ProtectedRoute requireBoardMember><Venues /></ProtectedRoute>} />
+          <Route path="/admin/facilities/new" element={<ProtectedRoute requireBoardMember><VenueEdit /></ProtectedRoute>} />
+          <Route path="/admin/facilities/:id" element={<ProtectedRoute requireBoardMember><VenueEdit /></ProtectedRoute>} />
+          <Route path="/admin/faqs" element={<ProtectedRoute requireBoardMember><FAQs /></ProtectedRoute>} />
+          <Route path="/admin/faqs/new" element={<ProtectedRoute requireBoardMember><FAQEdit /></ProtectedRoute>} />
+          <Route path="/admin/faqs/:id" element={<ProtectedRoute requireBoardMember><FAQEdit /></ProtectedRoute>} />
+          <Route path="/admin/support" element={<ProtectedRoute requireBoardMember><Support /></ProtectedRoute>} />
+          <Route path="/admin/support/new" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
+          <Route path="/admin/support/:id" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
+          <Route path="/admin/feedback" element={<ProtectedRoute requireBoardMember><Feedback /></ProtectedRoute>} />
+          <Route path="/admin/users" element={<ProtectedRoute requireBoardMember><Users /></ProtectedRoute>} />
+          
+          {/* Admin-Only Routes - restricted to admin role */}
+          <Route path="/admin/reports" element={<ProtectedRoute requireAdmin><AdminReports /></ProtectedRoute>} />
+          <Route path="/admin/gamechanger" element={<ProtectedRoute requireAdmin><GameChangerSync /></ProtectedRoute>} />
+          <Route path="/admin/programs" element={<ProtectedRoute requireAdmin><Programs /></ProtectedRoute>} />
           <Route path="/admin/programs/new" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />
           <Route path="/admin/programs/:id" element={<ProtectedRoute requireAdmin><ProgramEdit /></ProtectedRoute>} />
           <Route path="/admin/divisions" element={<ProtectedRoute requireAdmin><Divisions /></ProtectedRoute>} />
           <Route path="/admin/divisions/new" element={<ProtectedRoute requireAdmin><DivisionEdit /></ProtectedRoute>} />
           <Route path="/admin/divisions/:id" element={<ProtectedRoute requireAdmin><DivisionEdit /></ProtectedRoute>} />
-          <Route path="/admin/faqs" element={<ProtectedRoute requireAdmin><FAQs /></ProtectedRoute>} />
-          <Route path="/admin/faqs/new" element={<ProtectedRoute requireAdmin><FAQEdit /></ProtectedRoute>} />
-          <Route path="/admin/faqs/:id" element={<ProtectedRoute requireAdmin><FAQEdit /></ProtectedRoute>} />
-          <Route path="/admin/support" element={<ProtectedRoute requireAdmin><Support /></ProtectedRoute>} />
-          <Route path="/admin/support/new" element={<ProtectedRoute requireAdmin><SupportEdit /></ProtectedRoute>} />
-          <Route path="/admin/support/:id" element={<ProtectedRoute requireAdmin><SupportEdit /></ProtectedRoute>} />
           <Route path="/admin/site-content" element={<ProtectedRoute requireAdmin><SiteContent /></ProtectedRoute>} />
           <Route path="/admin/site-content/new" element={<ProtectedRoute requireAdmin><SiteContentEdit /></ProtectedRoute>} />
           <Route path="/admin/site-content/:id" element={<ProtectedRoute requireAdmin><SiteContentEdit /></ProtectedRoute>} />
@@ -142,8 +148,6 @@ const App = () => (
           <Route path="/admin/drafts/:id" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts/:id/live" element={<ProtectedRoute requireAdmin><DraftLive /></ProtectedRoute>} />
           <Route path="/admin/commissioner" element={<ProtectedRoute requireAdmin><Commissioner /></ProtectedRoute>} />
-          <Route path="/admin/feedback" element={<ProtectedRoute requireAdmin><Feedback /></ProtectedRoute>} />
-          <Route path="/admin/users" element={<ProtectedRoute requireAdmin><Users /></ProtectedRoute>} />
           {/* Coach Routes */}
           <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
             <Route index element={<CoachDashboard />} />

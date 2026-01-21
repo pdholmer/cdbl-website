@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Users as UsersIcon, Shield, UserCog, Search, Plus, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { AdminLayout } from '@/components/AdminLayout';
@@ -14,13 +14,17 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { useUsers, useInviteUser, UserProfile } from '@/hooks/useUsers';
 import { UserDetailSlider } from '@/components/admin/UserDetailSlider';
+import { supabase } from '@/integrations/supabase/client';
 
-const AVAILABLE_ROLES = ['admin', 'moderator', 'user', 'coach', 'commissioner'];
+// All available roles - admin role is conditionally shown based on current user
+const ALL_ROLES = ['admin', 'board_member', 'moderator', 'user', 'coach', 'commissioner'];
 
 const getRoleBadgeVariant = (role: string) => {
   switch (role) {
     case 'admin':
       return 'destructive';
+    case 'board_member':
+      return 'default';
     case 'commissioner':
       return 'default';
     case 'coach':
@@ -39,11 +43,33 @@ export default function Users() {
   const [roleFilter, setRoleFilter] = useState<string>('all');
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
-  const [inviteRoles, setInviteRoles] = useState<string[]>([]);
+  const [inviteRoles, setInviteRoles] = useState<string[]>(['board_member']);
+  const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(false);
   
   // Slider state - selectedUserId is the single source of truth
   // Slider is open whenever a user is selected
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
+  // Check if current user is an admin
+  useEffect(() => {
+    const checkAdminRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: hasAdminRole } = await supabase
+          .rpc('has_role', {
+            _user_id: session.user.id,
+            _role: 'admin'
+          });
+        setIsCurrentUserAdmin(!!hasAdminRole);
+      }
+    };
+    checkAdminRole();
+  }, []);
+
+  // Available roles based on current user's permissions
+  const availableRoles = isCurrentUserAdmin 
+    ? ALL_ROLES 
+    : ALL_ROLES.filter(role => role !== 'admin');
 
   const filteredUsers = users?.filter((user: UserProfile) => {
     const matchesSearch = 
@@ -58,8 +84,8 @@ export default function Users() {
   const stats = {
     total: users?.length || 0,
     admins: users?.filter((u: UserProfile) => u.roles.includes('admin')).length || 0,
+    boardMembers: users?.filter((u: UserProfile) => u.roles.includes('board_member')).length || 0,
     coaches: users?.filter((u: UserProfile) => u.roles.includes('coach')).length || 0,
-    commissioners: users?.filter((u: UserProfile) => u.roles.includes('commissioner')).length || 0,
   };
 
   const handleInvite = async () => {
@@ -73,7 +99,7 @@ export default function Users() {
       toast({ title: 'Success', description: `Invitation sent to ${inviteEmail}` });
       setInviteDialogOpen(false);
       setInviteEmail('');
-      setInviteRoles([]);
+      setInviteRoles(['board_member']);
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
     }
@@ -128,7 +154,7 @@ export default function Users() {
               <DialogHeader>
                 <DialogTitle>Invite New User</DialogTitle>
                 <DialogDescription>
-                  Send an invitation email to a new user.
+                  Send an invitation email to a new user. They will be assigned as a Board Member by default.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -143,9 +169,9 @@ export default function Users() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Roles (optional)</Label>
+                  <Label>Roles</Label>
                   <div className="flex flex-wrap gap-2">
-                    {AVAILABLE_ROLES.map(role => (
+                    {availableRoles.map(role => (
                       <div key={role} className="flex items-center space-x-2">
                         <Checkbox
                           id={`invite-role-${role}`}
@@ -156,11 +182,16 @@ export default function Users() {
                           htmlFor={`invite-role-${role}`}
                           className="text-sm capitalize cursor-pointer"
                         >
-                          {role}
+                          {role.replace('_', ' ')}
                         </label>
                       </div>
                     ))}
                   </div>
+                  {!isCurrentUserAdmin && (
+                    <p className="text-xs text-muted-foreground">
+                      Note: Only admins can assign the admin role.
+                    </p>
+                  )}
                 </div>
               </div>
               <DialogFooter>
@@ -198,20 +229,20 @@ export default function Users() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Board Members</CardTitle>
+              <UsersIcon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.boardMembers}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Coaches</CardTitle>
               <UserCog className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.coaches}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Commissioners</CardTitle>
-              <UsersIcon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.commissioners}</div>
             </CardContent>
           </Card>
         </div>
@@ -233,9 +264,9 @@ export default function Users() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Roles</SelectItem>
-              {AVAILABLE_ROLES.map(role => (
+              {ALL_ROLES.map(role => (
                 <SelectItem key={role} value={role} className="capitalize">
-                  {role}
+                  {role.replace('_', ' ')}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -288,7 +319,7 @@ export default function Users() {
                           {user.roles.length > 0 ? (
                             user.roles.map(role => (
                               <Badge key={role} variant={getRoleBadgeVariant(role)} className="capitalize">
-                                {role}
+                                {role.replace('_', ' ')}
                               </Badge>
                             ))
                           ) : (
@@ -326,6 +357,7 @@ export default function Users() {
         userId={selectedUserId}
         isOpen={selectedUserId !== null}
         onClose={handleSliderClose}
+        isCurrentUserAdmin={isCurrentUserAdmin}
       />
     </AdminLayout>
   );
