@@ -19,7 +19,7 @@ interface FeedbackTableProps {
   onRowClick: (feedback: Feedback) => void;
 }
 
-type SortField = 'subject' | 'feedback_type' | 'status' | 'created_at' | 'source_module';
+type SortField = 'subject' | 'submitter' | 'feedback_type' | 'status' | 'created_at' | 'source_module';
 type SortDirection = 'asc' | 'desc';
 
 export function FeedbackTable({ feedback, onRowClick }: FeedbackTableProps) {
@@ -36,15 +36,18 @@ export function FeedbackTable({ feedback, onRowClick }: FeedbackTableProps) {
   };
 
   const sortedFeedback = [...feedback].sort((a, b) => {
-    const aRaw = a[sortField] ?? '';
-    const bRaw = b[sortField] ?? '';
+    let aValue: string | number;
+    let bValue: string | number;
 
-    let aValue: string | number = String(aRaw);
-    let bValue: string | number = String(bRaw);
-
-    if (sortField === 'created_at') {
-      aValue = new Date(aRaw as string).getTime();
-      bValue = new Date(bRaw as string).getTime();
+    if (sortField === 'submitter') {
+      aValue = a.profiles?.display_name || a.profiles?.email || '';
+      bValue = b.profiles?.display_name || b.profiles?.email || '';
+    } else if (sortField === 'created_at') {
+      aValue = new Date(a.created_at).getTime();
+      bValue = new Date(b.created_at).getTime();
+    } else {
+      aValue = String(a[sortField] ?? '');
+      bValue = String(b[sortField] ?? '');
     }
 
     if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
@@ -72,6 +75,9 @@ export function FeedbackTable({ feedback, onRowClick }: FeedbackTableProps) {
               <SortableHeader field="subject">Subject</SortableHeader>
             </TableHead>
             <TableHead>
+              <SortableHeader field="submitter">Submitted By</SortableHeader>
+            </TableHead>
+            <TableHead>
               <SortableHeader field="feedback_type">Type</SortableHeader>
             </TableHead>
             <TableHead>
@@ -88,7 +94,7 @@ export function FeedbackTable({ feedback, onRowClick }: FeedbackTableProps) {
         <TableBody>
           {sortedFeedback.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="h-24 text-center">
+              <TableCell colSpan={6} className="h-24 text-center">
                 No feedback found.
               </TableCell>
             </TableRow>
@@ -101,6 +107,9 @@ export function FeedbackTable({ feedback, onRowClick }: FeedbackTableProps) {
               >
                 <TableCell className="font-medium max-w-[200px] truncate">
                   {item.subject}
+                </TableCell>
+                <TableCell className="text-muted-foreground max-w-[180px] truncate">
+                  {item.profiles?.display_name || item.profiles?.email || 'Unknown'}
                 </TableCell>
                 <TableCell>
                   <FeedbackTypeBadge type={item.feedback_type} />
