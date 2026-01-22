@@ -20,6 +20,10 @@ export interface Feedback {
   screenshot_url: string | null;
   created_at: string;
   updated_at: string;
+  profiles?: {
+    email: string;
+    display_name: string | null;
+  } | null;
 }
 
 export interface FeedbackInsert {
@@ -58,13 +62,35 @@ export function useAllFeedback() {
   return useQuery({
     queryKey: ['all-feedback'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Fetch feedback
+      const { data: feedbackData, error: feedbackError } = await supabase
         .from('platform_feedback')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      return data as Feedback[];
+      if (feedbackError) throw feedbackError;
+
+      // Get unique user IDs
+      const userIds = [...new Set(feedbackData.map(f => f.user_id))];
+      
+      // Fetch profiles for those users
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, email, display_name')
+        .in('id', userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Create a map for quick lookup
+      const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+
+      // Merge feedback with profiles
+      const feedbackWithProfiles = feedbackData.map(f => ({
+        ...f,
+        profiles: profilesMap.get(f.user_id) || null,
+      }));
+
+      return feedbackWithProfiles as Feedback[];
     },
   });
 }
