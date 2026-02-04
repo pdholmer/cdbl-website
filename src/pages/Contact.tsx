@@ -5,16 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Facebook, Instagram } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Mail, Phone, MapPin, Facebook, Instagram, CheckCircle, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const Contact = () => {
-  const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   
   // Get pre-filled subject from URL params
   const prefillSubject = searchParams.get("subject") || "";
@@ -51,29 +50,25 @@ const Contact = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Message sent!",
-        description: "We'll get back to you as soon as possible.",
-      });
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-      });
+      setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting contact form:", error);
-      toast({
-        title: "Something went wrong",
-        description: "Please try again or email us directly at info@cdbaseball.org",
-        variant: "destructive",
-      });
+      // Show inline error instead of toast for persistence
+      alert("Something went wrong. Please try again or email us directly at info@cdbaseball.org");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSendAnother = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: "",
+    });
+    setIsSubmitted(false);
   };
 
   return (
@@ -102,68 +97,87 @@ const Contact = () => {
                 <h2 className="text-3xl font-bold mb-6">Send Us a Message</h2>
                 <Card>
                   <CardContent className="pt-6">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Name *</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          placeholder="Your name"
-                          required
-                        />
+                    {isSubmitted ? (
+                      <div className="text-center py-8 space-y-4 animate-in fade-in-50 slide-in-from-bottom-2">
+                        <div className="inline-flex p-4 rounded-full bg-green-100 mb-4">
+                          <CheckCircle className="h-12 w-12 text-green-600" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-green-700">Message Sent!</h3>
+                        <p className="text-muted-foreground max-w-md mx-auto">
+                          Thank you for reaching out. We typically respond within 24-48 hours. 
+                          Check your email ({formData.email}) for our response.
+                        </p>
+                        <div className="pt-4">
+                          <Button variant="outline" onClick={handleSendAnother}>
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Send Another Message
+                          </Button>
+                        </div>
                       </div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Name *</Label>
+                          <Input
+                            id="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Your name"
+                            required
+                          />
+                        </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          placeholder="your.email@example.com"
-                          required
-                        />
-                      </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="your.email@example.com"
+                            required
+                          />
+                        </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Phone</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          placeholder="(555) 123-4567"
-                        />
-                      </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Phone</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="(555) 123-4567"
+                          />
+                        </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="subject">Subject *</Label>
-                        <Input
-                          id="subject"
-                          value={formData.subject}
-                          onChange={handleChange}
-                          placeholder="What is this regarding?"
-                          required
-                        />
-                      </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="subject">Subject *</Label>
+                          <Input
+                            id="subject"
+                            value={formData.subject}
+                            onChange={handleChange}
+                            placeholder="What is this regarding?"
+                            required
+                          />
+                        </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="message">Message *</Label>
-                        <Textarea
-                          id="message"
-                          value={formData.message}
-                          onChange={handleChange}
-                          placeholder="Tell us how we can help..."
-                          rows={5}
-                          required
-                        />
-                      </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="message">Message *</Label>
+                          <Textarea
+                            id="message"
+                            value={formData.message}
+                            onChange={handleChange}
+                            placeholder="Tell us how we can help..."
+                            rows={5}
+                            required
+                          />
+                        </div>
 
-                      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                        {isSubmitting ? "Sending..." : "Send Message"}
-                      </Button>
-                    </form>
+                        <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                          {isSubmitting ? "Sending..." : "Send Message"}
+                        </Button>
+                      </form>
+                    )}
                   </CardContent>
                 </Card>
               </div>

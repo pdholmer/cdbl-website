@@ -111,6 +111,11 @@ const DropdownNav = () => {
               Fields & Facilities
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/rules" className="w-full cursor-pointer">
+              Rules & Policies
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 

@@ -4,6 +4,7 @@ import { Calendar, Users, ShoppingBag, Camera, Trophy, Clipboard, Heart, HelpCir
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import DivisionFinder from "@/components/DivisionFinder";
 import heroNewToCdbl from "@/assets/hero-new-to-cdbl.jpg";
 
 const NewToCDBL = () => {
@@ -24,8 +25,15 @@ const NewToCDBL = () => {
           </div>
         </section>
 
+        {/* Division Finder Tool */}
+        <section className="py-12 bg-background">
+          <div className="container max-w-2xl">
+            <DivisionFinder />
+          </div>
+        </section>
+
         {/* Getting Started Timeline */}
-        <section className="py-16 bg-background">
+        <section className="py-16 bg-muted/30">
           <div className="container max-w-4xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Getting Started Timeline</h2>
             

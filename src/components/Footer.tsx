@@ -55,8 +55,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/schedule" className="opacity-80 hover:opacity-100 transition-opacity">
-                  Calendar
+                <Link to="/rules" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Rules & Policies
                 </Link>
               </li>
             </ul>
