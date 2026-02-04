@@ -186,6 +186,191 @@ export type Database = {
           },
         ]
       }
+      committee_tasks: {
+        Row: {
+          assigned_to: string | null
+          committee: string
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          notes: string | null
+          priority: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          committee: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          committee?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      concession_employees: {
+        Row: {
+          created_at: string
+          email: string | null
+          first_name: string
+          id: string
+          last_name: string
+          notes: string | null
+          phone: string | null
+          role: string
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          notes?: string | null
+          phone?: string | null
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          notes?: string | null
+          phone?: string | null
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      concession_inventory: {
+        Row: {
+          category: string
+          created_at: string
+          current_quantity: number
+          id: string
+          is_active: boolean | null
+          item_name: string
+          last_restocked_at: string | null
+          minimum_quantity: number
+          notes: string | null
+          sale_price: number | null
+          unit_cost: number | null
+          unit_type: string
+          updated_at: string
+          vendor: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          current_quantity?: number
+          id?: string
+          is_active?: boolean | null
+          item_name: string
+          last_restocked_at?: string | null
+          minimum_quantity?: number
+          notes?: string | null
+          sale_price?: number | null
+          unit_cost?: number | null
+          unit_type?: string
+          updated_at?: string
+          vendor?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          current_quantity?: number
+          id?: string
+          is_active?: boolean | null
+          item_name?: string
+          last_restocked_at?: string | null
+          minimum_quantity?: number
+          notes?: string | null
+          sale_price?: number | null
+          unit_cost?: number | null
+          unit_type?: string
+          updated_at?: string
+          vendor?: string | null
+        }
+        Relationships: []
+      }
+      concession_shifts: {
+        Row: {
+          created_at: string
+          employee_id: string | null
+          end_time: string
+          id: string
+          notes: string | null
+          shift_date: string
+          start_time: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id?: string | null
+          end_time: string
+          id?: string
+          notes?: string | null
+          shift_date: string
+          start_time: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string | null
+          end_time?: string
+          id?: string
+          notes?: string | null
+          shift_date?: string
+          start_time?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "concession_shifts_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "concession_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       divisions: {
         Row: {
           age_range: string
@@ -1776,6 +1961,50 @@ export type Database = {
           },
         ]
       }
+      team_important_dates: {
+        Row: {
+          created_at: string
+          date_type: string
+          date_value: string
+          description: string | null
+          id: string
+          is_recurring: boolean | null
+          team_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date_type?: string
+          date_value: string
+          description?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          team_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date_type?: string
+          date_value?: string
+          description?: string | null
+          id?: string
+          is_recurring?: boolean | null
+          team_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_important_dates_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_rosters: {
         Row: {
           created_at: string | null
@@ -1832,6 +2061,69 @@ export type Database = {
           },
           {
             foreignKeyName: "team_rosters_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_tasks: {
+        Row: {
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          priority: string | null
+          status: string
+          task_type: string
+          team_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string | null
+          status?: string
+          task_type?: string
+          team_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string | null
+          status?: string
+          task_type?: string
+          team_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_tasks_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "coaches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_tasks_team_id_fkey"
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"

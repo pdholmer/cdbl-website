@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog, ExternalLink, Lock, Tag } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog, ExternalLink, Lock, Tag, CheckSquare, Coffee } from "lucide-react";
 import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -21,6 +21,8 @@ const boardMemberItems = [
   { title: "Coaches", url: "/admin/coaches", icon: Users },
   { title: "Schedule", url: "/admin/schedule", icon: Calendar },
   { title: "Facilities", url: "/admin/facilities", icon: MapPin },
+  { title: "Committee Tasks", url: "/admin/committee-tasks", icon: CheckSquare },
+  { title: "Concessions", url: "/admin/concessions", icon: Coffee },
   { title: "FAQs", url: "/admin/faqs", icon: HelpCircle },
   { title: "Support", url: "/admin/support", icon: Heart },
 ];
