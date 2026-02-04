@@ -1305,6 +1305,123 @@ export type Database = {
         }
         Relationships: []
       }
+      registration_code_uses: {
+        Row: {
+          code_id: string
+          discount_applied: number | null
+          final_amount: number | null
+          id: string
+          original_amount: number | null
+          player_id: string | null
+          used_at: string
+          user_id: string | null
+        }
+        Insert: {
+          code_id: string
+          discount_applied?: number | null
+          final_amount?: number | null
+          id?: string
+          original_amount?: number | null
+          player_id?: string | null
+          used_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          code_id?: string
+          discount_applied?: number | null
+          final_amount?: number | null
+          id?: string
+          original_amount?: number | null
+          player_id?: string | null
+          used_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registration_code_uses_code_id_fkey"
+            columns: ["code_id"]
+            isOneToOne: false
+            referencedRelation: "registration_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_code_uses_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      registration_codes: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string | null
+          current_uses: number
+          description: string | null
+          discount_type: string
+          discount_value: number
+          division_id: string | null
+          id: string
+          is_active: boolean
+          max_uses: number | null
+          program_id: string | null
+          updated_at: string
+          valid_from: string
+          valid_until: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by?: string | null
+          current_uses?: number
+          description?: string | null
+          discount_type: string
+          discount_value?: number
+          division_id?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          program_id?: string | null
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          current_uses?: number
+          description?: string | null
+          discount_type?: string
+          discount_value?: number
+          division_id?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number | null
+          program_id?: string | null
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registration_codes_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_codes_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       registration_submissions: {
         Row: {
           admin_notes: string | null
@@ -1428,6 +1545,42 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      role_requests: {
+        Row: {
+          id: string
+          reason: string | null
+          requested_at: string
+          requested_role: Database["public"]["Enums"]["app_role"]
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          reason?: string | null
+          requested_at?: string
+          requested_role: Database["public"]["Enums"]["app_role"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          reason?: string | null
+          requested_at?: string
+          requested_role?: Database["public"]["Enums"]["app_role"]
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1900,6 +2053,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      approve_role_request: {
+        Args: { notes?: string; request_id: string }
+        Returns: boolean
+      }
       assign_first_user_admin: { Args: { _user_id: string }; Returns: boolean }
       check_schedule_conflict: {
         Args: {
@@ -1934,6 +2091,30 @@ export type Database = {
         }
         Returns: undefined
       }
+      redeem_registration_code: {
+        Args: {
+          _code_id: string
+          _discount_applied?: number
+          _final_amount?: number
+          _original_amount?: number
+          _player_id?: string
+        }
+        Returns: boolean
+      }
+      reject_role_request: {
+        Args: { notes?: string; request_id: string }
+        Returns: boolean
+      }
+      validate_registration_code: {
+        Args: { _code: string; _division_id?: string; _program_id?: string }
+        Returns: {
+          code_id: string
+          discount_type: string
+          discount_value: number
+          error_message: string
+          is_valid: boolean
+        }[]
+      }
     }
     Enums: {
       app_role:
@@ -1943,6 +2124,7 @@ export type Database = {
         | "coach"
         | "commissioner"
         | "board_member"
+        | "parent"
       program_type: "in_house" | "travel"
       resource_category:
         | "drill"
@@ -2084,6 +2266,7 @@ export const Constants = {
         "coach",
         "commissioner",
         "board_member",
+        "parent",
       ],
       program_type: ["in_house", "travel"],
       resource_category: [

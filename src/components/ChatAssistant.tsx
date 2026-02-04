@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, X, Send, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface Message {
   role: 'user' | 'assistant' | 'error';
@@ -13,14 +13,68 @@ interface Message {
   errorType?: 'credits_exhausted' | 'rate_limited' | 'gateway_rate_limited' | 'server_error';
 }
 
+// Map routes to context labels for the AI
+const getPageContext = (pathname: string): { page: string; module: string } => {
+  if (pathname.startsWith('/admin')) {
+    return { page: pathname, module: 'admin' };
+  }
+  if (pathname.startsWith('/coach')) {
+    return { page: pathname, module: 'coach' };
+  }
+  if (pathname.startsWith('/in-house')) {
+    return { page: pathname, module: 'in-house' };
+  }
+  if (pathname.startsWith('/travel')) {
+    return { page: pathname, module: 'travel' };
+  }
+  
+  // Map specific pages
+  const pageMap: Record<string, string> = {
+    '/': 'home',
+    '/registration': 'registration',
+    '/schedule': 'schedule',
+    '/teams': 'teams',
+    '/fields': 'fields',
+    '/rules': 'rules',
+    '/about': 'about',
+    '/contact': 'contact',
+    '/volunteer': 'volunteer',
+    '/donate': 'donate',
+    '/sponsors': 'sponsors',
+    '/shop': 'shop',
+  };
+  
+  return { 
+    page: pageMap[pathname] || pathname, 
+    module: 'public' 
+  };
+};
+
 export const ChatAssistant = () => {
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Hi! I\'m here to help you with questions about CDBL programs, registration, rules, and more. What would you like to know?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userRoles, setUserRoles] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Fetch user roles when component mounts
+  useEffect(() => {
+    const fetchUserRoles = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', session.user.id);
+        setUserRoles(roles?.map(r => r.role) || []);
+      }
+    };
+    fetchUserRoles();
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -36,9 +90,19 @@ export const ChatAssistant = () => {
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
 
+    // Get current page context
+    const pageContext = getPageContext(location.pathname);
+
     try {
       const { data, error } = await supabase.functions.invoke('ai-assistant', {
-        body: { messages: [...messages.filter(m => m.role !== 'error'), { role: 'user', content: userMessage }] }
+        body: { 
+          messages: [...messages.filter(m => m.role !== 'error'), { role: 'user', content: userMessage }],
+          context: {
+            page: pageContext.page,
+            module: pageContext.module,
+            userRoles: userRoles,
+          }
+        }
       });
 
       if (error) {

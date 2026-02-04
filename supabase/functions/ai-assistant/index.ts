@@ -50,7 +50,7 @@ serve(async (req) => {
       );
     }
 
-    const { messages } = await req.json();
+    const { messages, context } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
@@ -60,6 +60,18 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Extract context info
+    const currentPage = context?.page || 'unknown';
+    const currentModule = context?.module || 'public';
+    const userRoles: string[] = context?.userRoles || [];
+    
+    // Determine user access level for customizing responses
+    const isAdmin = userRoles.includes('admin');
+    const isBoardMember = userRoles.includes('board_member');
+    const isCoach = userRoles.includes('coach');
+    const isParent = userRoles.includes('parent');
+    const isAuthenticated = userRoles.length > 0;
 
     // Fetch context data
     const [programsRes, faqsRes, siteContentRes, supportRes] = await Promise.all([
@@ -81,8 +93,63 @@ serve(async (req) => {
       return acc;
     }, {});
 
+    // Build role-specific context
+    let roleContext = '';
+    if (isAdmin) {
+      roleContext = `
+The user is an ADMIN. They have full access to all features and can:
+- Manage users, roles, and permissions
+- Configure programs, divisions, and drafts
+- Access all reports and settings
+- Manage site content and FAQs`;
+    } else if (isBoardMember) {
+      roleContext = `
+The user is a BOARD MEMBER. They can:
+- Manage players, teams, coaches, and schedule
+- View and respond to feedback
+- Access admin dashboard features (but not admin-only areas like drafts, reports, site content)`;
+    } else if (isCoach) {
+      roleContext = `
+The user is a COACH. They can:
+- View their assigned teams and players
+- Participate in player drafts when assigned
+- Access coach-specific resources`;
+    } else if (isParent) {
+      roleContext = `
+The user is a registered PARENT. They can:
+- Register their children for programs
+- View schedules and team information
+- Access parent resources`;
+    } else {
+      roleContext = `
+The user is a PUBLIC VISITOR (not logged in). They can:
+- Browse general information about CDBL
+- View public schedules and team info
+- Learn about registration and programs`;
+    }
+
+    // Build page-specific context
+    let pageContext = '';
+    if (currentModule === 'admin') {
+      pageContext = `The user is currently in the ADMIN section of the website (page: ${currentPage}). Provide help relevant to administrative tasks.`;
+    } else if (currentModule === 'coach') {
+      pageContext = `The user is currently in the COACH section (page: ${currentPage}). Provide help relevant to coaching tasks.`;
+    } else if (currentModule === 'in-house') {
+      pageContext = `The user is currently viewing IN-HOUSE LEAGUE information (page: ${currentPage}). Focus answers on the In-House program.`;
+    } else if (currentModule === 'travel') {
+      pageContext = `The user is currently viewing TRAVEL TEAM information (page: ${currentPage}). Focus answers on the Travel program.`;
+    } else {
+      pageContext = `The user is on the public website (page: ${currentPage}).`;
+    }
+
     const contextInfo = `
 You are a helpful assistant for Carmel Dads' Baseball League (CDBL). Use this information to answer questions:
+
+USER CONTEXT:
+${roleContext}
+
+PAGE CONTEXT:
+${pageContext}
 
 WEBSITE CONTENT (organized by page and section):
 ${JSON.stringify(siteContentByPage, null, 2)}
@@ -99,7 +166,12 @@ ${JSON.stringify(faqsRes.data, null, 2)}
 SUPPORT OPTIONS:
 ${JSON.stringify(supportRes.data, null, 2)}
 
-Answer questions clearly and concisely using the website content and data above. If you're not sure about something, guide users to contact CDBL directly at the contact information found in the site content.
+IMPORTANT GUIDELINES:
+- Tailor your responses to the user's role and current page context
+- For admin/board member questions, provide detailed administrative guidance
+- For public visitors, focus on registration, programs, and general info
+- If you're not sure about something, guide users to contact CDBL directly
+- Be concise but helpful
     `.trim();
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
