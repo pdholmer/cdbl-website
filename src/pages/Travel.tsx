@@ -44,10 +44,10 @@ const Travel = () => {
             <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
             <div className="flex flex-wrap gap-4">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/in-house-registration">Register for In-House Season</Link>
+                <a href="#tryouts">Register for 2027 Tryouts</a>
               </Button>
               <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
-                <Link to="/in-house">Learn About In-House</Link>
+                <Link to="/travel/teams">View Rockets Teams</Link>
               </Button>
             </div>
           </div>
@@ -150,7 +150,7 @@ const Travel = () => {
         </section>
 
         {/* Tryout Information */}
-        <section className="py-16 bg-background">
+        <section id="tryouts" className="py-16 bg-background scroll-mt-20">
           <div className="container max-w-4xl">
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Tryout Information</h2>
             
@@ -251,9 +251,9 @@ const Travel = () => {
             </div>
 
             <div className="mt-12 text-center">
-              <Button variant="default" size="lg" asChild className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg font-semibold">
-                <Link to="/in-house-registration">Register for In-House Season</Link>
-              </Button>
+              <p className="text-muted-foreground mb-4">
+                <strong>Questions?</strong> Contact our Travel Coordinator at <a href="mailto:travel@cdbaseball.org" className="text-primary hover:underline">travel@cdbaseball.org</a>
+              </p>
             </div>
           </div>
         </section>
@@ -268,10 +268,10 @@ const Travel = () => {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/in-house-registration">Register for In-House Season</Link>
+                <a href="#tryouts">View Tryout Information</a>
               </Button>
               <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
-                <Link to="/in-house">Learn About In-House</Link>
+                <Link to="/travel/teams">View Rockets Teams</Link>
               </Button>
             </div>
           </div>

@@ -65,7 +65,7 @@ const DropdownNav = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/travel/registration" className="w-full cursor-pointer">
+            <Link to="/travel#tryouts" className="w-full cursor-pointer">
               Tryouts & Registration
             </Link>
           </DropdownMenuItem>
