@@ -25,6 +25,8 @@ const navItems: NavItem[] = [
   { title: "Schedule", description: "Games & calendar", icon: Calendar, path: "/admin/schedule", category: "schedule" },
   { title: "Facilities", description: "Fields & locations", icon: MapPin, path: "/admin/facilities", category: "schedule" },
   { title: "Drafts", description: "Manage drafts", icon: Database, path: "/admin/drafts", category: "schedule", adminOnly: true },
+  { title: "Committee Tasks", description: "Board tasks", icon: Calendar, path: "/admin/committee-tasks", category: "schedule", adminOnly: true },
+  { title: "Concessions", description: "Inventory & staff", icon: Database, path: "/admin/concessions", category: "schedule", adminOnly: true },
   { title: "Site Content", description: "Website text", icon: BookOpen, path: "/admin/site-content", category: "content", adminOnly: true },
   { title: "Programs", description: "In-House & Travel", icon: Database, path: "/admin/programs", category: "content", adminOnly: true },
   { title: "Divisions", description: "Age groups", icon: Users, path: "/admin/divisions", category: "content", adminOnly: true },

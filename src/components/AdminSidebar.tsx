@@ -21,8 +21,6 @@ const boardMemberItems = [
   { title: "Coaches", url: "/admin/coaches", icon: Users },
   { title: "Schedule", url: "/admin/schedule", icon: Calendar },
   { title: "Facilities", url: "/admin/facilities", icon: MapPin },
-  { title: "Committee Tasks", url: "/admin/committee-tasks", icon: CheckSquare },
-  { title: "Concessions", url: "/admin/concessions", icon: Coffee },
   { title: "FAQs", url: "/admin/faqs", icon: HelpCircle },
   { title: "Support", url: "/admin/support", icon: Heart },
 ];
@@ -31,6 +29,8 @@ const boardMemberItems = [
 const adminOnlyItems = [
   { title: "Drafts", url: "/admin/drafts", icon: ClipboardList },
   { title: "Registration Codes", url: "/admin/registration-codes", icon: Tag },
+  { title: "Committee Tasks", url: "/admin/committee-tasks", icon: CheckSquare },
+  { title: "Concessions", url: "/admin/concessions", icon: Coffee },
   { title: "Reports", url: "/admin/reports", icon: BarChart3 },
   { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
   { title: "Commissioner", url: "/admin/commissioner", icon: UsersRound },
