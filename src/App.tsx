@@ -155,8 +155,8 @@ const App = () => (
           <Route path="/admin/registration-codes" element={<ProtectedRoute requireAdmin><RegistrationCodes /></ProtectedRoute>} />
           <Route path="/admin/registration-codes/new" element={<ProtectedRoute requireAdmin><RegistrationCodeEdit /></ProtectedRoute>} />
           <Route path="/admin/registration-codes/:id" element={<ProtectedRoute requireAdmin><RegistrationCodeEdit /></ProtectedRoute>} />
-          <Route path="/admin/committee-tasks" element={<ProtectedRoute requireBoardMember><CommitteeTasks /></ProtectedRoute>} />
-          <Route path="/admin/concessions" element={<ProtectedRoute requireBoardMember><Concessions /></ProtectedRoute>} />
+          <Route path="/admin/committee-tasks" element={<ProtectedRoute requireAdmin><CommitteeTasks /></ProtectedRoute>} />
+          <Route path="/admin/concessions" element={<ProtectedRoute requireAdmin><Concessions /></ProtectedRoute>} />
           <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
             <Route index element={<CoachDashboard />} />
             <Route path="drafts/:id" element={<CoachDraftRoom />} />
