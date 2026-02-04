@@ -30,6 +30,8 @@ import { useCoachMutations } from "@/hooks/useCoachMutations";
 import { useRosterMutations } from "@/hooks/useRosterMutations";
 import { ArrowLeft, UserPlus, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { TeamTasksCard } from "@/components/admin/TeamTasksCard";
+import { TeamDatesCard } from "@/components/admin/TeamDatesCard";
 import type { Database } from "@/integrations/supabase/types";
 
 type TeamInsert = Database["public"]["Tables"]["teams"]["Insert"];
@@ -386,6 +388,12 @@ const TeamEdit = () => {
                 </Table>
               </CardContent>
             </Card>
+
+            {/* Tasks & Milestones */}
+            <TeamTasksCard teamId={id} />
+
+            {/* Important Dates */}
+            <TeamDatesCard teamId={id} />
           </>
         )}
       </div>

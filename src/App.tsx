@@ -60,6 +60,8 @@ import Feedback from "./pages/admin/Feedback";
 import Users from "./pages/admin/Users";
 import RegistrationCodes from "./pages/admin/RegistrationCodes";
 import RegistrationCodeEdit from "./pages/admin/RegistrationCodeEdit";
+import CommitteeTasks from "./pages/admin/CommitteeTasks";
+import Concessions from "./pages/admin/Concessions";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 import { CoachLayout } from "./components/CoachLayout";
@@ -153,7 +155,8 @@ const App = () => (
           <Route path="/admin/registration-codes" element={<ProtectedRoute requireAdmin><RegistrationCodes /></ProtectedRoute>} />
           <Route path="/admin/registration-codes/new" element={<ProtectedRoute requireAdmin><RegistrationCodeEdit /></ProtectedRoute>} />
           <Route path="/admin/registration-codes/:id" element={<ProtectedRoute requireAdmin><RegistrationCodeEdit /></ProtectedRoute>} />
-          {/* Coach Routes */}
+          <Route path="/admin/committee-tasks" element={<ProtectedRoute requireBoardMember><CommitteeTasks /></ProtectedRoute>} />
+          <Route path="/admin/concessions" element={<ProtectedRoute requireBoardMember><Concessions /></ProtectedRoute>} />
           <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
             <Route index element={<CoachDashboard />} />
             <Route path="drafts/:id" element={<CoachDraftRoom />} />
