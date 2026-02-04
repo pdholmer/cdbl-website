@@ -1,4 +1,4 @@
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   Sidebar,
@@ -9,38 +9,83 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog, ExternalLink, Lock, Tag, CheckSquare, Coffee } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { 
+  Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, 
+  RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, 
+  MessageSquare, UserCog, ExternalLink, Lock, Tag, CheckSquare, 
+  Coffee, ChevronDown, Settings, Megaphone
+} from "lucide-react";
 import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 
-// Items accessible by board members and admins
-const boardMemberItems = [
-  { title: "Dashboard", url: "/admin", icon: Home },
-  { title: "Players", url: "/admin/players", icon: Users },
-  { title: "Teams", url: "/admin/teams", icon: Database },
-  { title: "Coaches", url: "/admin/coaches", icon: Users },
-  { title: "Schedule", url: "/admin/schedule", icon: Calendar },
-  { title: "Facilities", url: "/admin/facilities", icon: MapPin },
-  { title: "FAQs", url: "/admin/faqs", icon: HelpCircle },
-  { title: "Support", url: "/admin/support", icon: Heart },
-];
+interface NavSection {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  items: { title: string; url: string; icon: React.ComponentType<{ className?: string }> }[];
+  adminOnly?: boolean;
+}
 
-// Items only accessible by admins
-const adminOnlyItems = [
-  { title: "Drafts", url: "/admin/drafts", icon: ClipboardList },
-  { title: "Registration Codes", url: "/admin/registration-codes", icon: Tag },
-  { title: "Committee Tasks", url: "/admin/committee-tasks", icon: CheckSquare },
-  { title: "Concessions", url: "/admin/concessions", icon: Coffee },
-  { title: "Reports", url: "/admin/reports", icon: BarChart3 },
-  { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
-  { title: "Commissioner", url: "/admin/commissioner", icon: UsersRound },
-  { title: "Site Content", url: "/admin/site-content", icon: FileText },
-  { title: "Programs", url: "/admin/programs", icon: Database },
-  { title: "Divisions", url: "/admin/divisions", icon: Users },
+const navSections: NavSection[] = [
+  {
+    title: "People",
+    icon: Users,
+    items: [
+      { title: "Players", url: "/admin/players", icon: Users },
+      { title: "Teams", url: "/admin/teams", icon: Database },
+      { title: "Coaches", url: "/admin/coaches", icon: UserCog },
+    ],
+  },
+  {
+    title: "Schedule & Events",
+    icon: Calendar,
+    items: [
+      { title: "Schedule", url: "/admin/schedule", icon: Calendar },
+      { title: "Facilities", url: "/admin/facilities", icon: MapPin },
+      { title: "Drafts", url: "/admin/drafts", icon: ClipboardList },
+    ],
+  },
+  {
+    title: "Content",
+    icon: FileText,
+    items: [
+      { title: "Site Content", url: "/admin/site-content", icon: FileText },
+      { title: "FAQs", url: "/admin/faqs", icon: HelpCircle },
+      { title: "Support", url: "/admin/support", icon: Heart },
+    ],
+  },
+  {
+    title: "Operations",
+    icon: Settings,
+    items: [
+      { title: "Registration Codes", url: "/admin/registration-codes", icon: Tag },
+      { title: "Committee Tasks", url: "/admin/committee-tasks", icon: CheckSquare },
+      { title: "Concessions", url: "/admin/concessions", icon: Coffee },
+      { title: "Commissioner", url: "/admin/commissioner", icon: UsersRound },
+    ],
+    adminOnly: true,
+  },
+  {
+    title: "System",
+    icon: BarChart3,
+    items: [
+      { title: "Programs", url: "/admin/programs", icon: Database },
+      { title: "Divisions", url: "/admin/divisions", icon: Users },
+      { title: "Reports", url: "/admin/reports", icon: BarChart3 },
+      { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
+    ],
+    adminOnly: true,
+  },
 ];
 
 export function AdminSidebar() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const checkAdminRole = async () => {
@@ -69,6 +114,14 @@ export function AdminSidebar() {
       ? "bg-primary-foreground/20 text-primary-foreground font-medium hover:bg-primary-foreground/30"
       : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground";
 
+  // Check if any item in a section is active
+  const isSectionActive = (section: NavSection) => {
+    return section.items.some(item => location.pathname === item.url);
+  };
+
+  // Filter sections based on admin status
+  const visibleSections = navSections.filter(section => !section.adminOnly || isAdmin);
+
   return (
     <Sidebar className="w-60">
       <SidebarContent className="bg-primary">
@@ -81,45 +134,65 @@ export function AdminSidebar() {
             />
           </Link>
         </div>
-        <SidebarGroup className="pl-[25px]">
+
+        <SidebarGroup className="pl-[25px] pr-4">
           <SidebarGroupContent>
             <SidebarMenu>
-              {/* Board Member Items - visible to all authenticated admin users */}
-              {boardMemberItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className={getNavClass}>
-                      <item.icon className="h-4 w-4" />
-                      <span className="ml-2">{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+              {/* Dashboard - Always visible at top */}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/admin" end className={getNavClass}>
+                    <Home className="h-4 w-4" />
+                    <span className="ml-2">Dashboard</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              {/* Collapsible Sections */}
+              {visibleSections.map((section) => (
+                <Collapsible
+                  key={section.title}
+                  defaultOpen={isSectionActive(section)}
+                  className="mt-1"
+                >
+                  <CollapsibleTrigger className={cn(
+                    "flex items-center justify-between w-full py-2 px-2 text-sm rounded-md transition-colors",
+                    "text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground",
+                    isSectionActive(section) && "text-primary-foreground"
+                  )}>
+                    <div className="flex items-center gap-2">
+                      <section.icon className="h-4 w-4" />
+                      <span className="font-medium">{section.title}</span>
+                    </div>
+                    <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pl-4 pt-1 space-y-0.5">
+                    {section.items.map((item) => (
+                      <SidebarMenuItem key={item.url}>
+                        <SidebarMenuButton asChild>
+                          <NavLink to={item.url} end className={getNavClass}>
+                            <item.icon className="h-4 w-4" />
+                            <span className="ml-2">{item.title}</span>
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
               ))}
-              
-              {/* Admin-Only Items - only visible to admins */}
+
+              {/* Admin Only Indicator */}
               {isAdmin && (
-                <>
-                  <div className="my-2 border-t border-primary-foreground/20" />
-                  <div className="flex items-center gap-1 px-2 py-1 text-xs text-primary-foreground/50 uppercase tracking-wider">
-                    <Lock className="h-3 w-3" />
-                    <span>Admin Only</span>
-                  </div>
-                  {adminOnlyItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <NavLink to={item.url} end className={getNavClass}>
-                          <item.icon className="h-4 w-4" />
-                          <span className="ml-2">{item.title}</span>
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </>
+                <div className="flex items-center gap-1 px-2 py-2 mt-2 text-xs text-primary-foreground/40 uppercase tracking-wider">
+                  <Lock className="h-3 w-3" />
+                  <span>Admin sections above</span>
+                </div>
               )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
+        {/* Footer Navigation */}
         <SidebarGroup className="mt-auto pl-[25px] pb-6">
           <SidebarGroupContent>
             <SidebarMenu>
