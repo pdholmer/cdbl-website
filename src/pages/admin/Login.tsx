@@ -119,7 +119,7 @@ const Login = () => {
       if (isFirstAdmin) {
         toast.success("Account created! You are the first admin.");
       } else {
-        toast.success("Account created! Please wait for admin approval.");
+        toast.success("Account created! You'll be signed in as a parent. Contact an admin for elevated access.");
       }
     }
 

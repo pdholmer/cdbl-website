@@ -15,7 +15,7 @@ import { useUser, useUpdateUser, useDeleteUser } from '@/hooks/useUsers';
 import { FeedbackStatusBadge } from '@/components/feedback/FeedbackStatusBadge';
 import { FeedbackTypeBadge } from '@/components/feedback/FeedbackTypeBadge';
 
-const ALL_ROLES = ['admin', 'board_member', 'moderator', 'user', 'coach', 'commissioner'];
+const ALL_ROLES = ['admin', 'board_member', 'moderator', 'user', 'coach', 'commissioner', 'parent'];
 
 const getRoleBadgeVariant = (role: string) => {
   switch (role) {
@@ -27,6 +27,8 @@ const getRoleBadgeVariant = (role: string) => {
       return 'default';
     case 'coach':
       return 'secondary';
+    case 'parent':
+      return 'outline';
     default:
       return 'outline';
   }

@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog, ExternalLink, Lock } from "lucide-react";
+import { Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, MessageSquare, UserCog, ExternalLink, Lock, Tag } from "lucide-react";
 import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -28,6 +28,7 @@ const boardMemberItems = [
 // Items only accessible by admins
 const adminOnlyItems = [
   { title: "Drafts", url: "/admin/drafts", icon: ClipboardList },
+  { title: "Registration Codes", url: "/admin/registration-codes", icon: Tag },
   { title: "Reports", url: "/admin/reports", icon: BarChart3 },
   { title: "GameChanger", url: "/admin/gamechanger", icon: RefreshCw },
   { title: "Commissioner", url: "/admin/commissioner", icon: UsersRound },

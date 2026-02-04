@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users as UsersIcon, Shield, UserCog, Search, Plus, Loader2 } from 'lucide-react';
+import { Users as UsersIcon, Shield, UserCog, Search, Plus, Loader2, UserCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { AdminLayout } from '@/components/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,10 +14,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { useUsers, useInviteUser, UserProfile } from '@/hooks/useUsers';
 import { UserDetailSlider } from '@/components/admin/UserDetailSlider';
+import { RoleRequestsCard } from '@/components/admin/RoleRequestsCard';
 import { supabase } from '@/integrations/supabase/client';
 
 // All available roles - admin role is conditionally shown based on current user
-const ALL_ROLES = ['admin', 'board_member', 'moderator', 'user', 'coach', 'commissioner'];
+const ALL_ROLES = ['admin', 'board_member', 'moderator', 'user', 'coach', 'commissioner', 'parent'];
 
 const getRoleBadgeVariant = (role: string) => {
   switch (role) {
@@ -86,6 +87,7 @@ export default function Users() {
     admins: users?.filter((u: UserProfile) => u.roles.includes('admin')).length || 0,
     boardMembers: users?.filter((u: UserProfile) => u.roles.includes('board_member')).length || 0,
     coaches: users?.filter((u: UserProfile) => u.roles.includes('coach')).length || 0,
+    parents: users?.filter((u: UserProfile) => u.roles.includes('parent')).length || 0,
   };
 
   const handleInvite = async () => {
@@ -204,11 +206,14 @@ export default function Users() {
                 </Button>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+        </Dialog>
         </div>
 
+        {/* Role Requests Card - Only show if there are pending requests */}
+        {isCurrentUserAdmin && <RoleRequestsCard />}
+
         {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-5">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -243,6 +248,15 @@ export default function Users() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.coaches}</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Parents</CardTitle>
+              <UserCheck className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.parents}</div>
             </CardContent>
           </Card>
         </div>

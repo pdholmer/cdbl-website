@@ -58,6 +58,8 @@ import DraftLive from "./pages/admin/DraftLive";
 import Commissioner from "./pages/admin/Commissioner";
 import Feedback from "./pages/admin/Feedback";
 import Users from "./pages/admin/Users";
+import RegistrationCodes from "./pages/admin/RegistrationCodes";
+import RegistrationCodeEdit from "./pages/admin/RegistrationCodeEdit";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 import { CoachLayout } from "./components/CoachLayout";
@@ -148,6 +150,9 @@ const App = () => (
           <Route path="/admin/drafts/:id" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts/:id/live" element={<ProtectedRoute requireAdmin><DraftLive /></ProtectedRoute>} />
           <Route path="/admin/commissioner" element={<ProtectedRoute requireAdmin><Commissioner /></ProtectedRoute>} />
+          <Route path="/admin/registration-codes" element={<ProtectedRoute requireAdmin><RegistrationCodes /></ProtectedRoute>} />
+          <Route path="/admin/registration-codes/new" element={<ProtectedRoute requireAdmin><RegistrationCodeEdit /></ProtectedRoute>} />
+          <Route path="/admin/registration-codes/:id" element={<ProtectedRoute requireAdmin><RegistrationCodeEdit /></ProtectedRoute>} />
           {/* Coach Routes */}
           <Route path="/coach" element={<ProtectedRoute requireCoach><CoachLayout /></ProtectedRoute>}>
             <Route index element={<CoachDashboard />} />
