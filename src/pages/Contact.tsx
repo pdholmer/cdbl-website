@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,29 +7,89 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Facebook, Instagram } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
 const Contact = () => {
-  const {
-    toast
-  } = useToast();
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Message sent!",
-      description: "We'll get back to you as soon as possible."
-    });
+  const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Get pre-filled subject from URL params
+  const prefillSubject = searchParams.get("subject") || "";
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: prefillSubject,
+    message: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
   };
-  return <div className="min-h-screen">
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from("contact_messages")
+        .insert({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          subject: formData.subject,
+          message: formData.message,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message sent!",
+        description: "We'll get back to you as soon as possible.",
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or email us directly at info@cdbaseball.org",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen">
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden" style={{
-        background: 'var(--gradient-hero)'
-      }}>
+        <section
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+          style={{ background: "var(--gradient-hero)" }}
+        >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Contact Us</h1>
-            <p className="text-xl max-w-2xl">Have questions? We're here to help! Reach out to the CDBL team anytime.</p>
+            <p className="text-xl max-w-2xl">
+              Have questions? We're here to help! Reach out to the CDBL team anytime.
+            </p>
           </div>
         </section>
 
@@ -43,31 +105,63 @@ const Contact = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
                         <Label htmlFor="name">Name *</Label>
-                        <Input id="name" placeholder="Your name" required />
+                        <Input
+                          id="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="Your name"
+                          required
+                        />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="email">Email *</Label>
-                        <Input id="email" type="email" placeholder="your.email@example.com" required />
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="your.email@example.com"
+                          required
+                        />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="phone">Phone</Label>
-                        <Input id="phone" type="tel" placeholder="(555) 123-4567" />
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleChange}
+                          placeholder="(555) 123-4567"
+                        />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject *</Label>
-                        <Input id="subject" placeholder="What is this regarding?" required />
+                        <Input
+                          id="subject"
+                          value={formData.subject}
+                          onChange={handleChange}
+                          placeholder="What is this regarding?"
+                          required
+                        />
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="message">Message *</Label>
-                        <Textarea id="message" placeholder="Tell us how we can help..." rows={5} required />
+                        <Textarea
+                          id="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          placeholder="Tell us how we can help..."
+                          rows={5}
+                          required
+                        />
                       </div>
 
-                      <Button type="submit" size="lg" className="w-full">
-                        Send Message
+                      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                        {isSubmitting ? "Sending..." : "Send Message"}
                       </Button>
                     </form>
                   </CardContent>
@@ -77,7 +171,7 @@ const Contact = () => {
               {/* Contact Information */}
               <div>
                 <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
-                
+
                 <div className="space-y-6">
                   <Card>
                     <CardHeader>
@@ -87,7 +181,10 @@ const Contact = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <a href="mailto:info@cdbaseball.org" className="text-lg text-primary hover:text-primary/80">
+                      <a
+                        href="mailto:info@cdbaseball.org"
+                        className="text-lg text-primary hover:text-primary/80"
+                      >
                         info@cdbaseball.org
                       </a>
                       <p className="text-sm text-muted-foreground mt-2">
@@ -109,7 +206,15 @@ const Contact = () => {
                       <p className="text-sm text-muted-foreground mt-2">
                         For field status and cancellations
                       </p>
-                      <button onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2224586', '_blank')} className="mt-3 text-primary hover:text-primary/80 font-semibold underline text-sm">
+                      <button
+                        onClick={() =>
+                          window.open(
+                            "https://leagues.bluesombrero.com/Default.aspx?tabid=2224586",
+                            "_blank"
+                          )
+                        }
+                        className="mt-3 text-primary hover:text-primary/80 font-semibold underline text-sm"
+                      >
                         Check Field Status Online →
                       </button>
                     </CardContent>
@@ -125,7 +230,15 @@ const Contact = () => {
                     <CardContent>
                       <p className="text-lg font-semibold">CDBL Baseball Complex</p>
                       <p className="text-muted-foreground">Burlington, IL 60109</p>
-                      <button onClick={() => window.open('https://maps.google.com/?q=Burlington+IL+baseball', '_blank')} className="mt-3 text-primary hover:text-primary/80 font-semibold">
+                      <button
+                        onClick={() =>
+                          window.open(
+                            "https://maps.google.com/?q=Burlington+IL+baseball",
+                            "_blank"
+                          )
+                        }
+                        className="mt-3 text-primary hover:text-primary/80 font-semibold"
+                      >
                         Get Directions →
                       </button>
                     </CardContent>
@@ -137,11 +250,21 @@ const Contact = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="flex gap-4">
-                        <a href="https://facebook.com/cdbl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:text-primary/80">
+                        <a
+                          href="https://facebook.com/cdbl"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-primary hover:text-primary/80"
+                        >
                           <Facebook className="h-5 w-5" />
                           <span>Facebook</span>
                         </a>
-                        <a href="https://instagram.com/cdbl" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:text-primary/80">
+                        <a
+                          href="https://instagram.com/cdbl"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-primary hover:text-primary/80"
+                        >
                           <Instagram className="h-5 w-5" />
                           <span>Instagram</span>
                         </a>
@@ -157,8 +280,10 @@ const Contact = () => {
         {/* Key Contacts */}
         <section className="py-16 bg-muted/30">
           <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Board Members & Key Contacts</h2>
-            
+            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+              Board Members & Key Contacts
+            </h2>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card>
                 <CardHeader>
@@ -196,8 +321,6 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              
-
               <Card>
                 <CardHeader>
                   <CardTitle>Travel Coordinator</CardTitle>
@@ -209,13 +332,13 @@ const Contact = () => {
                   </a>
                 </CardContent>
               </Card>
-
-              
             </div>
           </div>
         </section>
       </main>
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Contact;

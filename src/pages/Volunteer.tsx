@@ -1,12 +1,22 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, Heart, ClipboardCheck, Megaphone, Wrench, DollarSign } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import VolunteerSignupModal from "@/components/VolunteerSignupModal";
 import { Link } from "react-router-dom";
 import heroVolunteer from "@/assets/hero-volunteer.jpg";
 
 const Volunteer = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [preselectedInterest, setPreselectedInterest] = useState<string | undefined>();
+
+  const openModalWithInterest = (interest?: string) => {
+    setPreselectedInterest(interest);
+    setModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -82,7 +92,9 @@ const Volunteer = () => {
                     <li>• Practice helpers</li>
                     <li>• Pitching/hitting instructors</li>
                   </ul>
-                  <Button className="w-full">Sign Up to Coach</Button>
+                  <Button className="w-full" onClick={() => openModalWithInterest("coaching")}>
+                    Sign Up to Coach
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -102,7 +114,9 @@ const Volunteer = () => {
                     <li>• Flexible scheduling</li>
                     <li>• Paid positions available</li>
                   </ul>
-                  <Button className="w-full">Become an Umpire</Button>
+                  <Button className="w-full" onClick={() => openModalWithInterest("umpiring")}>
+                    Become an Umpire
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -122,7 +136,9 @@ const Volunteer = () => {
                     <li>• Game day setup/breakdown</li>
                     <li>• Grounds keeping projects</li>
                   </ul>
-                  <Button className="w-full" variant="outline">Join Field Crew</Button>
+                  <Button className="w-full" variant="outline" onClick={() => openModalWithInterest("field_operations")}>
+                    Join Field Crew
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -142,7 +158,9 @@ const Volunteer = () => {
                     <li>• Registration & check-in</li>
                     <li>• Photography and videography</li>
                   </ul>
-                  <Button className="w-full" variant="outline">Help With Events</Button>
+                  <Button className="w-full" variant="outline" onClick={() => openModalWithInterest("event_support")}>
+                    Help With Events
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -162,7 +180,9 @@ const Volunteer = () => {
                     <li>• End-of-season party planning</li>
                     <li>• Team photo organization</li>
                   </ul>
-                  <Button className="w-full" variant="outline">Volunteer as Team Parent</Button>
+                  <Button className="w-full" variant="outline" onClick={() => openModalWithInterest("team_parent")}>
+                    Volunteer as Team Parent
+                  </Button>
                 </CardContent>
               </Card>
 
@@ -182,7 +202,9 @@ const Volunteer = () => {
                     <li>• Division Coordinators</li>
                     <li>• Committee chairs</li>
                   </ul>
-                  <Button className="w-full" variant="outline">Learn About Board</Button>
+                  <Button className="w-full" variant="outline" onClick={() => openModalWithInterest("board_positions")}>
+                    Learn About Board
+                  </Button>
                 </CardContent>
               </Card>
             </div>
@@ -235,8 +257,10 @@ const Volunteer = () => {
                     <li>• Tournament sponsorships</li>
                     <li>• Logo on website and materials</li>
                   </ul>
-                  <Button size="lg" className="w-full" variant="outline">
-                    Sponsorship Info
+                  <Button size="lg" className="w-full" variant="outline" asChild>
+                    <Link to="/sponsors">
+                      Sponsorship Info
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -256,6 +280,7 @@ const Volunteer = () => {
                 variant="default" 
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+                onClick={() => openModalWithInterest()}
               >
                 Volunteer Interest Form
               </Button>
@@ -263,14 +288,23 @@ const Volunteer = () => {
                 variant="outline" 
                 size="lg"
                 className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
+                asChild
               >
-                Contact Volunteer Coordinator
+                <Link to="/contact?subject=Volunteer%20Inquiry">
+                  Contact Volunteer Coordinator
+                </Link>
               </Button>
             </div>
           </div>
         </section>
       </main>
       <Footer />
+
+      <VolunteerSignupModal 
+        open={modalOpen} 
+        onOpenChange={setModalOpen}
+        preselectedInterest={preselectedInterest}
+      />
     </div>
   );
 };

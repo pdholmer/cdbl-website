@@ -371,6 +371,42 @@ export type Database = {
           },
         ]
       }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          read_at: string | null
+          status: string
+          subject: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          read_at?: string | null
+          status?: string
+          subject: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          read_at?: string | null
+          status?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       divisions: {
         Row: {
           age_range: string
@@ -2337,6 +2373,42 @@ export type Database = {
           status?: string | null
           updated_at?: string | null
           zip_code?: string | null
+        }
+        Relationships: []
+      }
+      volunteer_signups: {
+        Row: {
+          created_at: string
+          email: string
+          experience: string | null
+          id: string
+          interest_areas: string[]
+          name: string
+          notes: string | null
+          phone: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          experience?: string | null
+          id?: string
+          interest_areas?: string[]
+          name: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          experience?: string | null
+          id?: string
+          interest_areas?: string[]
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          status?: string
         }
         Relationships: []
       }

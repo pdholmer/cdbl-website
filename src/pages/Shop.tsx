@@ -1,8 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, ExternalLink, Shirt, CircleDollarSign } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+const SPIRIT_WEAR_URL = "https://strawberrycreekcreations.com";
 
 const Shop = () => {
   return (
@@ -41,12 +44,14 @@ const Shop = () => {
                     <li>• Bags and accessories</li>
                     <li>• Custom team orders available</li>
                   </ul>
-                  <Button size="lg" className="w-full" variant="hero">
-                    <ShoppingCart className="mr-2 h-5 w-5" />
-                    Shop Spirit Wear
+                  <Button size="lg" className="w-full" variant="hero" asChild>
+                    <a href={SPIRIT_WEAR_URL} target="_blank" rel="noopener noreferrer">
+                      <ShoppingCart className="mr-2 h-5 w-5" />
+                      Shop Spirit Wear
+                    </a>
                   </Button>
                   <p className="text-xs text-muted-foreground text-center mt-3">
-                    Store opens December 2025
+                    Powered by Strawberry Creek Creations
                   </p>
                 </CardContent>
               </Card>
@@ -68,8 +73,10 @@ const Shop = () => {
                     <li>• Discount cards</li>
                     <li>• Raffle tickets (special events)</li>
                   </ul>
-                  <Button size="lg" className="w-full" variant="outline">
-                    Learn More
+                  <Button size="lg" className="w-full" variant="outline" asChild>
+                    <Link to="/contact?subject=Fundraiser%20Information">
+                      Learn More
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -129,11 +136,15 @@ const Shop = () => {
                   <li>• Special event merchandise</li>
                 </ul>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="flex-1">
-                    Request Custom Quote
+                  <Button size="lg" className="flex-1" asChild>
+                    <Link to="/contact?subject=Custom%20Quote%20Request">
+                      Request Custom Quote
+                    </Link>
                   </Button>
-                  <Button size="lg" variant="outline" className="flex-1">
-                    Contact Us
+                  <Button size="lg" variant="outline" className="flex-1" asChild>
+                    <Link to="/contact?subject=Shop%20Inquiry">
+                      Contact Us
+                    </Link>
                   </Button>
                 </div>
               </CardContent>
