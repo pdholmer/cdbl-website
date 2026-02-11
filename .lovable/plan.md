@@ -1,47 +1,25 @@
 
 
-# Generate Branded Carousel Lifestyle Images
+# Fix Game Schedule Carousel Image
 
-## Overview
-Use the Lovable AI image generation model (`google/gemini-2.5-flash-image`) to create 6 new lifestyle images for the hero carousel. Each image will feature youth baseball players wearing the Rockets branding (carolina blue/navy jerseys, white pants with blue piping, blue caps) in scenes relevant to each slide's content.
+## Problem
+The AI-generated "Game Schedule" hero image (`src/assets/hero-schedule.jpg`) has an artifact where the batter appears to be missing an arm.
 
-## Approach
-Create an edge function that generates each image via the AI image generation API, uploads the result to file storage, then update the Hero component to reference the new images from storage instead of the static assets.
+## Solution
+Regenerate just the `hero-schedule.jpg` image using the AI image generation model with an improved prompt that emphasizes correct anatomy -- specifically ensuring the batter has both arms visible and properly holding the bat.
 
-## Image Prompts (6 images)
+## Steps
 
-| Slide | Prompt Description |
-|-------|--------------------|
-| **New to CDBL?** | A welcoming scene of a parent and young child (age 5-6) arriving at a youth baseball field for the first time, child wearing a carolina blue baseball jersey with white "Rockets" script, blue cap, carrying a small glove, bright sunny day, green grass field |
-| **Find Your Program** | Two groups of youth baseball players on a field - one group in light carolina blue jerseys, another in dark navy blue jerseys with white "Rockets" text, both wearing white pants with blue piping and blue caps, practicing together |
-| **2026 Registration** | A smiling youth baseball player (age 8-9) in a carolina blue jersey with number on back, white pants, blue belt, holding a clipboard or tablet, standing at a registration table at a baseball field, welcoming atmosphere |
-| **Game Schedule** | An action shot of a youth baseball game in progress - batter at plate wearing carolina blue "Rockets" jersey and white pants, catcher behind, umpire, green field, scoreboard in background, sunny day |
-| **Shop Rockets Gear** | A display of youth baseball merchandise - carolina blue and navy jerseys laid out, blue caps, a navy pinstripe hoodie with "Rockets" logo, blue backpack, arranged attractively on a table or rack |
-| **Volunteer With Us** | An adult coach in a navy blue polo/quarter-zip with "Rockets" branding coaching a group of young players in carolina blue jerseys on a baseball field, teaching batting stance, warm community feel |
+1. **Regenerate the image** using `google/gemini-2.5-flash-image` with a refined prompt:
+   - "A realistic action photograph of a youth baseball game. A young batter (age 10) stands at home plate in a proper batting stance, both hands gripping the bat, both arms clearly visible. The batter wears a carolina blue jersey with white 'Rockets' script text, white baseball pants with thin blue piping, a carolina blue batting helmet, and blue batting gloves. A catcher crouches behind the plate. Green baseball diamond, blue sky, sunny day. Dynamic sports photography, shallow depth of field, 16:9 aspect ratio, ultra high resolution."
+   - Key change: explicit instruction for "both hands gripping the bat, both arms clearly visible"
 
-## Implementation Steps
+2. **Save the regenerated image** to `src/assets/hero-schedule.jpg`, replacing the current file.
 
-### Step 1: Create Image Generation Edge Function
-- Create `supabase/functions/generate-hero-images/index.ts`
-- For each of the 6 slides, call the `google/gemini-2.5-flash-image` model with a detailed prompt
-- Upload each generated image to a storage bucket called `hero-images`
-- Return the public URLs
+3. No code changes needed in `Hero.tsx` since it already references this file path.
 
-### Step 2: Create Storage Bucket
-- Create a `hero-images` public storage bucket via migration
-
-### Step 3: Run the Edge Function
-- Call the function to generate and store all 6 images
-- Verify the generated images look good
-
-### Step 4: Update Hero Component
-- Replace static asset imports with the storage bucket URLs
-- Keep the static assets as fallbacks in case storage is unavailable
-
-## Technical Notes
-- The `LOVABLE_API_KEY` secret is already configured, which is needed for the AI gateway
-- Images will be stored in a public bucket so they load fast without auth
-- Using `gemini-2.5-flash-image` for speed; can upgrade to `gemini-3-pro-image-preview` if quality isn't sufficient
-- Each image generation is independent so they can be generated sequentially in one function call
-- Generated base64 images will be decoded and uploaded as `.png` files to storage
+## Technical Details
+- Will use the edge function or direct generation to produce the image
+- If the first generation still has anatomy issues, will retry with an alternate composition (e.g., a wider shot or different pose)
+- The prompt upgrades to `google/gemini-3-pro-image-preview` if the flash model continues producing artifacts
 
