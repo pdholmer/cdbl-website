@@ -1,25 +1,31 @@
 
 
-# Fix Game Schedule Carousel Image
+# Re-apply User-Uploaded Hero Carousel Images
 
 ## Problem
-The AI-generated "Game Schedule" hero image (`src/assets/hero-schedule.jpg`) has an artifact where the batter appears to be missing an arm.
+Three user-provided photos for the hero carousel (Game Schedule, Shop Rockets Gear, and Volunteer With Us) are not displaying correctly. The AI-generated versions may still be in place despite previous replacement attempts.
 
 ## Solution
-Regenerate just the `hero-schedule.jpg` image using the AI image generation model with an improved prompt that emphasizes correct anatomy -- specifically ensuring the batter has both arms visible and properly holding the bat.
+Re-save all three user-uploaded images to their correct asset paths, ensuring the files are properly overwritten. No code changes are needed since `Hero.tsx` already references the correct file paths.
 
 ## Steps
 
-1. **Regenerate the image** using `google/gemini-2.5-flash-image` with a refined prompt:
-   - "A realistic action photograph of a youth baseball game. A young batter (age 10) stands at home plate in a proper batting stance, both hands gripping the bat, both arms clearly visible. The batter wears a carolina blue jersey with white 'Rockets' script text, white baseball pants with thin blue piping, a carolina blue batting helmet, and blue batting gloves. A catcher crouches behind the plate. Green baseball diamond, blue sky, sunny day. Dynamic sports photography, shallow depth of field, 16:9 aspect ratio, ultra high resolution."
-   - Key change: explicit instruction for "both hands gripping the bat, both arms clearly visible"
+1. **Replace Game Schedule image** -- Copy the user-uploaded game schedule photo to `src/assets/hero-schedule.jpg`, overwriting the existing file.
 
-2. **Save the regenerated image** to `src/assets/hero-schedule.jpg`, replacing the current file.
+2. **Replace Shop Rockets Gear image** -- Copy the user-uploaded shop/gear photo to `src/assets/hero-shop-gear.jpg`, overwriting the existing file.
 
-3. No code changes needed in `Hero.tsx` since it already references this file path.
+3. **Replace Volunteer With Us image** -- Copy the user-uploaded volunteer photo to `src/assets/hero-volunteer.jpg`, overwriting the existing file.
+
+4. **Verify in preview** -- Confirm all three carousel slides display the correct user-provided photos.
+
+## Note
+The user will need to re-upload the three images when approving this plan, as the previous uploads may no longer be available. The images should be provided for:
+- Game Schedule slide
+- Shop Rockets Gear slide
+- Volunteer With Us slide
 
 ## Technical Details
-- Will use the edge function or direct generation to produce the image
-- If the first generation still has anatomy issues, will retry with an alternate composition (e.g., a wider shot or different pose)
-- The prompt upgrades to `google/gemini-3-pro-image-preview` if the flash model continues producing artifacts
+- No code changes required; `Hero.tsx` already imports from the correct paths (`hero-schedule.jpg`, `hero-shop-gear.jpg`, `hero-volunteer.jpg`)
+- Vite may cache old images; a dev server restart or hard refresh may be needed after replacement
+- All images are used as CSS `background-image` via inline styles
 
