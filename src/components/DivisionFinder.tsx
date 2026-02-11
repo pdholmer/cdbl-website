@@ -24,7 +24,7 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
       ageRange: "Ages 4-6",
       description: "Introduction to baseball fundamentals in a fun, supportive environment. Coach-pitch format with focus on basic skills.",
       schedule: "1 practice + Saturday games",
-      cost: "$85"
+      cost: "$195"
     };
   } else if (age >= 7 && age <= 8) {
     return {
@@ -32,31 +32,31 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
       ageRange: "Ages 7-8",
       description: "Player-pitch baseball with continued skill development. Players begin learning positions and game strategy.",
       schedule: "2 practices + 1-2 games per week",
-      cost: "$125"
+      cost: "$250"
     };
   } else if (age >= 9 && age <= 10) {
     return {
-      name: "Bronco",
+      name: "Mustang",
       ageRange: "Ages 9-10",
       description: "Competitive play with full rules. Focus on team concepts, situational baseball, and advanced skills.",
       schedule: "2 practices + 1-2 games per week",
-      cost: "$150"
+      cost: "$275"
     };
   } else if (age >= 11 && age <= 12) {
     return {
-      name: "Pony",
+      name: "Bronco",
       ageRange: "Ages 11-12",
       description: "Advanced competitive baseball on larger fields. Preparation for middle school baseball programs.",
       schedule: "2-3 practices + 2 games per week",
-      cost: "$175"
+      cost: "$290"
     };
   } else if (age >= 13 && age <= 14) {
     return {
-      name: "Colt",
+      name: "Pony",
       ageRange: "Ages 13-14",
       description: "High-level youth baseball for experienced players. Full regulation field with advanced competition.",
       schedule: "2-3 practices + 2 games per week",
-      cost: "$200"
+      cost: "$335"
     };
   }
   

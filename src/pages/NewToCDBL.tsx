@@ -115,6 +115,7 @@ const NewToCDBL = () => {
                   <ul className="text-sm text-muted-foreground space-y-1 ml-4">
                     <li>• Baseball glove (appropriate for age)</li>
                     <li>• Batting helmet with face guard</li>
+                    <li>• Baseball pants</li>
                     <li>• Cleats (no metal under age 13)</li>
                     <li>• Athletic cup (required for catchers)</li>
                     <li>• Water bottle</li>
@@ -135,7 +136,7 @@ const NewToCDBL = () => {
                   <ul className="text-sm text-muted-foreground space-y-2">
                     <li><strong>T-Ball:</strong> 1 practice + Saturday games</li>
                     <li><strong>Pinto-Bronco:</strong> 2 practices + 1-2 games</li>
-                    <li><strong>Pony-Colt:</strong> 2-3 practices + 2 games</li>
+                    <li><strong>Bronco-Pony:</strong> 2-3 practices + 2 games</li>
                   </ul>
                   <p className="text-sm text-muted-foreground mt-3">
                     Games typically 6:00pm weeknights or Saturday mornings/afternoons.
@@ -246,7 +247,7 @@ const NewToCDBL = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Important league-wide announcements (weather cancellations, events, policy updates) will be sent via email to the address you used during registration. Check your spam folder and add info@cdbl.org to your contacts.
+                    Important league-wide announcements (weather cancellations, events, policy updates) will be sent via email to the address you used during registration. Check your spam folder and add Communications@cdbaseball.org to your contacts.
                   </p>
                 </CardContent>
               </Card>
