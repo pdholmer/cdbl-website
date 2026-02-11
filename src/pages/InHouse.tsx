@@ -39,7 +39,7 @@ const InHouse = () => {
                   asChild
                   className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
                 >
-                  <a href="https://leagues.bluesombrero.com/Default.aspx?tabid=2121025" target="_blank" rel="noopener noreferrer">Register Now</a>
+                  <a href="https://registration.bluesombrero.com/84830/program-questions/preview/80130405" target="_blank" rel="noopener noreferrer">Register Now</a>
                 </Button>
                 <Button 
                   variant="outline" 
@@ -76,7 +76,7 @@ const InHouse = () => {
                 </div>
                 <h3 className="text-xl font-bold mb-3">Affordable Family Fun</h3>
                 <p className="text-muted-foreground">
-                  Registration from just $75-$155 includes jersey, hat, and full season. Sibling discounts and scholarships available.
+                  Registration from just $195-$335 includes jersey, hat, and full season. Sibling discounts and scholarships available.
                 </p>
               </div>
 

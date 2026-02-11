@@ -32,7 +32,7 @@ const Registration = () => {
             <Button 
               size="lg" 
               variant="hero"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+              onClick={() => window.open('https://registration.bluesombrero.com/84830/program-questions/preview/80130405', '_blank')}
               className="bg-background text-foreground hover:bg-background/90"
             >
               Register Now on SportsConnect <ExternalLink className="ml-2 h-5 w-5" />
@@ -143,13 +143,13 @@ const Registration = () => {
                 <tbody>
                   <tr className="border-b">
                     <td className="p-4 font-semibold">Age Groups</td>
-                    <td className="p-4">Ages 4-14 (T-Ball through Colt)</td>
+                    <td className="p-4">Ages 4-14 (T-Ball through Pony)</td>
                     <td className="p-4">Ages 8-14 (8U through 14U)</td>
                   </tr>
                   <tr className="border-b bg-muted/30">
                     <td className="p-4 font-semibold">Registration Fee</td>
-                    <td className="p-4">$75-$155 per season</td>
-                    <td className="p-4">~$600 per season + tournament fees</td>
+                    <td className="p-4">$195-$335 per season</td>
+                    <td className="p-4">~$600/season + tournaments</td>
                   </tr>
                   <tr className="border-b">
                     <td className="p-4 font-semibold">Time Commitment</td>
@@ -158,7 +158,7 @@ const Registration = () => {
                   </tr>
                   <tr className="border-b bg-muted/30">
                     <td className="p-4 font-semibold">Season Length</td>
-                    <td className="p-4">April - June/July (12-16 games)</td>
+                    <td className="p-4">March - August</td>
                     <td className="p-4">March - August (50+ games)</td>
                   </tr>
                   <tr className="border-b">
@@ -169,7 +169,7 @@ const Registration = () => {
                   <tr className="border-b bg-muted/30">
                     <td className="p-4 font-semibold">Tryouts</td>
                     <td className="p-4">No tryouts - all players accepted</td>
-                    <td className="p-4">Tryouts required (March 8-9, 2026)</td>
+                    <td className="p-4">Tryouts required (July 2026)</td>
                   </tr>
                   <tr className="border-b">
                     <td className="p-4 font-semibold">Competition Level</td>
@@ -185,21 +185,6 @@ const Registration = () => {
               </table>
             </div>
 
-            <div className="mt-12 p-6 bg-primary/10 rounded-lg max-w-3xl mx-auto">
-              <h3 className="text-xl font-bold mb-3">Is Travel Right for My Child?</h3>
-              <p className="text-muted-foreground mb-4">
-                Travel baseball requires a higher level of commitment from both players and families. Consider travel if your child:
-              </p>
-              <ul className="space-y-2 text-muted-foreground ml-4">
-                <li>• Has played multiple seasons and shows strong fundamental skills</li>
-                <li>• Is passionate about baseball and eager to practice frequently</li>
-                <li>• Can commit to weekend tournaments and additional practice schedules</li>
-                <li>• Your family can support the time commitment and travel expenses</li>
-              </ul>
-              <p className="text-muted-foreground mt-4">
-                <strong>Not sure?</strong> Start with In-House and consider travel in future seasons!
-              </p>
-            </div>
           </div>
         </section>
 
@@ -262,8 +247,8 @@ const Registration = () => {
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Create or Log In</h3>
-                  <p className="text-muted-foreground">Create a new account or log in if you've registered with CDBL before.</p>
+                  <h3 className="font-bold text-lg mb-2">Create Your Account</h3>
+                  <p className="text-muted-foreground"><strong>Important:</strong> Due to our new website, ALL users must create a new account — even if you registered with CDBL before.</p>
                 </div>
               </div>
 
@@ -288,7 +273,7 @@ const Registration = () => {
               <Button 
                 size="lg" 
                 variant="hero"
-                onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+                onClick={() => window.open('https://registration.bluesombrero.com/84830/program-questions/preview/80130405', '_blank')}
               >
                 Start Registration <ExternalLink className="ml-2 h-5 w-5" />
               </Button>

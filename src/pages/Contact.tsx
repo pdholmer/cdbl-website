@@ -54,7 +54,7 @@ const Contact = () => {
     } catch (error) {
       console.error("Error submitting contact form:", error);
       // Show inline error instead of toast for persistence
-      alert("Something went wrong. Please try again or email us directly at info@cdbaseball.org");
+      alert("Something went wrong. Please try again or email us directly at Communications@cdbaseball.org");
     } finally {
       setIsSubmitting(false);
     }
@@ -196,10 +196,10 @@ const Contact = () => {
                     </CardHeader>
                     <CardContent>
                       <a
-                        href="mailto:info@cdbaseball.org"
+                        href="mailto:Communications@cdbaseball.org"
                         className="text-lg text-primary hover:text-primary/80"
                       >
-                        info@cdbaseball.org
+                        Communications@cdbaseball.org
                       </a>
                       <p className="text-sm text-muted-foreground mt-2">
                         We typically respond within 24-48 hours
@@ -215,8 +215,8 @@ const Contact = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-lg font-semibold">Field Hotline</p>
-                      <p className="text-lg text-primary">(555) 123-4567</p>
+                      <p className="text-lg font-semibold">Phone</p>
+                      <a href="tel:8475313237" className="text-lg text-primary hover:text-primary/80">847-531-3237</a>
                       <p className="text-sm text-muted-foreground mt-2">
                         For field status and cancellations
                       </p>
@@ -243,7 +243,7 @@ const Contact = () => {
                     </CardHeader>
                     <CardContent>
                       <p className="text-lg font-semibold">CDBL Baseball Complex</p>
-                      <p className="text-muted-foreground">Burlington, IL 60109</p>
+                      <p className="text-muted-foreground">Plato Center, IL</p>
                       <button
                         onClick={() =>
                           window.open(

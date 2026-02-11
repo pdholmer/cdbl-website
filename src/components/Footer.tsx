@@ -14,7 +14,7 @@ const Footer = () => {
               className="h-16 w-auto mb-4"
             />
             <p className="text-sm opacity-80 mb-4">
-              Central District Baseball League - Burlington, IL
+              Central District Baseball League - Plato Center, IL
             </p>
             <p className="text-sm opacity-80">
               For 38 years, CDBL has been dedicated to fostering the love of baseball in our community.
@@ -108,17 +108,17 @@ const Footer = () => {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span className="opacity-80">Burlington, IL</span>
+                <span className="opacity-80">Plato Center, IL</span>
               </li>
               <li className="flex items-start gap-2">
                 <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <a href="mailto:info@cdbaseball.org" className="opacity-80 hover:opacity-100 transition-opacity">
-                  info@cdbaseball.org
+                <a href="mailto:Communications@cdbaseball.org" className="opacity-80 hover:opacity-100 transition-opacity">
+                  Communications@cdbaseball.org
                 </a>
               </li>
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span className="opacity-80">Contact via registration portal</span>
+                <a href="tel:8475313237" className="opacity-80 hover:opacity-100 transition-opacity">847-531-3237</a>
               </li>
             </ul>
           </div>
@@ -131,7 +131,7 @@ const Footer = () => {
             </p>
             <div className="flex gap-6">
               <a 
-                href="https://leagues.bluesombrero.com/Default.aspx?tabid=2121019" 
+                href="https://registration.bluesombrero.com/84830/program-questions/preview/80130405" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:opacity-100 transition-opacity"

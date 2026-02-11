@@ -21,7 +21,7 @@ const InHouseRegistration = () => {
             <Button 
               size="lg" 
               variant="hero"
-              onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+              onClick={() => window.open('https://registration.bluesombrero.com/84830/program-questions/preview/80130405', '_blank')}
               className="bg-background text-foreground hover:bg-background/90"
             >
               Register Now on SportsConnect <ExternalLink className="ml-2 h-5 w-5" />
@@ -55,11 +55,11 @@ const InHouseRegistration = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li><strong>T-Ball (Ages 4-6):</strong> $75</li>
-                    <li><strong>Pinto (Ages 7-8):</strong> $95</li>
-                    <li><strong>Bronco (Ages 9-10):</strong> $115</li>
-                    <li><strong>Pony (Ages 11-12):</strong> $135</li>
-                    <li><strong>Colt (Ages 13-14):</strong> $155</li>
+                    <li><strong>T-Ball (Ages 4-6):</strong> $195</li>
+                    <li><strong>Pinto (Ages 7-8):</strong> $250</li>
+                    <li><strong>Mustang (Ages 9-10):</strong> $275</li>
+                    <li><strong>Bronco (Ages 11-12):</strong> $290</li>
+                    <li><strong>Pony (Ages 13-14):</strong> $335</li>
                   </ul>
                 </CardContent>
               </Card>
@@ -124,7 +124,7 @@ const InHouseRegistration = () => {
                 <CardContent className="p-6">
                   <h3 className="font-bold text-lg mb-3">Are scholarships or financial assistance available?</h3>
                   <p className="text-muted-foreground text-sm">
-                    Yes! CDBL is committed to making baseball accessible to all families. We offer need-based scholarships and payment plans. Contact our Treasurer, Sarah Johnson, at treasurer@cdbl.org or (555) 123-4567 for confidential assistance.
+                    Yes! CDBL is committed to making baseball accessible to all families. We offer need-based scholarships and payment plans. Contact our Treasurer at treasurer@cdbaseball.org or 847-531-3237 for confidential assistance.
                   </p>
                 </CardContent>
               </Card>
@@ -151,7 +151,7 @@ const InHouseRegistration = () => {
                 <CardContent className="p-6">
                   <h3 className="font-bold text-lg mb-3">What equipment does my child need?</h3>
                   <p className="text-muted-foreground text-sm">
-                    CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet with face guard (ages 4-12), cleats (no metal under age 13), athletic cup (required for catchers and recommended for all), and water bottle. Catchers gear is provided by the league.
+                    CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet with face guard (ages 4-12), baseball pants, cleats (no metal under age 13), athletic cup (required for catchers and recommended for all), and water bottle. Catchers gear is provided by the league.
                   </p>
                 </CardContent>
               </Card>
@@ -197,8 +197,8 @@ const InHouseRegistration = () => {
               <div className="flex gap-4">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">Create or Log In</h3>
-                  <p className="text-muted-foreground">Create a new account or log in if you've registered with CDBL before.</p>
+                  <h3 className="font-bold text-lg mb-2">Create Your Account</h3>
+                  <p className="text-muted-foreground"><strong>Important:</strong> Due to our new website, ALL users must create a new account — even if you registered with CDBL before.</p>
                 </div>
               </div>
 
@@ -223,7 +223,7 @@ const InHouseRegistration = () => {
               <Button 
                 size="lg" 
                 variant="hero"
-                onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}
+                onClick={() => window.open('https://registration.bluesombrero.com/84830/program-questions/preview/80130405', '_blank')}
               >
                 Start Registration <ExternalLink className="ml-2 h-5 w-5" />
               </Button>

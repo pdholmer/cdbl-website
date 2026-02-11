@@ -181,6 +181,7 @@ const Travel = () => {
                     <li>✓ Baseball glove</li>
                     <li>✓ Bat (or use team bats provided)</li>
                     <li>✓ Batting helmet</li>
+                    <li>✓ Baseball pants</li>
                     <li>✓ Cleats</li>
                     <li>✓ Athletic wear and water bottle</li>
                     
