@@ -85,7 +85,7 @@ const Hero = () => {
           {carouselSlides.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
               <section 
-                className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
+                className="relative min-h-[320px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[480px] py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center] flex items-center"
                 style={{ 
                   backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${slide.image}')`,
                 }}
