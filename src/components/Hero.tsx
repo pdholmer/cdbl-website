@@ -25,7 +25,6 @@ const Hero = () => {
       primaryCta: { text: "Start Here", link: "/new-to-cdbl" },
       secondaryCta: { text: "View Programs", link: "/teams" },
       image: heroNewToCdbl,
-      badge: { text: "First Time?", variant: "featured" as const }
     },
     {
       title: "Find Your Program",
@@ -40,9 +39,6 @@ const Hero = () => {
       primaryCta: { text: "Register Now", link: "/registration" },
       secondaryCta: { text: "View Programs", link: "/teams" },
       image: heroRegistration,
-      badge: isRegistrationOpen 
-        ? { text: "REGISTRATION OPEN", variant: "open" as const }
-        : { text: "COMING SOON", variant: "coming" as const }
     },
     {
       title: "Game Schedule",
@@ -92,20 +88,6 @@ const Hero = () => {
               >
                 <div className="container relative z-10">
                   <div className="max-w-3xl">
-                    {slide.badge && (
-                      <Badge 
-                        className={`mb-4 text-sm font-semibold px-3 py-1 ${
-                          slide.badge.variant === 'open' 
-                            ? 'bg-green-500 text-white animate-pulse' 
-                            : slide.badge.variant === 'featured'
-                            ? 'bg-amber-500 text-white'
-                            : 'bg-muted text-muted-foreground'
-                        }`}
-                      >
-                        {slide.badge.variant === 'featured' && <Sparkles className="h-3 w-3 mr-1" />}
-                        {slide.badge.text}
-                      </Badge>
-                    )}
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight line-clamp-1">
                       {slide.title}
                     </h1>
