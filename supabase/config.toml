@@ -20,3 +20,6 @@ verify_jwt = true
 
 [functions.admin-users]
 verify_jwt = false
+
+[functions.generate-hero-images]
+verify_jwt = false
