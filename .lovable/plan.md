@@ -1,150 +1,47 @@
 
 
-# PDF Annotation Changes Implementation Plan
+# Generate Branded Carousel Lifestyle Images
 
-## Summary
-Implement all 16 changes identified from the annotated PDF across registration fees, URLs, content, and contact information.
+## Overview
+Use the Lovable AI image generation model (`google/gemini-2.5-flash-image`) to create 6 new lifestyle images for the hero carousel. Each image will feature youth baseball players wearing the Rockets branding (carolina blue/navy jerseys, white pants with blue piping, blue caps) in scenes relevant to each slide's content.
 
----
+## Approach
+Create an edge function that generates each image via the AI image generation API, uploads the result to file storage, then update the Hero component to reference the new images from storage instead of the static assets.
 
-## Change 1: Update SportsConnect Registration URL
-**All occurrences** of the old URL `https://leagues.bluesombrero.com/Default.aspx?tabid=2121019` need to change to:
-`https://registration.bluesombrero.com/84830/program-questions/preview/80130405`
+## Image Prompts (6 images)
 
-**Files affected:**
-- `src/pages/InHouseRegistration.tsx` (lines 24, 226)
-- `src/pages/Registration.tsx` (lines 35, 291)
-- `src/components/Footer.tsx` (line 134)
+| Slide | Prompt Description |
+|-------|--------------------|
+| **New to CDBL?** | A welcoming scene of a parent and young child (age 5-6) arriving at a youth baseball field for the first time, child wearing a carolina blue baseball jersey with white "Rockets" script, blue cap, carrying a small glove, bright sunny day, green grass field |
+| **Find Your Program** | Two groups of youth baseball players on a field - one group in light carolina blue jerseys, another in dark navy blue jerseys with white "Rockets" text, both wearing white pants with blue piping and blue caps, practicing together |
+| **2026 Registration** | A smiling youth baseball player (age 8-9) in a carolina blue jersey with number on back, white pants, blue belt, holding a clipboard or tablet, standing at a registration table at a baseball field, welcoming atmosphere |
+| **Game Schedule** | An action shot of a youth baseball game in progress - batter at plate wearing carolina blue "Rockets" jersey and white pants, catcher behind, umpire, green field, scoreboard in background, sunny day |
+| **Shop Rockets Gear** | A display of youth baseball merchandise - carolina blue and navy jerseys laid out, blue caps, a navy pinstripe hoodie with "Rockets" logo, blue backpack, arranged attractively on a table or rack |
+| **Volunteer With Us** | An adult coach in a navy blue polo/quarter-zip with "Rockets" branding coaching a group of young players in carolina blue jerseys on a baseball field, teaching batting stance, warm community feel |
 
-Also update `src/pages/InHouse.tsx` line 42 URL (`tabid=2121025`) to the new URL.
+## Implementation Steps
 
----
+### Step 1: Create Image Generation Edge Function
+- Create `supabase/functions/generate-hero-images/index.ts`
+- For each of the 6 slides, call the `google/gemini-2.5-flash-image` model with a detailed prompt
+- Upload each generated image to a storage bucket called `hero-images`
+- Return the public URLs
 
-## Change 2: Update In-House Registration Fees
-Update the hardcoded fees in `src/pages/InHouseRegistration.tsx` (lines 58-62):
+### Step 2: Create Storage Bucket
+- Create a `hero-images` public storage bucket via migration
 
-| Division | Old Fee | New Fee |
-|----------|---------|---------|
-| T-Ball (Ages 4-6) | $75 | $195 |
-| Pinto (Ages 7-8) | $95 | $250 |
-| Mustang (Ages 9-10) | $115 (was "Bronco") | $275 |
-| Bronco (Ages 11-12) | $135 (was "Pony") | $290 |
-| Pony (Ages 13-14) | $155 (was "Colt") | $335 |
+### Step 3: Run the Edge Function
+- Call the function to generate and store all 6 images
+- Verify the generated images look good
 
-Note: Division names shift -- "Mustang" replaces what was previously labeled "Bronco" at ages 9-10, "Bronco" moves to ages 11-12, and "Pony" moves to ages 13-14. The "Colt" division is removed.
+### Step 4: Update Hero Component
+- Replace static asset imports with the storage bucket URLs
+- Keep the static assets as fallbacks in case storage is unavailable
 
----
-
-## Change 3: Update DivisionFinder Component
-Update `src/components/DivisionFinder.tsx` to match the new division names and fees:
-
-| Birth Year Range | Division | New Fee |
-|-----------------|----------|---------|
-| Ages 4-6 | T-Ball | $195 |
-| Ages 7-8 | Pinto | $250 |
-| Ages 9-10 | Mustang | $275 |
-| Ages 11-12 | Bronco | $290 |
-| Ages 13-14 | Pony | $335 |
-
----
-
-## Change 4: Update Comparison Table on Registration Page
-In `src/pages/Registration.tsx` (lines 149-163):
-- Change In-House fee range from `$75-$155` to `$195-$335`
-- Change Travel fee from `~$600 per season + tournament fees` to `~$600/season + tournaments`
-- Change season length from `April - June/July (12-16 games)` to `March - August`
-- Change Travel tryout dates from `March 8-9, 2026` to `July 2026`
-
----
-
-## Change 5: Remove "Is Travel Right for My Child?" Section
-Remove the entire section in `src/pages/Registration.tsx` (lines 188-202) that starts with "Is Travel Right for My Child?" -- this content belongs on the Travel page, not the In-House registration flow.
-
----
-
-## Change 6: Update Travel Tryout Timing
-In `src/pages/Travel.tsx` line 168, the tryout timing already says "July 2026" which is correct. No change needed here.
-
----
-
-## Change 7: Update Equipment Requirements
-In `src/pages/Travel.tsx` (lines 180-187), add "Baseball pants" to the "What to Bring" list and add a note that bats are available.
-
-In `src/pages/NewToCDBL.tsx` (lines 115-122), add "Baseball pants" to the equipment list.
-
-In `src/pages/InHouseRegistration.tsx` (lines 153-154), update equipment FAQ to mention pants.
-
----
-
-## Change 8: Add "New Website" Registration Note
-Add a note to the "How to Register" sections on both `InHouseRegistration.tsx` and `Registration.tsx` at Step 2 ("Create or Log In"):
-"Important: Due to our new website, ALL users must create a new account -- even if you registered with CDBL before."
-
----
-
-## Change 9: Update Footer Location
-In `src/components/Footer.tsx`:
-- Line 17: Change "Burlington, IL" to "Plato Center, IL"
-- Line 111: Change "Burlington, IL" to "Plato Center, IL"
-
----
-
-## Change 10: Update Footer Email
-In `src/components/Footer.tsx`:
-- Line 115-116: Change `info@cdbaseball.org` to `Communications@cdbaseball.org`
-
----
-
-## Change 11: Update Footer Phone
-In `src/components/Footer.tsx`:
-- Lines 119-122: Change from "Contact via registration portal" to actual phone number `847-531-3237`
-- Make it a clickable `tel:` link
-
----
-
-## Change 12: Update Contact Page Email & Phone
-In `src/pages/Contact.tsx`:
-- Line 57: Update error fallback email from `info@cdbaseball.org` to `Communications@cdbaseball.org`
-- Lines 198-203: Update email card from `info@cdbaseball.org` to `Communications@cdbaseball.org`
-- Lines 218-220: Update phone from `(555) 123-4567` to `847-531-3237`
-- Update "Field Hotline" label to just "Phone"
-
----
-
-## Change 13: Update Contact Page Location
-In `src/pages/Contact.tsx`:
-- Line 246: Change "Burlington, IL 60109" to "Plato Center, IL"
-
----
-
-## Change 14: Update InHouse Page Fee Range
-In `src/pages/InHouse.tsx`:
-- Line 79: Change `$75-$155` to `$195-$335`
-
----
-
-## Change 15: Update NewToCDBL Communication Section
-In `src/pages/NewToCDBL.tsx`:
-- Line 249: Change `info@cdbl.org` to `Communications@cdbaseball.org`
-
----
-
-## Change 16: Update InHouseRegistration FAQ
-In `src/pages/InHouseRegistration.tsx`:
-- Line 127: Update treasurer contact from `treasurer@cdbl.org or (555) 123-4567` to `treasurer@cdbaseball.org or 847-531-3237`
-
----
-
-## Files Modified (Summary)
-
-| File | Changes |
-|------|---------|
-| `src/pages/InHouseRegistration.tsx` | URL, fees, division names, equipment FAQ, treasurer contact, new account note |
-| `src/pages/Registration.tsx` | URL, comparison table fees/dates, remove "Is Travel Right" section, new account note |
-| `src/components/DivisionFinder.tsx` | Division names and fees |
-| `src/components/Footer.tsx` | Location, email, phone |
-| `src/pages/Contact.tsx` | Email, phone, location |
-| `src/pages/InHouse.tsx` | URL, fee range |
-| `src/pages/NewToCDBL.tsx` | Email, equipment list |
-| `src/pages/Travel.tsx` | Equipment list |
+## Technical Notes
+- The `LOVABLE_API_KEY` secret is already configured, which is needed for the AI gateway
+- Images will be stored in a public bucket so they load fast without auth
+- Using `gemini-2.5-flash-image` for speed; can upgrade to `gemini-3-pro-image-preview` if quality isn't sufficient
+- Each image generation is independent so they can be generated sequentially in one function call
+- Generated base64 images will be decoded and uploaded as `.png` files to storage
 
