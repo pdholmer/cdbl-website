@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import {
   SidebarProvider,
   SidebarInset,
 } from "@/components/ui/sidebar";
-import { Home, ClipboardList, LogOut, User } from "lucide-react";
+import { Home, ClipboardList, LogOut } from "lucide-react";
 import logo from "@/assets/cdbl-sidebar-logo.png";
 
 const coachItems = [
@@ -60,10 +59,6 @@ export const CoachLayout = () => {
           </SidebarContent>
 
           <div className="mt-auto p-4 border-t space-y-2">
-            <NavLink to="/coach/profile" className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-muted text-sm">
-              <User className="h-4 w-4" />
-              <span>My Profile</span>
-            </NavLink>
             <Button
               variant="ghost"
               className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"

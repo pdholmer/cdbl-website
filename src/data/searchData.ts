@@ -52,10 +52,10 @@ export const searchPages: SearchPage[] = [
     keywords: ["regulations", "guidelines", "policy", "how to play"]
   },
   {
-    title: "Events",
-    path: "/events",
-    description: "Upcoming events and activities",
-    keywords: ["tournament", "activities", "special", "celebration"]
+    title: "Schedule & Events",
+    path: "/schedule",
+    description: "Upcoming events, games, and activities",
+    keywords: ["tournament", "activities", "special", "celebration", "events", "games"]
   },
   {
     title: "About CDBL",

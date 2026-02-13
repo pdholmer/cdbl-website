@@ -9,20 +9,21 @@ const MAX_REQUESTS_PER_WINDOW = 10;
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
   const record = rateLimitStore.get(ip);
-  
+
   if (!record || now > record.resetAt) {
     rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW });
     return true;
   }
-  
+
   if (record.count >= MAX_REQUESTS_PER_WINDOW) {
     return false;
   }
-  
+
   record.count++;
   return true;
 }
 
+// CORS: For production, restrict Access-Control-Allow-Origin to your domain
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -35,16 +36,16 @@ serve(async (req) => {
 
   try {
     // Get client IP for rate limiting
-    const ip = req.headers.get('x-forwarded-for')?.split(',')[0] || 
-               req.headers.get('x-real-ip') || 
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ||
+               req.headers.get('x-real-ip') ||
                'unknown';
-    
+
     // Check rate limit
     if (!checkRateLimit(ip)) {
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'rate_limited',
-          message: 'You\'ve sent too many requests. Please try again in an hour.' 
+          message: 'You\'ve sent too many requests. Please try again in an hour.'
         }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -52,7 +53,7 @@ serve(async (req) => {
 
     const { messages, context } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    
+
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
@@ -65,113 +66,88 @@ serve(async (req) => {
     const currentPage = context?.page || 'unknown';
     const currentModule = context?.module || 'public';
     const userRoles: string[] = context?.userRoles || [];
-    
+
     // Determine user access level for customizing responses
     const isAdmin = userRoles.includes('admin');
     const isBoardMember = userRoles.includes('board_member');
     const isCoach = userRoles.includes('coach');
     const isParent = userRoles.includes('parent');
-    const isAuthenticated = userRoles.length > 0;
 
-    // Fetch context data
+    // Fetch only relevant context data to minimize token usage
     const [programsRes, faqsRes, siteContentRes, supportRes] = await Promise.all([
-      supabase.from('programs').select('*, divisions(*)'),
-      supabase.from('faqs').select('*').order('display_order'),
-      supabase.from('site_content').select('*').order('page, section, display_order'),
-      supabase.from('support_options').select('*').eq('active', true).order('display_order')
+      supabase.from('programs').select('name, type, description, active, divisions(name, age_range, description)').eq('active', true),
+      supabase.from('faqs').select('question, answer, category').order('display_order').limit(20),
+      supabase.from('site_content').select('page, section, content_key, content_value').order('page, section, display_order'),
+      supabase.from('support_options').select('title, description, type, url').eq('active', true).order('display_order')
     ]);
 
-    // Organize site content by page and section for better context
-    const siteContentByPage = (siteContentRes.data || []).reduce((acc: any, item: any) => {
-      if (!acc[item.page]) acc[item.page] = {};
-      if (!acc[item.page][item.section]) acc[item.page][item.section] = [];
-      acc[item.page][item.section].push({
-        key: item.content_key,
-        value: item.content_value,
-        type: item.content_type
-      });
+    // Filter site content to current page and common content for relevance
+    const relevantContent = (siteContentRes.data || []).filter((item: any) => {
+      const page = item.page?.toLowerCase() || '';
+      return page === currentPage || page === 'common' || page === 'home';
+    });
+
+    // Build compact site content summary
+    const contentSummary = relevantContent.reduce((acc: any, item: any) => {
+      const key = `${item.page}/${item.section}`;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(`${item.content_key}: ${item.content_value}`);
       return acc;
     }, {});
 
     // Build role-specific context
     let roleContext = '';
     if (isAdmin) {
-      roleContext = `
-The user is an ADMIN. They have full access to all features and can:
-- Manage users, roles, and permissions
-- Configure programs, divisions, and drafts
-- Access all reports and settings
-- Manage site content and FAQs`;
+      roleContext = 'User role: ADMIN (full access to all features, user management, programs, drafts, reports, site content).';
     } else if (isBoardMember) {
-      roleContext = `
-The user is a BOARD MEMBER. They can:
-- Manage players, teams, coaches, and schedule
-- View and respond to feedback
-- Access admin dashboard features (but not admin-only areas like drafts, reports, site content)`;
+      roleContext = 'User role: BOARD MEMBER (manages players, teams, coaches, schedule, feedback; no access to drafts/reports/site content).';
     } else if (isCoach) {
-      roleContext = `
-The user is a COACH. They can:
-- View their assigned teams and players
-- Participate in player drafts when assigned
-- Access coach-specific resources`;
+      roleContext = 'User role: COACH (views assigned teams/players, participates in drafts).';
     } else if (isParent) {
-      roleContext = `
-The user is a registered PARENT. They can:
-- Register their children for programs
-- View schedules and team information
-- Access parent resources`;
+      roleContext = 'User role: PARENT (registers children, views schedules and team info).';
     } else {
-      roleContext = `
-The user is a PUBLIC VISITOR (not logged in). They can:
-- Browse general information about CDBL
-- View public schedules and team info
-- Learn about registration and programs`;
+      roleContext = 'User role: PUBLIC VISITOR (browses general info, schedules, registration details).';
     }
 
     // Build page-specific context
-    let pageContext = '';
-    if (currentModule === 'admin') {
-      pageContext = `The user is currently in the ADMIN section of the website (page: ${currentPage}). Provide help relevant to administrative tasks.`;
-    } else if (currentModule === 'coach') {
-      pageContext = `The user is currently in the COACH section (page: ${currentPage}). Provide help relevant to coaching tasks.`;
-    } else if (currentModule === 'in-house') {
-      pageContext = `The user is currently viewing IN-HOUSE LEAGUE information (page: ${currentPage}). Focus answers on the In-House program.`;
-    } else if (currentModule === 'travel') {
-      pageContext = `The user is currently viewing TRAVEL TEAM information (page: ${currentPage}). Focus answers on the Travel program.`;
-    } else {
-      pageContext = `The user is on the public website (page: ${currentPage}).`;
-    }
+    let pageContext = `Current page: ${currentPage} (${currentModule} section).`;
+
+    // Build compact programs summary
+    const programsSummary = (programsRes.data || []).map((p: any) => ({
+      name: p.name,
+      type: p.type,
+      description: p.description,
+      divisions: p.divisions?.map((d: any) => `${d.name} (${d.age_range})`).join(', ')
+    }));
+
+    // Build compact FAQ list
+    const faqsSummary = (faqsRes.data || []).map((f: any) => `Q: ${f.question} A: ${f.answer}`).join('\n');
+
+    // Build compact support options
+    const supportSummary = (supportRes.data || []).map((s: any) => `${s.title}: ${s.description}`).join('\n');
 
     const contextInfo = `
-You are a helpful assistant for Carmel Dads' Baseball League (CDBL). Use this information to answer questions:
+You are a helpful assistant for Central District Baseball League (CDBL), a youth baseball league in Plato Center, IL.
 
-USER CONTEXT:
 ${roleContext}
-
-PAGE CONTEXT:
 ${pageContext}
 
-WEBSITE CONTENT (organized by page and section):
-${JSON.stringify(siteContentByPage, null, 2)}
-
 PROGRAMS:
-${JSON.stringify(programsRes.data, null, 2)}
+${JSON.stringify(programsSummary)}
 
-DIVISIONS:
-${programsRes.data?.map((p: any) => p.divisions).flat().map((d: any) => `${d.name}: ${d.age_range}`).join(', ')}
+RELEVANT PAGE CONTENT:
+${JSON.stringify(contentSummary)}
 
 FAQS:
-${JSON.stringify(faqsRes.data, null, 2)}
+${faqsSummary}
 
 SUPPORT OPTIONS:
-${JSON.stringify(supportRes.data, null, 2)}
+${supportSummary}
 
-IMPORTANT GUIDELINES:
-- Tailor your responses to the user's role and current page context
-- For admin/board member questions, provide detailed administrative guidance
-- For public visitors, focus on registration, programs, and general info
-- If you're not sure about something, guide users to contact CDBL directly
+GUIDELINES:
+- Tailor responses to the user's role and current page
 - Be concise but helpful
+- If unsure, direct users to contact CDBL at Communications@cdbaseball.org or visit the Contact page
     `.trim();
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -193,27 +169,27 @@ IMPORTANT GUIDELINES:
     if (!response.ok) {
       const errorText = await response.text();
       console.error('AI Gateway error:', response.status, errorText);
-      
+
       if (response.status === 402) {
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'credits_exhausted',
             message: 'The AI assistant is temporarily unavailable. Please visit our FAQ page or contact us directly for help.'
           }),
           { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-      
+
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'gateway_rate_limited',
             message: 'The AI service is experiencing high demand. Please try again in a few minutes.'
           }),
           { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-      
+
       throw new Error('AI Gateway request failed');
     }
 
@@ -228,7 +204,7 @@ IMPORTANT GUIDELINES:
     console.error('AI Assistant error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'server_error',
         message: 'Something went wrong. Please try again or visit our Contact page for assistance.'
       }),

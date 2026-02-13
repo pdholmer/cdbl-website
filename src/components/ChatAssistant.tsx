@@ -212,16 +212,17 @@ export const ChatAssistant = () => {
           onClick={() => setIsOpen(true)}
           className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
           size="icon"
+          aria-label="Open chat assistant"
         >
           <MessageCircle className="h-6 w-6" />
         </Button>
       )}
 
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-xl z-50 flex flex-col">
+        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-xl z-50 flex flex-col" role="dialog" aria-label="CDBL Chat Assistant">
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="font-semibold">CDBL Assistant</h3>
-            <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
+            <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} aria-label="Close chat assistant">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -268,8 +269,9 @@ export const ChatAssistant = () => {
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask a question..."
                 disabled={isLoading}
+                aria-label="Type your question"
               />
-              <Button onClick={handleSend} size="icon" disabled={isLoading || !input.trim()}>
+              <Button onClick={handleSend} size="icon" disabled={isLoading || !input.trim()} aria-label="Send message">
                 <Send className="h-4 w-4" />
               </Button>
             </div>

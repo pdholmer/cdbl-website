@@ -214,14 +214,6 @@ export function AdminSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <NavLink to="/admin/profile" className={getNavClass}>
-                    <User className="h-4 w-4" />
-                    <span className="ml-2">Profile</span>
-                  </NavLink>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
                   <Link to="/" className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
                     <ExternalLink className="h-4 w-4" />
                     <span className="ml-2">Return to Site</span>
