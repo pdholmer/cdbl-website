@@ -25,7 +25,7 @@ const InHouse = () => {
           <div className="container relative z-10">
             <div className="max-w-3xl">
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
-                In-House Baseball Program
+                In-House Program
               </h1>
               
               <p className="text-base sm:text-lg md:text-xl mb-1 leading-relaxed opacity-95">
