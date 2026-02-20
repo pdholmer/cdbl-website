@@ -1,52 +1,55 @@
 
-# Remove Rockets Travel Teams Sub-Page
+## Make In-House and Travel Hero Sections Match the Home Page
 
-## What's Being Removed
+The home page hero carousel slides use a specific set of styles that are missing or inconsistent on the two program pages. The fix is purely cosmetic — matching class names and structure, no logic changes.
 
-The `/travel/teams` route and its page (`TravelTeams.tsx`) are entirely placeholder content — fake coach names, fabricated records, and stats that don't exist yet. Removing it cleanly requires three coordinated changes.
+### What the Home Page Hero Has (the standard)
 
-## Audit of All References
+```text
+- min-h: [320px / 360px / 420px / 480px] responsive
+- py-16 md:py-24
+- backgroundImage: gradient overlay on image
+- container > max-w-3xl wrapper
+- H1: text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight
+- Subtitle: text-base sm:text-lg md:text-xl opacity-95
+- Subtitle 2 (italic): text-base sm:text-lg md:text-xl opacity-80 italic
+- Primary CTA: bg-white text-primary hover:bg-white/90 shadow-lg font-semibold
+- Secondary CTA: border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina font-semibold
+```
 
-**Route**: `src/App.tsx` line 107 — `<Route path="/travel/teams" element={<TravelTeams />} />`
-**Import**: `src/App.tsx` line 27 — `import TravelTeams from "./pages/TravelTeams";`
-**File**: `src/pages/TravelTeams.tsx` — the full page component
+### What's Different on the Program Pages
 
-**Navigation references to `/travel/teams`**:
-- `src/components/DropdownNav.tsx` — "Rockets Teams" item links to `/travel/teams`
-- `src/pages/Travel.tsx` — "View Rockets Teams" buttons link to `/travel/teams` (2 instances in hero and CTA sections)
+**In-House (`/in-house`)**
+- Missing `min-h` classes — hero has no minimum height, so it collapses on large screens compared to the home page
+- Only one subtitle line (no `subtitle2` italic line) — minor, but the structure differs
+- `relative z-10` is on the `container` but the section itself is missing it compared to home page structure
+- H1 font sizes match ✓, button styles match ✓
 
-The pending Travel page cleanup (from the previous approved plan, not yet implemented) was also going to add a sub-page nav card pointing to `/travel/teams`. That card should point somewhere else or be omitted entirely.
+**Travel (`/travel`)**
+- Missing `min-h` classes — same collapse issue
+- Missing `max-w-3xl` content wrapper — text runs full width on large screens
+- H1 only has `text-4xl md:text-6xl`, missing the `sm:` and `lg:` breakpoints and `leading-tight`
+- Subtitle text has different structure: a short tagline + a separate `<p>` for description — needs to match the two-line subtitle pattern with `opacity-95` and `opacity-80 italic`
+- The `flex items-center` on the section is missing — home page vertically centers content
 
-## Changes to Make
+### Changes
 
-### 1. `src/pages/TravelTeams.tsx` — Delete the file
-The entire page is placeholder data. It goes away entirely.
+**`src/pages/InHouse.tsx`** — Hero section only
+- Add `min-h-[320px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[480px] flex items-center` to the `<section>` class
+- Add a second subtitle line: `"No tryouts. No cuts. Just baseball."` styled with `opacity-80 italic` to match the home page two-line pattern
 
-### 2. `src/App.tsx` — Remove route and import
-- Remove line 27: `import TravelTeams from "./pages/TravelTeams";`
-- Remove line 107: `<Route path="/travel/teams" element={<TravelTeams />} />`
+**`src/pages/Travel.tsx`** — Hero section only
+- Add `min-h-[320px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[480px] flex items-center` to the `<section>` class
+- Wrap content in `<div className="max-w-3xl">` to constrain width like the home page
+- Update H1 to `text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight`
+- Restructure the tagline + description into two subtitle lines:
+  - Line 1 (`opacity-95`): `"Elite travel baseball building the pipeline to Burlington Central High School and beyond."`
+  - Line 2 (`opacity-80 italic`): `"Tryouts required. Ages 8–14."`
 
-### 3. `src/components/DropdownNav.tsx` — Remove "Rockets Teams" menu item
-Remove the `<DropdownMenuItem>` block linking to `/travel/teams` from the Travel Program dropdown. The remaining dropdown items (Overview, Tryouts & Registration, Tournament Schedule, Travel FAQ) still provide complete navigation.
+### Files to Modify
+- `src/pages/InHouse.tsx` — Add min-height, flex centering, second subtitle line
+- `src/pages/Travel.tsx` — Add min-height, flex centering, max-w-3xl wrapper, updated H1 sizing, restructured subtitles
 
-### 4. `src/pages/Travel.tsx` — Remove "View Rockets Teams" buttons (2 instances)
-- **Hero section**: Remove the "View Rockets Teams" `<Button>` that links to `/travel/teams`
-- **CTA section** (bottom of page): Remove the "View Rockets Teams" `<Button>` that links to `/travel/teams`
-
-Both of these are secondary buttons alongside the primary "2027 Season Tryouts" CTA, so removing them leaves the primary CTA intact.
-
-## Note on the Pending Travel Page Plan
-
-The previously approved (but not yet implemented) Travel page plan included a sub-page nav grid with a card for "Rockets Teams → `/travel/teams`". That card will be omitted from the nav grid since the page is being removed. The grid will have 3 cards instead of 4:
-- Tryouts & Registration → `/travel#tryouts`
-- Tournament Schedule → `/travel/schedule`
-- Travel FAQ → `/travel/faq`
-
-## Files to Modify
-- `src/pages/TravelTeams.tsx` — **deleted**
-- `src/App.tsx` — Remove TravelTeams import and route
-- `src/components/DropdownNav.tsx` — Remove "Rockets Teams" dropdown item
-- `src/pages/Travel.tsx` — Remove both "View Rockets Teams" buttons + implement all previously approved changes (logos, team cards, nav grid, content fixes) with the 3-card nav grid instead of 4
-
-## New Files
-None.
+### Files Not Changing
+- `src/components/Hero.tsx` — Already correct, this is the reference
+- The sub-page navigation grids, body content, and CTA sections on both pages remain untouched
