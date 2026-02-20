@@ -11,19 +11,19 @@ const Travel = () => {
       <Header />
       <main>
         {/* Hero Section */}
-        <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]" style={{
+        <section className="relative min-h-[320px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[480px] py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center] flex items-center" style={{
         backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelTeams}')`
       }}>
-          <div className="container">
-            <div className="mb-6">
-              <h1 className="text-4xl md:text-6xl font-bold">CDBL Rockets</h1>
-              <p className="text-xl opacity-90">The Future Starts Here</p>
-            </div>
-            <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
-            <div className="flex flex-wrap gap-4">
-              <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <a href="#tryouts">2027 Season Tryouts (Fall 2026)</a>
-              </Button>
+          <div className="container relative z-10">
+            <div className="max-w-3xl">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">CDBL Rockets</h1>
+              <p className="text-base sm:text-lg md:text-xl mb-1 leading-relaxed opacity-95">Elite travel baseball building the pipeline to Burlington Central High School and beyond.</p>
+              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-80 italic">Tryouts required. Ages 8–14.</p>
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
+                  <a href="#tryouts">2027 Season Tryouts (Fall 2026)</a>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
