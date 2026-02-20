@@ -26,6 +26,7 @@ import InHouseSchedule from "./pages/InHouseSchedule";
 import InHouseRules from "./pages/InHouseRules";
 import TravelSchedule from "./pages/TravelSchedule";
 import TravelFAQ from "./pages/TravelFAQ";
+import TravelRegistration from "./pages/TravelRegistration";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
@@ -104,6 +105,7 @@ const App = () => (
           <Route path="/travel" element={<Travel />} />
           <Route path="/travel/schedule" element={<TravelSchedule />} />
           <Route path="/travel/faq" element={<TravelFAQ />} />
+          <Route path="/travel/registration" element={<TravelRegistration />} />
           {/* Admin Routes */}
           <Route path="/admin/login" element={<Login />} />
           
