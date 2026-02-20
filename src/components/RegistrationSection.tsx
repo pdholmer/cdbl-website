@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Calendar, ClipboardList, Users, Trophy, Heart, MapPin } from "lucide-react";
 import playerPitching from "@/assets/player-pitching.jpg";
-import slidingAction from "@/assets/sliding-action.jpg";
+import inhouseAction from "@/assets/inhouse-action.png";
 import { usePrograms } from "@/hooks/usePrograms";
 
 const RegistrationSection = () => {
@@ -27,7 +27,7 @@ const RegistrationSection = () => {
           <Card className="overflow-hidden border-2 border-primary shadow-lg hover:shadow-xl transition-all">
             <div className="relative h-48 md:h-56">
               <img 
-                src={slidingAction} 
+                src={inhouseAction} 
                 alt="Youth player sliding into base" 
                 className="w-full h-full object-cover"
               />
