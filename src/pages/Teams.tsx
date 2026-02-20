@@ -723,7 +723,7 @@ const Teams = () => {
                       </li>
                     </ul>
                     <p className="text-xs text-muted-foreground mt-4">
-                      Email <strong>coaches@cdbl.org</strong> to request access to full library
+                      Email <strong>coaches@cdbaseball.org</strong> to request access to full library
                     </p>
                   </CardContent>
                 </Card>
