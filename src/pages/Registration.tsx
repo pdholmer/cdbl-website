@@ -88,7 +88,7 @@ const Registration = () => {
                     <ul className="space-y-2 text-muted-foreground">
                       {inHouseDivisions?.map((division) => (
                         <li key={division.id}>
-                          <strong>{division.name} (Ages {division.age_range}):</strong> ${division.cost}
+                          <strong>{division.name} (Ages {division.age_range}):</strong> {division.cost != null ? `$${division.cost}` : 'TBD'}
                         </li>
                       ))}
                     </ul>
@@ -248,7 +248,7 @@ const Registration = () => {
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Create Your Account</h3>
-                  <p className="text-muted-foreground"><strong>Important:</strong> Due to our new website, ALL users must create a new account — even if you registered with CDBL before.</p>
+                  <p className="text-muted-foreground">If you've registered with CDBL before, you'll need to create a new account in our updated registration system — it only takes 2 minutes.</p>
                 </div>
               </div>
 
@@ -270,6 +270,9 @@ const Registration = () => {
             </div>
 
             <div className="mt-12 text-center">
+              <p className="text-sm text-muted-foreground mb-4">
+                Clicking "Start Registration" will open our secure registration partner, SportsConnect, in a new tab. Return here any time for program information.
+              </p>
               <Button 
                 size="lg" 
                 variant="hero"

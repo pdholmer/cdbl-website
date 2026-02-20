@@ -4,8 +4,12 @@ import { ExternalLink, Calendar, DollarSign, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { usePrograms } from "@/hooks/usePrograms";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const InHouseRegistration = () => {
+  const { inHouseProgram, inHouseDivisions, isLoading } = usePrograms();
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -18,6 +22,9 @@ const InHouseRegistration = () => {
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Register for In-House Baseball</h1>
             <p className="text-xl mb-8 max-w-2xl">Join the recreational league where every child plays and learns the game!</p>
+            <p className="text-sm text-primary-foreground/80 mb-4">
+              Clicking "Register Now" will open our secure registration partner, SportsConnect, in a new tab. Return here any time for program information.
+            </p>
             <Button 
               size="lg" 
               variant="hero"
@@ -32,54 +39,75 @@ const InHouseRegistration = () => {
         {/* Key Information Cards */}
         <section className="py-16 bg-background">
           <div className="container">
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              <Card>
-                <CardHeader>
-                  <Calendar className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle>Important Dates</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li><strong>Early Registration:</strong> December 1, 2025</li>
-                    <li><strong>Regular Registration:</strong> January 15, 2026</li>
-                    <li><strong>Late Registration:</strong> March 1, 2026</li>
-                    <li><strong>Season Starts:</strong> April 2026</li>
-                  </ul>
-                </CardContent>
-              </Card>
+            {isLoading ? (
+              <div className="grid md:grid-cols-3 gap-6 mb-12">
+                {[1, 2, 3].map((i) => (
+                  <Card key={i}>
+                    <CardHeader>
+                      <Skeleton className="h-8 w-8 mb-2" />
+                      <Skeleton className="h-6 w-32" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-full mb-2" />
+                      <Skeleton className="h-4 w-3/4" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-6 mb-12">
+                <Card>
+                  <CardHeader>
+                    <Calendar className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>Important Dates</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-muted-foreground">
+                      <li><strong>Early Registration:</strong> December 1, 2025</li>
+                      <li><strong>Regular Registration:</strong> January 15, 2026</li>
+                      <li><strong>Late Registration:</strong> March 1, 2026</li>
+                      {inHouseProgram?.season_start && (
+                        <li><strong>Season Starts:</strong> {new Date(inHouseProgram.season_start).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</li>
+                      )}
+                    </ul>
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader>
-                  <DollarSign className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle>In-House Fees</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li><strong>T-Ball (Ages 4-6):</strong> $195</li>
-                    <li><strong>Pinto (Ages 7-8):</strong> $250</li>
-                    <li><strong>Mustang (Ages 9-10):</strong> $275</li>
-                    <li><strong>Bronco (Ages 11-12):</strong> $290</li>
-                    <li><strong>Pony (Ages 13-14):</strong> $335</li>
-                  </ul>
-                </CardContent>
-              </Card>
+                <Card>
+                  <CardHeader>
+                    <DollarSign className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>In-House Fees</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-muted-foreground">
+                      {inHouseDivisions?.map((division) => (
+                        <li key={division.id}>
+                          <strong>{division.name} (Ages {division.age_range}):</strong>{' '}
+                          {division.cost != null ? `$${division.cost}` : 'TBD — Contact registrar@cdbaseball.org'}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader>
-                  <Users className="h-8 w-8 text-primary mb-2" />
-                  <CardTitle>What's Included</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li>• Official CDBL jersey</li>
-                    <li>• MLB team hat</li>
-                    <li>• 12-16 game season</li>
-                    <li>• Professional coaching</li>
-                    <li>• End-of-season tournament</li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
+                <Card>
+                  <CardHeader>
+                    <Users className="h-8 w-8 text-primary mb-2" />
+                    <CardTitle>What's Included</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2 text-muted-foreground">
+                      <li>• Official CDBL jersey</li>
+                      <li>• MLB team hat</li>
+                      <li>• 12-16 game season</li>
+                      <li>• Professional coaching</li>
+                      <li>• End-of-season tournament</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
         </section>
 
@@ -198,7 +226,7 @@ const InHouseRegistration = () => {
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Create Your Account</h3>
-                  <p className="text-muted-foreground"><strong>Important:</strong> Due to our new website, ALL users must create a new account — even if you registered with CDBL before.</p>
+                  <p className="text-muted-foreground">If you've registered with CDBL before, you'll need to create a new account in our updated registration system — it only takes 2 minutes.</p>
                 </div>
               </div>
 
@@ -220,6 +248,9 @@ const InHouseRegistration = () => {
             </div>
 
             <div className="mt-12 text-center">
+              <p className="text-sm text-muted-foreground mb-4">
+                Clicking "Start Registration" will open our secure registration partner, SportsConnect, in a new tab. Return here any time for program information.
+              </p>
               <Button 
                 size="lg" 
                 variant="hero"
