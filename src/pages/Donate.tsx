@@ -79,7 +79,7 @@ const Donate = () => {
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">Support CDBL</h1>
               <p className="text-xl max-w-2xl">
-                Help us provide exceptional youth baseball programs for all families in Burlington, IL
+                Help us provide exceptional youth baseball programs for all families in Burlington & Plato Center, IL
               </p>
             </div>
           </div>

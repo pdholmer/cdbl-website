@@ -225,7 +225,7 @@ const TravelFAQ = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button variant="outline" asChild>
-                  <a href="mailto:travel@cdbl.org">Email: travel@cdbl.org</a>
+                  <a href="mailto:travel@cdbaseball.org">Email: travel@cdbaseball.org</a>
                 </Button>
                 <Button asChild>
                   <Link to="/travel/registration">Register for Tryouts</Link>

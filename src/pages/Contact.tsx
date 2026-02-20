@@ -305,9 +305,7 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="font-semibold text-lg">Jason Taylor</p>
-                  <a href="mailto:president@cdbaseball.org" className="text-primary text-sm">
-                    president@cdbaseball.org
-                  </a>
+                  <p className="text-sm text-muted-foreground mt-1">Contact via the form above</p>
                 </CardContent>
               </Card>
 
@@ -317,9 +315,7 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="font-semibold text-lg">Carrie Wolak</p>
-                  <a href="mailto:vp@cdbaseball.org" className="text-primary text-sm">
-                    vp@cdbaseball.org
-                  </a>
+                  <p className="text-sm text-muted-foreground mt-1">Contact via the form above</p>
                 </CardContent>
               </Card>
 
@@ -329,9 +325,7 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="font-semibold text-lg">Todd Weachter</p>
-                  <a href="mailto:treasurer@cdbaseball.org" className="text-primary text-sm">
-                    treasurer@cdbaseball.org
-                  </a>
+                  <p className="text-sm text-muted-foreground mt-1">Contact via the form above</p>
                 </CardContent>
               </Card>
 
@@ -341,9 +335,7 @@ const Contact = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="font-semibold text-lg">Bobby Rogers & Carrie Wolak</p>
-                  <a href="mailto:travel@cdbaseball.org" className="text-primary text-sm">
-                    travel@cdbaseball.org
-                  </a>
+                  <p className="text-sm text-muted-foreground mt-1">Contact via the form above</p>
                 </CardContent>
               </Card>
             </div>

@@ -13,7 +13,7 @@ const AboutSection = () => {
                 Welcome to CDBL
               </h2>
               <p className="text-base md:text-lg text-muted-foreground mb-4 md:mb-6 leading-relaxed">
-                The Central District Baseball League has proudly served Burlington, IL and the surrounding community for over three decades. As a 501(c)(3) non-profit organization, we're committed to providing exceptional youth baseball programs that emphasize skill development, teamwork, and the pure joy of the game.
+                The Central District Baseball League has proudly served Burlington & Plato Center, IL and the surrounding community for over three decades. As a 501(c)(3) non-profit organization, we're committed to providing exceptional youth baseball programs that emphasize skill development, teamwork, and the pure joy of the game.
               </p>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
                 Our mission is simple: foster a love of baseball while creating lasting memories and friendships. Whether your child is just starting out or looking to take their game to the next level with our Travel teams, CDBL offers programs designed to help every player succeed.
