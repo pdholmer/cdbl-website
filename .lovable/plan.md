@@ -1,74 +1,66 @@
 
-# Homepage Content & UX Improvements — Audit Results & Plan
+# New to CDBL Page — Audit Results & Plan
 
 ## Audit Findings
 
-### VALID — Will Fix
+### VALID — Will Implement (with adjustments)
 
-**[HIGH] Mission statement and Core Values duplicated on /about**
-Confirmed. `AboutSection.tsx` (rendered on the homepage) contains a full "Welcome to CDBL" mission statement and a complete 4-card "Our Core Values" section with a Safety highlight. These are also in `About.tsx` verbatim. Fix: Replace `AboutSection` with a slim 2-sentence teaser + "Learn More About CDBL" CTA linking to `/about`. The Safety highlight and core values cards stay on the About page only.
+**[LOW] Birth year tool could be more interactive**
+The current tool works but requires typing a 4-digit year into a text field and clicking a button. This friction is unnecessary. Fix: Convert the Input to a Select dropdown pre-populated with all valid birth years (2010–2022), so results appear instantly on selection change — no button press required. The result card and reset behavior remain the same.
 
-**[MEDIUM] Stats repeated (38 years, 400+ players)**
-Confirmed. The `RegistrationSection` value props show "400+ players and families in the Burlington area." The `About.tsx` page has a dedicated "By The Numbers" grid with all four stats. Fix: Rephrase the homepage value prop copy to remove the stat — e.g., change "400+ players and families" to "A welcoming community of players and families."
+The suggestion also asks to "deep-link to registration with division pre-selected." This is **not feasible** — the registration link goes to an external SportsConnect URL (`registration.bluesombrero.com`) that we don't control. The "Register for [Division]" CTA will continue to link to the `/registration` page, which is the correct behavior.
 
-**[MEDIUM] Hero carousel has 6 slides — too many**
-Confirmed. `Hero.tsx` defines 6 slides. Fix: Reduce to 3 highest-priority slides: (1) New to CDBL?, (2) 2026 Registration, (3) Game Schedule. Remove Find Your Program, Shop Rockets Gear, and Volunteer slides. Add dot progress indicators and pause-on-hover behavior.
+**[LOW] Add a printable PDF checklist**
+Valid — new parents genuinely benefit from a take-away reference sheet. However, generating a real PDF requires adding a third-party library (`jsPDF`, `html2canvas`, etc.) which adds bundle weight for a low-priority feature.
 
-**[MEDIUM] Sponsor section shows placeholder names**
-Confirmed. `SponsorsSection.tsx` has a hardcoded array of 6 placeholder sponsors. Fix: Remove the placeholder sponsor grid entirely. Display only the "Become a Sponsor" CTA panel. The heading changes to "Support CDBL" and a brief description explains why sponsorship matters.
-
-**[LOW] Quick-action cards for mobile users**
-Valid improvement. Nothing like this exists. Fix: Add a `QuickActions` section below the Hero with 4 cards: Register Now, View Schedule, Find a Field, Contact Us. 2×2 grid on mobile, 4-column on desktop. Min 44px tap targets throughout.
+Better approach: A **print-optimized checklist page** using CSS `@media print`. A "Print Checklist" button on the New to CDBL page calls `window.print()`, which triggers the browser's native print dialog (users can save as PDF from there). Print styles hide the header, footer, nav, and FABs, and render only the checklist content cleanly. Zero new dependencies, works on every device and browser, and users can still save as PDF.
 
 ---
 
-### NOT VALID / ALREADY WORKS — Will Not Fix
+### NOT VALID / NOT FEASIBLE — Will Not Implement
 
-**[LOW] #contact anchor link likely broken**
-Not valid. Inspecting the code: `Footer.tsx` already has `id="contact"` on the `<footer>` element (line 7). The `SponsorsSection` "Get in Touch →" link using `href="#contact"` will correctly scroll to the footer on the same page. No fix needed.
+Nothing is being skipped outright — both suggestions are valid in intent, only the implementation approach is adjusted as noted above.
 
 ---
 
 ## Changes to Make
 
-### 1. `src/components/AboutSection.tsx` — Replace with slim teaser
-Replace the full mission + core values + safety content with a compact section containing:
-- A 2-sentence mission teaser
-- A "Learn More About CDBL →" button linking to `/about`
-- A simple stat strip: "38 Years · 400+ Players · 50+ Teams · 100+ Volunteers" as a horizontal banner (not a full grid)
+### 1. `src/components/DivisionFinder.tsx` — Dropdown + instant results
 
-This cuts ~100 lines down to ~30, and the full content lives exclusively on `/about`.
+Replace the `Input` + button layout with a `Select` dropdown that:
+- Lists all valid birth years from 2022 down to 2010 as options (labels like "2018 — Ages 7-8 (Pinto)")
+- Triggers `getDivisionFromBirthYear` instantly on `onValueChange` — no button needed
+- Shows the result card immediately below
+- Keeps the "Try Another Year" reset button
+- Removes the manual `handleSearch`, `handleKeyDown`, and error states since all options are pre-validated
+- Removes the now-redundant `Input`, `Search` icon import, and "Find Division" button
 
-### 2. `src/components/RegistrationSection.tsx` — Remove stat from value prop
-Change the "Community First" card text from "400+ players and families in the Burlington area" to "A welcoming community of players and families" to avoid stat duplication with the About page.
+The result card layout (schedule, cost, description, register CTA) stays exactly as-is.
 
-### 3. `src/components/Hero.tsx` — Reduce to 3 slides + add dots + pause-on-hover
-Keep slides 1, 3, 4 (New to CDBL, 2026 Registration, Game Schedule). Remove slides 2, 5, 6 (Find Your Program, Shop Rockets Gear, Volunteer). Add:
-- Dot indicators (progress dots) at the bottom of the carousel
-- `stopOnInteraction: false` + `stopOnMouseEnter: true` for pause-on-hover behavior via the Autoplay plugin
+### 2. `src/pages/NewToCDBL.tsx` — Add Print Checklist button + print styles
 
-### 4. `src/components/SponsorsSection.tsx` — Remove placeholders, show CTA only
-Remove the 6 placeholder sponsor cards and the mapping loop. Show only the "Become a Sponsor" CTA panel, centered. Rename the section heading to "Support CDBL." Keep the heart icon.
+Add a "Print Getting Started Checklist" button with a `Printer` icon near the top of the page (below the hero, above the Division Finder). Clicking it calls `window.print()`.
 
-### 5. `src/pages/Index.tsx` + new `src/components/QuickActions.tsx` — Add mobile quick-action grid
-Create a new `QuickActions` component with 4 tap-friendly cards:
-- Register Now → `/registration`
-- View Schedule → `/schedule`  
-- Find a Field → `/fields`
-- Contact Us → `/contact`
+Add inline print CSS (via a `<style>` tag injected with a `useEffect`, or a dedicated print stylesheet imported in the component) that:
+- Hides: `<header>`, `<footer>`, `.feedback-fab`, `.chat-assistant`, and all sections except a dedicated `#print-checklist` div
+- Shows a clean black-and-white checklist layout with:
+  - CDBL logo header
+  - "2026 Getting Started Checklist" title
+  - Key dates (Registration deadline: Dec 1 early pricing; Evaluations: Mar 8-9; Draft: Mar 15; Opening Day: April 2026)
+  - Equipment list (from the "What to Expect" section)
+  - Volunteer duties reminder
+  - Key contact: Communications@cdbaseball.org
+  - Website URL
 
-Cards use large icons, bold labels, and `min-h-[88px]` with `min-w-[44px]` for accessibility. On mobile: 2×2 CSS grid. On desktop: single 4-column row. Place it in `Index.tsx` immediately after `<Hero />`.
+The `#print-checklist` div is hidden on screen (`hidden print:block`) and only visible when printing.
 
 ## Files to Modify
-- `src/components/Hero.tsx` — Slide reduction + dots + pause-on-hover
-- `src/components/AboutSection.tsx` — Replace with slim teaser
-- `src/components/RegistrationSection.tsx` — Remove stat duplication
-- `src/components/SponsorsSection.tsx` — Remove placeholders
-- `src/pages/Index.tsx` — Add QuickActions import
+- `src/components/DivisionFinder.tsx` — Replace Input+button with Select dropdown, instant results
+- `src/pages/NewToCDBL.tsx` — Add print button + hidden print-only checklist div
 
-## New File
-- `src/components/QuickActions.tsx` — New mobile-first quick-action grid
+## New Files
+None — print styles will use Tailwind's `print:` variant and a small `<style>` block.
 
 ## Not Changing
-- `src/components/Footer.tsx` — `id="contact"` already works correctly
-- `src/pages/About.tsx` — All full content stays here as intended
+- Registration deep-linking — not feasible (external SportsConnect URL)
+- The result card layout, CTA text, or division data — those are correct as-is
