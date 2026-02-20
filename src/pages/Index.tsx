@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import QuickActions from "@/components/QuickActions";
 import AboutSection from "@/components/AboutSection";
 import RegistrationSection from "@/components/RegistrationSection";
 import SpiritWearSection from "@/components/SpiritWearSection";
@@ -13,7 +14,7 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        
+        <QuickActions />
         <AboutSection />
         <RegistrationSection />
         <SpiritWearSection />

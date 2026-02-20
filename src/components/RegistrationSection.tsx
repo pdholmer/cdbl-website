@@ -191,7 +191,7 @@ const RegistrationSection = () => {
             </div>
             <h4 className="text-base md:text-lg font-bold mb-2">Community First</h4>
             <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-              400+ players and families in the Burlington area
+              A welcoming community of players and families
             </p>
           </div>
         </div>
