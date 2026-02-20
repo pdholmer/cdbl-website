@@ -1,34 +1,54 @@
 
-## Create a Dedicated `/travel/registration` Page
+## Registration Page Fixes
 
-### Overview
-Extract all tryout/registration content from `Travel.tsx` into a new standalone `TravelRegistration.tsx` page, clean up the overview page, update all internal links and navigation, and register the new route.
+### Summary of Claude's Recommendations — What's Real vs. Not
 
-### Files to Create
-**`src/pages/TravelRegistration.tsx`** — new page containing:
-- Hero section (gradient, matching the TravelFAQ style) titled "Tryouts & Registration"
-- Sub-page navigation grid (linking back to Overview, Tournament Schedule, Travel FAQ) — same 3-card grid pattern as Travel.tsx
-- All 4 tryout cards (2027 Season dates, What to Bring, Evaluation Process, Commitment Requirements)
-- "Is Your Child Ready for Travel?" checklist block
-- Contact footer (email Travel Coordinator)
-- Header + Footer wrappers
+| Issue | Status | Action |
+|---|---|---|
+| Fee amounts contradict across pages | Confirmed — 3 different fee sets across DB, /registration, and /in-house/registration | Fix |
+| Pony pricing bare '$' | Confirmed — DB has null, no null guard on Registration.tsx | Fix |
+| FAQ references board@cdbl.org | Not accurate — scholarship FAQ already uses correct `cdbaseball.org` domain | Skip |
+| 'ALL users must create new account' warning | Confirmed alarming — exists in both Registration and InHouseRegistration | Fix |
+| Interstitial before redirect | target=_blank already exists; add a brief info note explaining the redirect | Fix |
+
+---
+
+### Root Cause: Fee Data Mismatch
+
+The database has In-House fees set to: T-Ball $125, Pinto $150, Mustang $175, Bronco $200, Pony (null). These are likely outdated/incorrect values. The hardcoded fees ($195, $250, $275, $290, $335) in `InHouseRegistration.tsx` appear to be the correct 2026 fees per the stored memory. The comparison table in `Registration.tsx` already uses $195-$335, which matches those correct values.
+
+**Solution:** Update the database divisions to reflect the correct 2026 fees, then remove all hardcoded fee values so every page pulls dynamically from the single source of truth.
+
+---
+
+### Changes
+
+**1. Update database fees (data operation)**
+Update the `divisions` table to set correct 2026 In-House fees:
+- T-Ball: $195
+- Pinto: $250
+- Mustang: $275
+- Bronco: $290
+- Pony: $335
+
+**2. `src/pages/InHouseRegistration.tsx`**
+- Replace the hardcoded fee list with a dynamic query using `usePrograms()` hook (same pattern as `Registration.tsx` already uses)
+- Add a null guard on cost: show `TBD — Contact registrar@cdbaseball.org` if cost is null (matching the `/in-house` page pattern)
+
+**3. `src/pages/Registration.tsx`**
+- Add a null guard on the fee card render: `division.cost != null ? \`$${division.cost}\` : 'TBD'` (line 91)
+- The comparison table row already hardcodes `$195-$335` — update to reflect the real range dynamically or keep as accurate static text after the DB is corrected
+
+**4. Soften the "ALL users must create new account" warning**
+- `Registration.tsx` line 251: Change bold alarming text to: *"If you've registered with CDBL before, you'll need to create a new account in our updated registration system — it only takes 2 minutes."*
+- `InHouseRegistration.tsx` line 201: Same softened language
+
+**5. Add redirect notice before SportsConnect**
+- On both registration pages, add a small info callout above (or below) the "Register Now" button:  
+  *"Clicking Register Now will open our secure registration partner, SportsConnect, in a new tab. Return here any time for program information."*
+- This is a static `<p>` or `<Alert>` — no modal needed, keeps it lightweight
 
 ### Files to Modify
-
-**`src/pages/Travel.tsx`**
-- Remove the entire `#tryouts` section (lines 151–255) — the Tryout Information section
-- Remove the hero button `<a href="#tryouts">2027 Season Tryouts (Fall 2026)</a>` and replace with a `<Link to="/travel/registration">` button
-- Update the sub-page navigation grid: change the "Tryouts & Registration" card link from `/travel#tryouts` → `/travel/registration`
-- Update the CTA section at the bottom: change "View Tryout Information" button from `href="#tryouts"` → `<Link to="/travel/registration">`
-
-**`src/App.tsx`**
-- Import `TravelRegistration` from `./pages/TravelRegistration`
-- Add route: `<Route path="/travel/registration" element={<TravelRegistration />} />`
-
-**`src/components/DropdownNav.tsx`**
-- Update the "Tryouts & Registration" link from `/travel#tryouts` → `/travel/registration`
-
-### Technical Notes
-- The new page will follow the exact same structural pattern as `TravelFAQ.tsx` (gradient hero, max-w-4xl content container, Card components for each section)
-- All content is moved, not duplicated — the overview page will have no orphaned `#tryouts` anchor
-- The `TravelFAQ.tsx` already has a "Register for Tryouts" button linking to `/travel/registration` (line 231) — this will now resolve correctly
+- `src/pages/InHouseRegistration.tsx` — dynamic fees, soften warning, redirect notice
+- `src/pages/Registration.tsx` — null guard on fees, soften warning, redirect notice
+- Database `divisions` table — correct fee values for all 5 In-House divisions
