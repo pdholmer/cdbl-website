@@ -10,21 +10,24 @@ import heroNewToCdbl from "@/assets/hero-new-to-cdbl.jpg";
 const carouselSlides = [
   {
     title: "New to CDBL?",
-    subtitle: "Start your youth baseball journey here - find your program, division, and get registered in minutes",
+    subtitle: "Find your division, get registered, and join Burlington's youth baseball community.",
+    subtitle2: "Everything new families need — all in one place.",
     primaryCta: { text: "Start Here", link: "/new-to-cdbl" },
     secondaryCta: { text: "View Programs", link: "/teams" },
     image: heroNewToCdbl,
   },
   {
     title: "2026 Registration",
-    subtitle: "Join CDBL - 38 Years of Youth Baseball Excellence in Burlington & Plato Center",
+    subtitle: "38 years of youth baseball excellence in Burlington & Plato Center.",
+    subtitle2: "Early registration opens December 1st — secure your spot today.",
     primaryCta: { text: "Register Now", link: "/registration" },
     secondaryCta: { text: "View Programs", link: "/teams" },
     image: heroRegistration,
   },
   {
     title: "Game Schedule",
-    subtitle: "Find game times, field locations, and more",
+    subtitle: "View upcoming games, field assignments, and division standings.",
+    subtitle2: "All divisions — in-house and travel — updated in real time.",
     primaryCta: { text: "View Schedule", link: "/schedule" },
     secondaryCta: { text: "Find Fields", link: "/fields" },
     image: heroSchedule,
@@ -67,8 +70,11 @@ const Hero = () => {
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight line-clamp-1">
                       {slide.title}
                     </h1>
-                    <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95 line-clamp-2">
+                    <p className="text-base sm:text-lg md:text-xl mb-1 leading-relaxed opacity-95">
                       {slide.subtitle}
+                    </p>
+                    <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-80 italic">
+                      {slide.subtitle2}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                       <Button
