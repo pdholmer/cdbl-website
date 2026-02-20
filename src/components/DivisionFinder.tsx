@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { Search, Calendar, DollarSign, Clock, ArrowRight, RotateCcw } from "lucide-react";
+import { Calendar, DollarSign, Clock, ArrowRight, RotateCcw, ChevronDown } from "lucide-react";
 
 interface DivisionResult {
   name: string;
@@ -63,79 +63,56 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
   return null;
 };
 
+// Pre-build options: years 2022 down to 2010 with division label
+const BIRTH_YEAR_OPTIONS = Array.from({ length: 13 }, (_, i) => {
+  const year = 2022 - i;
+  const division = getDivisionFromBirthYear(year);
+  return {
+    value: String(year),
+    label: division ? `${year} — ${division.ageRange} (${division.name})` : `${year}`,
+  };
+});
+
 const DivisionFinder = () => {
-  const [birthYear, setBirthYear] = useState("");
   const [result, setResult] = useState<DivisionResult | null>(null);
-  const [error, setError] = useState("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
 
-  const handleSearch = () => {
-    setError("");
-    setResult(null);
-
-    const year = parseInt(birthYear);
-    if (isNaN(year)) {
-      setError("Please enter a valid birth year");
-      return;
-    }
-
-    const currentYear = new Date().getFullYear();
-    if (year < 2010 || year > currentYear - 3) {
-      setError(`Please enter a birth year between 2010 and ${currentYear - 3}`);
-      return;
-    }
-
+  const handleValueChange = (value: string) => {
+    setSelectedYear(value);
+    const year = parseInt(value);
     const division = getDivisionFromBirthYear(year);
-    if (!division) {
-      setError("No division found for this age. Please contact us for more information.");
-      return;
-    }
-
     setResult(division);
   };
 
   const handleReset = () => {
-    setBirthYear("");
+    setSelectedYear("");
     setResult(null);
-    setError("");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
   };
 
   return (
     <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-xl">
-          <Search className="h-5 w-5 text-primary" />
+          <ChevronDown className="h-5 w-5 text-primary" />
           Find Your Division
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Enter your child's birth year to find the right division
+          Select your child's birth year to instantly find the right division
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder="Birth year (e.g., 2018)"
-            value={birthYear}
-            onChange={(e) => setBirthYear(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1"
-            min="2010"
-            max={new Date().getFullYear() - 3}
-          />
-          <Button onClick={handleSearch} className="shrink-0">
-            Find Division
-          </Button>
-        </div>
-
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
+        <Select value={selectedYear} onValueChange={handleValueChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select birth year…" />
+          </SelectTrigger>
+          <SelectContent>
+            {BIRTH_YEAR_OPTIONS.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         {result && (
           <div className="mt-4 space-y-4 animate-in fade-in-50 slide-in-from-bottom-2">
