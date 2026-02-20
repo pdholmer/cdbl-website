@@ -60,11 +60,6 @@ const DropdownNav = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/travel/teams" className="w-full cursor-pointer">
-              Rockets Teams
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
             <Link to="/travel#tryouts" className="w-full cursor-pointer">
               Tryouts & Registration
             </Link>
