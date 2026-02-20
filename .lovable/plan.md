@@ -1,54 +1,58 @@
 
-## Registration Page Fixes
+## Consolidate to a Single Registration Page
 
-### Summary of Claude's Recommendations — What's Real vs. Not
+### The Situation
 
-| Issue | Status | Action |
+There are two overlapping registration pages:
+
+| Page | Route | Unique Content |
 |---|---|---|
-| Fee amounts contradict across pages | Confirmed — 3 different fee sets across DB, /registration, and /in-house/registration | Fix |
-| Pony pricing bare '$' | Confirmed — DB has null, no null guard on Registration.tsx | Fix |
-| FAQ references board@cdbl.org | Not accurate — scholarship FAQ already uses correct `cdbaseball.org` domain | Skip |
-| 'ALL users must create new account' warning | Confirmed alarming — exists in both Registration and InHouseRegistration | Fix |
-| Interstitial before redirect | target=_blank already exists; add a brief info note explaining the redirect | Fix |
+| `Registration.tsx` | `/registration` | Hero photo, In-House vs Travel comparison table, dynamic FAQs from database, "How to Register" steps |
+| `InHouseRegistration.tsx` | `/in-house/registration` | "All Players Welcome" section with 3 feature cards (No Tryouts / All Skill Levels / Fair Play), 6 detailed FAQ cards (equipment list, volunteer requirements, refund policy, etc.) |
 
----
-
-### Root Cause: Fee Data Mismatch
-
-The database has In-House fees set to: T-Ball $125, Pinto $150, Mustang $175, Bronco $200, Pony (null). These are likely outdated/incorrect values. The hardcoded fees ($195, $250, $275, $290, $335) in `InHouseRegistration.tsx` appear to be the correct 2026 fees per the stored memory. The comparison table in `Registration.tsx` already uses $195-$335, which matches those correct values.
-
-**Solution:** Update the database divisions to reflect the correct 2026 fees, then remove all hardcoded fee values so every page pulls dynamically from the single source of truth.
+**Winner: `/registration`** — it is more complete, pulls live data from the database, and is the more broadly-linked page. The unique content from `/in-house/registration` (the "All Players Welcome" block and the 6 detailed FAQ cards) will be merged into it.
 
 ---
 
 ### Changes
 
-**1. Update database fees (data operation)**
-Update the `divisions` table to set correct 2026 In-House fees:
-- T-Ball: $195
-- Pinto: $250
-- Mustang: $275
-- Bronco: $290
-- Pony: $335
+**1. `src/pages/Registration.tsx` — Merge unique In-House content**
+- Add the "All Players Welcome" section (3 feature cards: No Tryouts / All Skill Levels / Fair Play) between the comparison table and the FAQ section
+- Replace the sparse fallback FAQ block with the 6 detailed FAQs from `InHouseRegistration.tsx` as the static fallback (equipment, refund policy, scholarships, volunteer requirements, sibling discounts, evaluations/draft dates) — these still show when the database FAQs are empty
 
-**2. `src/pages/InHouseRegistration.tsx`**
-- Replace the hardcoded fee list with a dynamic query using `usePrograms()` hook (same pattern as `Registration.tsx` already uses)
-- Add a null guard on cost: show `TBD — Contact registrar@cdbaseball.org` if cost is null (matching the `/in-house` page pattern)
+**2. `src/App.tsx` — Remove the old route, add a redirect**
+- Remove the `import InHouseRegistration` line
+- Remove the `<Route path="/in-house/registration" ...>` route
+- Add a redirect: `<Route path="/in-house/registration" element={<Navigate to="/registration" replace />} />` so any bookmarked or external links still work
 
-**3. `src/pages/Registration.tsx`**
-- Add a null guard on the fee card render: `division.cost != null ? \`$${division.cost}\` : 'TBD'` (line 91)
-- The comparison table row already hardcodes `$195-$335` — update to reflect the real range dynamically or keep as accurate static text after the DB is corrected
+**3. `src/components/DropdownNav.tsx` — Update link**
+- Change the In-House dropdown "Registration" link from `/in-house/registration` → `/registration`
 
-**4. Soften the "ALL users must create new account" warning**
-- `Registration.tsx` line 251: Change bold alarming text to: *"If you've registered with CDBL before, you'll need to create a new account in our updated registration system — it only takes 2 minutes."*
-- `InHouseRegistration.tsx` line 201: Same softened language
+**4. `src/components/RegistrationSection.tsx` — Update link**
+- Change the "Register for In-House" button from `/in-house/registration` → `/registration`
 
-**5. Add redirect notice before SportsConnect**
-- On both registration pages, add a small info callout above (or below) the "Register Now" button:  
-  *"Clicking Register Now will open our secure registration partner, SportsConnect, in a new tab. Return here any time for program information."*
-- This is a static `<p>` or `<Alert>` — no modal needed, keeps it lightweight
+**5. `src/pages/InHouse.tsx` — Update sub-nav link**
+- Change the Registration card in the sub-page nav grid from `/in-house/registration` → `/registration`
 
-### Files to Modify
-- `src/pages/InHouseRegistration.tsx` — dynamic fees, soften warning, redirect notice
-- `src/pages/Registration.tsx` — null guard on fees, soften warning, redirect notice
-- Database `divisions` table — correct fee values for all 5 In-House divisions
+**6. Delete `src/pages/InHouseRegistration.tsx`**
+- File is no longer needed once all links redirect to `/registration`
+
+---
+
+### Links Updated Across the Site
+
+| File | Old link | New link |
+|---|---|---|
+| `DropdownNav.tsx` | `/in-house/registration` | `/registration` |
+| `RegistrationSection.tsx` | `/in-house/registration` | `/registration` |
+| `InHouse.tsx` | `/in-house/registration` | `/registration` |
+| `App.tsx` | route `/in-house/registration` | redirect → `/registration` |
+
+All other existing links to `/registration` (QuickActions, Footer, Teams, NewToCDBL, ChatAssistant) already point to the correct page and need no changes.
+
+---
+
+### Technical Notes
+- `Navigate` from `react-router-dom` is already imported in the project pattern — no new dependencies needed
+- The `InHouseRegistration.tsx` file is deleted entirely; the redirect in `App.tsx` handles any stale bookmarks or external links gracefully
+- The merged `Registration.tsx` keeps all dynamic data hooks (`usePrograms`, `useFAQs`) and adds the static "All Players Welcome" block as a visually distinct section between the comparison table and FAQ
