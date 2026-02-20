@@ -1,83 +1,82 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Rocket, Trophy, Target, Calendar, DollarSign, Star, TrendingUp, Award } from "lucide-react";
+import { Rocket, Trophy, Target, Calendar, DollarSign, TrendingUp, Award, ChevronRight, FileText, MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import rocketLogo from "@/assets/rocket-white-2.png";
-import chsLogo from "@/assets/chs-rocket.png";
-import rocketWhite3 from "@/assets/rocket-white-3.png";
 import heroTravelTeams from "@/assets/hero-travel-teams.jpg";
+
 const Travel = () => {
-  const teams = [{
-    age: "8U",
-    record: "Regional Champions 2025",
-    coach: "Mike Stevens"
-  }, {
-    age: "10U",
-    record: "State Tournament Qualifier",
-    coach: "Jennifer Martinez"
-  }, {
-    age: "12U",
-    record: "Conference Champions",
-    coach: "Robert Chen"
-  }, {
-    age: "14U",
-    record: "Elite Division Finalists",
-    coach: "David Thompson"
-  }];
   return <div className="min-h-screen">
       <Header />
       <main>
-        {/* Hero Section - Rockets Theme */}
+        {/* Hero Section */}
         <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]" style={{
         backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelTeams}')`
       }}>
           <div className="container">
-            <div className="flex items-center gap-4 mb-6">
-              <div>
-                <h1 className="text-4xl md:text-6xl font-bold">CDBL Rockets</h1>
-                <p className="text-xl opacity-90">The Future Starts Here</p>
-              </div>
-              <img src={rocketLogo} alt="CDBL Rockets" className="h-16 w-auto" />
+            <div className="mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold">CDBL Rockets</h1>
+              <p className="text-xl opacity-90">The Future Starts Here</p>
             </div>
             <p className="text-xl mb-8 max-w-2xl">Elite travel baseball program building the pipeline to Burlington Central High School and beyond.</p>
             <div className="flex flex-wrap gap-4">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <a href="#tryouts">Register for 2027 Tryouts</a>
-              </Button>
-              <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
-                <Link to="/travel/teams">View Rockets Teams</Link>
+                <a href="#tryouts">2027 Season Tryouts (Fall 2026)</a>
               </Button>
             </div>
           </div>
         </section>
 
-        {/* Future Stars Section */}
+        {/* Sub-page Navigation Grid */}
+        <section className="py-10 bg-muted/30 border-b border-border">
+          <div className="container">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+              <Link to="/travel#tryouts" className="flex items-center gap-3 p-4 bg-background rounded-lg border border-border hover:border-primary hover:shadow-sm transition-all group">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                  <Calendar className="h-5 w-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm">Tryouts & Registration</p>
+                  <p className="text-xs text-muted-foreground">Dates, eligibility & process</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+              </Link>
+
+              <Link to="/travel/schedule" className="flex items-center gap-3 p-4 bg-background rounded-lg border border-border hover:border-primary hover:shadow-sm transition-all group">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                  <MapPin className="h-5 w-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm">Tournament Schedule</p>
+                  <p className="text-xs text-muted-foreground">Upcoming tournaments & events</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+              </Link>
+
+              <Link to="/travel/faq" className="flex items-center gap-3 p-4 bg-background rounded-lg border border-border hover:border-primary hover:shadow-sm transition-all group">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                  <FileText className="h-5 w-5 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm">Travel FAQ</p>
+                  <p className="text-xs text-muted-foreground">Common questions answered</p>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Building Future Rockets */}
         <section className="py-16 bg-background">
           <div className="container">
             <div className="text-center mb-12">
-              <img src={chsLogo} alt="Central High School Rockets" className="h-16 w-auto mx-auto mb-4" />
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Building Future Rockets</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Our travel program creates a direct pipeline to Burlington Central High School (District 301), 
                 developing elite players who go on to compete at the highest levels.
               </p>
-            </div>
-
-            <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {teams.map(team => <Card key={team.age} className="text-center border-2 border-primary/20 hover:border-primary transition-colors">
-                  <CardHeader>
-                    <div className="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center bg-gradient-to-br from-primary to-accent">
-                      <Star className="h-8 w-8 text-white" />
-                    </div>
-                    <CardTitle className="text-2xl">{team.age}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p className="text-sm font-semibold text-primary">{team.record}</p>
-                    <p className="text-xs text-muted-foreground">Coach: {team.coach}</p>
-                  </CardContent>
-                </Card>)}
             </div>
           </div>
         </section>
@@ -120,7 +119,7 @@ const Travel = () => {
 
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent mx-auto mb-4 flex items-center justify-center">
-                  <Star className="h-8 w-8 text-white" />
+                  <Award className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">College Exposure</h3>
                 <p className="text-muted-foreground">
@@ -130,7 +129,7 @@ const Travel = () => {
 
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent mx-auto mb-4 flex items-center justify-center">
-                  <Award className="h-8 w-8 text-white" />
+                  <Calendar className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold mb-3">Competitive Schedule</h3>
                 <p className="text-muted-foreground">40-50 games per season including 5-8 weekend tournaments. April through July season.</p>
@@ -157,7 +156,7 @@ const Travel = () => {
             <div className="space-y-6">
               <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
                 <CardHeader>
-                  <CardTitle className="text-2xl">2027 Season Tryouts</CardTitle>
+                  <CardTitle className="text-2xl">2027 Season Tryouts (held Fall 2026)</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-4">
@@ -184,7 +183,6 @@ const Travel = () => {
                     <li>✓ Baseball pants</li>
                     <li>✓ Cleats</li>
                     <li>✓ Athletic wear and water bottle</li>
-                    
                   </ul>
                 </CardContent>
               </Card>
@@ -225,7 +223,7 @@ const Travel = () => {
                     <p className="font-semibold mb-2">Financial Investment</p>
                     <ul className="text-muted-foreground space-y-1 ml-4">
                       <li>• Registration fee: ~$400</li>
-                      <li>• Uniforms: $100 - $2500</li>
+                      <li>• Uniform package: $150 - $350 (varies by age group)</li>
                       <li>• Total typical cost: $1,500-$3,000 per season (depends on the team)</li>
                       <li>• Additional Expenses (possible): Travel, hotel, meals and gas</li>
                     </ul>
@@ -246,13 +244,10 @@ const Travel = () => {
                 <li>✓ Family can commit to weekend travel and practice schedule</li>
                 <li>✓ Financial investment fits family budget</li>
               </ul>
-              <p className="text-muted-foreground mt-4">
-                <strong>Questions?</strong> Contact our Travel Coordinator at travel@cdbaseball.org
-              </p>
             </div>
 
-            <div className="mt-12 text-center">
-              <p className="text-muted-foreground mb-4">
+            <div className="mt-8 text-center">
+              <p className="text-muted-foreground">
                 <strong>Questions?</strong> Contact our Travel Coordinator at <a href="mailto:travel@cdbaseball.org" className="text-primary hover:underline">travel@cdbaseball.org</a>
               </p>
             </div>
@@ -262,7 +257,6 @@ const Travel = () => {
         {/* CTA Section */}
         <section className="py-16 bg-primary text-primary-foreground">
           <div className="container text-center">
-            <img src={rocketWhite3} alt="CDBL Rockets" className="h-16 w-auto mx-auto mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Launch Your Baseball Career</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
               Join the CDBL Rockets and take your game to the next level. Future stars start here.
@@ -270,9 +264,6 @@ const Travel = () => {
             <div className="flex flex-wrap gap-4 justify-center">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
                 <a href="#tryouts">View Tryout Information</a>
-              </Button>
-              <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold">
-                <Link to="/travel/teams">View Rockets Teams</Link>
               </Button>
             </div>
           </div>

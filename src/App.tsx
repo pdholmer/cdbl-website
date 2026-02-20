@@ -24,8 +24,6 @@ import InHouseTeams from "./pages/InHouseTeams";
 import InHouseRegistration from "./pages/InHouseRegistration";
 import InHouseSchedule from "./pages/InHouseSchedule";
 import InHouseRules from "./pages/InHouseRules";
-import TravelTeams from "./pages/TravelTeams";
-
 import TravelSchedule from "./pages/TravelSchedule";
 import TravelFAQ from "./pages/TravelFAQ";
 import NotFound from "./pages/NotFound";
@@ -104,8 +102,6 @@ const App = () => (
           <Route path="/in-house/schedule" element={<InHouseSchedule />} />
           <Route path="/in-house/rules" element={<InHouseRules />} />
           <Route path="/travel" element={<Travel />} />
-          <Route path="/travel/teams" element={<TravelTeams />} />
-          
           <Route path="/travel/schedule" element={<TravelSchedule />} />
           <Route path="/travel/faq" element={<TravelFAQ />} />
           {/* Admin Routes */}
