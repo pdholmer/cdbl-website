@@ -17,7 +17,7 @@ const InHouse = () => {
       <main>
         {/* Hero Section */}
         <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
+          className="relative min-h-[320px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[480px] py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center] flex items-center"
           style={{ 
             backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroInhouse}')`
           }}
@@ -28,8 +28,11 @@ const InHouse = () => {
                 In-House Baseball Program
               </h1>
               
-              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-95">
+              <p className="text-base sm:text-lg md:text-xl mb-1 leading-relaxed opacity-95">
                 Where every child plays, learns, and loves the game. Recreational baseball for ages 4-14 using MLB team names.
+              </p>
+              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-80 italic">
+                No tryouts. No cuts. Just baseball.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
