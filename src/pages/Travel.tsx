@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Rocket, Trophy, Target, Calendar, DollarSign, TrendingUp, Award, ChevronRight, FileText, MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import heroTravelTeams from "@/assets/hero-travel-teams.jpg";
+import heroTravelRockets from "@/assets/hero-travel-rockets.jpg";
 
 const Travel = () => {
   return <div className="min-h-screen">
@@ -12,7 +12,7 @@ const Travel = () => {
       <main>
         {/* Hero Section */}
         <section className="relative min-h-[320px] sm:min-h-[360px] md:min-h-[420px] lg:min-h-[480px] py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center] flex items-center" style={{
-        backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelTeams}')`
+        backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroTravelRockets}')`
       }}>
           <div className="container relative z-10">
             <div className="max-w-3xl">
