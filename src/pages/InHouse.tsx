@@ -64,7 +64,7 @@ const InHouse = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { to: "/in-house/teams", icon: Users, label: "Teams & Divisions", desc: "See all divisions and meet your team" },
-                { to: "/in-house/registration", icon: ClipboardList, label: "Registration", desc: "Register your player for 2026" },
+                { to: "/registration", icon: ClipboardList, label: "Registration", desc: "Register your player for 2026" },
                 { to: "/in-house/schedule", icon: Calendar, label: "Schedule", desc: "View game dates and times" },
                 { to: "/in-house/rules", icon: BookOpen, label: "Rules & FAQ", desc: "Division rules and common questions" },
               ].map(({ to, icon: Icon, label, desc }) => (
