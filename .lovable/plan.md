@@ -1,13 +1,17 @@
 
-## Change H1 Text on In-House Hero
+## Update Travel Page Hero Image
 
-One-line change in `src/pages/InHouse.tsx`.
+Replace the current `hero-travel-teams.jpg` with the uploaded Rockets team photo.
 
-### Change
+### Changes
 
-**`src/pages/InHouse.tsx` line 28**
-- Before: `In-House Baseball Program`
-- After: `In-House Program`
+**1. Copy image to assets**
+- Copy `user-uploads://image-14.png` → `src/assets/hero-travel-rockets.jpg`
+
+**2. `src/pages/Travel.tsx`**
+- Swap the import: replace `import heroTravelTeams from "@/assets/hero-travel-teams.jpg"` with `import heroTravelRockets from "@/assets/hero-travel-rockets.jpg"`
+- Update the `backgroundImage` style to reference `heroTravelRockets`
 
 ### Files to Modify
-- `src/pages/InHouse.tsx` — H1 text only
+- `src/assets/hero-travel-rockets.jpg` — new asset (copied from upload)
+- `src/pages/Travel.tsx` — updated import and background image reference
