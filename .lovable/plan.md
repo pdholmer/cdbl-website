@@ -1,78 +1,74 @@
 
-# Security & Accessibility Audit — What's Valid, What Isn't, and What We'll Fix
+# Homepage Content & UX Improvements — Audit Results & Plan
 
-## Audit Results
+## Audit Findings
 
-### CONFIRMED VALID ISSUES (will fix)
+### VALID — Will Fix
 
-**[CRITICAL] Admin Sign Up tab is publicly accessible**
-Confirmed. `src/pages/admin/Login.tsx` has a full "Sign Up" tab visible to anyone. The `assign_first_user_admin` RPC call does soft-gate the admin role, but the tab still allows anyone to self-register an account. Fix: remove the Sign Up tab entirely. Admin user creation belongs in the protected Admin panel only.
+**[HIGH] Mission statement and Core Values duplicated on /about**
+Confirmed. `AboutSection.tsx` (rendered on the homepage) contains a full "Welcome to CDBL" mission statement and a complete 4-card "Our Core Values" section with a Safety highlight. These are also in `About.tsx` verbatim. Fix: Replace `AboutSection` with a slim 2-sentence teaser + "Learn More About CDBL" CTA linking to `/about`. The Safety highlight and core values cards stay on the About page only.
 
-**[HIGH] `user-scalable=no` in viewport meta tag**
-Confirmed. `index.html` line 5 has `maximum-scale=1.0, user-scalable=no`. This is a real WCAG 2.1 violation. Fix: remove those two attributes.
+**[MEDIUM] Stats repeated (38 years, 400+ players)**
+Confirmed. The `RegistrationSection` value props show "400+ players and families in the Burlington area." The `About.tsx` page has a dedicated "By The Numbers" grid with all four stats. Fix: Rephrase the homepage value prop copy to remove the stat — e.g., change "400+ players and families" to "A welcoming community of players and families."
 
-**[MEDIUM] Floating FABs lack aria-labels**
-Confirmed. `FeedbackFAB.tsx` has no `aria-label` on the button — only a `TooltipContent`. The `ChatAssistant.tsx` toggle button (MessageCircle icon) also needs to be checked for aria-label. Fix: add `aria-label` to both FAB buttons.
+**[MEDIUM] Hero carousel has 6 slides — too many**
+Confirmed. `Hero.tsx` defines 6 slides. Fix: Reduce to 3 highest-priority slides: (1) New to CDBL?, (2) 2026 Registration, (3) Game Schedule. Remove Find Your Program, Shop Rockets Gear, and Volunteer slides. Add dot progress indicators and pause-on-hover behavior.
 
-**[MEDIUM] Location inconsistency: Burlington vs Plato Center**
-Confirmed. Footer (`Footer.tsx`) shows "Plato Center, IL" in two places. `About.tsx`, `AboutSection.tsx`, `Donate.tsx`, `Travel.tsx`, and `index.html` all say "Burlington, IL." The correct league address per the memory notes is **Plato Center, IL**. Fix: standardize to "Burlington & Plato Center, IL" across all user-facing text where a location is mentioned.
+**[MEDIUM] Sponsor section shows placeholder names**
+Confirmed. `SponsorsSection.tsx` has a hardcoded array of 6 placeholder sponsors. Fix: Remove the placeholder sponsor grid entirely. Display only the "Become a Sponsor" CTA panel. The heading changes to "Support CDBL" and a brief description explains why sponsorship matters.
 
-**[MEDIUM] Domain inconsistency: @cdbl.org vs @cdbaseball.org**
-Confirmed. `TravelFAQ.tsx` uses `travel@cdbl.org` and `Teams.tsx` uses `coaches@cdbl.org`. All other references (Footer, Contact page, About) use `@cdbaseball.org`. Fix: update both `cdbl.org` email references to use `@cdbaseball.org`.
-
-**[MEDIUM] Board member emails exposed on /contact**
-Confirmed. `Contact.tsx` shows direct mailto links for president, VP, treasurer, and travel coordinator roles. This is an email harvesting risk. Fix: remove individual mailto links, replace with a note directing to the contact form.
+**[LOW] Quick-action cards for mobile users**
+Valid improvement. Nothing like this exists. Fix: Add a `QuickActions` section below the Hero with 4 cards: Register Now, View Schedule, Find a Field, Contact Us. 2×2 grid on mobile, 4-column on desktop. Min 44px tap targets throughout.
 
 ---
 
-### NOT ACTIONABLE / OUT OF SCOPE (will not implement)
+### NOT VALID / ALREADY WORKS — Will Not Fix
 
-**[HIGH] No CAPTCHA on any forms**
-CAPTCHA (reCAPTCHA v3 or Cloudflare Turnstile) requires an external API key/account setup that the user needs to configure. Adding reCAPTCHA also requires a secret key in a backend function and a site key in the frontend. This is a larger integration outside this single pass — flagged for user to set up separately.
-
-**[HIGH] No MFA on admin login**
-Supabase's TOTP MFA is configured in the Supabase dashboard and requires auth flow changes. The existing login already has 5-attempt client-side lockout. Full TOTP MFA is a significant separate feature with enrollment flow, recovery codes, etc. This is out of scope for this pass but noted for future work.
-
-**[HIGH] Multiple tap targets under 44px**
-This requires a full accessibility audit across all pages. A blanket CSS utility class can be added (`min-h-[44px]`), but applying it selectively without visual regression across every button/link/control across 30+ pages is too broad for a single sweep. Flagged for targeted follow-up.
+**[LOW] #contact anchor link likely broken**
+Not valid. Inspecting the code: `Footer.tsx` already has `id="contact"` on the `<footer>` element (line 7). The `SponsorsSection` "Get in Touch →" link using `href="#contact"` will correctly scroll to the footer on the same page. No fix needed.
 
 ---
 
 ## Changes to Make
 
-### 1. `index.html` — Fix viewport meta tag
-Remove `maximum-scale=1.0, user-scalable=no` from the viewport meta tag.
+### 1. `src/components/AboutSection.tsx` — Replace with slim teaser
+Replace the full mission + core values + safety content with a compact section containing:
+- A 2-sentence mission teaser
+- A "Learn More About CDBL →" button linking to `/about`
+- A simple stat strip: "38 Years · 400+ Players · 50+ Teams · 100+ Volunteers" as a horizontal banner (not a full grid)
 
-### 2. `src/pages/admin/Login.tsx` — Remove Sign Up tab
-Remove the "Sign Up" `TabsTrigger`, `TabsContent`, and all related `handleSignUp` logic. Replace the `Tabs` component with a simple sign-in-only form. Update the card description to reflect sign-in only. Leave a small note: "Need an account? Contact an administrator."
+This cuts ~100 lines down to ~30, and the full content lives exclusively on `/about`.
 
-### 3. `src/components/feedback/FeedbackFAB.tsx` — Add aria-label
-Add `aria-label="Submit feedback"` to the Button element.
+### 2. `src/components/RegistrationSection.tsx` — Remove stat from value prop
+Change the "Community First" card text from "400+ players and families in the Burlington area" to "A welcoming community of players and families" to avoid stat duplication with the About page.
 
-### 4. `src/components/ChatAssistant.tsx` — Add aria-label to toggle button
-Confirm and add `aria-label="Chat with CDBL Assistant"` to the open/close button.
+### 3. `src/components/Hero.tsx` — Reduce to 3 slides + add dots + pause-on-hover
+Keep slides 1, 3, 4 (New to CDBL, 2026 Registration, Game Schedule). Remove slides 2, 5, 6 (Find Your Program, Shop Rockets Gear, Volunteer). Add:
+- Dot indicators (progress dots) at the bottom of the carousel
+- `stopOnInteraction: false` + `stopOnMouseEnter: true` for pause-on-hover behavior via the Autoplay plugin
 
-### 5. `src/pages/Contact.tsx` — Replace board member email links
-In the "Board Members & Key Contacts" section, remove the `mailto:` anchor tags for president, VP, treasurer, and travel coordinator. Replace with a note directing people to the contact form above, keeping names and titles visible but removing harvastable email addresses.
+### 4. `src/components/SponsorsSection.tsx` — Remove placeholders, show CTA only
+Remove the 6 placeholder sponsor cards and the mapping loop. Show only the "Become a Sponsor" CTA panel, centered. Rename the section heading to "Support CDBL." Keep the heart icon.
 
-### 6. `src/pages/TravelFAQ.tsx` — Fix domain
-Change `travel@cdbl.org` → `travel@cdbaseball.org`.
+### 5. `src/pages/Index.tsx` + new `src/components/QuickActions.tsx` — Add mobile quick-action grid
+Create a new `QuickActions` component with 4 tap-friendly cards:
+- Register Now → `/registration`
+- View Schedule → `/schedule`  
+- Find a Field → `/fields`
+- Contact Us → `/contact`
 
-### 7. `src/pages/Teams.tsx` — Fix domain  
-Change `coaches@cdbl.org` → `coaches@cdbaseball.org`.
+Cards use large icons, bold labels, and `min-h-[88px]` with `min-w-[44px]` for accessibility. On mobile: 2×2 CSS grid. On desktop: single 4-column row. Place it in `Index.tsx` immediately after `<Hero />`.
 
-### 8. Location standardization — "Burlington & Plato Center, IL"
-Update location references across:
-- `src/components/Footer.tsx` — two instances of "Plato Center, IL"
-- `src/components/AboutSection.tsx` — "Burlington, IL"
-- `src/pages/About.tsx` — "Burlington, IL"
-- `src/pages/Donate.tsx` — "Burlington, IL"
-- `index.html` — schema JSON "Burlington" and meta description "Burlington, IL"
+## Files to Modify
+- `src/components/Hero.tsx` — Slide reduction + dots + pause-on-hover
+- `src/components/AboutSection.tsx` — Replace with slim teaser
+- `src/components/RegistrationSection.tsx` — Remove stat duplication
+- `src/components/SponsorsSection.tsx` — Remove placeholders
+- `src/pages/Index.tsx` — Add QuickActions import
 
-Use consistent phrasing: **"Burlington & Plato Center, IL"** (or "Serving Burlington & Plato Center, IL" where more context is needed).
+## New File
+- `src/components/QuickActions.tsx` — New mobile-first quick-action grid
 
-## Technical Notes
-- No database migrations required for these changes
-- No new dependencies required
-- All changes are purely to existing source files
-- The Sign Up removal does not disable Supabase auth signups globally — it only removes the public-facing UI entry point. Admin user creation flow should eventually be built into the protected Admin > Users panel.
+## Not Changing
+- `src/components/Footer.tsx` — `id="contact"` already works correctly
+- `src/pages/About.tsx` — All full content stays here as intended
