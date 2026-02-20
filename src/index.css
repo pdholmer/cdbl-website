@@ -172,3 +172,28 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* Print styles: hide all site chrome, show only checklist */
+@media print {
+  header,
+  footer,
+  nav,
+  .feedback-fab,
+  .chat-assistant,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  body > #root > div > main {
+    display: none !important;
+  }
+
+  #print-checklist {
+    display: block !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

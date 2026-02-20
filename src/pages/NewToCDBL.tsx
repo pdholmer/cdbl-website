@@ -1,11 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users, ShoppingBag, Camera, Trophy, Clipboard, Heart, HelpCircle } from "lucide-react";
+import { Calendar, Users, ShoppingBag, Camera, Trophy, Clipboard, Heart, HelpCircle, Printer } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import DivisionFinder from "@/components/DivisionFinder";
 import heroNewToCdbl from "@/assets/hero-new-to-cdbl.jpg";
+import cdblLogo from "@/assets/cdbl-logo-main.png";
 
 const NewToCDBL = () => {
   return (
@@ -20,10 +21,69 @@ const NewToCDBL = () => {
           }}
         >
           <div className="container">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">New to CDBL?</h1>
-            <p className="text-xl max-w-2xl">Everything you need to know to get started with your child's baseball journey.</p>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">New to CDBL?</h1>
+            <p className="text-xl max-w-2xl mb-8">Everything you need to know to get started with your child's baseball journey.</p>
+            <Button
+              variant="outline"
+              className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold"
+              onClick={() => window.print()}
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Print Getting Started Checklist
+            </Button>
           </div>
         </section>
+
+        {/* Hidden print-only checklist */}
+        <div id="print-checklist" className="hidden print:block p-8 font-sans text-black max-w-2xl mx-auto">
+          <div className="flex items-center gap-4 mb-6 border-b-2 border-black pb-4">
+            <img src={cdblLogo} alt="CDBL Logo" className="h-16 w-auto" />
+            <div>
+              <h1 className="text-2xl font-bold">2026 Getting Started Checklist</h1>
+              <p className="text-sm">Carrollton-Durham Baseball League · cdbaseball.org</p>
+            </div>
+          </div>
+
+          <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">📅 Key Dates</h2>
+          <ul className="mb-4 space-y-1 text-sm">
+            <li>☐ <strong>December 1:</strong> Early registration opens (best pricing)</li>
+            <li>☐ <strong>March 8–9, 2026:</strong> Player evaluations (bring glove)</li>
+            <li>☐ <strong>March 15, 2026:</strong> Draft Day — teams assigned</li>
+            <li>☐ <strong>March 20, 2026:</strong> Team & coach notification via email</li>
+            <li>☐ <strong>Late March:</strong> First team practice</li>
+            <li>☐ <strong>April 2026:</strong> Opening Day & season begins</li>
+          </ul>
+
+          <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">🧢 Equipment Checklist</h2>
+          <p className="text-sm mb-1"><strong>CDBL Provides:</strong> Jersey, hat, team equipment</p>
+          <p className="text-sm mb-1"><strong>You Provide:</strong></p>
+          <ul className="mb-4 space-y-1 text-sm ml-4">
+            <li>☐ Baseball glove (appropriate for age)</li>
+            <li>☐ Batting helmet with face guard</li>
+            <li>☐ Baseball pants</li>
+            <li>☐ Cleats (no metal under age 13)</li>
+            <li>☐ Athletic cup (required for catchers)</li>
+            <li>☐ Water bottle</li>
+            <li>☐ Bat (optional — team bats available)</li>
+          </ul>
+
+          <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">🤝 Volunteer Duties</h2>
+          <ul className="mb-4 space-y-1 text-sm">
+            <li>☐ 2 concession stand shifts per season</li>
+            <li>☐ Help at 1 league event (Opening Day, field cleanup, or fundraiser)</li>
+            <li>☐ Optional: Coaching, team parent, scorekeeper roles</li>
+          </ul>
+
+          <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">📬 Key Contacts</h2>
+          <ul className="mb-4 space-y-1 text-sm">
+            <li><strong>League Communications:</strong> Communications@cdbaseball.org</li>
+            <li><strong>Website:</strong> cdbaseball.org</li>
+          </ul>
+
+          <p className="text-xs text-gray-500 mt-8 border-t pt-2">
+            Carrollton-Durham Baseball League — 2026 Season · cdbaseball.org
+          </p>
+        </div>
 
         {/* Division Finder Tool */}
         <section className="py-12 bg-background">
