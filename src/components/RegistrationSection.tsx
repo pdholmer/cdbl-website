@@ -78,7 +78,7 @@ const RegistrationSection = () => {
                   className="flex-1"
                   asChild
                 >
-                  <Link to="/in-house/registration">
+                  <Link to="/registration">
                     Register for In-House
                   </Link>
                 </Button>
