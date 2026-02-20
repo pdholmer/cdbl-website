@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { CircleDot, Users, Trophy, DollarSign, Calendar, Heart } from "lucide-react";
+import { CircleDot, Users, Trophy, DollarSign, Calendar, Heart, ClipboardList, BookOpen } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import heroInhouse from "@/assets/hero-inhouse.jpg";
@@ -50,6 +50,33 @@ const InHouse = () => {
                   <Link to="/teams#in-house">View Teams</Link>
                 </Button>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Sub-page Navigation Grid */}
+        <section className="py-10 bg-muted/50 border-b">
+          <div className="container">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-5">Explore the Program</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { to: "/in-house/teams", icon: Users, label: "Teams & Divisions", desc: "See all divisions and meet your team" },
+                { to: "/in-house/registration", icon: ClipboardList, label: "Registration", desc: "Register your player for 2026" },
+                { to: "/in-house/schedule", icon: Calendar, label: "Schedule", desc: "View game dates and times" },
+                { to: "/in-house/rules", icon: BookOpen, label: "Rules & FAQ", desc: "Division rules and common questions" },
+              ].map(({ to, icon: Icon, label, desc }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className="flex flex-col gap-2 p-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary hover:shadow-md transition-all group"
+                >
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="font-semibold text-sm leading-tight">{label}</span>
+                  <span className="text-xs text-muted-foreground leading-snug">{desc}</span>
+                </Link>
+              ))}
             </div>
           </div>
         </section>
@@ -206,11 +233,20 @@ const InHouse = () => {
                     <CardTitle>Registration Fees</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-2">
+                    {/* Mobile: card stack; Desktop: horizontal rows */}
+                    <div className="grid grid-cols-1 gap-3 md:gap-0 md:space-y-2">
                       {inHouseDivisions?.map((division) => (
-                        <div key={division.id} className="flex justify-between items-center pb-2 border-b last:border-0">
-                          <span>{division.name} (Ages {division.age_range})</span>
-                          <span className="font-bold text-primary">${division.cost}</span>
+                        <div
+                          key={division.id}
+                          className="flex flex-col gap-1 rounded-lg border p-3 md:flex-row md:justify-between md:items-center md:rounded-none md:border-0 md:border-b md:last:border-0 md:p-0 md:pb-2"
+                        >
+                          <div>
+                            <span className="font-semibold block md:inline">{division.name}</span>
+                            <span className="text-sm text-muted-foreground md:ml-1">Ages {division.age_range}</span>
+                          </div>
+                          <span className="font-bold text-primary text-lg md:text-base">
+                            {division.cost != null ? `$${division.cost}` : 'TBD — Contact registrar@cdbaseball.org'}
+                          </span>
                         </div>
                       ))}
                     </div>
