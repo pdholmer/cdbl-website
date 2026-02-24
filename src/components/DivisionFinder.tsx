@@ -4,18 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { Calendar, DollarSign, Clock, ArrowRight, RotateCcw, ChevronDown } from "lucide-react";
+import { Calendar, DollarSign, Clock, ArrowRight, RotateCcw, ChevronDown, Loader2 } from "lucide-react";
+import { usePrograms } from "@/hooks/usePrograms";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface DivisionResult {
+interface DivisionInfo {
   name: string;
   ageRange: string;
   description: string;
   schedule: string;
-  cost: string;
 }
 
-const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
-  const currentYear = 2026; // Season year
+const getDivisionInfoFromBirthYear = (birthYear: number): DivisionInfo | null => {
+  const currentYear = 2026;
   const age = currentYear - birthYear;
 
   if (age >= 4 && age <= 6) {
@@ -24,7 +25,6 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
       ageRange: "Ages 4-6",
       description: "Introduction to baseball fundamentals in a fun, supportive environment. Coach-pitch format with focus on basic skills.",
       schedule: "1 practice + Saturday games",
-      cost: "$195"
     };
   } else if (age >= 7 && age <= 8) {
     return {
@@ -32,7 +32,6 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
       ageRange: "Ages 7-8",
       description: "Player-pitch baseball with continued skill development. Players begin learning positions and game strategy.",
       schedule: "2 practices + 1-2 games per week",
-      cost: "$250"
     };
   } else if (age >= 9 && age <= 10) {
     return {
@@ -40,7 +39,6 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
       ageRange: "Ages 9-10",
       description: "Competitive play with full rules. Focus on team concepts, situational baseball, and advanced skills.",
       schedule: "2 practices + 1-2 games per week",
-      cost: "$275"
     };
   } else if (age >= 11 && age <= 12) {
     return {
@@ -48,7 +46,6 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
       ageRange: "Ages 11-12",
       description: "Advanced competitive baseball on larger fields. Preparation for middle school baseball programs.",
       schedule: "2-3 practices + 2 games per week",
-      cost: "$290"
     };
   } else if (age >= 13 && age <= 14) {
     return {
@@ -56,17 +53,16 @@ const getDivisionFromBirthYear = (birthYear: number): DivisionResult | null => {
       ageRange: "Ages 13-14",
       description: "High-level youth baseball for experienced players. Full regulation field with advanced competition.",
       schedule: "2-3 practices + 2 games per week",
-      cost: "$335"
     };
   }
-  
+
   return null;
 };
 
 // Pre-build options: years 2022 down to 2010 with division label
 const BIRTH_YEAR_OPTIONS = Array.from({ length: 13 }, (_, i) => {
   const year = 2022 - i;
-  const division = getDivisionFromBirthYear(year);
+  const division = getDivisionInfoFromBirthYear(year);
   return {
     value: String(year),
     label: division ? `${year} — ${division.ageRange} (${division.name})` : `${year}`,
@@ -74,14 +70,23 @@ const BIRTH_YEAR_OPTIONS = Array.from({ length: 13 }, (_, i) => {
 });
 
 const DivisionFinder = () => {
-  const [result, setResult] = useState<DivisionResult | null>(null);
+  const [result, setResult] = useState<DivisionInfo | null>(null);
   const [selectedYear, setSelectedYear] = useState<string>("");
+  const { inHouseDivisions, isLoading } = usePrograms();
+
+  const getCostForDivision = (divisionName: string): string => {
+    if (isLoading) return "Loading…";
+    const match = (inHouseDivisions || []).find(
+      (d: any) => d.name?.toLowerCase() === divisionName.toLowerCase()
+    );
+    if (match?.cost != null) return `$${match.cost}`;
+    return "TBD";
+  };
 
   const handleValueChange = (value: string) => {
     setSelectedYear(value);
     const year = parseInt(value);
-    const division = getDivisionFromBirthYear(year);
-    setResult(division);
+    setResult(getDivisionInfoFromBirthYear(year));
   };
 
   const handleReset = () => {
@@ -132,7 +137,11 @@ const DivisionFinder = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-4 w-4" />
-                  <span>{result.cost} per season</span>
+                  {isLoading ? (
+                    <Skeleton className="h-4 w-16 bg-white/20" />
+                  ) : (
+                    <span>{getCostForDivision(result.name)} per season</span>
+                  )}
                 </div>
               </div>
             </div>
