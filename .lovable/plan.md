@@ -1,34 +1,36 @@
 
 
-## Fix: Feedback Status Changes Not Persisting
+## Fix Equipment Requirements: Faceguards & Cups
 
 ### Problem
-In `FeedbackDetailSlider.tsx`, the state synchronization logic (lines 48-52) runs during every render and compares local state against the `feedback` prop. When a user changes the status dropdown, the new local value differs from the prop, triggering the sync logic to reset it back immediately. The user's selection is reverted before they can click "Save Changes."
+Equipment lists across several pages incorrectly state:
+- **Faceguards**: Listed as mandatory ("Batting helmet with face guard") — they should be **optional/recommended**, not required
+- **Athletic cups**: Listed as "required for catchers" only — they should be **recommended for all players**
 
-### Solution
-Replace the inline state-reset logic with a proper `useEffect` that only syncs local state when a **different feedback item** is selected (keyed on `feedback.id`), not on every render.
+### Affected Files & Changes
 
-### Technical Details
+**4 files need updates** (all text-only changes, no logic):
 
-**File: `src/components/feedback/FeedbackDetailSlider.tsx`**
+#### 1. `src/pages/NewToCDBL.tsx` — Print checklist (line 62)
+- Change: `☐ Batting helmet with face guard` → `☐ Batting helmet (face guard optional)`
 
-1. Add `useEffect` to the import from React (line 1)
-2. Remove the broken inline sync block (lines 48-52)
-3. Add a `useEffect` keyed on `feedback?.id`:
+#### 2. `src/pages/NewToCDBL.tsx` — Equipment Needs card (line 177)
+- Change: `• Batting helmet with face guard` → `• Batting helmet (face guard optional)`
 
-```tsx
-useEffect(() => {
-  if (feedback) {
-    setStatus(feedback.status);
-    setPriority(feedback.priority || '');
-    setAdminNotes(feedback.admin_notes || '');
-  }
-}, [feedback?.id]);
-```
+#### 3. `src/pages/NewToCDBL.tsx` — Print checklist cup line (line 65)
+- Change: `☐ Athletic cup (required for catchers)` → `☐ Athletic cup (recommended for all players)`
 
-This ensures state resets only when opening a different feedback item, not when the user interacts with the form controls.
+#### 4. `src/pages/NewToCDBL.tsx` — Equipment Needs card cup line (line 180)
+- Change: `• Athletic cup (required for catchers)` → `• Athletic cup (recommended for all players)`
+
+#### 5. `src/pages/Registration.tsx` — FAQ answer (line 277)
+- Change: `helmet with face guard (ages 4-12)` → `helmet (face guard optional)`
+- Change: `athletic cup (required for catchers and recommended for all)` → `athletic cup (recommended for all players)`
+
+#### 6. `src/pages/Teams.tsx` — Travel equipment list (line 364)
+- Change: `Athletic cup (required)` → `Athletic cup (recommended for all players)`
 
 ### Scope
-- 1 file modified: `src/components/feedback/FeedbackDetailSlider.tsx`
-- No database or backend changes needed
+- 3 files modified, text-only changes
+- No database, logic, or component structure changes
 
