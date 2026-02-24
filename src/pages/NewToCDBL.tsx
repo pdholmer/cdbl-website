@@ -59,10 +59,10 @@ const NewToCDBL = () => {
           <p className="text-sm mb-1"><strong>You Provide:</strong></p>
           <ul className="mb-4 space-y-1 text-sm ml-4">
             <li>☐ Baseball glove (appropriate for age)</li>
-            <li>☐ Batting helmet with face guard</li>
+            <li>☐ Batting helmet (face guard optional)</li>
             <li>☐ Baseball pants</li>
             <li>☐ Cleats (no metal under age 13)</li>
-            <li>☐ Athletic cup (required for catchers)</li>
+            <li>☐ Athletic cup (recommended for all players)</li>
             <li>☐ Water bottle</li>
             <li>☐ Bat (optional — team bats available)</li>
           </ul>
@@ -174,10 +174,10 @@ const NewToCDBL = () => {
                   </p>
                   <ul className="text-sm text-muted-foreground space-y-1 ml-4">
                     <li>• Baseball glove (appropriate for age)</li>
-                    <li>• Batting helmet with face guard</li>
+                    <li>• Batting helmet (face guard optional)</li>
                     <li>• Baseball pants</li>
                     <li>• Cleats (no metal under age 13)</li>
-                    <li>• Athletic cup (required for catchers)</li>
+                    <li>• Athletic cup (recommended for all players)</li>
                     <li>• Water bottle</li>
                     <li>• Bat (optional, can use team bats)</li>
                   </ul>

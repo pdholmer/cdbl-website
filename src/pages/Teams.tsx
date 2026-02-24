@@ -361,7 +361,7 @@ const Teams = () => {
                             </li>
                             <li className="flex items-start gap-2">
                               <span className="text-primary font-bold">•</span>
-                              <span>Athletic cup (required)</span>
+                              <span>Athletic cup (recommended for all players)</span>
                             </li>
                             <li className="flex items-start gap-2">
                               <span className="text-primary font-bold">•</span>
