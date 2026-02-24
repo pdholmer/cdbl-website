@@ -1,36 +1,27 @@
 
 
-## Fix Equipment Requirements: Faceguards & Cups
+## Fix: DivisionFinder Cost Mismatch — Use Database-Driven Costs
 
 ### Problem
-Equipment lists across several pages incorrectly state:
-- **Faceguards**: Listed as mandatory ("Batting helmet with face guard") — they should be **optional/recommended**, not required
-- **Athletic cups**: Listed as "required for catchers" only — they should be **recommended for all players**
+The `DivisionFinder` component (`src/components/DivisionFinder.tsx`) determines the age group from a birth year and displays a hardcoded cost (lines 21-60). Meanwhile, the In-House page (`src/pages/InHouse.tsx`) and Registration page pull costs dynamically from the database via `usePrograms`. If database costs are updated, the DivisionFinder will show stale values, creating a mismatch.
 
-### Affected Files & Changes
+Currently both sources happen to agree (T-Ball $195, Pinto $250, Mustang $275, Bronco $290, Pony $335), but the architecture guarantees future drift. The fix is to make DivisionFinder consume the same database-driven division data.
 
-**4 files need updates** (all text-only changes, no logic):
+### Solution
+Refactor `DivisionFinder` to use the `usePrograms` hook for cost data instead of hardcoding it.
 
-#### 1. `src/pages/NewToCDBL.tsx` — Print checklist (line 62)
-- Change: `☐ Batting helmet with face guard` → `☐ Batting helmet (face guard optional)`
+### Technical Details
 
-#### 2. `src/pages/NewToCDBL.tsx` — Equipment Needs card (line 177)
-- Change: `• Batting helmet with face guard` → `• Batting helmet (face guard optional)`
+**File: `src/components/DivisionFinder.tsx`**
 
-#### 3. `src/pages/NewToCDBL.tsx` — Print checklist cup line (line 65)
-- Change: `☐ Athletic cup (required for catchers)` → `☐ Athletic cup (recommended for all players)`
+1. Import and call `usePrograms()` to get `inHouseDivisions`
+2. Keep the birth-year-to-division-name mapping (the age ranges are structural and won't change), but replace the hardcoded `cost` field with a lookup into `inHouseDivisions` by matching on division name
+3. The `getDivisionFromBirthYear` function will accept the divisions array as a parameter and pull `cost` from the matching database record
+4. Show a loading state or fallback ("TBD") if the hook is still loading or cost is null
 
-#### 4. `src/pages/NewToCDBL.tsx` — Equipment Needs card cup line (line 180)
-- Change: `• Athletic cup (required for catchers)` → `• Athletic cup (recommended for all players)`
-
-#### 5. `src/pages/Registration.tsx` — FAQ answer (line 277)
-- Change: `helmet with face guard (ages 4-12)` → `helmet (face guard optional)`
-- Change: `athletic cup (required for catchers and recommended for all)` → `athletic cup (recommended for all players)`
-
-#### 6. `src/pages/Teams.tsx` — Travel equipment list (line 364)
-- Change: `Athletic cup (required)` → `Athletic cup (recommended for all players)`
+The static `BIRTH_YEAR_OPTIONS` array (used for the dropdown labels) will remain hardcoded for the division name/age labels since those are structural, but the cost shown in the result card will come from the database.
 
 ### Scope
-- 3 files modified, text-only changes
-- No database, logic, or component structure changes
+- 1 file modified: `src/components/DivisionFinder.tsx`
+- No database changes needed
 
