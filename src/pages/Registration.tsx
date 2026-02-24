@@ -274,7 +274,7 @@ const Registration = () => {
                   <CardContent className="p-6">
                     <h3 className="font-bold text-lg mb-3">What equipment does my child need?</h3>
                     <p className="text-muted-foreground text-sm">
-                      CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet with face guard (ages 4-12), baseball pants, cleats (no metal under age 13), athletic cup (required for catchers and recommended for all), and water bottle. Catchers gear is provided by the league.
+                      CDBL provides jerseys and hats. Players need: glove, bat (or can borrow team bats), helmet (face guard optional), baseball pants, cleats (no metal under age 13), athletic cup (recommended for all players), and water bottle. Catchers gear is provided by the league.
                     </p>
                   </CardContent>
                 </Card>
