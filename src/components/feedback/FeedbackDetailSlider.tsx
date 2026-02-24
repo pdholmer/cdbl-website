@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Copy, Check, Trash2, Star, ExternalLink } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -44,12 +44,13 @@ export function FeedbackDetailSlider({ feedback, isOpen, onClose }: FeedbackDeta
   const [priority, setPriority] = useState(feedback?.priority || '');
   const [adminNotes, setAdminNotes] = useState(feedback?.admin_notes || '');
 
-  // Update local state when feedback changes
-  if (feedback && (status !== feedback.status || priority !== (feedback.priority || '') || adminNotes !== (feedback.admin_notes || ''))) {
-    setStatus(feedback.status);
-    setPriority(feedback.priority || '');
-    setAdminNotes(feedback.admin_notes || '');
-  }
+  useEffect(() => {
+    if (feedback) {
+      setStatus(feedback.status);
+      setPriority(feedback.priority || '');
+      setAdminNotes(feedback.admin_notes || '');
+    }
+  }, [feedback?.id]);
 
   const handleCopyPrompt = async () => {
     if (feedback?.recommended_prompt) {
