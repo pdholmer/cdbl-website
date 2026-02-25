@@ -1076,8 +1076,9 @@ export type Database = {
           source_page: string | null
           status: string
           subject: string
+          submitter_email: string | null
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           admin_notes?: string | null
@@ -1095,8 +1096,9 @@ export type Database = {
           source_page?: string | null
           status?: string
           subject: string
+          submitter_email?: string | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           admin_notes?: string | null
@@ -1114,8 +1116,9 @@ export type Database = {
           source_page?: string | null
           status?: string
           subject?: string
+          submitter_email?: string | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }

@@ -159,6 +159,10 @@ export function FeedbackDetailSlider({ feedback, isOpen, onClose }: FeedbackDeta
               </div>
             )}
             <div>
+              <Label className="text-muted-foreground text-sm">Submitted By</Label>
+              <p>{feedback.profiles?.display_name || feedback.profiles?.email || feedback.submitter_email || 'Unknown'}</p>
+            </div>
+            <div>
               <Label className="text-muted-foreground text-sm">Submitted</Label>
               <p>{format(new Date(feedback.created_at), 'MMM d, yyyy h:mm a')}</p>
             </div>

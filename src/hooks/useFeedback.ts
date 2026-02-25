@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 
 export interface Feedback {
   id: string;
-  user_id: string;
+  user_id: string | null;
   feedback_type: 'general' | 'feature_rating' | 'bug_report' | 'feature_request';
   subject: string;
   description: string;
@@ -18,6 +18,7 @@ export interface Feedback {
   recommended_prompt: string | null;
   prompt_generated_at: string | null;
   screenshot_url: string | null;
+  submitter_email: string | null;
   created_at: string;
   updated_at: string;
   profiles?: {
@@ -30,6 +31,7 @@ export interface FeedbackInsert {
   feedback_type: Feedback['feedback_type'];
   subject: string;
   description: string;
+  submitter_email: string;
   feature_module?: string;
   rating?: number;
   priority?: Feedback['priority'];
@@ -62,7 +64,6 @@ export function useAllFeedback() {
   return useQuery({
     queryKey: ['all-feedback'],
     queryFn: async () => {
-      // Fetch feedback
       const { data: feedbackData, error: feedbackError } = await supabase
         .from('platform_feedback')
         .select('*')
@@ -70,24 +71,23 @@ export function useAllFeedback() {
 
       if (feedbackError) throw feedbackError;
 
-      // Get unique user IDs
-      const userIds = [...new Set(feedbackData.map(f => f.user_id))];
-      
-      // Fetch profiles for those users
-      const { data: profilesData, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, email, display_name')
-        .in('id', userIds);
+      // Get unique non-null user IDs
+      const userIds = [...new Set(feedbackData.map(f => f.user_id).filter(Boolean))] as string[];
 
-      if (profilesError) throw profilesError;
+      let profilesMap = new Map();
+      if (userIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, email, display_name')
+          .in('id', userIds);
 
-      // Create a map for quick lookup
-      const profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+        if (profilesError) throw profilesError;
+        profilesMap = new Map(profilesData?.map(p => [p.id, p]) || []);
+      }
 
-      // Merge feedback with profiles
       const feedbackWithProfiles = feedbackData.map(f => ({
         ...f,
-        profiles: profilesMap.get(f.user_id) || null,
+        profiles: f.user_id ? profilesMap.get(f.user_id) || null : null,
       }));
 
       return feedbackWithProfiles as Feedback[];
@@ -108,25 +108,23 @@ export function useSubmitFeedback() {
       feedback: FeedbackInsert; 
       screenshot: string | null;
     }) => {
+      // Try to get current user (may be null for anonymous)
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('User not authenticated');
 
-      // Insert feedback record
       const { data: feedbackData, error: insertError } = await supabase
         .from('platform_feedback')
         .insert({
           ...feedback,
-          user_id: user.id,
+          user_id: user?.id || null,
         })
         .select()
         .single();
 
       if (insertError) throw insertError;
 
-      // Upload screenshot if present
+      // Upload screenshot if present (may fail for anonymous users)
       if (screenshot && feedbackData) {
         try {
-          // Convert base64 to blob
           const response = await fetch(screenshot);
           const blob = await response.blob();
           
@@ -142,7 +140,6 @@ export function useSubmitFeedback() {
               .from('feedback-screenshots')
               .getPublicUrl(fileName);
 
-            // Update feedback with screenshot URL
             await supabase
               .from('platform_feedback')
               .update({ screenshot_url: publicUrl })
@@ -153,10 +150,10 @@ export function useSubmitFeedback() {
         }
       }
 
-      // Generate AI prompt
+      // Generate AI prompt (may fail for anonymous users)
       if (feedbackData) {
         try {
-          const { error: promptError } = await supabase.functions.invoke('generate-feedback-prompt', {
+          await supabase.functions.invoke('generate-feedback-prompt', {
             body: {
               feedbackId: feedbackData.id,
               feedbackType: feedback.feedback_type,
@@ -166,10 +163,6 @@ export function useSubmitFeedback() {
               priority: feedback.priority,
             },
           });
-
-          if (promptError) {
-            console.error('Failed to generate AI prompt:', promptError);
-          }
         } catch (error) {
           console.error('Failed to call AI prompt function:', error);
         }

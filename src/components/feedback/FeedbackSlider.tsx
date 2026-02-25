@@ -1,15 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { X, MessageSquare, Star, Bug, Lightbulb, Check, Loader2 } from 'lucide-react';
+import { MessageSquare, Star, Bug, Lightbulb, Check, Loader2 } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
   Form,
   FormControl,
@@ -27,12 +26,10 @@ import {
 } from '@/components/ui/select';
 import { useFeedbackContext } from '@/contexts/FeedbackContext';
 import { useSubmitFeedback, FeedbackInsert } from '@/hooks/useFeedback';
-import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
-import { FeedbackAuthPrompt } from './FeedbackAuthPrompt';
-import type { User } from '@supabase/supabase-js';
 
 const feedbackSchema = z.object({
+  email: z.string().trim().email('Please enter a valid email address').max(255),
   feedback_type: z.enum(['general', 'feature_rating', 'bug_report', 'feature_request']),
   subject: z.string().min(5, 'Subject must be at least 5 characters').max(100, 'Subject must be less than 100 characters'),
   description: z.string().min(20, 'Description must be at least 20 characters').max(2000, 'Description must be less than 2000 characters'),
@@ -69,12 +66,11 @@ export function FeedbackSlider() {
   const submitFeedback = useSubmitFeedback();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedRating, setSelectedRating] = useState<number>(0);
-  const [user, setUser] = useState<User | null>(null);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   const form = useForm<FeedbackFormData>({
     resolver: zodResolver(feedbackSchema),
     defaultValues: {
+      email: '',
       feedback_type: 'general',
       subject: '',
       description: '',
@@ -83,29 +79,12 @@ export function FeedbackSlider() {
 
   const feedbackType = form.watch('feedback_type');
 
-  // Set up auth state listener
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-        setIsCheckingAuth(false);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setIsCheckingAuth(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   const handleSubmit = async (data: FeedbackFormData) => {
     const feedbackData: FeedbackInsert = {
       feedback_type: data.feedback_type,
       subject: data.subject,
       description: data.description,
+      submitter_email: data.email,
       feature_module: data.feature_module,
       priority: data.priority,
       source_page: sourcePage,
@@ -133,19 +112,6 @@ export function FeedbackSlider() {
       handleReset();
     }, 300);
   };
-
-  // Loading state while checking auth
-  const renderLoading = () => (
-    <div className="space-y-6 py-4">
-      <div className="flex flex-col items-center space-y-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
-        <Skeleton className="h-6 w-48" />
-        <Skeleton className="h-4 w-64" />
-      </div>
-      <Skeleton className="h-24 w-full" />
-      <Skeleton className="h-10 w-full" />
-    </div>
-  );
 
   // Success state after submission
   const renderSuccess = () => (
@@ -191,6 +157,21 @@ export function FeedbackSlider() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          {/* Email */}
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="you@example.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {/* Feedback Type Selection */}
           <div className="space-y-2">
             <Label>What type of feedback?</Label>
@@ -369,15 +350,7 @@ export function FeedbackSlider() {
           <SheetTitle>Send Feedback</SheetTitle>
         </SheetHeader>
 
-        {isCheckingAuth ? (
-          renderLoading()
-        ) : !user ? (
-          <FeedbackAuthPrompt onClose={handleClose} />
-        ) : isSubmitted ? (
-          renderSuccess()
-        ) : (
-          renderForm()
-        )}
+        {isSubmitted ? renderSuccess() : renderForm()}
       </SheetContent>
     </Sheet>
   );
