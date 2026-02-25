@@ -1,27 +1,31 @@
 
 
-## Fix: DivisionFinder Cost Mismatch — Use Database-Driven Costs
+## Update Umpires Section with External Links
 
 ### Problem
-The `DivisionFinder` component (`src/components/DivisionFinder.tsx`) determines the age group from a birth year and displays a hardcoded cost (lines 21-60). Meanwhile, the In-House page (`src/pages/InHouse.tsx`) and Registration page pull costs dynamically from the database via `usePrograms`. If database costs are updated, the DivisionFinder will show stale values, creating a mismatch.
+The umpire section currently has a single "Sign Up to Learn More" button linking to Blue Sombrero. It needs three links added: a PDF flyer, a Google Form sign-up, and the FVB website.
 
-Currently both sources happen to agree (T-Ball $195, Pinto $250, Mustang $275, Bronco $290, Pony $335), but the architecture guarantees future drift. The fix is to make DivisionFinder consume the same database-driven division data.
+### Changes
 
-### Solution
-Refactor `DivisionFinder` to use the `usePrograms` hook for cost data instead of hardcoding it.
+**File: `src/components/UmpiresSection.tsx`**
 
-### Technical Details
+1. Add `FileText, ExternalLink, ClipboardList` icons from lucide-react
+2. Replace the single "Sign Up to Learn More" button with three buttons/links:
+   - **Download Flyer** (PDF link) — opens the JVB flyer PDF in a new tab
+   - **Sign Up Now** (Google Form) — primary CTA linking to the Google Form
+   - **Visit FVB Website** (external link) — links to fvbumpire.com/jvblues
+3. Stack them in a flex column or grid layout so they display cleanly on all screen sizes
 
-**File: `src/components/DivisionFinder.tsx`**
-
-1. Import and call `usePrograms()` to get `inHouseDivisions`
-2. Keep the birth-year-to-division-name mapping (the age ranges are structural and won't change), but replace the hardcoded `cost` field with a lookup into `inHouseDivisions` by matching on division name
-3. The `getDivisionFromBirthYear` function will accept the divisions array as a parameter and pull `cost` from the matching database record
-4. Show a loading state or fallback ("TBD") if the hook is still loading or cost is null
-
-The static `BIRTH_YEAR_OPTIONS` array (used for the dropdown labels) will remain hardcoded for the division name/age labels since those are structural, but the cost shown in the result card will come from the database.
+### Button Layout
+```text
+┌─────────────────────────────────┐
+│  [Sign Up Now]         (hero)   │  ← Google Form (primary CTA)
+│  [Download Flyer]    (outline)  │  ← PDF flyer
+│  [Visit FVB Website] (outline)  │  ← FVB website
+└─────────────────────────────────┘
+```
 
 ### Scope
-- 1 file modified: `src/components/DivisionFinder.tsx`
-- No database changes needed
+- 1 file modified: `src/components/UmpiresSection.tsx`
+- Text and link changes only, no database or logic changes
 
