@@ -109,7 +109,7 @@ export function FeedbackTable({ feedback, onRowClick }: FeedbackTableProps) {
                   {item.subject}
                 </TableCell>
                 <TableCell className="text-muted-foreground max-w-[180px] truncate">
-                  {item.profiles?.display_name || item.profiles?.email || 'Unknown'}
+                  {item.profiles?.display_name || item.profiles?.email || item.submitter_email || 'Unknown'}
                 </TableCell>
                 <TableCell>
                   <FeedbackTypeBadge type={item.feedback_type} />
