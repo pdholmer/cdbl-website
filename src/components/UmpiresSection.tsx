@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import slidingAction from "@/assets/sliding-action.jpg";
+import youthUmpire from "@/assets/youth-umpire.png";
 import { Sparkles, DollarSign, GraduationCap, Users, FileText, ExternalLink } from "lucide-react";
 const UmpiresSection = () => {
   return <section id="umpires" className="py-12 md:py-20 bg-gradient-to-b from-muted/30 to-background">
@@ -80,7 +80,7 @@ const UmpiresSection = () => {
             </div>
           </div>
           <div className="order-1 md:order-2 md:col-span-2">
-            <img src={slidingAction} alt="Baseball action - sliding into base" className="rounded-xl shadow-[var(--shadow-elevated)] w-full h-auto" />
+            <img src={youthUmpire} alt="Youth umpire making a call during a Rockets baseball game" className="rounded-xl shadow-[var(--shadow-elevated)] w-full h-auto" />
           </div>
         </div>
 
