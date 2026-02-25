@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import slidingAction from "@/assets/sliding-action.jpg";
-import { Sparkles, DollarSign, GraduationCap, Users } from "lucide-react";
+import { Sparkles, DollarSign, GraduationCap, Users, FileText, ExternalLink } from "lucide-react";
 const UmpiresSection = () => {
   return <section id="umpires" className="py-12 md:py-20 bg-gradient-to-b from-muted/30 to-background">
       <div className="container">
@@ -63,9 +63,21 @@ const UmpiresSection = () => {
               </div>
             </div>
 
-            <Button variant="hero" size="lg" className="w-full" onClick={() => window.open('https://leagues.bluesombrero.com/Default.aspx?tabid=2121019', '_blank')}>
-              Sign Up to Learn More
-            </Button>
+            <div className="flex flex-col gap-3">
+              <Button variant="hero" size="lg" className="w-full" onClick={() => window.open('https://forms.gle/JYC4DrjqxtTqSRF1A', '_blank')}>
+                Sign Up Now
+              </Button>
+              <div className="grid grid-cols-2 gap-3">
+                <Button variant="outline" size="lg" className="w-full" onClick={() => window.open('https://cdn3.sportngin.com/attachments/document/4dfb-2881317/JVB_Flyer_-_Generic_2026.pdf?_gl=1*1dmueco*_ga*MjkwNjQ3ODgxLjE3NzE5ODUwMTE.#_ga=2.33686177.1627488704.1771985011-290647881.1771985011', '_blank')}>
+                  <FileText className="w-4 h-4 mr-1" />
+                  Download Flyer
+                </Button>
+                <Button variant="outline" size="lg" className="w-full" onClick={() => window.open('https://www.fvbumpire.com/jvblues/', '_blank')}>
+                  <ExternalLink className="w-4 h-4 mr-1" />
+                  Visit FVB Website
+                </Button>
+              </div>
+            </div>
           </div>
           <div className="order-1 md:order-2 md:col-span-2">
             <img src={slidingAction} alt="Baseball action - sliding into base" className="rounded-xl shadow-[var(--shadow-elevated)] w-full h-auto" />
