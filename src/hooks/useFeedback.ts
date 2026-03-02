@@ -111,16 +111,29 @@ export function useSubmitFeedback() {
       // Try to get current user (may be null for anonymous)
       const { data: { user } } = await supabase.auth.getUser();
 
-      const { data: feedbackData, error: insertError } = await supabase
-        .from('platform_feedback')
-        .insert({
-          ...feedback,
-          user_id: user?.id || null,
-        })
-        .select()
-        .single();
+      const insertPayload = {
+        ...feedback,
+        user_id: user?.id || null,
+      };
 
-      if (insertError) throw insertError;
+      let feedbackData: any = null;
+
+      if (user) {
+        // Authenticated: insert + select (for screenshot/prompt)
+        const { data, error: insertError } = await supabase
+          .from('platform_feedback')
+          .insert(insertPayload)
+          .select()
+          .single();
+        if (insertError) throw insertError;
+        feedbackData = data;
+      } else {
+        // Anonymous: insert only (no select needed, RLS prevents reading back)
+        const { error: insertError } = await supabase
+          .from('platform_feedback')
+          .insert(insertPayload);
+        if (insertError) throw insertError;
+      }
 
       // Upload screenshot if present (may fail for anonymous users)
       if (screenshot && feedbackData) {
