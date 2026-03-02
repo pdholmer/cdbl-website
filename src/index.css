@@ -184,7 +184,7 @@ All colors MUST be HSL.
     display: none !important;
   }
 
-  body > #root > div > main {
+  body > #root > div > main > section {
     display: none !important;
   }
 
