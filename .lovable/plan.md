@@ -1,47 +1,66 @@
 
 
-## Allow Anonymous Feedback with Email Tracking
+## Fix: Feedback Submission Fails for Anonymous Users
 
-### Problem
-The feedback system currently requires sign-in before submitting. The `platform_feedback` table enforces a non-null `user_id` and the RLS INSERT policy requires `auth.uid() = user_id`, blocking unauthenticated users entirely.
+### Root Cause
+The `useSubmitFeedback` hook chains `.select().single()` after the insert:
+```typescript
+const { data, error } = await supabase
+  .from('platform_feedback')
+  .insert({...})
+  .select()
+  .single();
+```
 
-### Solution
-Make `user_id` optional, add a `submitter_email` column, update RLS to allow anonymous inserts, and replace the auth gate in the UI with a simple email field.
+The INSERT succeeds (RLS policy: `WITH CHECK (true)`), but the `.select().single()` requires a matching SELECT policy. The only SELECT policies are:
+- `Admins can view all feedback` — requires admin role
+- `Users can view their own feedback` — uses `auth.uid() = user_id`, which fails when both are null (`NULL = NULL` → false in SQL)
 
-### Technical Details
+So the insert goes through but the response triggers an error, which the mutation treats as a failure.
 
-**Database Migration**
-1. Make `user_id` nullable on `platform_feedback`
-2. Add `submitter_email TEXT` column
-3. Replace the INSERT RLS policy: change from `auth.uid() = user_id` to `true` (allow anyone to insert)
-4. Keep admin SELECT/UPDATE/DELETE policies unchanged
+### Fix (two-part)
 
-**File: `src/components/feedback/FeedbackSlider.tsx`**
-- Remove the auth check logic (`user`, `isCheckingAuth`, `onAuthStateChange`)
-- Remove the `FeedbackAuthPrompt` import and conditional render — always show the form
-- Add an `email` field to the zod schema (required, valid email)
-- Add an email input field to the form UI
-- Pass the email to the submit mutation
+**1. Database migration** — Add a SELECT policy allowing users to read rows where `submitter_email` matches, or simpler: allow selecting rows that were just inserted by adding a policy for anonymous reads of own submissions. The cleanest fix is to just remove the `.select().single()` from the anonymous path, since we don't actually need the returned data for screenshot upload when the user isn't authenticated.
 
-**File: `src/hooks/useFeedback.ts`**
-- Update `FeedbackInsert` interface to include `submitter_email: string`
-- In `useSubmitFeedback`, remove the `getUser()` / auth check
-- If user is logged in, still attach `user_id`; if not, set `user_id` to null
-- Include `submitter_email` in the insert payload
-- Skip screenshot upload for unauthenticated users (storage requires auth) — or attempt it and fail gracefully (already has try/catch)
-- Skip AI prompt generation for anonymous submissions (edge function requires JWT) — or keep the try/catch as-is
+**2. File: `src/hooks/useFeedback.ts`** — Update `useSubmitFeedback` to handle the anonymous case:
+- When no user is authenticated, perform a plain `.insert()` without `.select().single()` (we don't need the returned row for anonymous users since screenshot upload and AI prompt generation both require auth anyway)
+- When a user IS authenticated, keep the current `.select().single()` flow
 
-**File: `src/components/feedback/FeedbackDetailSlider.tsx`** (admin view)
-- Display `submitter_email` in the detail view, falling back to the profile email when `user_id` is present
+### Code Change Detail
 
-**File: `src/components/feedback/FeedbackTable.tsx`** (admin table)
-- Update the "Submitted By" column to show `submitter_email` when no profile is joined
+In `useSubmitFeedback` mutation function:
+```typescript
+// Get current user (may be null)
+const { data: { user } } = await supabase.auth.getUser();
 
-**File: `src/hooks/useFeedback.ts` — `useAllFeedback`**
-- Handle nullable `user_id` in the profiles join (skip null IDs)
+const insertPayload = {
+  ...feedback,
+  user_id: user?.id || null,
+};
+
+if (user) {
+  // Authenticated: insert + select (for screenshot/prompt)
+  const { data, error } = await supabase
+    .from('platform_feedback')
+    .insert(insertPayload)
+    .select()
+    .single();
+  if (error) throw error;
+  // ... handle screenshot upload and AI prompt
+  return data;
+} else {
+  // Anonymous: insert only (no select needed)
+  const { error } = await supabase
+    .from('platform_feedback')
+    .insert(insertPayload);
+  if (error) throw error;
+  return null;
+}
+```
+
+Then guard the screenshot upload and AI prompt blocks with `if (feedbackData)` — which is already the case in the current code, so anonymous submissions will skip those steps gracefully.
 
 ### Scope
-- 1 database migration (alter `platform_feedback`, update RLS)
-- 4 files modified: `FeedbackSlider.tsx`, `useFeedback.ts`, `FeedbackTable.tsx`, `FeedbackDetailSlider.tsx`
-- `FeedbackAuthPrompt.tsx` becomes unused (can be removed)
+- 1 file modified: `src/hooks/useFeedback.ts`
+- No database migration needed — the INSERT policy is fine, we just stop requesting a SELECT on anonymous inserts
 
