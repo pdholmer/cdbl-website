@@ -4,7 +4,6 @@ import { ExternalLink, Calendar, DollarSign, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import heroRegistration from "@/assets/hero-registration.jpg";
 import { usePrograms } from "@/hooks/usePrograms";
 import { useFAQs } from "@/hooks/useFAQs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,25 +20,12 @@ const Registration = () => {
       <main>
         {/* Hero Section */}
         <section 
-          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden bg-cover bg-center sm:bg-center md:bg-[65%_center]"
-          style={{ 
-            backgroundImage: `linear-gradient(to right, hsla(215, 100%, 26%, 0.9) 0%, hsla(201, 63%, 56%, 0.1) 100%), url('${heroRegistration}')`
-          }}
+          className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
+          style={{ background: 'var(--gradient-hero)' }}
         >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Register for 2026 Season</h1>
-            <p className="text-xl mb-8 max-w-2xl">Join the CDBL family! Registration is now open for the 2026 baseball season.</p>
-            <p className="text-sm text-primary-foreground/80 mb-4">
-              Clicking "Register Now" will open our secure registration partner, SportsConnect, in a new tab.
-            </p>
-            <Button 
-              size="lg" 
-              variant="hero"
-              onClick={() => window.open('https://registration.bluesombrero.com/84830/program-questions/preview/80130405', '_blank')}
-              className="bg-background text-foreground hover:bg-background/90"
-            >
-              Register Now on SportsConnect <ExternalLink className="ml-2 h-5 w-5" />
-            </Button>
+            <p className="text-xl max-w-2xl">Join the CDBL family! Registration is now open for the 2026 baseball season.</p>
           </div>
         </section>
 
