@@ -14,8 +14,8 @@ const UmpiresSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-6 md:gap-8 items-center mb-8 md:mb-12">
-          <div className="order-2 md:order-1 md:col-span-3 bg-white p-6 md:p-8 rounded-xl shadow-[var(--shadow-card)] border border-primary/20">
+        <div className="grid lg:grid-cols-5 gap-6 lg:gap-8 items-start mb-8 md:mb-12">
+          <div className="order-2 lg:order-1 lg:col-span-3 bg-white p-6 md:p-8 rounded-xl shadow-[var(--shadow-card)] border border-primary/20">
             <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Calling All Future Umpires!</h3>
             <p className="text-base md:text-lg mb-4 md:mb-6 leading-relaxed">
               The Fox Valley Blues Umpires Association's Junior Blues (JVB) youth umpire program is recruiting dedicated boys and girls ages 13–18 who love baseball and softball.
@@ -79,8 +79,8 @@ const UmpiresSection = () => {
               </div>
             </div>
           </div>
-          <div className="order-1 md:order-2 md:col-span-2">
-            <img src={youthUmpire} alt="Youth umpire making a call during a Rockets baseball game" className="rounded-xl shadow-[var(--shadow-elevated)] w-full h-auto" />
+          <div className="order-1 lg:order-2 lg:col-span-2">
+            <img src={youthUmpire} alt="Youth umpire making a call during a Rockets baseball game" className="rounded-xl shadow-[var(--shadow-elevated)] w-full object-cover h-64 md:h-80 lg:h-full max-h-[500px]" />
           </div>
         </div>
 
