@@ -38,6 +38,12 @@ function sanitizeString(str: string, maxLength: number): string {
 }
 
 function validateFormData(data: any): { valid: boolean; error?: string } {
+  // Honeypot check: if hidden fields are filled, it's a bot
+  if (data._hp_website || data._hp_phone_alt) {
+    // Silently reject but return success to not tip off bots
+    return { valid: false, error: "__honeypot__" };
+  }
+
   // Required fields validation
   if (!data.first_name || !data.last_name || !data.date_of_birth) {
     return { valid: false, error: "Missing required player information" };
@@ -91,6 +97,13 @@ serve(async (req) => {
     // Validate input
     const validation = validateFormData(formData);
     if (!validation.valid) {
+      // If honeypot triggered, return fake success to not alert bots
+      if (validation.error === "__honeypot__") {
+        return new Response(
+          JSON.stringify({ success: true, submission_id: "ok", message: "Registration submitted successfully." }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
       return new Response(
         JSON.stringify({ error: validation.error }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

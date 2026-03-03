@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
 import { Copy, Check, Trash2, Star, ExternalLink } from 'lucide-react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,43 @@ import { FeedbackTypeBadge } from './FeedbackTypeBadge';
 import { FeedbackStatusBadge } from './FeedbackStatusBadge';
 import { Feedback, useUpdateFeedback, useDeleteFeedback } from '@/hooks/useFeedback';
 import { cn } from '@/lib/utils';
+
+// Component for loading signed screenshot URLs
+function ScreenshotDisplay({ filePath }: { filePath: string }) {
+  const [signedUrl, setSignedUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadUrl = async () => {
+      // If it's already a full URL (legacy data), use directly
+      if (filePath.startsWith('http')) {
+        setSignedUrl(filePath);
+        return;
+      }
+      const { data, error } = await supabase.storage
+        .from('feedback-screenshots')
+        .createSignedUrl(filePath, 3600);
+      if (!error && data?.signedUrl) {
+        setSignedUrl(data.signedUrl);
+      }
+    };
+    loadUrl();
+  }, [filePath]);
+
+  if (!signedUrl) return null;
+
+  return (
+    <div className="space-y-2">
+      <Label className="text-muted-foreground text-sm">Screenshot</Label>
+      <a href={signedUrl} target="_blank" rel="noopener noreferrer" className="block">
+        <img
+          src={signedUrl}
+          alt="Feedback screenshot"
+          className="rounded-lg border max-h-48 w-full object-cover hover:opacity-90 transition-opacity"
+        />
+      </a>
+    </div>
+  );
+}
 
 interface FeedbackDetailSliderProps {
   feedback: Feedback | null;
@@ -170,21 +208,7 @@ export function FeedbackDetailSlider({ feedback, isOpen, onClose }: FeedbackDeta
 
           {/* Screenshot */}
           {feedback.screenshot_url && (
-            <div className="space-y-2">
-              <Label className="text-muted-foreground text-sm">Screenshot</Label>
-              <a 
-                href={feedback.screenshot_url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <img
-                  src={feedback.screenshot_url}
-                  alt="Feedback screenshot"
-                  className="rounded-lg border max-h-48 w-full object-cover hover:opacity-90 transition-opacity"
-                />
-              </a>
-            </div>
+            <ScreenshotDisplay filePath={feedback.screenshot_url} />
           )}
 
           <Separator />
