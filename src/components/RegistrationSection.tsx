@@ -48,8 +48,7 @@ const RegistrationSection = () => {
             </div>
             <CardContent className="p-5 md:p-6">
               <p className="text-muted-foreground mb-4 leading-relaxed">
-                Our recreational league is perfect for players of all skill levels. No tryouts required—just fun, 
-                skill-building, and making friends while learning America's favorite pastime.
+                Our recreational league welcomes players of all skill levels. No tryouts required — just fun, skill-building, and making friends while learning the game.
               </p>
               
               <div className="grid grid-cols-2 gap-3 mb-5">
