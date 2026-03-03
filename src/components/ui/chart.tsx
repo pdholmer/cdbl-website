@@ -58,6 +58,15 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
+const sanitizeCSSValue = (value: string): string => {
+  // Only allow valid CSS color formats: hex, rgb/rgba, hsl/hsla, named colors
+  const trimmed = value.trim();
+  if (/^#[0-9A-Fa-f]{3,8}$/.test(trimmed)) return trimmed;
+  if (/^(rgb|rgba|hsl|hsla)\([^)]*\)$/.test(trimmed)) return trimmed;
+  if (/^[a-zA-Z]+$/.test(trimmed)) return trimmed;
+  return 'transparent';
+};
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
 
@@ -75,7 +84,7 @@ ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
+    return color ? `  --color-${key}: ${sanitizeCSSValue(color)};` : null;
   })
   .join("\n")}
 }
