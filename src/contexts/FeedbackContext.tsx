@@ -26,7 +26,7 @@ const moduleMap: Record<string, string> = {
   '/in-house/rules': 'In-House Rules',
   '/travel': 'Travel',
   '/travel/teams': 'Travel Teams',
-  '/travel/schedule': 'Travel Schedule',
+  
   '/travel/faq': 'Travel FAQ',
   '/fields': 'Fields',
   '/shop': 'Shop',

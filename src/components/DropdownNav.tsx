@@ -65,8 +65,8 @@ const DropdownNav = () => {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/travel/schedule" className="w-full cursor-pointer">
-              Tournament Schedule
+            <Link to="/schedule" className="w-full cursor-pointer">
+              Schedule
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>

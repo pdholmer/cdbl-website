@@ -24,7 +24,7 @@ import InHouseTeams from "./pages/InHouseTeams";
 import { Navigate } from "react-router-dom";
 import InHouseSchedule from "./pages/InHouseSchedule";
 import InHouseRules from "./pages/InHouseRules";
-import TravelSchedule from "./pages/TravelSchedule";
+
 import TravelFAQ from "./pages/TravelFAQ";
 import TravelRegistration from "./pages/TravelRegistration";
 import NotFound from "./pages/NotFound";
@@ -103,7 +103,7 @@ const App = () => (
           <Route path="/in-house/schedule" element={<InHouseSchedule />} />
           <Route path="/in-house/rules" element={<InHouseRules />} />
           <Route path="/travel" element={<Travel />} />
-          <Route path="/travel/schedule" element={<TravelSchedule />} />
+          <Route path="/travel/schedule" element={<Navigate to="/schedule" replace />} />
           <Route path="/travel/faq" element={<TravelFAQ />} />
           <Route path="/travel/registration" element={<TravelRegistration />} />
           {/* Admin Routes */}
