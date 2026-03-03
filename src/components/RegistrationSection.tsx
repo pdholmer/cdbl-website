@@ -141,7 +141,7 @@ const RegistrationSection = () => {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button 
-                  variant="default" 
+                  variant="hero" 
                   size="lg" 
                   className="flex-1"
                   asChild
