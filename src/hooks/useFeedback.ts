@@ -149,13 +149,10 @@ export function useSubmitFeedback() {
             });
 
           if (!uploadError) {
-            const { data: { publicUrl } } = supabase.storage
-              .from('feedback-screenshots')
-              .getPublicUrl(fileName);
-
+            // Store file path (not public URL) since bucket is private
             await supabase
               .from('platform_feedback')
-              .update({ screenshot_url: publicUrl })
+              .update({ screenshot_url: fileName })
               .eq('id', feedbackData.id);
           }
         } catch (error) {
