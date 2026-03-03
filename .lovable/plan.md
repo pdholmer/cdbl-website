@@ -1,13 +1,21 @@
 
 
-## Update "New to CDBL?" Carousel Subtitle2
+## Match Card Description Character Counts
 
-The current subtitle2 is **"Everything new families need — all in one place."** (49 characters). The target length from the Registration slide is **"Early registration opens December 1st — secure your spot today."** (63 characters).
+**Target**: 157 characters (the Travel card description).
+
+**Travel card** (lines 118-121): Already matches — no change needed.
+
+**In-House card** (lines 50-52): Currently 173 characters. Needs to be trimmed to ~157 characters.
 
 ### Change
-**File: `src/components/Hero.tsx`** — Line 14: Update `subtitle2` to a longer line matching the ~63-character count, e.g.:
+**File: `src/components/RegistrationSection.tsx`** — Lines 50-52: Replace the In-House description with a shorter version matching 157 characters, e.g.:
 
-`"From registration to Opening Day — your complete guide starts here."`
+`"Our recreational league is perfect for players of all skill levels. No tryouts required — just fun, skill-building, and friends on the diamond."`
 
-This keeps the same italic, secondary tone while matching the visual line length of the other slides.
+This trims from 173 to ~143... Better option at exactly ~157:
+
+`"Our recreational league welcomes players of all skill levels. No tryouts required — just fun, skill-building, and making friends while learning the game."`
+
+(155 chars — close match to Travel's 157.)
 
