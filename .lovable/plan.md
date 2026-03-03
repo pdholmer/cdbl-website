@@ -1,9 +1,13 @@
 
 
-## Fix Travel Card Button Style
+## Update "New to CDBL?" Carousel Subtitle2
 
-The In-House card uses `variant="hero"` for its primary button (bold text with strong shadow), while the Travel card uses `variant="default"` (standard style). This creates a visual inconsistency.
+The current subtitle2 is **"Everything new families need — all in one place."** (49 characters). The target length from the Registration slide is **"Early registration opens December 1st — secure your spot today."** (63 characters).
 
 ### Change
-**File: `src/components/RegistrationSection.tsx`** — Line 144: Change the Travel card's "View Tryout Info" button from `variant="default"` to `variant="hero"` to match the In-House card's button treatment.
+**File: `src/components/Hero.tsx`** — Line 14: Update `subtitle2` to a longer line matching the ~63-character count, e.g.:
+
+`"From registration to Opening Day — your complete guide starts here."`
+
+This keeps the same italic, secondary tone while matching the visual line length of the other slides.
 
