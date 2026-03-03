@@ -1,15 +1,9 @@
 
 
-## Fix: Print Checklist Is Blank
+## Fix Travel Card Button Style
 
-### Root Cause
-The print stylesheet in `src/index.css` hides `body > #root > div > main` entirely. The `#print-checklist` div lives **inside** `<main>`, so even though it has `display: block !important`, it's invisible because its parent is hidden.
+The In-House card uses `variant="hero"` for its primary button (bold text with strong shadow), while the Travel card uses `variant="default"` (standard style). This creates a visual inconsistency.
 
-### Solution
-Instead of hiding `<main>` entirely, hide only its child `<section>` elements (the visible page sections) while leaving `<main>` itself visible so the `#print-checklist` div can render.
-
-### Changes
-
-**File: `src/index.css`** (1 line change)
-- Replace `body > #root > div > main` with `body > #root > div > main > section` in the print media query hide rule. This hides each section within main but keeps `<main>` itself visible, allowing `#print-checklist` (a `<div>`) to show through.
+### Change
+**File: `src/components/RegistrationSection.tsx`** — Line 144: Change the Travel card's "View Tryout Info" button from `variant="default"` to `variant="hero"` to match the In-House card's button treatment.
 
