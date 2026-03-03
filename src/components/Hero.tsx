@@ -11,7 +11,7 @@ const carouselSlides = [
   {
     title: "New to CDBL?",
     subtitle: "Find your division, get registered, and join Burlington's youth baseball community.",
-    subtitle2: "Everything new families need — all in one place.",
+    subtitle2: "From registration to Opening Day — your complete guide starts here.",
     primaryCta: { text: "Start Here", link: "/new-to-cdbl" },
     secondaryCta: { text: "View Programs", link: "/teams" },
     image: heroNewToCdbl,
