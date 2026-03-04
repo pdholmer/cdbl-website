@@ -1,18 +1,11 @@
 
 
-## Make Montserrat the Site-Wide Font
+## Remove About Page Hero Background Image
 
-Currently the tailwind config defines two font families:
-- `font-sans` → Raleway (used for body/paragraph text)
-- `font-heading` → Montserrat (used for headings)
+**File: `src/pages/About.tsx`**
 
-To make Montserrat the only font used across the entire site:
+Remove the background image from the hero section's `style` prop. Replace the gradient-over-image with a solid background using the primary color (matching the site's blue). Remove the `heroAbout` import since it will no longer be used.
 
-### Changes
-
-**File: `tailwind.config.ts`** — Update the `fontFamily.sans` value from `['Raleway', ...]` to `['Montserrat', 'system-ui', 'sans-serif']`. This makes Montserrat the default font for all text site-wide, since `font-sans` is what Tailwind applies to the `body` by default.
-
-The `font-heading` entries scattered across components will continue to work (they already point to Montserrat), and all body/paragraph text previously in Raleway will now render in Montserrat too.
-
-Optionally, the Google Fonts import in `index.html` can drop the Raleway family to save a network request, but it's not required for the visual change.
+- Remove `import heroAbout` line
+- Change the `style` prop from the gradient+image to a simple solid background: `backgroundColor: 'hsl(215, 100%, 26%)'` (or use Tailwind class `bg-primary` and remove the `style` prop entirely)
 
