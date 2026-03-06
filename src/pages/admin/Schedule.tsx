@@ -32,15 +32,15 @@ const AdminSchedule = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="games">
+        <Tabs defaultValue="events">
           <TabsList>
+            <TabsTrigger value="events">Events</TabsTrigger>
             <TabsTrigger value="games">Games</TabsTrigger>
             <TabsTrigger value="practices">Practices</TabsTrigger>
-            <TabsTrigger value="events">Events</TabsTrigger>
           </TabsList>
+          <TabsContent value="events"><EventsTab /></TabsContent>
           <TabsContent value="games"><GamesTab /></TabsContent>
           <TabsContent value="practices"><PracticesTab /></TabsContent>
-          <TabsContent value="events"><EventsTab /></TabsContent>
         </Tabs>
       </div>
     </AdminLayout>
