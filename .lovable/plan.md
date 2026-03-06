@@ -1,59 +1,39 @@
 
 
-## Redesign Admin Facilities Page with Inline Field Status Management
+## Improve VenueEdit Page Layout
 
-Currently, admins must click into each venue's edit form to change individual field statuses — too many clicks for a frequent operation like marking fields open/closed.
+The current page stacks 4 full-width cards vertically with a lot of wasted horizontal space. The form is long and requires excessive scrolling.
 
-### Approach
+### Changes — `src/pages/admin/VenueEdit.tsx`
 
-Redesign the admin Venues page (`src/pages/admin/Venues.tsx`) to surface all fields with inline status controls directly on the main page. The page will shift from a venue-centric table to a **field-status dashboard** with venue grouping.
-
-### Layout
+Reorganize into a **two-column layout** on desktop:
 
 ```text
-┌──────────────────────────────────────────────────┐
-│  Facility Management                [Add Facility]│
-├──────────────────────────────────────────────────┤
-│  [3 Open] [6 Closed] [0 Maintenance]  ← stat cards│
-│  [Set All Open]  [Set All Closed]    ← bulk actions│
-├──────────────────────────────────────────────────┤
-│  🔍 Search...          Status filter ▼            │
-├──────────────────────────────────────────────────┤
-│  Burlington Fields                    [Edit ✏️]   │
-│  ┌─────────────────┬─────────────┬────────────┐  │
-│  │ Burlington Lower │ Bronco      │ [●Open ▼]  │  │
-│  │ Burlington Upper │ Mustang,Pin │ [●Closed▼] │  │
-│  └─────────────────┴─────────────┴────────────┘  │
-│                                                    │
-│  Stonebrook Fields                    [Edit ✏️]   │
-│  ┌─────────────────┬─────────────┬────────────┐  │
-│  │ Field 1          │ Pony        │ [●Open ▼]  │  │
-│  │ ...               │             │            │  │
-│  └─────────────────┴─────────────┴────────────┘  │
-└──────────────────────────────────────────────────┘
+┌─────────────────────────┬──────────────────────────┐
+│  Basic Information      │  Contact Information     │
+│  Name, Address, City,   │  Name, Phone, Email      │
+│  State, Zip, Status     │                          │
+│  Features: ☐☐☐          │  Additional Info         │
+│                         │  Parking, Directions     │
+├─────────────────────────┴──────────────────────────┤
+│  Individual Fields                    [+ Add Field] │
+│  ┌─ Field 1 ──────────────────────────────────────┐ │
+│  │ #  Name  Status  Divisions  Notes    [🗑]      │ │
+│  └────────────────────────────────────────────────┘ │
+│  ┌─ Field 2 ──────────────────────────────────────┐ │
+│  │ ...                                             │ │
+│  └────────────────────────────────────────────────┘ │
+│                              [Save]  [Cancel]       │
+└─────────────────────────────────────────────────────┘
 ```
 
-### Changes
+1. **Two-column top section**: Merge "Basic Information" and "Contact + Additional Info" side-by-side using `grid lg:grid-cols-2`. Left column has name/address/features. Right column has contact details and parking/directions.
 
-**File: `src/pages/admin/Venues.tsx`** — Major rewrite
+2. **Compact field rows**: Replace the current stacked card-per-field layout with a denser inline row layout. Each field becomes a single horizontal row with all inputs on one line (field number, name, status select, divisions, notes) plus a delete button. This drastically reduces vertical space.
 
-1. **Fetch all venue fields** alongside venues using a new query for `venue_fields` (join with venue name).
-2. **Stat cards**: Show counts for Open / Closed / Maintenance fields (not just venue counts).
-3. **Bulk actions**: "Set All Open" and "Set All Closed" buttons that call `useVenueFieldMutations` to update all fields at once.
-4. **Venue-grouped card layout**: Replace the table with cards grouped by venue. Each card shows the venue name, an "Edit" link, and a compact table/grid of its fields.
-5. **Inline status select**: Each field row has a `<Select>` dropdown (Open/Closed/Maintenance) that immediately saves via `updateField.mutate()` — no form submission needed.
-6. **Notes field**: Show an inline editable notes input next to closed/maintenance fields for context (e.g., "Rain damage").
-7. **Color-coded status badges**: Green for open, red for closed, yellow for maintenance — consistent with the public Fields page.
+3. **Sticky save bar**: Move Save/Cancel buttons into a sticky footer bar at the bottom of the form for easy access without scrolling.
 
-**File: `src/hooks/useVenueFields.ts`** — Minor update
+4. **Wider field inputs**: Use `grid-cols-5` or flex layout for field rows so all columns fit on one line on desktop, collapsing to stacked on mobile.
 
-- Add an `useAllVenueFields` hook (or modify existing) that fetches all fields across all venues (no `venueId` filter, `enabled: true`), joining venue name for display.
-
-### No database changes needed
-The `venue_fields` table already has `status`, `notes`, and the admin-only RLS policy for full access. The `useVenueFieldMutations` hook already supports `updateField`.
-
-### Key UX details
-- Status changes save instantly on select change (optimistic or with toast confirmation)
-- Bulk actions show a confirmation count ("Update 9 fields to Open?")
-- The existing venue edit page remains for full facility editing (address, features, adding/removing fields)
+Single file change: `src/pages/admin/VenueEdit.tsx`.
 
