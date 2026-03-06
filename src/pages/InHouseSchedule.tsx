@@ -100,7 +100,7 @@ const InHouseSchedule = () => {
               Full game schedules will be posted on SportsConnect once teams are finalized. Typical game times by division are shown below.
             </p>
 
-            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
               <Card>
                 <CardHeader>
                   <CardTitle>T-Ball & Pinto (Ages 4-8)</CardTitle>
