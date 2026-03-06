@@ -35,6 +35,45 @@ export const useVenueFields = (venueId?: string) => {
   });
 };
 
+export const useAllVenueFields = () => {
+  return useQuery({
+    queryKey: ["venue-fields", "all"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("venue_fields")
+        .select("*, venues(name)")
+        .order("field_number", { ascending: true });
+      if (error) throw error;
+      return (data || []) as (VenueField & { venues: { name: string } | null })[];
+    },
+  });
+};
+
+export const useBulkUpdateFieldStatus = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ fieldIds, status }: { fieldIds: string[]; status: string }) => {
+      const { error } = await supabase
+        .from("venue_fields")
+        .update({ status, updated_at: new Date().toISOString() } as any)
+        .in("id", fieldIds);
+      if (error) throw error;
+    },
+    onSuccess: (_, { status, fieldIds }) => {
+      queryClient.invalidateQueries({ queryKey: ["venue-fields"] });
+      toast({
+        title: "Fields updated",
+        description: `${fieldIds.length} field(s) set to ${status}.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+  });
+};
+
 export const useVenueFieldMutations = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
