@@ -135,7 +135,7 @@ const InHouseSchedule = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Bronco & Pony (Ages 9-12)</CardTitle>
+                  <CardTitle>Mustang & Bronco (Ages 9-12)</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -167,7 +167,7 @@ const InHouseSchedule = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Colt (Ages 13-14)</CardTitle>
+                  <CardTitle>Pony & Colt (Ages 13-14)</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
