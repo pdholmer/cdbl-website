@@ -1,97 +1,69 @@
 
 
-## Page Visibility Management System
+## Admin Schedule Page Overhaul
 
-Add the ability for admins and board members to toggle public-facing pages on/off, with an optional message explaining why a page is unavailable.
+The current admin schedule page is titled "Game Schedule" and only manages games. It needs to become a broader "Schedule & Events" management hub, support adding events (not just games), allow Excel/CSV schedule imports, and link to the public schedule page.
 
-### Database
+### Changes
 
-**New table: `page_visibility`**
+**1. Rename and rebrand — `src/pages/admin/Schedule.tsx`**
+- Title: "Game Schedule" → "Schedule & Events"
+- Subtitle: "Manage game schedules and facilities" → "Manage games, practices, events, and league calendar"
+- Add a link/button to view the public schedule page (`/schedule`)
+
+**2. Add "Add Event" capability — `src/pages/admin/Schedule.tsx`**
+- Add a tabbed interface: **Games** | **Practices** | **Events**
+- Games tab: keep existing game table (mostly as-is)
+- Practices tab: list practices from `usePractices()` with ability to add/edit
+- Events tab: manage the static calendar events — since these are currently hardcoded in `calendarEvents.ts`, create a new `league_events` database table to make them dynamic and admin-editable
+- Add "Add Event" button that opens a dialog/form for creating league events (title, date, time, location, type, description)
+
+**3. New database table: `league_events`**
 
 | Column | Type | Default |
 |--------|------|---------|
 | id | uuid | gen_random_uuid() |
-| page_slug | text (unique) | required |
-| page_label | text | required |
-| is_visible | boolean | true |
-| hidden_message | text | null |
-| hidden_by | uuid | null |
-| hidden_at | timestamptz | null |
+| title | text | required |
+| event_date | date | required |
+| end_date | date | null |
+| event_time | text | null |
+| location | text | null |
+| event_type | text | 'special-event' |
+| description | text | null |
+| category | text | 'event' |
+| created_by | uuid | null |
+| created_at | timestamptz | now() |
 | updated_at | timestamptz | now() |
 
-RLS policies:
-- Public SELECT (everyone needs to check visibility)
-- Board members (admin + board_member) can UPDATE
-- Admin-only INSERT/DELETE
+RLS: Public SELECT, board_member+ INSERT/UPDATE/DELETE.
 
-Seed the table with all current public pages (registration, travel, in-house, schedule, fields, shop, volunteer, etc.) so admins have something to toggle immediately.
+**4. Excel/CSV import — `src/pages/admin/Schedule.tsx`**
+- Add an "Import Schedule" button that accepts `.csv` or `.xlsx` files
+- Parse the file client-side (use a lightweight CSV parser; for Excel, use the `xlsx` npm package or stick to CSV-only to avoid a new dependency)
+- Show a preview table of parsed rows with column mapping (date, time, home team, away team, venue)
+- On confirm, bulk-insert games via `useGameMutations`
+- Support both game schedule imports and event imports
 
-### Admin UI Changes
+**5. Update `useScheduleEvents` hook — `src/hooks/useScheduleEvents.ts`**
+- Replace static `calendarEvents` import with data from the new `league_events` table
+- Keep backward compatibility: merge DB events with any remaining static events during transition
 
-**File: `src/pages/admin/SiteContent.tsx`** — Add a "Page Visibility" tab
+**6. New hook: `src/hooks/useLeagueEvents.ts`**
+- CRUD operations for `league_events` table
 
-Add a tabbed layout at the top: **Content** | **Page Visibility**
+**7. Link public schedule to admin — `src/pages/Schedule.tsx`**
+- No changes needed; it already uses `useScheduleEvents` which will automatically pick up DB events
 
-The Page Visibility tab shows a card-based list of all pages:
-- Each card shows: page label, page path, current status (visible/hidden badge)
-- A Switch toggle for instant visibility changes
-- An expandable "hidden message" textarea that appears when toggled off (e.g., "Registration opens January 15")
-- Board members can access this tab (route changes from `requireAdmin` to `requireBoardMember`)
+**8. Route updates — `src/App.tsx`**
+- Add route for `/admin/schedule/new` (game creation form) — currently missing
+- Keep existing `/admin/schedule` route
 
-### Frontend Enforcement
+### Files to create
+- `src/hooks/useLeagueEvents.ts` — query + mutations for league_events
+- Migration for `league_events` table
 
-**New hook: `src/hooks/usePageVisibility.ts`**
-- Fetches all rows from `page_visibility`
-- Exports a `useIsPageVisible(slug)` check and the full list
-
-**New component: `src/components/PageGate.tsx`**
-- Wraps public page content
-- Checks visibility via the hook
-- If hidden, renders a branded "Page Unavailable" message with the optional `hidden_message` text and a "Go Home" button
-- If visible, renders children normally
-
-**File: `src/App.tsx`** — Wrap applicable public routes with `<PageGate slug="registration">` etc.
-
-Example:
-```text
-<Route path="/registration" element={
-  <PageGate slug="registration"><Registration /></PageGate>
-} />
-```
-
-### Navigation Filtering
-
-**Files: `src/components/DropdownNav.tsx`, `src/components/Header.tsx` (mobile nav)**
-- Import the visibility hook
-- Filter out hidden pages from nav links so they don't appear in menus at all
-
-### Route Access Changes
-
-**File: `src/App.tsx`** — Change the site-content routes from `requireAdmin` to `requireBoardMember` so board members can manage page visibility.
-
-### Pages to seed (initial data)
-
-| Slug | Label |
-|------|-------|
-| registration | Registration |
-| travel | Travel Program |
-| travel-registration | Travel Tryouts & Registration |
-| travel-faq | Travel FAQ |
-| in-house | In-House Program |
-| in-house-teams | In-House Teams |
-| in-house-schedule | In-House Schedule |
-| in-house-rules | In-House Rules |
-| schedule | Season Schedule |
-| fields | Fields & Facilities |
-| shop | Spirit Wear Shop |
-| volunteer | Volunteer |
-| donate | Donate |
-| sponsors | Sponsors |
-| contact | Contact Us |
-| about | About CDBL |
-| board | Board Info |
-| new-to-cdbl | New to CDBL |
-| rules | Rules & Policies |
-
-All default to `is_visible: true`.
+### Files to modify
+- `src/pages/admin/Schedule.tsx` — full overhaul (rename, tabs, import, event management)
+- `src/hooks/useScheduleEvents.ts` — pull from league_events instead of static data
+- `src/App.tsx` — add missing schedule sub-routes if needed
 
