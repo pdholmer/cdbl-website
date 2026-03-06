@@ -1,12 +1,14 @@
 import { useMemo } from "react";
 import { useGames } from "@/hooks/useGames";
 import { usePractices } from "@/hooks/usePractices";
+import { useLeagueEvents } from "@/hooks/useLeagueEvents";
 import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
-import { Trophy, Users } from "lucide-react";
+import { Trophy, Users, Calendar } from "lucide-react";
 
 export const useScheduleEvents = () => {
   const { data: games, isLoading: gamesLoading } = useGames();
   const { data: practices, isLoading: practicesLoading } = usePractices();
+  const { data: leagueEvents, isLoading: eventsLoading } = useLeagueEvents();
 
   const events = useMemo(() => {
     // Map games to CalendarEvent format
@@ -39,16 +41,36 @@ export const useScheduleEvents = () => {
       teamId: p.team_id,
     }));
 
-    // Keep static events (board meetings, tournaments, ceremonies, etc.)
+    // Map DB league events to CalendarEvent format
+    const dbEvents: CalendarEvent[] = (leagueEvents || []).map((e) => ({
+      id: `event-${e.id}`,
+      title: e.title,
+      date: e.event_date,
+      endDate: e.end_date || undefined,
+      time: e.event_time || undefined,
+      location: e.location || undefined,
+      category: "event" as const,
+      type: (e.event_type || "special-event") as CalendarEvent["type"],
+      description: e.description || "",
+      icon: Calendar,
+    }));
+
+    // Keep static events as fallback (these will be phased out)
     const staticEvents = calendarEvents.filter(
       (e) => e.category === "event"
     );
 
-    return [...gameEvents, ...practiceEvents, ...staticEvents];
-  }, [games, practices]);
+    // Merge: DB events take priority; keep static events that aren't duplicated
+    const dbEventTitles = new Set(dbEvents.map((e) => `${e.title}-${e.date}`));
+    const uniqueStaticEvents = staticEvents.filter(
+      (e) => !dbEventTitles.has(`${e.title}-${e.date}`)
+    );
+
+    return [...gameEvents, ...practiceEvents, ...dbEvents, ...uniqueStaticEvents];
+  }, [games, practices, leagueEvents]);
 
   return {
     events,
-    isLoading: gamesLoading || practicesLoading,
+    isLoading: gamesLoading || practicesLoading || eventsLoading,
   };
 };
