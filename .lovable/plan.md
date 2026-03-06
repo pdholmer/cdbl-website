@@ -1,14 +1,25 @@
 
 
-## Link Public Schedule to Admin Schedule
+## Seed Static Calendar Events into the Database
 
-Add a contextual "Manage Schedule" button on the public `/schedule` page that links to `/admin/schedule`. This should only be visible to authenticated users with admin or board_member roles.
+The problem: The public schedule page shows dozens of events from the hardcoded `calendarEvents.ts` file, but the admin Events tab only queries the `league_events` database table, which is currently empty. So admins see "No events found" even though the public site is full of events.
 
-### Changes — `src/pages/Schedule.tsx`
+### Solution
 
-1. Import `Link` (already imported), `useSession` or equivalent auth check, and a settings/edit icon.
-2. Add a small "Manage Schedule" button near the page title area (top of the Interactive Schedule section, next to the heading) that links to `/admin/schedule`.
-3. Conditionally render it only for users with admin/board_member roles — check using the existing `has_role` pattern or a simple auth session check. If role-checking infrastructure isn't readily available on the public side, show the link to any authenticated user (admins will naturally be logged in; non-admins hitting the admin route will be stopped by `ProtectedRoute`).
+**1. Database migration — seed all static events into `league_events`**
 
-Single file change: `src/pages/Schedule.tsx`.
+Create a migration that inserts every event from `calendarEvents.ts` (the ones with `category: "event"` and `category: "practice"` that are static milestones) into the `league_events` table. This is approximately 50+ rows covering board meetings, tournaments, registration dates, clinics, ceremonies, field days, etc. from Oct 2025 through Oct 2026.
+
+**2. Remove static fallback from `useScheduleEvents.ts`**
+
+Once the data lives in the database, remove the merge logic that pulls from the static `calendarEvents` array. The hook should rely solely on DB data (games, practices, league_events).
+
+**3. Optionally keep `calendarEvents.ts` as a reference** but it will no longer be imported by active code. Can be deleted in a follow-up.
+
+### Files to change
+- New migration SQL — bulk INSERT of all static events into `league_events`
+- `src/hooks/useScheduleEvents.ts` — remove static event fallback
+- `src/components/admin/schedule/EventsTab.tsx` — no changes needed (already queries `league_events`)
+
+This way, when admins open the Events tab, they'll see every event that appears on the public schedule, and can edit/delete/add from there.
 
