@@ -1,20 +1,18 @@
 
 
-## Fix Division Cards Layout for Desktop
+## Mark All Fields as Closed
 
-The current grid is `md:grid-cols-2`, which means 3 cards display as 2 on top and 1 orphaned below — an awkward layout.
+This is a simple data update — all 9 venue_fields records currently have `status: 'open'` and need to be set to `closed`.
 
 ### Change
 
-**File: `src/pages/InHouseSchedule.tsx` (line 103)**
+Run a single SQL update against the `venue_fields` table:
 
-Change the grid from `md:grid-cols-2` to `lg:grid-cols-3` so all three cards sit side-by-side on desktop. Also widen `max-w-4xl` to `max-w-6xl` to give them room.
-
-```
-grid md:grid-cols-2 gap-6 max-w-4xl mx-auto
-→
-grid md:grid-cols-3 gap-6 max-w-6xl mx-auto
+```sql
+UPDATE venue_fields SET status = 'closed', updated_at = now();
 ```
 
-Single line change. Cards will stack on mobile and display as a clean 3-column row on desktop.
+This will update all 9 fields across all venues. The Fields page will automatically show the "Field Status Alert" banner and each field card will display a red "Closed" badge.
+
+No code changes needed — the UI already handles the `closed` status rendering.
 
