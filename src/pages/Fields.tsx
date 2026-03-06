@@ -145,35 +145,35 @@ export default function Fields() {
                       <Navigation className="h-3.5 w-3.5" />
                       Get Directions
                     </button>
+
+                    {/* Fields - compact table rows */}
+                    {venueFields.length > 0 && (
+                      <div>
+                        <h3 className="text-sm font-bold mb-2">Fields</h3>
+                        <div className="border rounded-lg overflow-hidden divide-y">
+                          {venueFields.map((field) => (
+                            <div key={field.id} className="flex items-center gap-3 px-3 py-2 bg-card text-sm">
+                              <span className="font-medium min-w-[120px]">
+                                {field.field_name || `Field ${field.field_number}`}
+                              </span>
+                              {field.divisions && field.divisions.length > 0 && (
+                                <span className="text-muted-foreground text-xs">
+                                  {field.divisions.join(" / ")}
+                                </span>
+                              )}
+                              <span className="ml-auto flex items-center gap-2">
+                                {field.notes && field.status !== "open" && (
+                                  <span className="text-xs text-destructive">{field.notes}</span>
+                                )}
+                                {getStatusBadge(field.status)}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
-
-                {/* Fields - compact table rows */}
-                {venueFields.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-bold mb-3">Fields</h3>
-                    <div className="border rounded-lg overflow-hidden divide-y">
-                      {venueFields.map((field) => (
-                        <div key={field.id} className="flex items-center gap-3 px-4 py-2.5 bg-card text-sm">
-                          <span className="font-medium min-w-[120px]">
-                            {field.field_name || `Field ${field.field_number}`}
-                          </span>
-                          {field.divisions && field.divisions.length > 0 && (
-                            <span className="text-muted-foreground text-xs">
-                              {field.divisions.join(" / ")}
-                            </span>
-                          )}
-                          <span className="ml-auto flex items-center gap-2">
-                            {field.notes && field.status !== "open" && (
-                              <span className="text-xs text-destructive">{field.notes}</span>
-                            )}
-                            {getStatusBadge(field.status)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </section>
           );
