@@ -126,7 +126,7 @@ const InHouseSchedule = () => {
                       <MapPin className="h-5 w-5 text-primary mt-0.5" />
                       <div>
                         <p className="font-semibold">Locations</p>
-                        <p className="text-muted-foreground">CDBL Main Complex</p>
+                        <p className="text-muted-foreground">Plato Center Fields</p>
                       </div>
                     </div>
                   </div>
@@ -158,7 +158,7 @@ const InHouseSchedule = () => {
                       <MapPin className="h-5 w-5 text-primary mt-0.5" />
                       <div>
                         <p className="font-semibold">Locations</p>
-                        <p className="text-muted-foreground">CDBL Fields 1-4</p>
+                        <p className="text-muted-foreground">Plato Center Fields</p>
                       </div>
                     </div>
                   </div>
@@ -190,7 +190,7 @@ const InHouseSchedule = () => {
                       <MapPin className="h-5 w-5 text-primary mt-0.5" />
                       <div>
                         <p className="font-semibold">Locations</p>
-                        <p className="text-muted-foreground">CDBL Championship Field</p>
+                        <p className="text-muted-foreground">Stonebrook Fields</p>
                       </div>
                     </div>
                   </div>
