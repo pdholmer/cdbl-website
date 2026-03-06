@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -15,11 +15,26 @@ import { UnifiedScheduleToolbar } from "@/components/UnifiedScheduleToolbar";
 import { CalendarEvent } from "@/data/calendarEvents";
 import { useScheduleEvents } from "@/hooks/useScheduleEvents";
 import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
-import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound, History } from "lucide-react";
+import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound, History, Settings } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { isAfter, parseISO, startOfToday, isBefore } from "date-fns";
 import heroImage from "@/assets/hero-schedule.jpg";
 
 const Schedule = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
+      const { data } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'admin' });
+      if (data) { setIsAdmin(true); return; }
+      const { data: bm } = await supabase.rpc('has_role', { _user_id: session.user.id, _role: 'board_member' });
+      if (bm) setIsAdmin(true);
+    };
+    checkRole();
+  }, []);
+
   // State management for modals and UI
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -258,7 +273,17 @@ const Schedule = () => {
         <section id="schedule-section" className="py-12 md:py-16 bg-background" tabIndex={-1}>
           <div className="container mx-auto px-4">
             <div className="mb-8">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">Interactive Schedule</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-3xl md:text-4xl font-heading font-bold">Interactive Schedule</h2>
+                {isAdmin && (
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/admin/schedule">
+                      <Settings className="w-4 h-4 mr-2" />
+                      Manage Schedule
+                    </Link>
+                  </Button>
+                )}
+              </div>
               {/* Unified Filter Toolbar */}
               <UnifiedScheduleToolbar
                 activeCategory={activeTab as 'all' | 'event' | 'practice' | 'game'}
