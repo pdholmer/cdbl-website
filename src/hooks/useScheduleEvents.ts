@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useGames } from "@/hooks/useGames";
 import { usePractices } from "@/hooks/usePractices";
 import { useLeagueEvents } from "@/hooks/useLeagueEvents";
-import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
+import { CalendarEvent } from "@/data/calendarEvents";
 import { Trophy, Users, Calendar } from "lucide-react";
 
 export const useScheduleEvents = () => {
@@ -55,18 +55,7 @@ export const useScheduleEvents = () => {
       icon: Calendar,
     }));
 
-    // Keep static events as fallback (these will be phased out)
-    const staticEvents = calendarEvents.filter(
-      (e) => e.category === "event"
-    );
-
-    // Merge: DB events take priority; keep static events that aren't duplicated
-    const dbEventTitles = new Set(dbEvents.map((e) => `${e.title}-${e.date}`));
-    const uniqueStaticEvents = staticEvents.filter(
-      (e) => !dbEventTitles.has(`${e.title}-${e.date}`)
-    );
-
-    return [...gameEvents, ...practiceEvents, ...dbEvents, ...uniqueStaticEvents];
+    return [...gameEvents, ...practiceEvents, ...dbEvents];
   }, [games, practices, leagueEvents]);
 
   return {
