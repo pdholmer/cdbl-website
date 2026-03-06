@@ -1,23 +1,20 @@
 
 
-## Update Division Groupings on In-House Schedule Page
+## Fix Division Cards Layout for Desktop
 
-The "Game Schedules by Division" section currently has three cards:
-1. T-Ball & Pinto (Ages 4-8)
-2. Bronco & Pony (Ages 9-12)
-3. Colt (Ages 13-14)
+The current grid is `md:grid-cols-2`, which means 3 cards display as 2 on top and 1 orphaned below — an awkward layout.
 
-The user wants them restructured to:
-1. **T-Ball & Pinto** (Ages 4-8)
-2. **Mustang & Bronco** (Ages 9-12)
-3. **Pony & Colt** (Ages 13-14)
+### Change
 
-### Changes
+**File: `src/pages/InHouseSchedule.tsx` (line 103)**
 
-**File: `src/pages/InHouseSchedule.tsx`**
+Change the grid from `md:grid-cols-2` to `lg:grid-cols-3` so all three cards sit side-by-side on desktop. Also widen `max-w-4xl` to `max-w-6xl` to give them room.
 
-- **Card 2 (lines 136-166)**: Change title from "Bronco & Pony (Ages 9-12)" to "Mustang & Bronco (Ages 9-12)". Keep existing schedule details.
-- **Card 3 (lines 168-198)**: Change title from "Colt (Ages 13-14)" to "Pony & Colt (Ages 13-14)". Keep existing schedule details.
+```
+grid md:grid-cols-2 gap-6 max-w-4xl mx-auto
+→
+grid md:grid-cols-3 gap-6 max-w-6xl mx-auto
+```
 
-Two line edits, no structural changes.
+Single line change. Cards will stack on mobile and display as a clean 3-column row on desktop.
 
