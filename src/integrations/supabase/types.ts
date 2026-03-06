@@ -1059,6 +1059,39 @@ export type Database = {
           },
         ]
       }
+      page_visibility: {
+        Row: {
+          hidden_at: string | null
+          hidden_by: string | null
+          hidden_message: string | null
+          id: string
+          is_visible: boolean
+          page_label: string
+          page_slug: string
+          updated_at: string
+        }
+        Insert: {
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hidden_message?: string | null
+          id?: string
+          is_visible?: boolean
+          page_label: string
+          page_slug: string
+          updated_at?: string
+        }
+        Update: {
+          hidden_at?: string | null
+          hidden_by?: string | null
+          hidden_message?: string | null
+          id?: string
+          is_visible?: boolean
+          page_label?: string
+          page_slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       platform_feedback: {
         Row: {
           admin_notes: string | null

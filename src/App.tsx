@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
+import { PageGate } from "./components/PageGate";
 import Index from "./pages/Index";
 import Registration from "./pages/Registration";
 import Teams from "./pages/Teams";
@@ -84,28 +85,28 @@ const App = () => (
           <FeedbackSlider />
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/registration" element={<Registration />} />
+          <Route path="/registration" element={<PageGate slug="registration"><Registration /></PageGate>} />
           <Route path="/teams" element={<Teams />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/fields" element={<Fields />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/rules" element={<Rules />} />
-          <Route path="/volunteer" element={<Volunteer />} />
-          <Route path="/donate" element={<Donate />} />
-          <Route path="/sponsors" element={<Sponsors />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/new-to-cdbl" element={<NewToCDBL />} />
-          <Route path="/board" element={<BoardInfo />} />
-          <Route path="/in-house" element={<InHouse />} />
-          <Route path="/in-house/teams" element={<InHouseTeams />} />
+          <Route path="/schedule" element={<PageGate slug="schedule"><Schedule /></PageGate>} />
+          <Route path="/fields" element={<PageGate slug="fields"><Fields /></PageGate>} />
+          <Route path="/shop" element={<PageGate slug="shop"><Shop /></PageGate>} />
+          <Route path="/about" element={<PageGate slug="about"><About /></PageGate>} />
+          <Route path="/rules" element={<PageGate slug="rules"><Rules /></PageGate>} />
+          <Route path="/volunteer" element={<PageGate slug="volunteer"><Volunteer /></PageGate>} />
+          <Route path="/donate" element={<PageGate slug="donate"><Donate /></PageGate>} />
+          <Route path="/sponsors" element={<PageGate slug="sponsors"><Sponsors /></PageGate>} />
+          <Route path="/contact" element={<PageGate slug="contact"><Contact /></PageGate>} />
+          <Route path="/new-to-cdbl" element={<PageGate slug="new-to-cdbl"><NewToCDBL /></PageGate>} />
+          <Route path="/board" element={<PageGate slug="board"><BoardInfo /></PageGate>} />
+          <Route path="/in-house" element={<PageGate slug="in-house"><InHouse /></PageGate>} />
+          <Route path="/in-house/teams" element={<PageGate slug="in-house-teams"><InHouseTeams /></PageGate>} />
           <Route path="/in-house/registration" element={<Navigate to="/registration" replace />} />
-          <Route path="/in-house/schedule" element={<InHouseSchedule />} />
-          <Route path="/in-house/rules" element={<InHouseRules />} />
-          <Route path="/travel" element={<Travel />} />
+          <Route path="/in-house/schedule" element={<PageGate slug="in-house-schedule"><InHouseSchedule /></PageGate>} />
+          <Route path="/in-house/rules" element={<PageGate slug="in-house-rules"><InHouseRules /></PageGate>} />
+          <Route path="/travel" element={<PageGate slug="travel"><Travel /></PageGate>} />
           <Route path="/travel/schedule" element={<Navigate to="/schedule" replace />} />
-          <Route path="/travel/faq" element={<TravelFAQ />} />
-          <Route path="/travel/registration" element={<TravelRegistration />} />
+          <Route path="/travel/faq" element={<PageGate slug="travel-faq"><TravelFAQ /></PageGate>} />
+          <Route path="/travel/registration" element={<PageGate slug="travel-registration"><TravelRegistration /></PageGate>} />
           {/* Admin Routes */}
           <Route path="/admin/login" element={<Login />} />
           
@@ -142,9 +143,9 @@ const App = () => (
           <Route path="/admin/divisions" element={<ProtectedRoute requireAdmin><Divisions /></ProtectedRoute>} />
           <Route path="/admin/divisions/new" element={<ProtectedRoute requireAdmin><DivisionEdit /></ProtectedRoute>} />
           <Route path="/admin/divisions/:id" element={<ProtectedRoute requireAdmin><DivisionEdit /></ProtectedRoute>} />
-          <Route path="/admin/site-content" element={<ProtectedRoute requireAdmin><SiteContent /></ProtectedRoute>} />
-          <Route path="/admin/site-content/new" element={<ProtectedRoute requireAdmin><SiteContentEdit /></ProtectedRoute>} />
-          <Route path="/admin/site-content/:id" element={<ProtectedRoute requireAdmin><SiteContentEdit /></ProtectedRoute>} />
+          <Route path="/admin/site-content" element={<ProtectedRoute requireBoardMember><SiteContent /></ProtectedRoute>} />
+          <Route path="/admin/site-content/new" element={<ProtectedRoute requireBoardMember><SiteContentEdit /></ProtectedRoute>} />
+          <Route path="/admin/site-content/:id" element={<ProtectedRoute requireBoardMember><SiteContentEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts" element={<ProtectedRoute requireAdmin><Drafts /></ProtectedRoute>} />
           <Route path="/admin/drafts/new" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
           <Route path="/admin/drafts/:id" element={<ProtectedRoute requireAdmin><DraftEdit /></ProtectedRoute>} />
