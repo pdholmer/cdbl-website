@@ -12,10 +12,11 @@ import { CalendarGrid } from "@/components/CalendarGrid";
 import { FeaturedEventsCarousel } from "@/components/FeaturedEventsCarousel";
 import { FindMyTeamModal } from "@/components/FindMyTeamModal";
 import { UnifiedScheduleToolbar } from "@/components/UnifiedScheduleToolbar";
-import { calendarEvents, CalendarEvent } from "@/data/calendarEvents";
+import { CalendarEvent } from "@/data/calendarEvents";
+import { useScheduleEvents } from "@/hooks/useScheduleEvents";
 import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
-import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound } from "lucide-react";
-import { isAfter, parseISO, startOfToday } from "date-fns";
+import { Calendar, MapPin, Users, HandHeart, ExternalLink, Filter, Trophy, List, UsersRound, History } from "lucide-react";
+import { isAfter, parseISO, startOfToday, isBefore } from "date-fns";
 import heroImage from "@/assets/hero-schedule.jpg";
 
 const Schedule = () => {
@@ -25,6 +26,10 @@ const Schedule = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [viewMode, setViewMode] = useState<"calendar" | "list">("list");
   const [teamModalOpen, setTeamModalOpen] = useState(false);
+  const [showPast, setShowPast] = useState(false);
+
+  // Dynamic events from database + static
+  const { events: allEvents, isLoading: eventsLoading } = useScheduleEvents();
   
   // Filter state - Program > Division > Team hierarchy
   const [programFilter, setProgramFilter] = useState<string | 'all'>('all');
@@ -42,18 +47,14 @@ const Schedule = () => {
   // Get upcoming events (future events only)
   const upcomingEvents = useMemo(() => {
     const today = startOfToday();
-    return calendarEvents
+    return allEvents
       .filter(event => {
         const eventDate = parseISO(event.date);
         return isAfter(eventDate, today) || eventDate.toDateString() === today.toDateString();
       })
-      .sort((a, b) => {
-        const dateA = parseISO(a.date);
-        const dateB = parseISO(b.date);
-        return dateA.getTime() - dateB.getTime();
-      })
-      .slice(0, 5);
-  }, []);
+      .sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime())
+      .slice(0, 6);
+  }, [allEvents]);
 
   // Dynamic divisions based on program filter
   const availableDivisions = useMemo(() => {
@@ -73,7 +74,16 @@ const Schedule = () => {
 
   // Filter events by category, program, division, and team
   const filteredEvents = useMemo(() => {
-    let events = calendarEvents;
+    const today = startOfToday();
+    let events = allEvents;
+    
+    // Default: show upcoming only unless showPast is toggled
+    if (!showPast) {
+      events = events.filter(event => {
+        const eventDate = parseISO(event.date);
+        return isAfter(eventDate, today) || eventDate.toDateString() === today.toDateString();
+      });
+    }
     
     // Filter by category tab
     if (activeTab !== "all") {
@@ -83,31 +93,30 @@ const Schedule = () => {
     // Filter by program
     if (programFilter !== 'all') {
       events = events.filter(event => 
-        !event.programId || // Show events without program specified (league-wide)
-        event.programId === programFilter
+        !event.programId || event.programId === programFilter
       );
     }
     
     // Filter by division
     if (divisionFilter !== 'all') {
       events = events.filter(event => 
-        !event.divisionId || // Show events without division specified
-        event.divisionId === divisionFilter
+        !event.divisionId || event.divisionId === divisionFilter
       );
     }
     
     // Filter by team
     if (teamFilter !== 'all') {
       events = events.filter(event => 
-        !event.teamId || // Show events without team specified
+        !event.teamId ||
         event.teamId === teamFilter ||
         event.homeTeamId === teamFilter ||
         event.awayTeamId === teamFilter
       );
     }
     
-    return events;
-  }, [activeTab, programFilter, divisionFilter, teamFilter]);
+    // Sort by date
+    return events.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
+  }, [allEvents, activeTab, programFilter, divisionFilter, teamFilter, showPast]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
@@ -241,7 +250,7 @@ const Schedule = () => {
 
         {/* Featured Upcoming Section */}
         <FeaturedEventsCarousel 
-          events={calendarEvents}
+          events={upcomingEvents}
           onEventClick={handleEventClick}
         />
 
@@ -269,6 +278,16 @@ const Schedule = () => {
                 onClearFilters={handleClearAllFilters}
                 activeFilterText={activeFilterText}
               />
+              <div className="mt-4 flex items-center gap-2">
+                <Button
+                  variant={showPast ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setShowPast(!showPast)}
+                >
+                  <History className="mr-2 h-4 w-4" />
+                  {showPast ? "Showing All Events" : "Show Past Events"}
+                </Button>
+              </div>
             </div>
             
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -335,7 +354,7 @@ const Schedule = () => {
                     <Trophy className="h-8 w-8 text-event-game" />
                   </div>
                   <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
-                    {calendarEvents.filter(e => e.category === 'game').length}
+                    {allEvents.filter(e => e.category === 'game').length}
                   </p>
                   <p className="text-sm md:text-base text-muted-foreground font-sans">Total Games</p>
                 </CardContent>
@@ -346,7 +365,7 @@ const Schedule = () => {
                     <Users className="h-8 w-8 text-event-practice" />
                   </div>
                   <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
-                    {calendarEvents.filter(e => e.category === 'practice').length}
+                    {allEvents.filter(e => e.category === 'practice').length}
                   </p>
                   <p className="text-sm md:text-base text-muted-foreground font-sans">Practice Sessions</p>
                 </CardContent>
@@ -357,7 +376,7 @@ const Schedule = () => {
                     <Calendar className="h-8 w-8 text-event-gold" />
                   </div>
                   <p className="text-3xl md:text-4xl font-heading font-bold mb-1">
-                    {calendarEvents.filter(e => e.category === 'event').length}
+                    {allEvents.filter(e => e.category === 'event').length}
                   </p>
                   <p className="text-sm md:text-base text-muted-foreground font-sans">League Events</p>
                 </CardContent>
