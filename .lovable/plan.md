@@ -1,39 +1,20 @@
 
 
-## Improve VenueEdit Page Layout
+## Optimize Fields Page Layout
 
-The current page stacks 4 full-width cards vertically with a lot of wasted horizontal space. The form is long and requires excessive scrolling.
+The current page has excessive vertical spacing — each venue gets a full-width section with `py-16`, large gaps, and the map + info card use a 2-column grid that leaves a lot of whitespace. The bottom sections (Visitor Info, Coach Resources) are narrow `max-w-3xl` centered cards with big padding.
 
-### Changes — `src/pages/admin/VenueEdit.tsx`
+### Changes — `src/pages/Fields.tsx`
 
-Reorganize into a **two-column layout** on desktop:
+1. **Tighter venue sections**: Reduce `py-16` to `py-8`, `mb-12` gaps to `mb-6`, and `gap-12` to `gap-6`. Shrink heading sizes from `text-3xl md:text-4xl` to `text-2xl font-bold`.
 
-```text
-┌─────────────────────────┬──────────────────────────┐
-│  Basic Information      │  Contact Information     │
-│  Name, Address, City,   │  Name, Phone, Email      │
-│  State, Zip, Status     │                          │
-│  Features: ☐☐☐          │  Additional Info         │
-│                         │  Parking, Directions     │
-├─────────────────────────┴──────────────────────────┤
-│  Individual Fields                    [+ Add Field] │
-│  ┌─ Field 1 ──────────────────────────────────────┐ │
-│  │ #  Name  Status  Divisions  Notes    [🗑]      │ │
-│  └────────────────────────────────────────────────┘ │
-│  ┌─ Field 2 ──────────────────────────────────────┐ │
-│  │ ...                                             │ │
-│  └────────────────────────────────────────────────┘ │
-│                              [Save]  [Cancel]       │
-└─────────────────────────────────────────────────────┘
-```
+2. **Compact map + info row**: Keep the 2-col grid but make the map smaller (`aspect-[16/10]` instead of `aspect-video` with `mb-6`). Move the address details inline rather than inside a full Card — just text with icon, no card chrome. This saves significant vertical space per venue.
 
-1. **Two-column top section**: Merge "Basic Information" and "Contact + Additional Info" side-by-side using `grid lg:grid-cols-2`. Left column has name/address/features. Right column has contact details and parking/directions.
+3. **Inline field status row**: Replace the `grid md:grid-cols-2 lg:grid-cols-4` field cards with a compact horizontal list/table row. Each field becomes a single row: name, divisions badge, status badge, and notes — no card wrapper. This cuts the field section height dramatically.
 
-2. **Compact field rows**: Replace the current stacked card-per-field layout with a denser inline row layout. Each field becomes a single horizontal row with all inputs on one line (field number, name, status select, divisions, notes) plus a delete button. This drastically reduces vertical space.
+4. **Merge bottom sections**: Combine "Visitor Information" and "For Coaches" side-by-side in a 2-column grid instead of stacking them full-width, halving the vertical footprint.
 
-3. **Sticky save bar**: Move Save/Cancel buttons into a sticky footer bar at the bottom of the form for easy access without scrolling.
+5. **Reduce hero padding**: `py-16 md:py-24` → `py-12 md:py-16`.
 
-4. **Wider field inputs**: Use `grid-cols-5` or flex layout for field rows so all columns fit on one line on desktop, collapsing to stacked on mobile.
-
-Single file change: `src/pages/admin/VenueEdit.tsx`.
+Single file change: `src/pages/Fields.tsx`.
 
