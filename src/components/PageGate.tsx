@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useIsPageVisible } from "@/hooks/usePageVisibility";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Calendar, Users, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -31,9 +31,25 @@ export const PageGate = ({ slug, children }: PageGateProps) => {
           ) : (
             <p className="text-muted-foreground">This page is temporarily unavailable. Please check back later.</p>
           )}
-          <Link to="/">
-            <Button>Go Home</Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link to="/">
+              <Button>Go Home</Button>
+            </Link>
+          </div>
+          <div className="border-t pt-6">
+            <p className="text-sm text-muted-foreground mb-3">While you're here, explore:</p>
+            <div className="flex flex-wrap gap-2 justify-center">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/schedule"><Calendar className="mr-1 h-4 w-4" /> Schedule</Link>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/teams"><Users className="mr-1 h-4 w-4" /> Teams</Link>
+              </Button>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/volunteer"><Heart className="mr-1 h-4 w-4" /> Volunteer</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </main>
       <Footer />
