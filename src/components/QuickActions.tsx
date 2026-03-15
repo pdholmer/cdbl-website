@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ClipboardList, Calendar, MapPin, Mail } from "lucide-react";
+import { Users, Calendar, MapPin, Mail } from "lucide-react";
 
 const actions = [
   {
