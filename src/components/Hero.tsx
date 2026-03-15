@@ -10,7 +10,7 @@ import heroNewToCdbl from "@/assets/hero-new-to-cdbl.jpg";
 const carouselSlides = [
   {
     title: "New to CDBL?",
-    subtitle: "Find your division, learn about our programs, and join Burlington's youth baseball community.",
+    subtitle: "Learn about our programs and join Burlington's baseball community.",
     subtitle2: "Your complete guide to CDBL — from programs to game day.",
     primaryCta: { text: "Start Here", link: "/new-to-cdbl" },
     secondaryCta: { text: "View Programs", link: "/teams" },
