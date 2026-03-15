@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselApi } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import heroRegistration from "@/assets/hero-registration.png";
+
 import heroSchedule from "@/assets/hero-schedule.jpg";
 import heroNewToCdbl from "@/assets/hero-new-to-cdbl.jpg";
 
