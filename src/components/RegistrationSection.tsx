@@ -149,6 +149,16 @@ const RegistrationSection = () => {
           </Card>
         </div>
 
+        {/* Cross-link to schedule */}
+        <div className="text-center mb-8 md:mb-12">
+          <Button variant="outline" size="lg" asChild>
+            <Link to="/schedule" className="gap-2">
+              <Calendar className="h-5 w-5" />
+              See Upcoming Games →
+            </Link>
+          </Button>
+        </div>
+
         {/* Value Props */}
         <div className="grid sm:grid-cols-3 gap-4 md:gap-6">
           <div className="text-center p-5 md:p-6 bg-white rounded-lg shadow-sm border border-border hover:shadow-md transition-all">
