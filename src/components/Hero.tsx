@@ -73,7 +73,7 @@ const Hero = () => {
                         variant="default"
                         size="lg"
                         asChild
-                        className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+                        className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold text-base px-6 py-3"
                       >
                         <Link to={slide.primaryCta.link}>{slide.primaryCta.text}</Link>
                       </Button>
@@ -81,7 +81,7 @@ const Hero = () => {
                         variant="outline"
                         size="lg"
                         asChild
-                        className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
+                        className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold text-base px-6 py-3"
                       >
                         <Link to={slide.secondaryCta.link}>{slide.secondaryCta.text}</Link>
                       </Button>

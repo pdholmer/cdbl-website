@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, Calendar, DollarSign, Users } from "lucide-react";
+import { Calendar, DollarSign, Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -18,14 +18,27 @@ const Registration = () => {
     <div className="min-h-screen">
       <Header />
       <main>
-        {/* Hero Section */}
+        {/* Hero Section - Registration Closed */}
         <section 
           className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
           style={{ background: 'var(--gradient-hero)' }}
         >
           <div className="container">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">Register for 2026 Season</h1>
-            <p className="text-xl max-w-2xl">Join the CDBL family! Registration is now open for the 2026 baseball season.</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">2026 Registration is Closed</h1>
+            <p className="text-xl max-w-2xl mb-8">
+              The 2026 season is underway! Explore our schedule, find your team, or get involved as a volunteer.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button size="lg" asChild className="bg-white text-primary hover:bg-white/90 font-semibold">
+                <Link to="/schedule">View Schedule <ArrowRight className="ml-2 h-5 w-5" /></Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold">
+                <Link to="/teams">View Teams</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold">
+                <Link to="/volunteer">Volunteer</Link>
+              </Button>
+            </div>
           </div>
         </section>
 
@@ -53,17 +66,17 @@ const Registration = () => {
                 <Card>
                   <CardHeader>
                     <Calendar className="h-8 w-8 text-primary mb-2" />
-                    <CardTitle>Important Dates</CardTitle>
+                    <CardTitle>Season Dates</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2 text-muted-foreground">
                       {inHouseProgram?.season_start && (
-                        <li><strong>Season Starts:</strong> {new Date(inHouseProgram.season_start).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</li>
+                        <li><strong>Season Started:</strong> {new Date(inHouseProgram.season_start).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</li>
                       )}
                       {inHouseProgram?.season_end && (
                         <li><strong>Season Ends:</strong> {new Date(inHouseProgram.season_end).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</li>
                       )}
-                      <li><strong>Status:</strong> {inHouseProgram?.registration_open ? 'Registration Open' : 'Registration Closed'}</li>
+                      <li><strong>Status:</strong> Season in progress</li>
                     </ul>
                   </CardContent>
                 </Card>
@@ -287,59 +300,44 @@ const Registration = () => {
           </div>
         </section>
 
-        {/* How to Register Section */}
+        {/* Next Steps CTA - replaces "How to Register" */}
         <section className="py-16 bg-background">
-          <div className="container max-w-3xl">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">How to Register</h2>
-            <p className="text-center text-muted-foreground mb-8">
-              New to CDBL? <Link to="/new-to-cdbl" className="text-primary hover:underline font-semibold">Check out our orientation guide</Link> for everything you need to know.
+          <div className="container max-w-3xl text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Stay Connected</h2>
+            <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+              Registration for the 2026 season has closed. Here's how to stay involved with CDBL.
             </p>
-            
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">1</div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Visit SportsConnect</h3>
-                  <p className="text-muted-foreground">Click the "Register Now" button to access our registration system powered by SportsConnect.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">2</div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Create Your Account</h3>
-                  <p className="text-muted-foreground">If you've registered with CDBL before, you'll need to create a new account in our updated registration system — it only takes 2 minutes.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">3</div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Complete Player Information</h3>
-                  <p className="text-muted-foreground">Fill out your child's information, select their division, and choose your preferred program.</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold">4</div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Submit Payment</h3>
-                  <p className="text-muted-foreground">Pay your registration fee securely online. Payment plans may be available.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12 text-center">
-              <p className="text-sm text-muted-foreground mb-4">
-                Clicking "Start Registration" will open our secure registration partner, SportsConnect, in a new tab. Return here any time for program information.
-              </p>
-              <Button 
-                size="lg" 
-                variant="hero"
-                onClick={() => window.open('https://registration.bluesombrero.com/84830/program-questions/preview/80130405', '_blank')}
-              >
-                Start Registration <ExternalLink className="ml-2 h-5 w-5" />
-              </Button>
+            <div className="grid sm:grid-cols-3 gap-4">
+              <Card className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <Calendar className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-bold mb-2">Game Schedule</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Find upcoming games and field assignments</p>
+                  <Button variant="outline" asChild className="w-full">
+                    <Link to="/schedule">View Schedule <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <Users className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-bold mb-2">Find Your Team</h3>
+                  <p className="text-sm text-muted-foreground mb-4">See team rosters and divisions</p>
+                  <Button variant="outline" asChild className="w-full">
+                    <Link to="/teams">View Teams <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                  </Button>
+                </CardContent>
+              </Card>
+              <Card className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6 text-center">
+                  <Calendar className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-bold mb-2">Volunteer</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Help make the season great for everyone</p>
+                  <Button variant="outline" asChild className="w-full">
+                    <Link to="/volunteer">Sign Up <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
