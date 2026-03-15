@@ -37,11 +37,6 @@ const RegistrationSection = () => {
                   <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded">
                     MOST POPULAR
                   </span>
-                  {inHouseProgram?.registration_open && (
-                    <span className="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">
-                      OPEN NOW
-                    </span>
-                  )}
                 </div>
                 <h3 className="text-2xl md:text-3xl font-bold text-white">In-House Baseball</h3>
               </div>
@@ -74,16 +69,6 @@ const RegistrationSection = () => {
                 <Button 
                   variant="hero" 
                   size="lg" 
-                  className="flex-1"
-                  asChild
-                >
-                  <Link to="/registration">
-                    Register for In-House
-                  </Link>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
                   className="flex-1"
                   asChild
                 >

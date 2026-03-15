@@ -3,33 +3,25 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselApi } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import heroRegistration from "@/assets/hero-registration.png";
+
 import heroSchedule from "@/assets/hero-schedule.jpg";
 import heroNewToCdbl from "@/assets/hero-new-to-cdbl.jpg";
 
 const carouselSlides = [
   {
     title: "New to CDBL?",
-    subtitle: "Find your division, get registered, and join Burlington's youth baseball community.",
-    subtitle2: "From registration to Opening Day — your complete guide starts here.",
+    subtitle: "Find your division, learn about our programs, and join Burlington's youth baseball community.",
+    subtitle2: "Your complete guide to CDBL — from programs to game day.",
     primaryCta: { text: "Start Here", link: "/new-to-cdbl" },
     secondaryCta: { text: "View Programs", link: "/teams" },
     image: heroNewToCdbl,
   },
   {
-    title: "2026 Registration",
+    title: "2026 Season Underway",
     subtitle: "38 years of youth baseball excellence in Burlington & Plato Center.",
-    subtitle2: "Early registration opens December 1st — secure your spot today.",
-    primaryCta: { text: "Register Now", link: "/registration" },
-    secondaryCta: { text: "View Programs", link: "/teams" },
-    image: heroRegistration,
-  },
-  {
-    title: "Game Schedule",
-    subtitle: "View upcoming games, field assignments, and division standings.",
-    subtitle2: "All divisions — in-house and travel — updated in real time.",
+    subtitle2: "Check the schedule for upcoming games and find your field.",
     primaryCta: { text: "View Schedule", link: "/schedule" },
-    secondaryCta: { text: "Find Fields", link: "/fields" },
+    secondaryCta: { text: "View Teams", link: "/teams" },
     image: heroSchedule,
   },
 ];
