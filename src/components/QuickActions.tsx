@@ -3,10 +3,10 @@ import { ClipboardList, Calendar, MapPin, Mail } from "lucide-react";
 
 const actions = [
   {
-    label: "Register Now",
-    description: "Sign up for a program",
-    icon: ClipboardList,
-    href: "/registration",
+    label: "View Teams",
+    description: "Rosters & divisions",
+    icon: Users,
+    href: "/teams",
     color: "text-primary",
     bg: "bg-primary/10",
   },
