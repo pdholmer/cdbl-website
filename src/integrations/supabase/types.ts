@@ -2515,6 +2515,31 @@ export type Database = {
         Returns: boolean
       }
       get_current_pick_team: { Args: { draft_id: string }; Returns: string }
+      get_invitation_by_token: {
+        Args: { _token: string }
+        Returns: {
+          accepted_at: string | null
+          created_at: string | null
+          division_id: string | null
+          email: string
+          expires_at: string | null
+          first_name: string
+          id: string
+          invited_by: string | null
+          last_name: string
+          phone: string | null
+          program_id: string | null
+          status: string | null
+          team_id: string | null
+          token: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "coach_invitations"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_user_email: { Args: never; Returns: string }
       has_admin_access: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
