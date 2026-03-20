@@ -274,7 +274,7 @@ const InHouse = () => {
           <div className="container text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Play Ball?</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Join hundreds of families in the CDBL in-house program. Registration is open now for the 2026 season!
+              The 2026 season is underway! Follow your team's schedule and get involved.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button 
@@ -283,7 +283,7 @@ const InHouse = () => {
                 asChild
                 className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
               >
-                <Link to="/registration">Register Today</Link>
+                <Link to="/schedule">View Schedule</Link>
               </Button>
               <Button 
                 variant="outline" 
