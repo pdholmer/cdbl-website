@@ -42,7 +42,7 @@ const InHouse = () => {
                   asChild
                   className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
                 >
-                  <a href="https://registration.bluesombrero.com/84830/program-questions/preview/80130405" target="_blank" rel="noopener noreferrer">Register Now</a>
+                  <Link to="/in-house/schedule">View Schedule</Link>
                 </Button>
                 <Button 
                   variant="outline" 
@@ -64,7 +64,7 @@ const InHouse = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { to: "/in-house/teams", icon: Users, label: "Teams & Divisions", desc: "See all divisions and meet your team" },
-                { to: "/registration", icon: ClipboardList, label: "Registration", desc: "Register your player for 2026" },
+                { to: "/volunteer", icon: Heart, label: "Volunteer", desc: "Help coach or support the league" },
                 { to: "/in-house/schedule", icon: Calendar, label: "Schedule", desc: "View game dates and times" },
                 { to: "/in-house/rules", icon: BookOpen, label: "Rules & FAQ", desc: "Division rules and common questions" },
               ].map(({ to, icon: Icon, label, desc }) => (
@@ -263,7 +263,7 @@ const InHouse = () => {
 
             <div className="mt-12 text-center">
               <Button size="lg" variant="hero" asChild>
-                <Link to="/registration">Register for In-House Baseball</Link>
+                <Link to="/in-house/schedule">View the Full Schedule</Link>
               </Button>
             </div>
           </div>
@@ -274,7 +274,7 @@ const InHouse = () => {
           <div className="container text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Play Ball?</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Join hundreds of families in the CDBL in-house program. Registration is open now for the 2026 season!
+              The 2026 season is underway! Follow your team's schedule and get involved.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button 
@@ -283,7 +283,7 @@ const InHouse = () => {
                 asChild
                 className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
               >
-                <Link to="/registration">Register Today</Link>
+                <Link to="/schedule">View Schedule</Link>
               </Button>
               <Button 
                 variant="outline" 
