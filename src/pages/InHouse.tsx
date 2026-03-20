@@ -263,7 +263,7 @@ const InHouse = () => {
 
             <div className="mt-12 text-center">
               <Button size="lg" variant="hero" asChild>
-                <Link to="/registration">Register for In-House Baseball</Link>
+                <Link to="/in-house/schedule">View the Full Schedule</Link>
               </Button>
             </div>
           </div>
