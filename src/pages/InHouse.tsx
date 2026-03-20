@@ -42,7 +42,7 @@ const InHouse = () => {
                   asChild
                   className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
                 >
-                  <a href="https://registration.bluesombrero.com/84830/program-questions/preview/80130405" target="_blank" rel="noopener noreferrer">Register Now</a>
+                  <Link to="/in-house/schedule">View Schedule</Link>
                 </Button>
                 <Button 
                   variant="outline" 
