@@ -1,78 +1,52 @@
 
 
-## Fix External Calendar Display + Add Filter Metadata
+## Switch Calendar Source + Cleaner Team Naming
 
-### Problem 1 — Events not appearing on `/schedule`
+### Changes
 
-The 28 synced events ARE in the database, but they're invisible because of how the schedule page filters work. External events have no `category` matching the active "game/practice" tab and no `programId/divisionId/teamId` — combined with the upcoming/past filter and the way the cards look, they get lost.
+**1. Replace the calendar feed**
+- Update the existing `external_calendars` row: swap the TeamApp `.ics` URL for the new BlueSombrero feed.
+- Convert the `webcal://` scheme to `https://` before fetching (servers don't speak `webcal`; it's just a hint to open in a calendar app). Final URL:
+  `https://calendar.bluesombrero.com/api/v1/Calendar?instancekey=leagues&portalId=84830&id=46965016&key=79C9LD6T`
+- Set `source = "bluesombrero"` and update the display name.
+- Trigger a manual sync after the swap to repopulate `external_calendar_events` with the new feed (old TeamApp events get removed by the existing "delete events not in feed" step since they share the same calendar_id).
 
-Root cause: in `useScheduleEvents.ts`, every external event is hardcoded to `category: "event"`. So when a parent filters to "Games" or "Practices" they vanish. We also have no metadata to match them to a Program / Division / Team.
+**2. Smarter title formatting in `useScheduleEvents.ts`**
 
-### Problem 2 — No filter metadata
+When external events have classified team metadata, build display titles like this so parents/coaches always see the division and never see "CDBL Rockets":
 
-The TeamApp `.ics` data is rich enough to infer what we need:
+| Category | Both teams resolved | Only one team resolved | No teams resolved |
+|---|---|---|---|
+| Game (In-House) | `Mustang: Pirates vs Cardinals` | fall back to cleaned raw title | cleaned raw title |
+| Game (Travel) | `10U White vs 10U IHTT` (use division name as the team label since travel team names are the division code) | cleaned raw title | cleaned raw title |
+| Practice (In-House) | `Mustang Pirates Practice` | — | cleaned raw title |
+| Practice (Travel) | `10U White Practice` | — | cleaned raw title |
 
-| Field in feed | Example | Maps to |
-|---|---|---|
-| Title prefix `Mustang …` / `CDBL Rockets 10u IHTT` | "Mustang Pirates vs Mustang Cardinals" | Division (`Mustang`) + Teams (`Pirates`, `Cardinals`) |
-| Title contains "vs Practice" | "CDBL Rockets 10u IHTT vs Practice" | Category = **practice** |
-| Title contains "vs <team>" | "Mustang Pirates vs Mustang Brewers" | Category = **game** |
-| Description | "10u IHTT Games 2026", "Mustang Practice 2026" | Confirms division + Travel vs In-House |
-| Location prefix | "Mustang - Field 2, …" | Field number |
+Cleaning rules applied to any fallback title:
+- Strip leading `CDBL Rockets ` / `CDBL ` prefixes
+- Strip trailing ` IHTT` token only when it duplicates the division (keep "10U IHTT" as a team label when that IS the team name)
+- Collapse extra whitespace
 
-### Plan
+**3. Tighten the edge-function classifier (`sync-external-calendar/index.ts`)**
 
-**1. Add metadata columns** (migration on `external_calendar_events`):
-- `program_id uuid` (nullable, FK to programs)
-- `division_id uuid` (nullable, FK to divisions)
-- `home_team_id uuid` (nullable, FK to teams)
-- `away_team_id uuid` (nullable, FK to teams)
-- `event_category text` — `'game' | 'practice' | 'event'` (defaults to `'event'`)
-- `field_number text` (parsed from location)
+BlueSombrero feeds use a slightly different title convention than TeamApp, so:
+- Keep existing keyword division detection (Mustang/Pinto/Pony/Bronco/T-Ball + `\d{1,2}U` codes).
+- Add handling for BlueSombrero-style titles which often look like `10U White @ 10U IHTT` or `Mustang Pirates @ Mustang Cardinals` — accept both ` vs ` and ` @ ` (and ` at `) as the home/away separator.
+- Improve travel team matching: when the parsed team string equals or contains the division code (e.g. `10U White`), match the team whose name is `White` (or full `10U White`) within the `10U` division.
+- Strip `CDBL Rockets` / `CDBL` prefixes before team lookup so name-matching against the `teams` table still works.
+- Keep the existing per-event raw fallback in `raw_data` so we can debug any mismatches.
 
-**2. Update the sync edge function** (`sync-external-calendar/index.ts`):
+**4. Admin UX**
+- The Calendars tab already shows the sync summary (games / practices / events / unmatched). No structural changes — admins will see the new counts after the first sync of the new feed.
 
-Add a classifier that runs per parsed event:
+### Files touched
+- DB (data update via insert tool): update the existing `external_calendars` row's `ical_url`, `name`, `source`.
+- `supabase/functions/sync-external-calendar/index.ts` — add `@`/`at` separator support, tighten travel team matching, strip `CDBL Rockets` before lookup.
+- `src/hooks/useScheduleEvents.ts` — new title-builder that always includes the division label and never shows `CDBL Rockets`.
+- One-shot: invoke the sync function to backfill events from the new feed.
 
-- **Category detection**
-  - Title contains `vs Practice` (case-insensitive) → `practice`
-  - Title contains ` vs ` and both sides look like team names → `game`
-  - Description contains "Practice" → `practice`
-  - Otherwise → `event`
-
-- **Division matching**: substring/keyword match against existing `divisions` table — `Mustang`, `Pinto`, `Pony`, `Bronco`, `T-Ball`, plus travel codes (`8U`, `9U`, `10U`, `11U`, `12U`, `13U`, `14U`, `15U`) parsed from title/description (e.g. `10u White`, `10u IHTT` → `10U White`).
-
-- **Program matching**: `Travel` if division is travel-style (`10U`, `11U`, etc.) OR description/title mentions "Travel" / "IHTT" / "Rockets"; else `In-House`.
-
-- **Team matching**: split title on ` vs `, strip division prefix (`Mustang Pirates` → `Pirates`), match against `teams` table within the resolved division. Store as `home_team_id` (left of "vs") and `away_team_id` (right). Practices store the team in `home_team_id` only.
-
-- **Field number**: regex `/Field\s+(\d+)/i` against location → `field_number`.
-
-The function caches lookups (programs, divisions, teams) per run, then writes the resolved IDs into the upsert payload. Re-running sync re-classifies all events so existing rows backfill on the next manual sync.
-
-**3. Update `useScheduleEvents.ts`**:
-- Map external event `event_category` → `CalendarEvent.category` (`game` | `practice` | `event`).
-- Pass through `programId`, `divisionId`, `homeTeamId`, `awayTeamId` so the existing filter logic on `/schedule` "just works".
-- Use `Trophy` icon for game, `Users` for practice, keep `CalendarDays` for unclassified.
-- For games/practices, build a nicer title (e.g. "Pirates vs Cardinals" instead of "Mustang Pirates vs Mustang Cardinals") when both teams resolve.
-
-**4. Update `useExternalCalendarEvents` hook** to select the new columns.
-
-**5. Run sync immediately** after the migration + function deploy so existing 28 events get classified.
-
-**6. Admin UX (small)**: in `CalendarsTab.tsx`, after sync show a quick summary (`X games, Y practices, Z events; N unmatched`) so admins know if any titles failed to map.
-
-### What this delivers
-- All synced events show up in the unified `/schedule`, in the right tab (Games / Practices).
-- Parents using "Find My Team" or program/division/team filters see external events filtered correctly alongside native games & practices.
-- Admins can see at a glance how many events were auto-classified.
-- No manual data entry needed for future syncs — classification re-runs every hour.
-
-### Files / objects touched
-- DB migration: add columns + FKs to `external_calendar_events`
-- `supabase/functions/sync-external-calendar/index.ts` — add classifier + lookups + populate new columns
-- `src/hooks/useExternalCalendars.ts` — extend `ExternalCalendarEvent` type + select
-- `src/hooks/useScheduleEvents.ts` — map metadata + dynamic category/icon/title
-- `src/components/admin/schedule/CalendarsTab.tsx` — show classification summary
-- One-shot: invoke `sync-external-calendar` to backfill
+### Notes
+- `webcal://` → `https://` conversion is server-side only; the URL stored in DB will be `https://…` so future syncs work without special-casing.
+- Old TeamApp events are removed automatically by the existing "delete events no longer in feed" step.
+- If any titles fail to classify after the first sync, the unmatched count in the Calendars tab will tell us, and we can iterate on the parser without further schema changes.
 
