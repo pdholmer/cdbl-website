@@ -88,6 +88,15 @@ const Schedule = () => {
     return getTeamsByDivision(divisionFilter);
   }, [divisionFilter, availableDivisions, getTeamsByDivision]);
 
+  // Dynamic locations derived from loaded events
+  const availableLocations = useMemo(() => {
+    const set = new Set<string>();
+    allEvents.forEach(e => {
+      if (e.location && e.location.trim()) set.add(e.location.trim());
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [allEvents]);
+
   // Filter events by category, program, division, and team
   const filteredEvents = useMemo(() => {
     const today = startOfToday();
