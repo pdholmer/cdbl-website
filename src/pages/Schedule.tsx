@@ -130,12 +130,16 @@ const Schedule = () => {
       );
     }
     
-    // Filter by location (independent, case-insensitive exact match)
+    // Filter by location (categorical: stonecrest/plato/burlington/other)
     if (locationFilter !== 'all') {
-      const target = locationFilter.toLowerCase();
-      events = events.filter(event => 
-        (event.location || '').trim().toLowerCase() === target
-      );
+      const knownKeywords = ['stonecrest', 'plato', 'burlington'];
+      events = events.filter(event => {
+        const loc = (event.location || '').toLowerCase();
+        if (locationFilter === 'other') {
+          return !knownKeywords.some(k => loc.includes(k));
+        }
+        return loc.includes(locationFilter.toLowerCase());
+      });
     }
     
     // Sort by date
