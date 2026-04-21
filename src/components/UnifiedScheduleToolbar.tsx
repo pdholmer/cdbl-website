@@ -23,6 +23,10 @@ interface UnifiedScheduleToolbarProps {
   onTeamChange: (teamId: string | 'all') => void;
   availableTeams: Team[];
   
+  selectedLocation: string | 'all';
+  onLocationChange: (location: string | 'all') => void;
+  availableLocations: string[];
+  
   // View mode toggle
   viewMode: 'calendar' | 'list';
   onViewModeChange: (mode: 'calendar' | 'list') => void;
