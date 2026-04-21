@@ -169,6 +169,7 @@ const Schedule = () => {
     setProgramFilter('all');
     setDivisionFilter('all');
     setTeamFilter('all');
+    setLocationFilter('all');
   };
 
   const handleProgramChange = (programId: string | 'all') => {
@@ -185,8 +186,9 @@ const Schedule = () => {
   const hasActiveFilters = useMemo(() => {
     return programFilter !== 'all' || 
            divisionFilter !== 'all' || 
-           teamFilter !== 'all';
-  }, [programFilter, divisionFilter, teamFilter]);
+           teamFilter !== 'all' ||
+           locationFilter !== 'all';
+  }, [programFilter, divisionFilter, teamFilter, locationFilter]);
 
   const activeFilterText = useMemo(() => {
     const parts: string[] = [];
