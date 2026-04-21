@@ -78,7 +78,7 @@ export const useScheduleEvents = () => {
       id: `practice-${p.id}`,
       title: `${p.team?.name || "Team"} Practice`,
       date: p.practice_date,
-      time: p.start_time,
+      time: formatTime(p.start_time),
       location: p.venue?.name || undefined,
       category: "practice" as const,
       type: "practices-start" as const,
