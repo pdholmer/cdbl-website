@@ -1,4 +1,4 @@
-import { Home, Trophy, Users, Calendar as CalendarIcon, Calendar, List, X } from "lucide-react";
+import { Home, Trophy, Users, Calendar as CalendarIcon, Calendar, List, X, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
