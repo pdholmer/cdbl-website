@@ -208,7 +208,13 @@ const Schedule = () => {
     }
     
     if (locationFilter !== 'all') {
-      parts.push(`📍 ${locationFilter}`);
+      const labelMap: Record<string, string> = {
+        stonecrest: 'Stonecrest',
+        plato: 'Plato',
+        burlington: 'Burlington',
+        other: 'Other',
+      };
+      parts.push(`📍 ${labelMap[locationFilter] || locationFilter}`);
     }
     
     return parts.length > 0 ? parts.join(' → ') : undefined;
@@ -320,7 +326,7 @@ const Schedule = () => {
                 availableTeams={availableTeams}
                 selectedLocation={locationFilter}
                 onLocationChange={setLocationFilter}
-                availableLocations={availableLocations}
+                
                 hasActiveFilters={hasActiveFilters}
                 onClearFilters={handleClearAllFilters}
                 activeFilterText={activeFilterText}
