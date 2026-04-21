@@ -738,6 +738,110 @@ export type Database = {
           },
         ]
       }
+      external_calendar_events: {
+        Row: {
+          all_day: boolean
+          calendar_id: string
+          created_at: string
+          description: string | null
+          end_date: string | null
+          end_time: string | null
+          external_uid: string
+          id: string
+          location: string | null
+          raw_data: Json | null
+          start_date: string
+          start_time: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          all_day?: boolean
+          calendar_id: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          end_time?: string | null
+          external_uid: string
+          id?: string
+          location?: string | null
+          raw_data?: Json | null
+          start_date: string
+          start_time?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          all_day?: boolean
+          calendar_id?: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          end_time?: string | null
+          external_uid?: string
+          id?: string
+          location?: string | null
+          raw_data?: Json | null
+          start_date?: string
+          start_time?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_calendar_events_calendar_id_fkey"
+            columns: ["calendar_id"]
+            isOneToOne: false
+            referencedRelation: "external_calendars"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      external_calendars: {
+        Row: {
+          color: string | null
+          created_at: string
+          created_by: string | null
+          ical_url: string
+          id: string
+          is_active: boolean
+          last_sync_message: string | null
+          last_sync_status: string | null
+          last_synced_at: string | null
+          name: string
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          ical_url: string
+          id?: string
+          is_active?: boolean
+          last_sync_message?: string | null
+          last_sync_status?: string | null
+          last_synced_at?: string | null
+          name: string
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          ical_url?: string
+          id?: string
+          is_active?: boolean
+          last_sync_message?: string | null
+          last_sync_status?: string | null
+          last_synced_at?: string | null
+          name?: string
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       faqs: {
         Row: {
           answer: string
