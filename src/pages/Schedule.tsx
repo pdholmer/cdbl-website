@@ -212,8 +212,12 @@ const Schedule = () => {
       parts.push(activeTab + 's');
     }
     
+    if (locationFilter !== 'all') {
+      parts.push(`📍 ${locationFilter}`);
+    }
+    
     return parts.length > 0 ? parts.join(' → ') : undefined;
-  }, [programFilter, divisionFilter, teamFilter, activeTab, programs, availableDivisions, availableTeams]);
+  }, [programFilter, divisionFilter, teamFilter, locationFilter, activeTab, programs, availableDivisions, availableTeams]);
 
   const scrollToSchedule = () => {
     const scheduleSection = document.getElementById('schedule-section');
