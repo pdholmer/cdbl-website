@@ -139,9 +139,17 @@ const Schedule = () => {
       );
     }
     
+    // Filter by location (independent, case-insensitive exact match)
+    if (locationFilter !== 'all') {
+      const target = locationFilter.toLowerCase();
+      events = events.filter(event => 
+        (event.location || '').trim().toLowerCase() === target
+      );
+    }
+    
     // Sort by date
     return events.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
-  }, [allEvents, activeTab, programFilter, divisionFilter, teamFilter, showPast]);
+  }, [allEvents, activeTab, programFilter, divisionFilter, teamFilter, locationFilter, showPast]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
