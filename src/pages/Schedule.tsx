@@ -50,6 +50,7 @@ const Schedule = () => {
   const [programFilter, setProgramFilter] = useState<string | 'all'>('all');
   const [divisionFilter, setDivisionFilter] = useState<string | 'all'>('all');
   const [teamFilter, setTeamFilter] = useState<string | 'all'>('all');
+  const [locationFilter, setLocationFilter] = useState<string | 'all'>('all');
 
   // Get hierarchical team data
   const { 
