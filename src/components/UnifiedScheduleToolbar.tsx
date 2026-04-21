@@ -1,4 +1,4 @@
-import { Home, Trophy, Users, Calendar as CalendarIcon, Calendar, List, X, MapPin } from "lucide-react";
+import { Home, Trophy, Users, Calendar as CalendarIcon, Calendar, List, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,6 @@ interface UnifiedScheduleToolbarProps {
   
   selectedLocation: string | 'all';
   onLocationChange: (location: string | 'all') => void;
-  availableLocations: string[];
   
   // View mode toggle
   viewMode: 'calendar' | 'list';
@@ -60,7 +59,6 @@ export const UnifiedScheduleToolbar = ({
   availableTeams,
   selectedLocation,
   onLocationChange,
-  availableLocations,
   viewMode,
   onViewModeChange,
   hasActiveFilters,
@@ -175,16 +173,14 @@ export const UnifiedScheduleToolbar = ({
         {/* Location Dropdown */}
         <Select value={selectedLocation} onValueChange={onLocationChange}>
           <SelectTrigger className="w-[200px] rounded-2xl border-2 hover:border-accent transition-colors" aria-label="Filter by Location">
-            <MapPin className="h-4 w-4 mr-1 shrink-0" />
             <SelectValue placeholder="All Locations" />
           </SelectTrigger>
           <SelectContent className="z-50 bg-background max-h-[300px]">
             <SelectItem value="all">All Locations</SelectItem>
-            {availableLocations.map((loc) => (
-              <SelectItem key={loc} value={loc}>
-                {loc}
-              </SelectItem>
-            ))}
+            <SelectItem value="stonecrest">Stonecrest</SelectItem>
+            <SelectItem value="plato">Plato</SelectItem>
+            <SelectItem value="burlington">Burlington</SelectItem>
+            <SelectItem value="other">Other</SelectItem>
           </SelectContent>
         </Select>
 
@@ -317,16 +313,14 @@ export const UnifiedScheduleToolbar = ({
         <div className="w-full">
           <Select value={selectedLocation} onValueChange={onLocationChange}>
             <SelectTrigger className="w-full h-11 rounded-2xl border-2" aria-label="Filter by Location">
-              <MapPin className="h-4 w-4 mr-1 shrink-0" />
               <SelectValue placeholder="Location" />
             </SelectTrigger>
             <SelectContent className="z-50 bg-background max-h-[300px]">
               <SelectItem value="all">All Locations</SelectItem>
-              {availableLocations.map((loc) => (
-                <SelectItem key={loc} value={loc}>
-                  {loc}
-                </SelectItem>
-              ))}
+              <SelectItem value="stonecrest">Stonecrest</SelectItem>
+              <SelectItem value="plato">Plato</SelectItem>
+              <SelectItem value="burlington">Burlington</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
             </SelectContent>
           </Select>
         </div>
