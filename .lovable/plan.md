@@ -1,39 +1,43 @@
 
 
-## Add Location Filter to Schedule Page
+## Simplify Location Filter to 4 Categorical Options
 
-Add a fifth dropdown — **Location** — alongside the existing Program / Division / Team filters on `/schedule`. It filters all event sources (games, practices, league events, external synced events) by the venue/location string shown on each event card.
+### Change
 
-### Approach
+Replace the dynamic location dropdown (which currently lists every distinct venue string from synced events) with a fixed 4-option categorical filter:
 
-Locations come from a mix of sources:
-- Native games/practices use `venue.name` from the `venues` table.
-- League events and external synced events store free-form `location` strings (e.g. `"Prairie Knolls - Field 2"`).
+- **All Locations** (default)
+- **Stonecrest**
+- **Plato**
+- **Burlington**
+- **Other** (anything that doesn't match the three above)
 
-Rather than restrict to the `venues` table only (which would miss external feed locations), the dropdown is built dynamically from the **distinct `location` values present in the currently loaded events**. This guarantees every option in the dropdown produces results, and it picks up new venues from the synced feed automatically.
+This gives parents/coaches a quick way to check field activity at our three primary local sites without wading through dozens of away-game venue names.
 
-### Changes
+### Matching logic (`src/pages/Schedule.tsx`)
 
-**1. `src/pages/Schedule.tsx`**
-- Add `locationFilter` state (`string | 'all'`, default `'all'`).
-- Derive `availableLocations` via `useMemo` over `allEvents`: collect unique non-empty `event.location` values, sort alphabetically.
-- Add `locationFilter` to the `filteredEvents` filter chain (case-insensitive exact match against `event.location`).
-- Include in `hasActiveFilters`, `handleClearAllFilters`, and `activeFilterText` (`📍 <location>`).
-- Pass `selectedLocation`, `onLocationChange`, `availableLocations` props into `UnifiedScheduleToolbar`.
+Case-insensitive substring match on `event.location`:
 
-**2. `src/components/UnifiedScheduleToolbar.tsx`**
-- Extend props with `selectedLocation`, `onLocationChange`, `availableLocations: string[]`.
-- **Desktop**: Add a Location `Select` after the Team dropdown, same `rounded-2xl border-2` styling, width `w-[200px]`, with a `MapPin` icon-style placeholder "All Locations". Trigger label shows the selected location truncated.
-- **Mobile**: Add a fourth row below the Team dropdown with a full-width Location select (or pair it with Team in a 2-col grid — chosen layout: keep Team full-width, add Location full-width below to avoid cramping long facility names).
-- Location filter does NOT cascade — it's independent, so all program/division/team selections remain valid.
+| Filter value | Matches when `event.location` contains… |
+|---|---|
+| `stonecrest` | "stonecrest" |
+| `plato` | "plato" (covers "Plato Center", "Plato Center Park", etc.) |
+| `burlington` | "burlington" |
+| `other` | none of the above three keywords (and location is non-empty OR empty — included so parents can find off-site/TBD games too) |
+| `all` | no filter applied |
 
-### Behavior
-- Selecting a location narrows the visible events to ones at that exact location string, combined with any other active filters (AND logic).
-- Clearing filters resets location to `'all'`.
-- "Now viewing" badge appends the location chosen.
-- Empty state copy already references "filters" so no change needed.
+Remove the `availableLocations` `useMemo` derivation — no longer needed since options are static.
+
+### Toolbar styling (`src/components/UnifiedScheduleToolbar.tsx`)
+
+- Remove the `MapPin` icon from the Location trigger so it matches Program / Division / Team (which use plain text triggers, no icons).
+- Replace dynamic `availableLocations.map(...)` with hardcoded `SelectItem`s for the four options.
+- Drop the `availableLocations` prop from the component interface.
+- Keep the same desktop placement (after Team, `w-[200px]`, `rounded-2xl border-2`) and the mobile full-width row.
+- Update the active filter badge text to display the chosen label (e.g. `📍 Stonecrest`) — emoji is on the badge in the page, not on the trigger.
 
 ### Files touched
-- `src/pages/Schedule.tsx`
-- `src/components/UnifiedScheduleToolbar.tsx`
+
+- `src/pages/Schedule.tsx` — swap dynamic location list for fixed 4 options + categorical match logic; remove `availableLocations` memo.
+- `src/components/UnifiedScheduleToolbar.tsx` — remove `MapPin` icon, hardcode the 4 `SelectItem`s, drop `availableLocations` prop.
 
