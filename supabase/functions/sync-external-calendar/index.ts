@@ -196,12 +196,21 @@ function detectDivision(
 
 function stripDivisionPrefix(teamName: string, divisionName: string): string {
   // Remove "Mustang " / "CDBL Rockets 10u IHTT" style prefixes
-  const cleaned = teamName
-    .replace(new RegExp(`^${divisionName}\\s+`, "i"), "")
+  let cleaned = teamName
     .replace(/^CDBL\s+Rockets?\s+/i, "")
     .replace(/^CDBL\s+/i, "")
     .trim();
+  if (divisionName) {
+    cleaned = cleaned.replace(new RegExp(`^${divisionName}\\s+`, "i"), "").trim();
+  }
   return cleaned;
+}
+
+// Splits a game-style title on "vs" / "@" / "at" separators. Returns null if no split.
+function splitVersus(title: string): [string, string] | null {
+  const m = title.match(/^(.+?)\s+(?:vs\.?|@|at)\s+(.+)$/i);
+  if (!m) return null;
+  return [m[1].trim(), m[2].trim()];
 }
 
 function findTeam(
