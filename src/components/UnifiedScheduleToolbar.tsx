@@ -172,6 +172,22 @@ export const UnifiedScheduleToolbar = ({
           </SelectContent>
         </Select>
 
+        {/* Location Dropdown */}
+        <Select value={selectedLocation} onValueChange={onLocationChange}>
+          <SelectTrigger className="w-[200px] rounded-2xl border-2 hover:border-accent transition-colors" aria-label="Filter by Location">
+            <MapPin className="h-4 w-4 mr-1 shrink-0" />
+            <SelectValue placeholder="All Locations" />
+          </SelectTrigger>
+          <SelectContent className="z-50 bg-background max-h-[300px]">
+            <SelectItem value="all">All Locations</SelectItem>
+            {availableLocations.map((loc) => (
+              <SelectItem key={loc} value={loc}>
+                {loc}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
         {/* Spacer */}
         <div className="flex-1" />
 
