@@ -11,15 +11,16 @@ interface ParsedEvent {
   summary: string;
   description?: string;
   location?: string;
-  startDate: string; // YYYY-MM-DD
-  startTime?: string; // HH:MM:SS
+  startDate: string;
+  startTime?: string;
   endDate?: string;
   endTime?: string;
   allDay: boolean;
   raw: Record<string, string>;
 }
 
-// Unfold long lines (RFC5545: lines starting with space/tab continue prev line)
+// ---------- iCal parsing ----------
+
 function unfoldLines(text: string): string[] {
   const rawLines = text.replace(/\r\n/g, "\n").split("\n");
   const out: string[] = [];
@@ -41,15 +42,11 @@ function unescapeText(s: string): string {
     .replace(/\\\\/g, "\\");
 }
 
-// Parse DTSTART/DTEND value -> { date, time?, allDay }
 function parseDateTime(propLine: string): {
   date: string;
   time?: string;
   allDay: boolean;
 } | null {
-  // propLine looks like: DTSTART;TZID=America/Chicago:20260415T180000
-  // or DTSTART;VALUE=DATE:20260415
-  // or DTSTART:20260415T180000Z
   const colonIdx = propLine.indexOf(":");
   if (colonIdx === -1) return null;
   const params = propLine.slice(0, colonIdx);
@@ -64,11 +61,11 @@ function parseDateTime(propLine: string): {
 
   const m = value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
   if (!m) return null;
-  const date = `${m[1]}-${m[2]}-${m[3]}`;
-  const time = `${m[4]}:${m[5]}:${m[6]}`;
-  // Note: We're storing local time as-is. TZID is informational.
-  // For UTC (Z suffix), we could convert, but most calendars include local TZID.
-  return { date, time, allDay: false };
+  return {
+    date: `${m[1]}-${m[2]}-${m[3]}`,
+    time: `${m[4]}:${m[5]}:${m[6]}`,
+    allDay: false,
+  };
 }
 
 function parseICal(text: string): ParsedEvent[] {
@@ -112,7 +109,6 @@ function parseICal(text: string): ParsedEvent[] {
       }
       current = null;
     } else if (current) {
-      // Extract property name (before ; or :)
       const sepIdx = Math.min(
         ...[line.indexOf(";"), line.indexOf(":")].filter((i) => i !== -1),
       );
@@ -136,6 +132,187 @@ function parseICal(text: string): ParsedEvent[] {
   return events;
 }
 
+// ---------- Classification ----------
+
+interface DivisionRow {
+  id: string;
+  name: string;
+  program_id: string;
+  program_type: string;
+}
+interface TeamRow {
+  id: string;
+  name: string;
+  division_id: string;
+}
+interface ProgramRow {
+  id: string;
+  type: string;
+}
+
+interface Classification {
+  event_category: "game" | "practice" | "event";
+  program_id: string | null;
+  division_id: string | null;
+  home_team_id: string | null;
+  away_team_id: string | null;
+  field_number: string | null;
+}
+
+const TRAVEL_AGE_RE = /\b(\d{1,2})\s*[uU]\b/; // 10u, 11U
+const FIELD_RE = /Field\s+(\d+)/i;
+
+function detectDivision(
+  haystack: string,
+  divisions: DivisionRow[],
+): DivisionRow | null {
+  const lower = haystack.toLowerCase();
+
+  // Travel-style age code: "10u", "8U", etc.
+  const ageMatch = haystack.match(TRAVEL_AGE_RE);
+  if (ageMatch) {
+    const age = ageMatch[1];
+    const travel = divisions.find(
+      (d) =>
+        d.program_type === "travel" &&
+        d.name.toLowerCase().startsWith(`${age}u`),
+    );
+    if (travel) return travel;
+  }
+
+  // In-house keyword: Mustang/Pinto/Pony/Bronco/T-Ball
+  for (const d of divisions) {
+    if (d.program_type !== "in_house") continue;
+    const dn = d.name.toLowerCase();
+    if (dn === "t-ball") {
+      if (/\bt[-\s]?ball\b/i.test(haystack)) return d;
+    } else if (lower.includes(dn)) {
+      return d;
+    }
+  }
+
+  return null;
+}
+
+function stripDivisionPrefix(teamName: string, divisionName: string): string {
+  // Remove "Mustang " / "CDBL Rockets 10u IHTT" style prefixes
+  const cleaned = teamName
+    .replace(new RegExp(`^${divisionName}\\s+`, "i"), "")
+    .replace(/^CDBL\s+Rockets?\s+/i, "")
+    .replace(/^CDBL\s+/i, "")
+    .trim();
+  return cleaned;
+}
+
+function findTeam(
+  rawName: string,
+  divisionId: string | null,
+  teams: TeamRow[],
+): string | null {
+  const cleaned = rawName.trim();
+  if (!cleaned) return null;
+  const lower = cleaned.toLowerCase();
+
+  // Try exact match within division first
+  if (divisionId) {
+    const inDiv = teams.find(
+      (t) =>
+        t.division_id === divisionId && t.name.toLowerCase() === lower,
+    );
+    if (inDiv) return inDiv.id;
+
+    // substring match within division
+    const partial = teams.find(
+      (t) =>
+        t.division_id === divisionId &&
+        (lower.includes(t.name.toLowerCase()) ||
+          t.name.toLowerCase().includes(lower)),
+    );
+    if (partial) return partial.id;
+  }
+
+  // Fall back to any-division exact match
+  const any = teams.find((t) => t.name.toLowerCase() === lower);
+  return any?.id ?? null;
+}
+
+function classify(
+  event: ParsedEvent,
+  divisions: DivisionRow[],
+  teams: TeamRow[],
+  programs: ProgramRow[],
+): Classification {
+  const title = event.summary ?? "";
+  const desc = event.description ?? "";
+  const loc = event.location ?? "";
+  const haystack = `${title} ${desc}`;
+
+  // 1. Category
+  let category: Classification["event_category"] = "event";
+  const isPracticeTitle = /\bvs\s+practice\b/i.test(title) ||
+    /\bpractice\b/i.test(title);
+  const isPracticeDesc = /\bpractice\b/i.test(desc);
+  const hasVs = /\s+vs\.?\s+/i.test(title);
+
+  if (isPracticeTitle || (isPracticeDesc && !hasVs)) {
+    category = "practice";
+  } else if (hasVs) {
+    category = "game";
+  } else if (isPracticeDesc) {
+    category = "practice";
+  }
+
+  // 2. Division
+  const division = detectDivision(haystack, divisions);
+
+  // 3. Program
+  let programId: string | null = division?.program_id ?? null;
+  if (!programId) {
+    const isTravel = /\b(travel|ihtt|rockets|\d{1,2}u)\b/i.test(haystack);
+    const program = programs.find(
+      (p) => p.type === (isTravel ? "travel" : "in_house"),
+    );
+    programId = program?.id ?? null;
+  }
+
+  // 4. Teams
+  let homeTeamId: string | null = null;
+  let awayTeamId: string | null = null;
+
+  if (category === "game" && hasVs) {
+    const parts = title.split(/\s+vs\.?\s+/i);
+    if (parts.length === 2) {
+      const homeName = stripDivisionPrefix(parts[0], division?.name ?? "");
+      const awayName = stripDivisionPrefix(parts[1], division?.name ?? "");
+      homeTeamId = findTeam(homeName, division?.id ?? null, teams);
+      awayTeamId = findTeam(awayName, division?.id ?? null, teams);
+    }
+  } else if (category === "practice") {
+    // Title like "Mustang Pirates vs Practice" or "CDBL Rockets 10u IHTT vs Practice"
+    let teamPart = title;
+    const vsIdx = title.search(/\s+vs\.?\s+/i);
+    if (vsIdx > 0) teamPart = title.slice(0, vsIdx);
+    teamPart = teamPart.replace(/\bpractice\b/i, "").trim();
+    const cleaned = stripDivisionPrefix(teamPart, division?.name ?? "");
+    homeTeamId = findTeam(cleaned, division?.id ?? null, teams);
+  }
+
+  // 5. Field number
+  const fieldMatch = loc.match(FIELD_RE) ?? title.match(FIELD_RE);
+  const fieldNumber = fieldMatch ? fieldMatch[1] : null;
+
+  return {
+    event_category: category,
+    program_id: programId,
+    division_id: division?.id ?? null,
+    home_team_id: homeTeamId,
+    away_team_id: awayTeamId,
+    field_number: fieldNumber,
+  };
+}
+
+// ---------- Main handler ----------
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -147,8 +324,33 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
+    const body = req.method === "POST"
+      ? await req.json().catch(() => ({}))
+      : {};
     const calendarId: string | undefined = body?.calendar_id;
+
+    // Load lookups once
+    const [divRes, teamRes, progRes] = await Promise.all([
+      supabase
+        .from("divisions")
+        .select("id, name, program_id, programs!inner(type)")
+        .returns<any[]>(),
+      supabase.from("teams").select("id, name, division_id").returns<any[]>(),
+      supabase.from("programs").select("id, type").returns<any[]>(),
+    ]);
+
+    if (divRes.error) throw divRes.error;
+    if (teamRes.error) throw teamRes.error;
+    if (progRes.error) throw progRes.error;
+
+    const divisions: DivisionRow[] = (divRes.data ?? []).map((d: any) => ({
+      id: d.id,
+      name: d.name,
+      program_id: d.program_id,
+      program_type: d.programs?.type ?? "",
+    }));
+    const teams: TeamRow[] = teamRes.data ?? [];
+    const programs: ProgramRow[] = progRes.data ?? [];
 
     // Fetch calendars to sync
     const { data: calendars, error: calErr } = await supabase
@@ -160,7 +362,7 @@ Deno.serve(async (req) => {
     if (calErr) throw calErr;
     if (!calendars || calendars.length === 0) {
       return new Response(
-        JSON.stringify({ message: "No active calendars to sync", synced: [] }),
+        JSON.stringify({ message: "No active calendars to sync", results: [] }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
@@ -172,9 +374,7 @@ Deno.serve(async (req) => {
         const res = await fetch(cal.ical_url, {
           headers: { "User-Agent": "CDBL-Calendar-Sync/1.0" },
         });
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const text = await res.text();
         const parsed = parseICal(text);
 
@@ -191,20 +391,34 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        // Upsert events
-        const rows = parsed.map((e) => ({
-          calendar_id: cal.id,
-          external_uid: e.uid,
-          title: e.summary,
-          description: e.description ?? null,
-          location: e.location ?? null,
-          start_date: e.startDate,
-          start_time: e.startTime ?? null,
-          end_date: e.endDate ?? null,
-          end_time: e.endTime ?? null,
-          all_day: e.allDay,
-          raw_data: e.raw,
-        }));
+        // Classify + build rows
+        let games = 0, practices = 0, events = 0, unmatched = 0;
+        const rows = parsed.map((e) => {
+          const c = classify(e, divisions, teams, programs);
+          if (c.event_category === "game") games++;
+          else if (c.event_category === "practice") practices++;
+          else events++;
+          if (!c.division_id) unmatched++;
+          return {
+            calendar_id: cal.id,
+            external_uid: e.uid,
+            title: e.summary,
+            description: e.description ?? null,
+            location: e.location ?? null,
+            start_date: e.startDate,
+            start_time: e.startTime ?? null,
+            end_date: e.endDate ?? null,
+            end_time: e.endTime ?? null,
+            all_day: e.allDay,
+            raw_data: e.raw,
+            event_category: c.event_category,
+            program_id: c.program_id,
+            division_id: c.division_id,
+            home_team_id: c.home_team_id,
+            away_team_id: c.away_team_id,
+            field_number: c.field_number,
+          };
+        });
 
         const { error: upErr } = await supabase
           .from("external_calendar_events")
@@ -217,15 +431,22 @@ Deno.serve(async (req) => {
           .from("external_calendar_events")
           .delete()
           .eq("calendar_id", cal.id)
-          .not("external_uid", "in", `(${uids.map((u) => `"${u.replace(/"/g, '\\"')}"`).join(",")})`);
+          .not(
+            "external_uid",
+            "in",
+            `(${uids.map((u) => `"${u.replace(/"/g, '\\"')}"`).join(",")})`,
+          );
         if (delErr) console.error("Delete error:", delErr);
+
+        const summary =
+          `Synced ${parsed.length} events (${games} games, ${practices} practices, ${events} other; ${unmatched} unmatched)`;
 
         await supabase
           .from("external_calendars")
           .update({
             last_synced_at: new Date().toISOString(),
             last_sync_status: "success",
-            last_sync_message: `Synced ${parsed.length} events`,
+            last_sync_message: summary,
           })
           .eq("id", cal.id);
 
@@ -233,6 +454,10 @@ Deno.serve(async (req) => {
           calendar_id: cal.id,
           name: cal.name,
           synced: parsed.length,
+          games,
+          practices,
+          events,
+          unmatched,
           status: "success",
         });
       } catch (err) {
