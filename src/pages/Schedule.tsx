@@ -88,15 +88,6 @@ const Schedule = () => {
     return getTeamsByDivision(divisionFilter);
   }, [divisionFilter, availableDivisions, getTeamsByDivision]);
 
-  // Dynamic locations derived from loaded events
-  const availableLocations = useMemo(() => {
-    const set = new Set<string>();
-    allEvents.forEach(e => {
-      if (e.location && e.location.trim()) set.add(e.location.trim());
-    });
-    return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [allEvents]);
-
   // Filter events by category, program, division, and team
   const filteredEvents = useMemo(() => {
     const today = startOfToday();
@@ -139,12 +130,16 @@ const Schedule = () => {
       );
     }
     
-    // Filter by location (independent, case-insensitive exact match)
+    // Filter by location (categorical: stonecrest/plato/burlington/other)
     if (locationFilter !== 'all') {
-      const target = locationFilter.toLowerCase();
-      events = events.filter(event => 
-        (event.location || '').trim().toLowerCase() === target
-      );
+      const knownKeywords = ['stonecrest', 'plato', 'burlington'];
+      events = events.filter(event => {
+        const loc = (event.location || '').toLowerCase();
+        if (locationFilter === 'other') {
+          return !knownKeywords.some(k => loc.includes(k));
+        }
+        return loc.includes(locationFilter.toLowerCase());
+      });
     }
     
     // Sort by date
@@ -213,7 +208,13 @@ const Schedule = () => {
     }
     
     if (locationFilter !== 'all') {
-      parts.push(`📍 ${locationFilter}`);
+      const labelMap: Record<string, string> = {
+        stonecrest: 'Stonecrest',
+        plato: 'Plato',
+        burlington: 'Burlington',
+        other: 'Other',
+      };
+      parts.push(`📍 ${labelMap[locationFilter] || locationFilter}`);
     }
     
     return parts.length > 0 ? parts.join(' → ') : undefined;
@@ -325,7 +326,7 @@ const Schedule = () => {
                 availableTeams={availableTeams}
                 selectedLocation={locationFilter}
                 onLocationChange={setLocationFilter}
-                availableLocations={availableLocations}
+                
                 hasActiveFilters={hasActiveFilters}
                 onClearFilters={handleClearAllFilters}
                 activeFilterText={activeFilterText}
