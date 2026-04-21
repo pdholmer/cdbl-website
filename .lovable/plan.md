@@ -1,56 +1,78 @@
 
 
-## Sync External iCal Calendar into League Schedule
+## Fix External Calendar Display + Add Filter Metadata
 
-Yes — I can pull events from that TeamApp `.ics` subscription URL and display them on the league `/schedule` page alongside games, practices, and existing league events. Updates will sync automatically on a schedule.
+### Problem 1 — Events not appearing on `/schedule`
 
-### How it works
+The 28 synced events ARE in the database, but they're invisible because of how the schedule page filters work. External events have no `category` matching the active "game/practice" tab and no `programId/divisionId/teamId` — combined with the upcoming/past filter and the way the cards look, they get lost.
 
-```text
-TeamApp .ics URL ──► Edge Function (fetch + parse)
-                          │
-                          ▼
-                  external_calendar_events table
-                          │
-                          ▼
-                useScheduleEvents hook (merge)
-                          │
-                          ▼
-              /schedule page (calendar + list)
-```
+Root cause: in `useScheduleEvents.ts`, every external event is hardcoded to `category: "event"`. So when a parent filters to "Games" or "Practices" they vanish. We also have no metadata to match them to a Program / Division / Team.
 
-### Implementation
+### Problem 2 — No filter metadata
 
-**1. Database (migration)**
-- New table `external_calendars`: `id`, `name`, `ical_url`, `source` (e.g. "teamapp"), `color`, `is_active`, `last_synced_at`, `created_by`, timestamps.
-- New table `external_calendar_events`: `id`, `calendar_id` (FK), `external_uid` (unique per calendar — used for upsert), `title`, `description`, `location`, `start_date`, `start_time`, `end_date`, `end_time`, `all_day`, `raw_data` (jsonb), timestamps.
-- RLS: public can `SELECT` (events show on public schedule); only admins/board can manage calendars and trigger sync.
-- Seed one row in `external_calendars` with the provided TeamApp URL.
+The TeamApp `.ics` data is rich enough to infer what we need:
 
-**2. Edge function — `sync-external-calendar`**
-- Fetches the `.ics` URL server-side (avoids browser CORS).
-- Parses VEVENTs (UID, SUMMARY, DTSTART, DTEND, LOCATION, DESCRIPTION; handles all-day vs timed; expands basic RRULE recurrences within a 1-year window).
-- Upserts into `external_calendar_events` keyed on `(calendar_id, external_uid)`; deletes events no longer present in the feed.
-- Updates `last_synced_at`. Returns sync summary.
-- Callable manually (admin button) and via scheduled cron.
+| Field in feed | Example | Maps to |
+|---|---|---|
+| Title prefix `Mustang …` / `CDBL Rockets 10u IHTT` | "Mustang Pirates vs Mustang Cardinals" | Division (`Mustang`) + Teams (`Pirates`, `Cardinals`) |
+| Title contains "vs Practice" | "CDBL Rockets 10u IHTT vs Practice" | Category = **practice** |
+| Title contains "vs <team>" | "Mustang Pirates vs Mustang Brewers" | Category = **game** |
+| Description | "10u IHTT Games 2026", "Mustang Practice 2026" | Confirms division + Travel vs In-House |
+| Location prefix | "Mustang - Field 2, …" | Field number |
 
-**3. Scheduled sync (pg_cron + pg_net)**
-- Runs `sync-external-calendar` every 60 minutes so the league calendar stays current automatically.
+### Plan
 
-**4. Frontend integration**
-- New hook `useExternalCalendarEvents.ts` — queries `external_calendar_events` joined with `external_calendars`.
-- Update `src/hooks/useScheduleEvents.ts` to merge external events into the unified `CalendarEvent[]` with `category: "event"` and a distinct icon/color so users can tell them apart from games, practices, and league-created events.
-- Existing `/schedule` page, `CalendarGrid`, and `EventDetailModal` work without changes since they consume `CalendarEvent[]`.
+**1. Add metadata columns** (migration on `external_calendar_events`):
+- `program_id uuid` (nullable, FK to programs)
+- `division_id uuid` (nullable, FK to divisions)
+- `home_team_id uuid` (nullable, FK to teams)
+- `away_team_id uuid` (nullable, FK to teams)
+- `event_category text` — `'game' | 'practice' | 'event'` (defaults to `'event'`)
+- `field_number text` (parsed from location)
 
-**5. Admin management — `src/components/admin/schedule/EventsTab.tsx` (or new "Calendars" sub-section)**
-- List of connected external calendars with name, URL, last sync time, active toggle.
-- "Sync Now" button → invokes the edge function.
-- "Add Calendar" dialog (name, iCal URL, color) for future feeds.
+**2. Update the sync edge function** (`sync-external-calendar/index.ts`):
 
-### Notes & caveats
+Add a classifier that runs per parsed event:
 
-- TeamApp `.ics` feeds use a long-lived `secret` token in the URL. We'll store it server-side in the `external_calendars` table — never exposed to the browser.
-- Recurring events: standard `RRULE FREQ=WEEKLY/DAILY/MONTHLY` with `COUNT`/`UNTIL` are supported; exotic rules fall back to the first occurrence.
-- Sync interval: 60 min by default — easy to change. Manual "Sync Now" available anytime.
-- External events are read-only in our admin (edits should happen in TeamApp); they can be hidden by toggling the calendar inactive.
+- **Category detection**
+  - Title contains `vs Practice` (case-insensitive) → `practice`
+  - Title contains ` vs ` and both sides look like team names → `game`
+  - Description contains "Practice" → `practice`
+  - Otherwise → `event`
+
+- **Division matching**: substring/keyword match against existing `divisions` table — `Mustang`, `Pinto`, `Pony`, `Bronco`, `T-Ball`, plus travel codes (`8U`, `9U`, `10U`, `11U`, `12U`, `13U`, `14U`, `15U`) parsed from title/description (e.g. `10u White`, `10u IHTT` → `10U White`).
+
+- **Program matching**: `Travel` if division is travel-style (`10U`, `11U`, etc.) OR description/title mentions "Travel" / "IHTT" / "Rockets"; else `In-House`.
+
+- **Team matching**: split title on ` vs `, strip division prefix (`Mustang Pirates` → `Pirates`), match against `teams` table within the resolved division. Store as `home_team_id` (left of "vs") and `away_team_id` (right). Practices store the team in `home_team_id` only.
+
+- **Field number**: regex `/Field\s+(\d+)/i` against location → `field_number`.
+
+The function caches lookups (programs, divisions, teams) per run, then writes the resolved IDs into the upsert payload. Re-running sync re-classifies all events so existing rows backfill on the next manual sync.
+
+**3. Update `useScheduleEvents.ts`**:
+- Map external event `event_category` → `CalendarEvent.category` (`game` | `practice` | `event`).
+- Pass through `programId`, `divisionId`, `homeTeamId`, `awayTeamId` so the existing filter logic on `/schedule` "just works".
+- Use `Trophy` icon for game, `Users` for practice, keep `CalendarDays` for unclassified.
+- For games/practices, build a nicer title (e.g. "Pirates vs Cardinals" instead of "Mustang Pirates vs Mustang Cardinals") when both teams resolve.
+
+**4. Update `useExternalCalendarEvents` hook** to select the new columns.
+
+**5. Run sync immediately** after the migration + function deploy so existing 28 events get classified.
+
+**6. Admin UX (small)**: in `CalendarsTab.tsx`, after sync show a quick summary (`X games, Y practices, Z events; N unmatched`) so admins know if any titles failed to map.
+
+### What this delivers
+- All synced events show up in the unified `/schedule`, in the right tab (Games / Practices).
+- Parents using "Find My Team" or program/division/team filters see external events filtered correctly alongside native games & practices.
+- Admins can see at a glance how many events were auto-classified.
+- No manual data entry needed for future syncs — classification re-runs every hour.
+
+### Files / objects touched
+- DB migration: add columns + FKs to `external_calendar_events`
+- `supabase/functions/sync-external-calendar/index.ts` — add classifier + lookups + populate new columns
+- `src/hooks/useExternalCalendars.ts` — extend `ExternalCalendarEvent` type + select
+- `src/hooks/useScheduleEvents.ts` — map metadata + dynamic category/icon/title
+- `src/components/admin/schedule/CalendarsTab.tsx` — show classification summary
+- One-shot: invoke `sync-external-calendar` to backfill
 
