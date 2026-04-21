@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GamesTab } from "@/components/admin/schedule/GamesTab";
 import { PracticesTab } from "@/components/admin/schedule/PracticesTab";
 import { EventsTab } from "@/components/admin/schedule/EventsTab";
+import { CalendarsTab } from "@/components/admin/schedule/CalendarsTab";
 import { ScheduleImportDialog } from "@/components/admin/schedule/ScheduleImportDialog";
 import { ExternalLink, MapPin } from "lucide-react";
 
@@ -37,10 +38,12 @@ const AdminSchedule = () => {
             <TabsTrigger value="events">Events</TabsTrigger>
             <TabsTrigger value="games">Games</TabsTrigger>
             <TabsTrigger value="practices">Practices</TabsTrigger>
+            <TabsTrigger value="calendars">Calendars</TabsTrigger>
           </TabsList>
           <TabsContent value="events"><EventsTab /></TabsContent>
           <TabsContent value="games"><GamesTab /></TabsContent>
           <TabsContent value="practices"><PracticesTab /></TabsContent>
+          <TabsContent value="calendars"><CalendarsTab /></TabsContent>
         </Tabs>
       </div>
     </AdminLayout>

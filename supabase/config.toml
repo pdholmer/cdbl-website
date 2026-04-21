@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.generate-hero-images]
 verify_jwt = false
+
+[functions.sync-external-calendar]
+verify_jwt = false
