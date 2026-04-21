@@ -2,13 +2,16 @@ import { useMemo } from "react";
 import { useGames } from "@/hooks/useGames";
 import { usePractices } from "@/hooks/usePractices";
 import { useLeagueEvents } from "@/hooks/useLeagueEvents";
+import { useExternalCalendarEvents } from "@/hooks/useExternalCalendars";
 import { CalendarEvent } from "@/data/calendarEvents";
-import { Trophy, Users, Calendar } from "lucide-react";
+import { Trophy, Users, Calendar, CalendarDays } from "lucide-react";
 
 export const useScheduleEvents = () => {
   const { data: games, isLoading: gamesLoading } = useGames();
   const { data: practices, isLoading: practicesLoading } = usePractices();
   const { data: leagueEvents, isLoading: eventsLoading } = useLeagueEvents();
+  const { data: externalEvents, isLoading: externalLoading } =
+    useExternalCalendarEvents();
 
   const events = useMemo(() => {
     // Map games to CalendarEvent format
