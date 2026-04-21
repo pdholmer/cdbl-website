@@ -65,6 +65,8 @@ const Schedule = () => {
     const today = startOfToday();
     return allEvents
       .filter(event => {
+        // Exclude practices — Featured Events should only show items relevant to everyone
+        if (event.category === 'practice') return false;
         const eventDate = parseISO(event.date);
         return isAfter(eventDate, today) || eventDate.toDateString() === today.toDateString();
       })
