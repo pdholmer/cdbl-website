@@ -61,6 +61,33 @@ function parseDateTime(propLine: string): {
 
   const m = value.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/);
   if (!m) return null;
+  const isUtc = m[7] === "Z";
+  if (isUtc) {
+    // Convert UTC to America/Chicago
+    const utcDate = new Date(
+      `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}Z`,
+    );
+    const fmt = new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Chicago",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+    const parts = Object.fromEntries(
+      fmt.formatToParts(utcDate).map((p) => [p.type, p.value]),
+    );
+    let hour = parts.hour;
+    if (hour === "24") hour = "00";
+    return {
+      date: `${parts.year}-${parts.month}-${parts.day}`,
+      time: `${hour}:${parts.minute}:${parts.second}`,
+      allDay: false,
+    };
+  }
   return {
     date: `${m[1]}-${m[2]}-${m[3]}`,
     time: `${m[4]}:${m[5]}:${m[6]}`,
