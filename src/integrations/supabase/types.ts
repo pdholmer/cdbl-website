@@ -741,14 +741,20 @@ export type Database = {
       external_calendar_events: {
         Row: {
           all_day: boolean
+          away_team_id: string | null
           calendar_id: string
           created_at: string
           description: string | null
+          division_id: string | null
           end_date: string | null
           end_time: string | null
+          event_category: string
           external_uid: string
+          field_number: string | null
+          home_team_id: string | null
           id: string
           location: string | null
+          program_id: string | null
           raw_data: Json | null
           start_date: string
           start_time: string | null
@@ -757,14 +763,20 @@ export type Database = {
         }
         Insert: {
           all_day?: boolean
+          away_team_id?: string | null
           calendar_id: string
           created_at?: string
           description?: string | null
+          division_id?: string | null
           end_date?: string | null
           end_time?: string | null
+          event_category?: string
           external_uid: string
+          field_number?: string | null
+          home_team_id?: string | null
           id?: string
           location?: string | null
+          program_id?: string | null
           raw_data?: Json | null
           start_date: string
           start_time?: string | null
@@ -773,14 +785,20 @@ export type Database = {
         }
         Update: {
           all_day?: boolean
+          away_team_id?: string | null
           calendar_id?: string
           created_at?: string
           description?: string | null
+          division_id?: string | null
           end_date?: string | null
           end_time?: string | null
+          event_category?: string
           external_uid?: string
+          field_number?: string | null
+          home_team_id?: string | null
           id?: string
           location?: string | null
+          program_id?: string | null
           raw_data?: Json | null
           start_date?: string
           start_time?: string | null
@@ -793,6 +811,20 @@ export type Database = {
             columns: ["calendar_id"]
             isOneToOne: false
             referencedRelation: "external_calendars"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_calendar_events_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_calendar_events_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
             referencedColumns: ["id"]
           },
         ]
