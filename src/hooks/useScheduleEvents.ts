@@ -7,6 +7,47 @@ import { useTeams } from "@/hooks/useTeams";
 import { CalendarEvent } from "@/data/calendarEvents";
 import { Trophy, Users, Calendar, CalendarDays } from "lucide-react";
 
+// Normalize any time string to 12-hour standard format (e.g. "7:00 PM").
+// Accepts "HH:MM", "HH:MM:SS", "H:MM AM/PM", or ranges like "5:30 PM - 7:00 PM".
+const formatTime = (input?: string | null): string | undefined => {
+  if (!input) return undefined;
+  const str = String(input).trim();
+  if (!str) return undefined;
+
+  const convertOne = (token: string): string => {
+    const t = token.trim();
+    // Already in 12-hour format
+    if (/[ap]\.?m\.?$/i.test(t)) {
+      const m = t.match(/^(\d{1,2}):?(\d{2})?\s*([ap])\.?m\.?$/i);
+      if (m) {
+        const h = parseInt(m[1], 10);
+        const min = m[2] ?? "00";
+        const ap = m[3].toUpperCase() + "M";
+        return `${h}:${min} ${ap}`;
+      }
+      return t;
+    }
+    // 24-hour HH:MM(:SS)
+    const m24 = t.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+    if (m24) {
+      let h = parseInt(m24[1], 10);
+      const min = m24[2];
+      const ap = h >= 12 ? "PM" : "AM";
+      h = h % 12;
+      if (h === 0) h = 12;
+      return `${h}:${min} ${ap}`;
+    }
+    return t;
+  };
+
+  // Handle range with dash
+  const rangeMatch = str.split(/\s*[-–—]\s*/);
+  if (rangeMatch.length === 2) {
+    return `${convertOne(rangeMatch[0])} - ${convertOne(rangeMatch[1])}`;
+  }
+  return convertOne(str);
+};
+
 export const useScheduleEvents = () => {
   const { data: games, isLoading: gamesLoading } = useGames();
   const { data: practices, isLoading: practicesLoading } = usePractices();
@@ -21,7 +62,7 @@ export const useScheduleEvents = () => {
       id: `game-${g.id}`,
       title: `${g.home_team?.name || "TBD"} vs ${g.away_team?.name || "TBD"}`,
       date: g.game_date,
-      time: g.game_time,
+      time: formatTime(g.game_time),
       location: g.venue?.name || undefined,
       category: "game" as const,
       type: "games-start" as const,
@@ -37,7 +78,7 @@ export const useScheduleEvents = () => {
       id: `practice-${p.id}`,
       title: `${p.team?.name || "Team"} Practice`,
       date: p.practice_date,
-      time: p.start_time,
+      time: formatTime(p.start_time),
       location: p.venue?.name || undefined,
       category: "practice" as const,
       type: "practices-start" as const,
@@ -52,7 +93,7 @@ export const useScheduleEvents = () => {
       title: e.title,
       date: e.event_date,
       endDate: e.end_date || undefined,
-      time: e.event_time || undefined,
+      time: formatTime(e.event_time),
       location: e.location || undefined,
       category: "event" as const,
       type: (e.event_type || "special-event") as CalendarEvent["type"],
@@ -95,7 +136,7 @@ export const useScheduleEvents = () => {
         title,
         date: e.start_date,
         endDate: e.end_date || undefined,
-        time: e.start_time ? e.start_time.slice(0, 5) : undefined,
+        time: formatTime(e.start_time),
         location: e.location || undefined,
         category: cat,
         type,
