@@ -3,6 +3,7 @@ import { useGames } from "@/hooks/useGames";
 import { usePractices } from "@/hooks/usePractices";
 import { useLeagueEvents } from "@/hooks/useLeagueEvents";
 import { useExternalCalendarEvents } from "@/hooks/useExternalCalendars";
+import { useTeams } from "@/hooks/useTeams";
 import { CalendarEvent } from "@/data/calendarEvents";
 import { Trophy, Users, Calendar, CalendarDays } from "lucide-react";
 
@@ -12,6 +13,7 @@ export const useScheduleEvents = () => {
   const { data: leagueEvents, isLoading: eventsLoading } = useLeagueEvents();
   const { data: externalEvents, isLoading: externalLoading } =
     useExternalCalendarEvents();
+  const { data: teams } = useTeams();
 
   const events = useMemo(() => {
     // Map games to CalendarEvent format
@@ -58,22 +60,58 @@ export const useScheduleEvents = () => {
       icon: Calendar,
     }));
 
-    // Map external (synced) calendar events
-    const extEvents: CalendarEvent[] = (externalEvents || []).map((e) => ({
-      id: `ext-${e.id}`,
-      title: e.title,
-      date: e.start_date,
-      endDate: e.end_date || undefined,
-      time: e.start_time ? e.start_time.slice(0, 5) : undefined,
-      location: e.location || undefined,
-      category: "event" as const,
-      type: "special-event" as CalendarEvent["type"],
-      description: e.description || (e.calendar?.name ? `From ${e.calendar.name}` : ""),
-      icon: CalendarDays,
-    }));
+    // Quick team-name lookup for nicer titles
+    const teamNameById = new Map<string, string>();
+    (teams || []).forEach((t: any) => teamNameById.set(t.id, t.name));
+
+    // Map external (synced) calendar events with classification
+    const extEvents: CalendarEvent[] = (externalEvents || []).map((e) => {
+      const cat = (e.event_category as CalendarEvent["category"]) || "event";
+      const icon = cat === "game"
+        ? Trophy
+        : cat === "practice"
+          ? Users
+          : CalendarDays;
+
+      // Build a nicer title when teams resolved
+      let title = e.title;
+      if (cat === "game" && e.home_team_id && e.away_team_id) {
+        const h = teamNameById.get(e.home_team_id);
+        const a = teamNameById.get(e.away_team_id);
+        if (h && a) title = `${h} vs ${a}`;
+      } else if (cat === "practice" && e.home_team_id) {
+        const h = teamNameById.get(e.home_team_id);
+        if (h) title = `${h} Practice`;
+      }
+
+      const type: CalendarEvent["type"] = cat === "game"
+        ? "games-start"
+        : cat === "practice"
+          ? "practices-start"
+          : "special-event";
+
+      return {
+        id: `ext-${e.id}`,
+        title,
+        date: e.start_date,
+        endDate: e.end_date || undefined,
+        time: e.start_time ? e.start_time.slice(0, 5) : undefined,
+        location: e.location || undefined,
+        category: cat,
+        type,
+        description:
+          e.description || (e.calendar?.name ? `From ${e.calendar.name}` : ""),
+        icon,
+        programId: e.program_id || undefined,
+        divisionId: e.division_id || undefined,
+        teamId: cat === "practice" ? (e.home_team_id || undefined) : undefined,
+        homeTeamId: e.home_team_id || undefined,
+        awayTeamId: e.away_team_id || undefined,
+      };
+    });
 
     return [...gameEvents, ...practiceEvents, ...dbEvents, ...extEvents];
-  }, [games, practices, leagueEvents, externalEvents]);
+  }, [games, practices, leagueEvents, externalEvents, teams]);
 
   return {
     events,

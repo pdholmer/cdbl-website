@@ -28,6 +28,12 @@ export interface ExternalCalendarEvent {
   end_date: string | null;
   end_time: string | null;
   all_day: boolean;
+  event_category: "game" | "practice" | "event" | null;
+  program_id: string | null;
+  division_id: string | null;
+  home_team_id: string | null;
+  away_team_id: string | null;
+  field_number: string | null;
   calendar?: { name: string; color: string | null };
 }
 
@@ -51,7 +57,9 @@ export const useExternalCalendarEvents = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("external_calendar_events" as any)
-        .select("*, calendar:external_calendars(name, color, is_active)")
+        .select(
+          "id, calendar_id, external_uid, title, description, location, start_date, start_time, end_date, end_time, all_day, event_category, program_id, division_id, home_team_id, away_team_id, field_number, calendar:external_calendars(name, color, is_active)",
+        )
         .order("start_date", { ascending: true });
       if (error) throw error;
       const filtered = ((data ?? []) as any[]).filter(

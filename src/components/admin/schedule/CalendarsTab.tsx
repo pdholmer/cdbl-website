@@ -182,7 +182,11 @@ export const CalendarsTab = () => {
                   </TableCell>
                   <TableCell>
                     {c.last_sync_status === "success" ? (
-                      <Badge variant="outline" className="bg-green-50 text-green-700">
+                      <Badge
+                        variant="outline"
+                        className="bg-green-50 text-green-700"
+                        title={c.last_sync_message ?? ""}
+                      >
                         Success
                       </Badge>
                     ) : c.last_sync_status === "error" ? (
@@ -190,11 +194,20 @@ export const CalendarsTab = () => {
                         Error
                       </Badge>
                     ) : c.last_sync_status === "warning" ? (
-                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700">
+                      <Badge
+                        variant="outline"
+                        className="bg-yellow-50 text-yellow-700"
+                        title={c.last_sync_message ?? ""}
+                      >
                         Warning
                       </Badge>
                     ) : (
                       <Badge variant="outline">—</Badge>
+                    )}
+                    {c.last_sync_message && (
+                      <div className="text-xs text-muted-foreground mt-1 max-w-xs truncate">
+                        {c.last_sync_message}
+                      </div>
                     )}
                   </TableCell>
                   <TableCell>
