@@ -323,6 +323,9 @@ const Schedule = () => {
                 selectedTeam={teamFilter}
                 onTeamChange={setTeamFilter}
                 availableTeams={availableTeams}
+                selectedLocation={locationFilter}
+                onLocationChange={setLocationFilter}
+                availableLocations={availableLocations}
                 hasActiveFilters={hasActiveFilters}
                 onClearFilters={handleClearAllFilters}
                 activeFilterText={activeFilterText}
