@@ -105,6 +105,36 @@ export const useScheduleEvents = () => {
     const teamNameById = new Map<string, string>();
     (teams || []).forEach((t: any) => teamNameById.set(t.id, t.name));
 
+    // Division/program lookups via team relations
+    const divisionNameByTeamId = new Map<string, string | undefined>();
+    (teams || []).forEach((t: any) =>
+      divisionNameByTeamId.set(t.id, t.division?.name)
+    );
+    const programTypeByTeamId = new Map<string, string | undefined>();
+    (teams || []).forEach((t: any) =>
+      programTypeByTeamId.set(t.id, t.program?.type)
+    );
+
+    // Clean raw external title: strip CDBL Rockets / CDBL prefixes, collapse whitespace
+    const cleanRawTitle = (raw: string): string =>
+      raw
+        .replace(/\bCDBL\s+Rockets?\s+/gi, "")
+        .replace(/^CDBL\s+/i, "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    // Strip leading division prefix from a team string ("Mustang Pirates" -> "Pirates")
+    const stripDivPrefix = (teamName: string, divName?: string): string => {
+      let s = teamName
+        .replace(/\bCDBL\s+Rockets?\s+/gi, "")
+        .replace(/^CDBL\s+/i, "")
+        .trim();
+      if (divName) {
+        s = s.replace(new RegExp(`^${divName}\\s+`, "i"), "").trim();
+      }
+      return s;
+    };
+
     // Map external (synced) calendar events with classification
     const extEvents: CalendarEvent[] = (externalEvents || []).map((e) => {
       const cat = (e.event_category as CalendarEvent["category"]) || "event";
@@ -114,15 +144,39 @@ export const useScheduleEvents = () => {
           ? Users
           : CalendarDays;
 
-      // Build a nicer title when teams resolved
-      let title = e.title;
-      if (cat === "game" && e.home_team_id && e.away_team_id) {
-        const h = teamNameById.get(e.home_team_id);
-        const a = teamNameById.get(e.away_team_id);
-        if (h && a) title = `${h} vs ${a}`;
-      } else if (cat === "practice" && e.home_team_id) {
-        const h = teamNameById.get(e.home_team_id);
-        if (h) title = `${h} Practice`;
+      const divName =
+        (e.home_team_id && divisionNameByTeamId.get(e.home_team_id)) ||
+        (e.away_team_id && divisionNameByTeamId.get(e.away_team_id)) ||
+        undefined;
+      const programType =
+        (e.home_team_id && programTypeByTeamId.get(e.home_team_id)) ||
+        (e.away_team_id && programTypeByTeamId.get(e.away_team_id)) ||
+        undefined;
+      const isTravel = programType === "travel";
+
+      let title = cleanRawTitle(e.title);
+      const homeName = e.home_team_id ? teamNameById.get(e.home_team_id) : undefined;
+      const awayName = e.away_team_id ? teamNameById.get(e.away_team_id) : undefined;
+
+      if (cat === "game" && homeName && awayName) {
+        if (isTravel) {
+          title = `${homeName} vs ${awayName}`;
+        } else if (divName) {
+          const h = stripDivPrefix(homeName, divName);
+          const a = stripDivPrefix(awayName, divName);
+          title = `${divName}: ${h} vs ${a}`;
+        } else {
+          title = `${homeName} vs ${awayName}`;
+        }
+      } else if (cat === "practice" && homeName) {
+        if (isTravel) {
+          title = `${homeName} Practice`;
+        } else if (divName) {
+          const h = stripDivPrefix(homeName, divName);
+          title = `${divName} ${h} Practice`;
+        } else {
+          title = `${homeName} Practice`;
+        }
       }
 
       const type: CalendarEvent["type"] = cat === "game"
