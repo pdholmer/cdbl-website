@@ -1,4 +1,4 @@
-import { Home, Trophy, Users, Calendar as CalendarIcon, Calendar, List, X } from "lucide-react";
+import { Home, Trophy, Users, Calendar as CalendarIcon, Calendar, List, X, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,10 @@ interface UnifiedScheduleToolbarProps {
   selectedTeam: string | 'all';
   onTeamChange: (teamId: string | 'all') => void;
   availableTeams: Team[];
+  
+  selectedLocation: string | 'all';
+  onLocationChange: (location: string | 'all') => void;
+  availableLocations: string[];
   
   // View mode toggle
   viewMode: 'calendar' | 'list';
@@ -54,6 +58,9 @@ export const UnifiedScheduleToolbar = ({
   selectedTeam,
   onTeamChange,
   availableTeams,
+  selectedLocation,
+  onLocationChange,
+  availableLocations,
   viewMode,
   onViewModeChange,
   hasActiveFilters,
@@ -160,6 +167,22 @@ export const UnifiedScheduleToolbar = ({
             {availableTeams.map((team) => (
               <SelectItem key={team.id} value={team.id}>
                 {team.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Location Dropdown */}
+        <Select value={selectedLocation} onValueChange={onLocationChange}>
+          <SelectTrigger className="w-[200px] rounded-2xl border-2 hover:border-accent transition-colors" aria-label="Filter by Location">
+            <MapPin className="h-4 w-4 mr-1 shrink-0" />
+            <SelectValue placeholder="All Locations" />
+          </SelectTrigger>
+          <SelectContent className="z-50 bg-background max-h-[300px]">
+            <SelectItem value="all">All Locations</SelectItem>
+            {availableLocations.map((loc) => (
+              <SelectItem key={loc} value={loc}>
+                {loc}
               </SelectItem>
             ))}
           </SelectContent>
@@ -290,7 +313,25 @@ export const UnifiedScheduleToolbar = ({
           </Select>
         </div>
 
-        {/* Row 4: View Toggle & Clear Filters */}
+        {/* Row 4: Location Dropdown - Full Width */}
+        <div className="w-full">
+          <Select value={selectedLocation} onValueChange={onLocationChange}>
+            <SelectTrigger className="w-full h-11 rounded-2xl border-2" aria-label="Filter by Location">
+              <MapPin className="h-4 w-4 mr-1 shrink-0" />
+              <SelectValue placeholder="Location" />
+            </SelectTrigger>
+            <SelectContent className="z-50 bg-background max-h-[300px]">
+              <SelectItem value="all">All Locations</SelectItem>
+              {availableLocations.map((loc) => (
+                <SelectItem key={loc} value={loc}>
+                  {loc}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Row 5: View Toggle & Clear Filters */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex gap-2">
             <button

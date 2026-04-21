@@ -50,6 +50,7 @@ const Schedule = () => {
   const [programFilter, setProgramFilter] = useState<string | 'all'>('all');
   const [divisionFilter, setDivisionFilter] = useState<string | 'all'>('all');
   const [teamFilter, setTeamFilter] = useState<string | 'all'>('all');
+  const [locationFilter, setLocationFilter] = useState<string | 'all'>('all');
 
   // Get hierarchical team data
   const { 
@@ -86,6 +87,15 @@ const Schedule = () => {
     }
     return getTeamsByDivision(divisionFilter);
   }, [divisionFilter, availableDivisions, getTeamsByDivision]);
+
+  // Dynamic locations derived from loaded events
+  const availableLocations = useMemo(() => {
+    const set = new Set<string>();
+    allEvents.forEach(e => {
+      if (e.location && e.location.trim()) set.add(e.location.trim());
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [allEvents]);
 
   // Filter events by category, program, division, and team
   const filteredEvents = useMemo(() => {
@@ -129,9 +139,17 @@ const Schedule = () => {
       );
     }
     
+    // Filter by location (independent, case-insensitive exact match)
+    if (locationFilter !== 'all') {
+      const target = locationFilter.toLowerCase();
+      events = events.filter(event => 
+        (event.location || '').trim().toLowerCase() === target
+      );
+    }
+    
     // Sort by date
     return events.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
-  }, [allEvents, activeTab, programFilter, divisionFilter, teamFilter, showPast]);
+  }, [allEvents, activeTab, programFilter, divisionFilter, teamFilter, locationFilter, showPast]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
@@ -151,6 +169,7 @@ const Schedule = () => {
     setProgramFilter('all');
     setDivisionFilter('all');
     setTeamFilter('all');
+    setLocationFilter('all');
   };
 
   const handleProgramChange = (programId: string | 'all') => {
@@ -167,8 +186,9 @@ const Schedule = () => {
   const hasActiveFilters = useMemo(() => {
     return programFilter !== 'all' || 
            divisionFilter !== 'all' || 
-           teamFilter !== 'all';
-  }, [programFilter, divisionFilter, teamFilter]);
+           teamFilter !== 'all' ||
+           locationFilter !== 'all';
+  }, [programFilter, divisionFilter, teamFilter, locationFilter]);
 
   const activeFilterText = useMemo(() => {
     const parts: string[] = [];
@@ -192,8 +212,12 @@ const Schedule = () => {
       parts.push(activeTab + 's');
     }
     
+    if (locationFilter !== 'all') {
+      parts.push(`📍 ${locationFilter}`);
+    }
+    
     return parts.length > 0 ? parts.join(' → ') : undefined;
-  }, [programFilter, divisionFilter, teamFilter, activeTab, programs, availableDivisions, availableTeams]);
+  }, [programFilter, divisionFilter, teamFilter, locationFilter, activeTab, programs, availableDivisions, availableTeams]);
 
   const scrollToSchedule = () => {
     const scheduleSection = document.getElementById('schedule-section');
@@ -299,6 +323,9 @@ const Schedule = () => {
                 selectedTeam={teamFilter}
                 onTeamChange={setTeamFilter}
                 availableTeams={availableTeams}
+                selectedLocation={locationFilter}
+                onLocationChange={setLocationFilter}
+                availableLocations={availableLocations}
                 hasActiveFilters={hasActiveFilters}
                 onClearFilters={handleClearAllFilters}
                 activeFilterText={activeFilterText}
