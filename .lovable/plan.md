@@ -1,26 +1,56 @@
 
 
-## Remove Registration from In-House Page (Bounce-Safe)
+## Sync External iCal Calendar into League Schedule
 
-Replace all registration CTAs on `/in-house` with season-active alternatives, ensuring every button leads to engaging content rather than dead ends.
+Yes — I can pull events from that TeamApp `.ics` subscription URL and display them on the league `/schedule` page alongside games, practices, and existing league events. Updates will sync automatically on a schedule.
 
-### Changes — `src/pages/InHouse.tsx`
+### How it works
 
-**Hero section**
-- "Register Now" button → "View Schedule" linking to `/in-house/schedule`
-- Keep "View Teams" button as-is
+```text
+TeamApp .ics URL ──► Edge Function (fetch + parse)
+                          │
+                          ▼
+                  external_calendar_events table
+                          │
+                          ▼
+                useScheduleEvents hook (merge)
+                          │
+                          ▼
+              /schedule page (calendar + list)
+```
 
-**Navigation grid**
-- Replace the "Registration" card (currently links to `/registration`) with a "Volunteer" card linking to `/volunteer` with desc "Help coach or support the league"
+### Implementation
 
-**"Register for In-House Baseball" button (below Season Overview)**
-- Change to "View the Full Schedule" linking to `/in-house/schedule`
+**1. Database (migration)**
+- New table `external_calendars`: `id`, `name`, `ical_url`, `source` (e.g. "teamapp"), `color`, `is_active`, `last_synced_at`, `created_by`, timestamps.
+- New table `external_calendar_events`: `id`, `calendar_id` (FK), `external_uid` (unique per calendar — used for upsert), `title`, `description`, `location`, `start_date`, `start_time`, `end_date`, `end_time`, `all_day`, `raw_data` (jsonb), timestamps.
+- RLS: public can `SELECT` (events show on public schedule); only admins/board can manage calendars and trigger sync.
+- Seed one row in `external_calendars` with the provided TeamApp URL.
 
-**CTA section at bottom**
-- Heading: "Ready to Play Ball?" stays
-- Body: "Registration is open now for the 2026 season!" → "The 2026 season is underway! Follow your team's schedule and get involved."
-- "Register Today" button → "View Schedule" linking to `/schedule`
-- "New to CDBL?" button stays (keeps users exploring)
+**2. Edge function — `sync-external-calendar`**
+- Fetches the `.ics` URL server-side (avoids browser CORS).
+- Parses VEVENTs (UID, SUMMARY, DTSTART, DTEND, LOCATION, DESCRIPTION; handles all-day vs timed; expands basic RRULE recurrences within a 1-year window).
+- Upserts into `external_calendar_events` keyed on `(calendar_id, external_uid)`; deletes events no longer present in the feed.
+- Updates `last_synced_at`. Returns sync summary.
+- Callable manually (admin button) and via scheduled cron.
 
-Every replaced CTA points to an active, content-rich page — no dead ends.
+**3. Scheduled sync (pg_cron + pg_net)**
+- Runs `sync-external-calendar` every 60 minutes so the league calendar stays current automatically.
+
+**4. Frontend integration**
+- New hook `useExternalCalendarEvents.ts` — queries `external_calendar_events` joined with `external_calendars`.
+- Update `src/hooks/useScheduleEvents.ts` to merge external events into the unified `CalendarEvent[]` with `category: "event"` and a distinct icon/color so users can tell them apart from games, practices, and league-created events.
+- Existing `/schedule` page, `CalendarGrid`, and `EventDetailModal` work without changes since they consume `CalendarEvent[]`.
+
+**5. Admin management — `src/components/admin/schedule/EventsTab.tsx` (or new "Calendars" sub-section)**
+- List of connected external calendars with name, URL, last sync time, active toggle.
+- "Sync Now" button → invokes the edge function.
+- "Add Calendar" dialog (name, iCal URL, color) for future feeds.
+
+### Notes & caveats
+
+- TeamApp `.ics` feeds use a long-lived `secret` token in the URL. We'll store it server-side in the `external_calendars` table — never exposed to the browser.
+- Recurring events: standard `RRULE FREQ=WEEKLY/DAILY/MONTHLY` with `COUNT`/`UNTIL` are supported; exotic rules fall back to the first occurrence.
+- Sync interval: 60 min by default — easy to change. Manual "Sync Now" available anytime.
+- External events are read-only in our admin (edits should happen in TeamApp); they can be hidden by toggling the calendar inactive.
 
