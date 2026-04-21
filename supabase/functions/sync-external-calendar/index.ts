@@ -261,7 +261,8 @@ function classify(
   const isPracticeTitle = /\bvs\s+practice\b/i.test(title) ||
     /\bpractice\b/i.test(title);
   const isPracticeDesc = /\bpractice\b/i.test(desc);
-  const hasVs = /\s+vs\.?\s+/i.test(title);
+  const versusParts = splitVersus(title);
+  const hasVs = versusParts !== null;
 
   if (isPracticeTitle || (isPracticeDesc && !hasVs)) {
     category = "practice";
@@ -288,18 +289,16 @@ function classify(
   let homeTeamId: string | null = null;
   let awayTeamId: string | null = null;
 
-  if (category === "game" && hasVs) {
-    const parts = title.split(/\s+vs\.?\s+/i);
-    if (parts.length === 2) {
-      const homeName = stripDivisionPrefix(parts[0], division?.name ?? "");
-      const awayName = stripDivisionPrefix(parts[1], division?.name ?? "");
-      homeTeamId = findTeam(homeName, division?.id ?? null, teams);
-      awayTeamId = findTeam(awayName, division?.id ?? null, teams);
-    }
+  if (category === "game" && versusParts) {
+    const [left, right] = versusParts;
+    const homeName = stripDivisionPrefix(left, division?.name ?? "");
+    const awayName = stripDivisionPrefix(right, division?.name ?? "");
+    homeTeamId = findTeam(homeName, division?.id ?? null, teams);
+    awayTeamId = findTeam(awayName, division?.id ?? null, teams);
   } else if (category === "practice") {
     // Title like "Mustang Pirates vs Practice" or "CDBL Rockets 10u IHTT vs Practice"
     let teamPart = title;
-    const vsIdx = title.search(/\s+vs\.?\s+/i);
+    const vsIdx = title.search(/\s+(?:vs\.?|@|at)\s+/i);
     if (vsIdx > 0) teamPart = title.slice(0, vsIdx);
     teamPart = teamPart.replace(/\bpractice\b/i, "").trim();
     const cleaned = stripDivisionPrefix(teamPart, division?.name ?? "");
