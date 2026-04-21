@@ -58,11 +58,26 @@ export const useScheduleEvents = () => {
       icon: Calendar,
     }));
 
-    return [...gameEvents, ...practiceEvents, ...dbEvents];
-  }, [games, practices, leagueEvents]);
+    // Map external (synced) calendar events
+    const extEvents: CalendarEvent[] = (externalEvents || []).map((e) => ({
+      id: `ext-${e.id}`,
+      title: e.title,
+      date: e.start_date,
+      endDate: e.end_date || undefined,
+      time: e.start_time ? e.start_time.slice(0, 5) : undefined,
+      location: e.location || undefined,
+      category: "event" as const,
+      type: "special-event" as CalendarEvent["type"],
+      description: e.description || (e.calendar?.name ? `From ${e.calendar.name}` : ""),
+      icon: CalendarDays,
+    }));
+
+    return [...gameEvents, ...practiceEvents, ...dbEvents, ...extEvents];
+  }, [games, practices, leagueEvents, externalEvents]);
 
   return {
     events,
-    isLoading: gamesLoading || practicesLoading || eventsLoading,
+    isLoading:
+      gamesLoading || practicesLoading || eventsLoading || externalLoading,
   };
 };
