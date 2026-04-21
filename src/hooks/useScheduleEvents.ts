@@ -62,7 +62,7 @@ export const useScheduleEvents = () => {
       id: `game-${g.id}`,
       title: `${g.home_team?.name || "TBD"} vs ${g.away_team?.name || "TBD"}`,
       date: g.game_date,
-      time: g.game_time,
+      time: formatTime(g.game_time),
       location: g.venue?.name || undefined,
       category: "game" as const,
       type: "games-start" as const,
