@@ -331,26 +331,25 @@ Deno.serve(async (req) => {
 
     // Load lookups once
     const [divRes, teamRes, progRes] = await Promise.all([
-      supabase
-        .from("divisions")
-        .select("id, name, program_id, programs!inner(type)")
-        .returns<any[]>(),
-      supabase.from("teams").select("id, name, division_id").returns<any[]>(),
-      supabase.from("programs").select("id, type").returns<any[]>(),
+      supabase.from("divisions").select("id, name, program_id"),
+      supabase.from("teams").select("id, name, division_id"),
+      supabase.from("programs").select("id, type"),
     ]);
 
-    if (divRes.error) throw divRes.error;
-    if (teamRes.error) throw teamRes.error;
-    if (progRes.error) throw progRes.error;
+    if (divRes.error) throw new Error(`divisions: ${divRes.error.message}`);
+    if (teamRes.error) throw new Error(`teams: ${teamRes.error.message}`);
+    if (progRes.error) throw new Error(`programs: ${progRes.error.message}`);
+
+    const programs: ProgramRow[] = (progRes.data ?? []) as ProgramRow[];
+    const programTypeById = new Map(programs.map((p) => [p.id, p.type]));
 
     const divisions: DivisionRow[] = (divRes.data ?? []).map((d: any) => ({
       id: d.id,
       name: d.name,
       program_id: d.program_id,
-      program_type: d.programs?.type ?? "",
+      program_type: programTypeById.get(d.program_id) ?? "",
     }));
-    const teams: TeamRow[] = teamRes.data ?? [];
-    const programs: ProgramRow[] = progRes.data ?? [];
+    const teams: TeamRow[] = (teamRes.data ?? []) as TeamRow[];
 
     // Fetch calendars to sync
     const { data: calendars, error: calErr } = await supabase
