@@ -132,13 +132,21 @@ const Schedule = () => {
     
     // Filter by location (categorical: stonecrest/plato/burlington/other)
     if (locationFilter !== 'all') {
-      const knownKeywords = ['stonecrest', 'plato', 'burlington'];
+      // Map each category to the substrings that should match it.
+      // Plato includes the Russell Road address (41W625 Russell Road = Plato Center).
+      const locationKeywords: Record<string, string[]> = {
+        stonecrest: ['stonecrest'],
+        plato: ['plato', 'russell', '41w625'],
+        burlington: ['burlington'],
+      };
+      const allKnown = Object.values(locationKeywords).flat();
       events = events.filter(event => {
         const loc = (event.location || '').toLowerCase();
         if (locationFilter === 'other') {
-          return !knownKeywords.some(k => loc.includes(k));
+          return !allKnown.some(k => loc.includes(k));
         }
-        return loc.includes(locationFilter.toLowerCase());
+        const keywords = locationKeywords[locationFilter] || [locationFilter.toLowerCase()];
+        return keywords.some(k => loc.includes(k));
       });
     }
     
