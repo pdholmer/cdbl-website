@@ -243,12 +243,23 @@ export const CalendarsTab = () => {
                       >
                         <RefreshCw className="h-3 w-3" />
                       </Button>
+                      {(c as any).source_url && (
+                        <a
+                          href={(c as any).source_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button variant="outline" size="sm" title="View public schedule page">
+                            <ExternalLink className="h-3 w-3" />
+                          </Button>
+                        </a>
+                      )}
                       <a
                         href={c.ical_url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Button variant="outline" size="sm" title="Open feed">
+                        <Button variant="outline" size="sm" title="Open iCal feed">
                           <ExternalLink className="h-3 w-3" />
                         </Button>
                       </a>
