@@ -114,6 +114,16 @@ export const CalendarsTab = () => {
                   />
                 </div>
                 <div>
+                  <Label>Public Source URL (optional)</Label>
+                  <Input
+                    placeholder="Link to the public schedule page"
+                    value={form.source_url}
+                    onChange={(e) =>
+                      setForm({ ...form, source_url: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
                   <Label>Color</Label>
                   <Input
                     type="color"
