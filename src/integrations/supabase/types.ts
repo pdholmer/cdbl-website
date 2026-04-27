@@ -842,6 +842,7 @@ export type Database = {
           last_synced_at: string | null
           name: string
           source: string
+          source_url: string | null
           updated_at: string
         }
         Insert: {
@@ -856,6 +857,7 @@ export type Database = {
           last_synced_at?: string | null
           name: string
           source?: string
+          source_url?: string | null
           updated_at?: string
         }
         Update: {
@@ -870,6 +872,7 @@ export type Database = {
           last_synced_at?: string | null
           name?: string
           source?: string
+          source_url?: string | null
           updated_at?: string
         }
         Relationships: []
