@@ -124,7 +124,7 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
                   onClick={openInMaps}
                   className="text-left font-semibold hover:text-primary transition-colors hover:underline"
                 >
-                  {event.location}
+                  {getStreetAddress(event.location)}
                 </button>
                 <p className="text-sm text-muted-foreground">Tap to open in maps</p>
               </div>
