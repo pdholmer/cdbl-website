@@ -5,6 +5,7 @@ import { CalendarEvent } from "@/data/calendarEvents";
 import { MapPin, Clock, Calendar } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { getEventCategoryImage } from "@/utils/eventImageHelper";
+import { getFacilityLabel } from "@/utils/locationFormat";
 
 interface UpcomingMatchCardProps {
   event: CalendarEvent;
@@ -79,7 +80,7 @@ export const UpcomingMatchCard = ({ event, onViewDetails }: UpcomingMatchCardPro
           {event.location && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 flex-shrink-0" />
-              <span className="line-clamp-1">{event.location}</span>
+              <span className="line-clamp-1">{getFacilityLabel(event.location)}</span>
             </div>
           )}
         </div>

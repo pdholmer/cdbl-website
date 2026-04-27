@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
 import { MapPin } from "lucide-react";
 import { getEventCategoryImage } from "@/utils/eventImageHelper";
+import { getFacilityLabel } from "@/utils/locationFormat";
 
 interface DivisionScheduleTableProps {
   events: CalendarEvent[];
@@ -67,7 +68,7 @@ export const DivisionScheduleTable = ({ events, onEventClick }: DivisionSchedule
                   <td className="py-3 px-4 text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
-                      <span className="line-clamp-1">{event.location || 'TBD'}</span>
+                      <span className="line-clamp-1">{event.location ? getFacilityLabel(event.location) : 'TBD'}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4">
@@ -116,7 +117,7 @@ export const DivisionScheduleTable = ({ events, onEventClick }: DivisionSchedule
                   )}
                   {event.location && (
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {event.location}
+                      {getFacilityLabel(event.location)}
                     </p>
                   )}
                 </div>

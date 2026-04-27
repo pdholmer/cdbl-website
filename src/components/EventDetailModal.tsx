@@ -7,6 +7,7 @@ import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
 import { getEventCategoryImage } from "@/utils/eventImageHelper";
 import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
+import { getStreetAddress } from "@/utils/locationFormat";
 
 interface EventDetailModalProps {
   event: CalendarEvent | null;
@@ -123,7 +124,7 @@ export const EventDetailModal = ({ event, open, onOpenChange }: EventDetailModal
                   onClick={openInMaps}
                   className="text-left font-semibold hover:text-primary transition-colors hover:underline"
                 >
-                  {event.location}
+                  {getStreetAddress(event.location)}
                 </button>
                 <p className="text-sm text-muted-foreground">Tap to open in maps</p>
               </div>

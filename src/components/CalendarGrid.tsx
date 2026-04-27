@@ -3,6 +3,7 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, addMo
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { getFacilityLabel } from "@/utils/locationFormat";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 
@@ -213,7 +214,7 @@ export const CalendarGrid = ({ events, onEventClick }: CalendarGridProps) => {
                       </h3>
                       {event.location && (
                         <p className="text-sm text-muted-foreground line-clamp-1">
-                          {event.location}
+                          {getFacilityLabel(event.location)}
                         </p>
                       )}
                     </div>

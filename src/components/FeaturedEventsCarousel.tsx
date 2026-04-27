@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 import { getEventCategoryImage, getGameMatchupDisplay } from "@/utils/eventImageHelper";
+import { getFacilityLabel } from "@/utils/locationFormat";
 import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
 import { format, parseISO } from "date-fns";
 import {
@@ -107,7 +108,7 @@ export const FeaturedEventsCarousel = ({ events, onEventClick }: FeaturedEventsC
                       {event.location && (
                         <div className="flex items-start gap-2 text-sm text-muted-foreground mb-3">
                           <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                          <span className="line-clamp-2">{event.location}</span>
+                          <span className="line-clamp-2">{getFacilityLabel(event.location)}</span>
                         </div>
                       )}
                       <p className="text-sm text-muted-foreground mb-4 line-clamp-3 flex-grow">
