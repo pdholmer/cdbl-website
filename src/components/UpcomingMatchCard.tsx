@@ -5,6 +5,7 @@ import { CalendarEvent } from "@/data/calendarEvents";
 import { MapPin, Clock, Calendar } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { getEventCategoryImage } from "@/utils/eventImageHelper";
+import { getFacilityLabel } from "@/utils/locationFormat";
 
 interface UpcomingMatchCardProps {
   event: CalendarEvent;
