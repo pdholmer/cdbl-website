@@ -117,7 +117,7 @@ export const DivisionScheduleTable = ({ events, onEventClick }: DivisionSchedule
                   )}
                   {event.location && (
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {event.location}
+                      {getFacilityLabel(event.location)}
                     </p>
                   )}
                 </div>
