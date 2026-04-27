@@ -426,33 +426,48 @@ Deno.serve(async (req) => {
         }
 
         // Classify + build rows
-        let games = 0, practices = 0, events = 0, unmatched = 0;
-        const rows = parsed.map((e) => {
-          const c = classify(e, divisions, teams, programs);
-          if (c.event_category === "game") games++;
-          else if (c.event_category === "practice") practices++;
-          else events++;
-          if (!c.division_id) unmatched++;
-          return {
-            calendar_id: cal.id,
-            external_uid: e.uid,
-            title: e.summary,
-            description: e.description ?? null,
-            location: e.location ?? null,
-            start_date: e.startDate,
-            start_time: e.startTime ?? null,
-            end_date: e.endDate ?? null,
-            end_time: e.endTime ?? null,
-            all_day: e.allDay,
-            raw_data: e.raw,
-            event_category: c.event_category,
-            program_id: c.program_id,
-            division_id: c.division_id,
-            home_team_id: c.home_team_id,
-            away_team_id: c.away_team_id,
-            field_number: c.field_number,
-          };
-        });
+        let games = 0, practices = 0, events = 0, unmatched = 0, skippedBronco = 0;
+        const divisionNameById = new Map<string, string>();
+        divisions.forEach((d) => divisionNameById.set(d.id, d.name));
+        const rows = parsed
+          .map((e) => {
+            const c = classify(e, divisions, teams, programs);
+            return { e, c };
+          })
+          .filter(({ c }) => {
+            // Exclude Bronco games per league policy — there are no Bronco games.
+            const divName = c.division_id ? divisionNameById.get(c.division_id) : null;
+            if (c.event_category === "game" && divName?.toLowerCase() === "bronco") {
+              skippedBronco++;
+              return false;
+            }
+            return true;
+          })
+          .map(({ e, c }) => {
+            if (c.event_category === "game") games++;
+            else if (c.event_category === "practice") practices++;
+            else events++;
+            if (!c.division_id) unmatched++;
+            return {
+              calendar_id: cal.id,
+              external_uid: e.uid,
+              title: e.summary,
+              description: e.description ?? null,
+              location: e.location ?? null,
+              start_date: e.startDate,
+              start_time: e.startTime ?? null,
+              end_date: e.endDate ?? null,
+              end_time: e.endTime ?? null,
+              all_day: e.allDay,
+              raw_data: e.raw,
+              event_category: c.event_category,
+              program_id: c.program_id,
+              division_id: c.division_id,
+              home_team_id: c.home_team_id,
+              away_team_id: c.away_team_id,
+              field_number: c.field_number,
+            };
+          });
 
         const { error: upErr } = await supabase
           .from("external_calendar_events")
