@@ -47,13 +47,17 @@ export const CalendarsTab = () => {
   const [form, setForm] = useState({
     name: "",
     ical_url: "",
+    source_url: "",
     color: "#8b5cf6",
   });
 
   const handleCreate = async () => {
     if (!form.name || !form.ical_url) return;
-    await create.mutateAsync(form);
-    setForm({ name: "", ical_url: "", color: "#8b5cf6" });
+    await create.mutateAsync({
+      ...form,
+      source_url: form.source_url || null,
+    } as any);
+    setForm({ name: "", ical_url: "", source_url: "", color: "#8b5cf6" });
     setOpen(false);
   };
 
