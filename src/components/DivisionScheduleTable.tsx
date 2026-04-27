@@ -68,7 +68,7 @@ export const DivisionScheduleTable = ({ events, onEventClick }: DivisionSchedule
                   <td className="py-3 px-4 text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
-                      <span className="line-clamp-1">{event.location || 'TBD'}</span>
+                      <span className="line-clamp-1">{event.location ? getFacilityLabel(event.location) : 'TBD'}</span>
                     </div>
                   </td>
                   <td className="py-3 px-4">
