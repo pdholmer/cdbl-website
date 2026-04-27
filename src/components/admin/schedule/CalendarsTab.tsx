@@ -47,13 +47,17 @@ export const CalendarsTab = () => {
   const [form, setForm] = useState({
     name: "",
     ical_url: "",
+    source_url: "",
     color: "#8b5cf6",
   });
 
   const handleCreate = async () => {
     if (!form.name || !form.ical_url) return;
-    await create.mutateAsync(form);
-    setForm({ name: "", ical_url: "", color: "#8b5cf6" });
+    await create.mutateAsync({
+      ...form,
+      source_url: form.source_url || null,
+    } as any);
+    setForm({ name: "", ical_url: "", source_url: "", color: "#8b5cf6" });
     setOpen(false);
   };
 
@@ -106,6 +110,16 @@ export const CalendarsTab = () => {
                     value={form.ical_url}
                     onChange={(e) =>
                       setForm({ ...form, ical_url: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <Label>Public Source URL (optional)</Label>
+                  <Input
+                    placeholder="Link to the public schedule page"
+                    value={form.source_url}
+                    onChange={(e) =>
+                      setForm({ ...form, source_url: e.target.value })
                     }
                   />
                 </div>
@@ -229,12 +243,23 @@ export const CalendarsTab = () => {
                       >
                         <RefreshCw className="h-3 w-3" />
                       </Button>
+                      {(c as any).source_url && (
+                        <a
+                          href={(c as any).source_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button variant="outline" size="sm" title="View public schedule page">
+                            <ExternalLink className="h-3 w-3" />
+                          </Button>
+                        </a>
+                      )}
                       <a
                         href={c.ical_url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <Button variant="outline" size="sm" title="Open feed">
+                        <Button variant="outline" size="sm" title="Open iCal feed">
                           <ExternalLink className="h-3 w-3" />
                         </Button>
                       </a>

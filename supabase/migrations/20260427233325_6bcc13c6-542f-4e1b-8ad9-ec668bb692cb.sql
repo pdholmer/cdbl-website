@@ -1,0 +1,1 @@
+ALTER TABLE public.external_calendars ADD COLUMN IF NOT EXISTS source_url text;
