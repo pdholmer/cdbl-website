@@ -7,6 +7,7 @@ import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
 import { getEventCategoryImage } from "@/utils/eventImageHelper";
 import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
+import { getStreetAddress } from "@/utils/locationFormat";
 
 interface EventDetailModalProps {
   event: CalendarEvent | null;
