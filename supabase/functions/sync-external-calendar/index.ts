@@ -474,8 +474,9 @@ Deno.serve(async (req) => {
           .upsert(rows, { onConflict: "calendar_id,external_uid" });
         if (upErr) throw upErr;
 
-        // Delete events no longer in feed
-        const uids = parsed.map((e) => e.uid);
+        // Delete events no longer in feed (also removes any previously-synced
+        // Bronco games, since their UIDs are no longer in the kept rows).
+        const keepUids = rows.map((r) => r.external_uid);
         const { error: delErr } = await supabase
           .from("external_calendar_events")
           .delete()
@@ -483,12 +484,12 @@ Deno.serve(async (req) => {
           .not(
             "external_uid",
             "in",
-            `(${uids.map((u) => `"${u.replace(/"/g, '\\"')}"`).join(",")})`,
+            `(${keepUids.map((u) => `"${u.replace(/"/g, '\\"')}"`).join(",")})`,
           );
         if (delErr) console.error("Delete error:", delErr);
 
         const summary =
-          `Synced ${parsed.length} events (${games} games, ${practices} practices, ${events} other; ${unmatched} unmatched)`;
+          `Synced ${rows.length} events (${games} games, ${practices} practices, ${events} other; ${unmatched} unmatched; skipped ${skippedBronco} Bronco game${skippedBronco === 1 ? "" : "s"})`;
 
         await supabase
           .from("external_calendars")
