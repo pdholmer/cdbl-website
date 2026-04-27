@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
 import { MapPin } from "lucide-react";
 import { getEventCategoryImage } from "@/utils/eventImageHelper";
+import { getFacilityLabel } from "@/utils/locationFormat";
 
 interface DivisionScheduleTableProps {
   events: CalendarEvent[];
