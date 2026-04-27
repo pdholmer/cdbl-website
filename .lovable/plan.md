@@ -1,34 +1,33 @@
-## Update Schedule Source + Exclude Bronco Games
+## Show Facility Names on Calendar, Street-Only on Event Details
 
-### Heads up about the link
+### Background
 
-The link you shared (`https://leagues.bluesombrero.com/Default.aspx?tabid=2204766#/gameScheduleCalendar`) is the **public webpage** version of the schedule, not the iCal feed our sync system reads. Our current calendar pulls from a different format:
+Synced events from BlueSombrero arrive with verbose raw addresses like:
+- `4w400 Stonecrest Drive,,Elgin,IL-60124 US`
+- `12N475 Park St ,Burlington,IL-60109 US`
+- `41W625 Russell Road,Elgin,IL-60124 US`
 
-```
-https://calendar.bluesombrero.com/api/v1/Calendar?instancekey=leagues&portalId=...&id=...&key=...
-```
+Right now those raw strings show everywhere — in the main calendar list, the upcoming-match cards, the featured carousel, and the event detail modal. The Google Maps link uses the same raw string.
 
-I'll handle this in two ways:
+### What changes
 
-1. **Save the new public URL** as the calendar's `source_url` (a new field) so admins/users can click through to view the live source on BlueSombrero.
-2. **Refresh the iCal feed** — when you open the new tab on BlueSombrero, there's typically an "Export / Subscribe" button that gives the actual iCal/.ics URL for that specific schedule view. If the new tab represents a different team/portal than what we sync today, I'll need that exported iCal URL to swap in. For now, the plan keeps the existing iCal feed (which is currently syncing 395 events successfully) and just updates the visible source link — unless you provide the new .ics export URL, in which case I'll swap `ical_url` too.
+**Main calendar / list views** — show a short facility/field name instead of the address:
+- Anything containing "stonecrest" → **Stonecrest Fields**
+- "plato" / "russell rd" → **Plato Fields**
+- "burlington fields" / "park st" / "12n475" → **Burlington Fields**
+- Anything else → falls back to the street portion only (no city/state/zip)
 
-### Exclude Bronco games
-
-Bronco games will be filtered out at sync time so they never enter the database (and therefore never appear on `/schedule`, `Featured Events`, division views, or anywhere else). Practices and non-game events for Bronco will still be allowed unless you want those gone too.
-
-**Logic:** in `supabase/functions/sync-external-calendar/index.ts`, after each event is classified, drop any row where `event_category === "game"` AND the detected division name is "Bronco". The deletion step at the end of sync (which removes events no longer in the feed) will also clean out any previously-synced Bronco games on the next run.
+**Event detail modal** — show only the street address (e.g. `4W400 Stonecrest Drive` or `225 Nesler Rd`). City/state/zip is implied and removed from the visible label. The Maps link still uses the original full string so it resolves accurately on Google Maps.
 
 ### Files touched
 
-- `supabase/functions/sync-external-calendar/index.ts` — add Bronco-game filter inside the `parsed.map(...)` step (skip the row instead of returning it); update sync stats so skipped rows are reported in `last_sync_message` (e.g. "skipped 12 Bronco games").
-- `src/pages/admin/Schedule.tsx` / `src/components/admin/schedule/CalendarsTab.tsx` — surface a clickable "View source" link to the new BlueSombrero page so admins can verify the upstream schedule.
-- Database migration — update the `external_calendars` row for "BlueSombrero League Calendar" to store the new public page URL (add a `source_url` column if it doesn't exist; current schema only has `ical_url`).
+- **`src/utils/locationFormat.ts` (new)** — two helpers:
+  - `getFacilityLabel(raw)` — returns "Stonecrest Fields" / "Plato Fields" / "Burlington Fields" / street-only fallback.
+  - `getStreetAddress(raw)` — returns just the first comma-segment (the street).
+- **`src/components/CalendarGrid.tsx`** — replace `{event.location}` with `{getFacilityLabel(event.location)}`.
+- **`src/components/UpcomingMatchCard.tsx`** — same replacement.
+- **`src/components/FeaturedEventsCarousel.tsx`** — same replacement.
+- **`src/components/DivisionScheduleTable.tsx`** — same replacement (both display sites at lines 70 and 119).
+- **`src/components/EventDetailModal.tsx`** — display `getStreetAddress(event.location)` as the visible button text; the `openInMaps` handler keeps using the original `event.location` for the Google Maps query.
 
-### Question before I build
-
-Do you want me to:
-- (a) Keep the existing iCal feed and just record the new public URL as the source link (safe, no sync disruption), **or**
-- (b) Replace the iCal feed entirely — in which case please grab the new .ics/Export URL from the BlueSombrero "Subscribe" button on that page and paste it here.
-
-Either way, the Bronco-game exclusion is included.
+No database, RLS, or sync changes needed — pure presentation.
