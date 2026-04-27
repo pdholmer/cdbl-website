@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 import { getEventCategoryImage, getGameMatchupDisplay } from "@/utils/eventImageHelper";
+import { getFacilityLabel } from "@/utils/locationFormat";
 import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
 import { format, parseISO } from "date-fns";
 import {
