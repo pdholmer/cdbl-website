@@ -155,7 +155,10 @@ export const useScheduleEvents = () => {
           ? Users
           : CalendarDays;
 
+      // Prefer the event's OWN division (most authoritative), then fall back to
+      // the home/away team's division as a hint when the event has no division_id.
       const divName =
+        (e.division_id && divisionNameById.get(e.division_id)) ||
         (e.home_team_id && divisionNameByTeamId.get(e.home_team_id)) ||
         (e.away_team_id && divisionNameByTeamId.get(e.away_team_id)) ||
         undefined;
@@ -166,8 +169,21 @@ export const useScheduleEvents = () => {
       const isTravel = programType === "travel";
 
       let title = cleanRawTitle(e.title);
-      const homeName = e.home_team_id ? teamNameById.get(e.home_team_id) : undefined;
-      const awayName = e.away_team_id ? teamNameById.get(e.away_team_id) : undefined;
+
+      // Try to extract teams from the raw title first (handles cases where the
+      // sync mapped to wrong-division team rows because of duplicate names).
+      const rawSplit = splitVersus(cleanRawTitle(e.title));
+      const homeFromTitle = rawSplit
+        ? stripDivPrefix(rawSplit[0], divName)
+        : undefined;
+      const awayFromTitle = rawSplit
+        ? stripDivPrefix(rawSplit[1], divName)
+        : undefined;
+
+      const homeDb = e.home_team_id ? teamNameById.get(e.home_team_id) : undefined;
+      const awayDb = e.away_team_id ? teamNameById.get(e.away_team_id) : undefined;
+      const homeName = homeFromTitle || homeDb;
+      const awayName = awayFromTitle || awayDb;
 
       if (cat === "game" && homeName && awayName) {
         if (isTravel) {
@@ -179,14 +195,15 @@ export const useScheduleEvents = () => {
         } else {
           title = `${homeName} vs ${awayName}`;
         }
-      } else if (cat === "practice" && homeName) {
+      } else if (cat === "practice" && (homeName || homeDb)) {
+        const name = homeName || homeDb!;
         if (isTravel) {
-          title = `${homeName} Practice`;
+          title = `${name} Practice`;
         } else if (divName) {
-          const h = stripDivPrefix(homeName, divName);
+          const h = stripDivPrefix(name, divName);
           title = `${divName} ${h} Practice`;
         } else {
-          title = `${homeName} Practice`;
+          title = `${name} Practice`;
         }
       }
 
