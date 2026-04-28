@@ -4,6 +4,7 @@ import { usePractices } from "@/hooks/usePractices";
 import { useLeagueEvents } from "@/hooks/useLeagueEvents";
 import { useExternalCalendarEvents } from "@/hooks/useExternalCalendars";
 import { useTeams } from "@/hooks/useTeams";
+import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
 import { CalendarEvent } from "@/data/calendarEvents";
 import { Trophy, Users, Calendar, CalendarDays } from "lucide-react";
 
@@ -55,6 +56,16 @@ export const useScheduleEvents = () => {
   const { data: externalEvents, isLoading: externalLoading } =
     useExternalCalendarEvents();
   const { data: teams } = useTeams();
+  const { programs } = useTeamHierarchy();
+
+  // Build a flat division-id → name map from the hierarchy
+  const divisionNameById = useMemo(() => {
+    const map = new Map<string, string>();
+    (programs || []).forEach((p) =>
+      (p.divisions || []).forEach((d) => map.set(d.id, d.name)),
+    );
+    return map;
+  }, [programs]);
 
   const events = useMemo(() => {
     // Map games to CalendarEvent format
@@ -135,6 +146,12 @@ export const useScheduleEvents = () => {
       return s;
     };
 
+    // Split a "Home vs Away" / "Home @ Away" / "Home at Away" title into [home, away].
+    const splitVersus = (raw: string): [string, string] | null => {
+      const m = raw.match(/^(.+?)\s+(?:vs\.?|@|at)\s+(.+)$/i);
+      return m ? [m[1].trim(), m[2].trim()] : null;
+    };
+
     // Map external (synced) calendar events with classification
     const extEvents: CalendarEvent[] = (externalEvents || []).map((e) => {
       const cat = (e.event_category as CalendarEvent["category"]) || "event";
@@ -144,7 +161,10 @@ export const useScheduleEvents = () => {
           ? Users
           : CalendarDays;
 
+      // Prefer the event's OWN division (most authoritative), then fall back to
+      // the home/away team's division as a hint when the event has no division_id.
       const divName =
+        (e.division_id && divisionNameById.get(e.division_id)) ||
         (e.home_team_id && divisionNameByTeamId.get(e.home_team_id)) ||
         (e.away_team_id && divisionNameByTeamId.get(e.away_team_id)) ||
         undefined;
@@ -155,8 +175,21 @@ export const useScheduleEvents = () => {
       const isTravel = programType === "travel";
 
       let title = cleanRawTitle(e.title);
-      const homeName = e.home_team_id ? teamNameById.get(e.home_team_id) : undefined;
-      const awayName = e.away_team_id ? teamNameById.get(e.away_team_id) : undefined;
+
+      // Try to extract teams from the raw title first (handles cases where the
+      // sync mapped to wrong-division team rows because of duplicate names).
+      const rawSplit = splitVersus(cleanRawTitle(e.title));
+      const homeFromTitle = rawSplit
+        ? stripDivPrefix(rawSplit[0], divName)
+        : undefined;
+      const awayFromTitle = rawSplit
+        ? stripDivPrefix(rawSplit[1], divName)
+        : undefined;
+
+      const homeDb = e.home_team_id ? teamNameById.get(e.home_team_id) : undefined;
+      const awayDb = e.away_team_id ? teamNameById.get(e.away_team_id) : undefined;
+      const homeName = homeFromTitle || homeDb;
+      const awayName = awayFromTitle || awayDb;
 
       if (cat === "game" && homeName && awayName) {
         if (isTravel) {
@@ -168,14 +201,15 @@ export const useScheduleEvents = () => {
         } else {
           title = `${homeName} vs ${awayName}`;
         }
-      } else if (cat === "practice" && homeName) {
+      } else if (cat === "practice" && (homeName || homeDb)) {
+        const name = homeName || homeDb!;
         if (isTravel) {
-          title = `${homeName} Practice`;
+          title = `${name} Practice`;
         } else if (divName) {
-          const h = stripDivPrefix(homeName, divName);
+          const h = stripDivPrefix(name, divName);
           title = `${divName} ${h} Practice`;
         } else {
-          title = `${homeName} Practice`;
+          title = `${name} Practice`;
         }
       }
 
@@ -206,7 +240,7 @@ export const useScheduleEvents = () => {
     });
 
     return [...gameEvents, ...practiceEvents, ...dbEvents, ...extEvents];
-  }, [games, practices, leagueEvents, externalEvents, teams]);
+  }, [games, practices, leagueEvents, externalEvents, teams, divisionNameById]);
 
   return {
     events,
