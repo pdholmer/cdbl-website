@@ -56,6 +56,16 @@ export const useScheduleEvents = () => {
   const { data: externalEvents, isLoading: externalLoading } =
     useExternalCalendarEvents();
   const { data: teams } = useTeams();
+  const { programs } = useTeamHierarchy();
+
+  // Build a flat division-id → name map from the hierarchy
+  const divisionNameById = useMemo(() => {
+    const map = new Map<string, string>();
+    (programs || []).forEach((p) =>
+      (p.divisions || []).forEach((d) => map.set(d.id, d.name)),
+    );
+    return map;
+  }, [programs]);
 
   const events = useMemo(() => {
     // Map games to CalendarEvent format
