@@ -146,6 +146,12 @@ export const useScheduleEvents = () => {
       return s;
     };
 
+    // Split a "Home vs Away" / "Home @ Away" / "Home at Away" title into [home, away].
+    const splitVersus = (raw: string): [string, string] | null => {
+      const m = raw.match(/^(.+?)\s+(?:vs\.?|@|at)\s+(.+)$/i);
+      return m ? [m[1].trim(), m[2].trim()] : null;
+    };
+
     // Map external (synced) calendar events with classification
     const extEvents: CalendarEvent[] = (externalEvents || []).map((e) => {
       const cat = (e.event_category as CalendarEvent["category"]) || "event";
