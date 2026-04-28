@@ -240,7 +240,7 @@ export const useScheduleEvents = () => {
     });
 
     return [...gameEvents, ...practiceEvents, ...dbEvents, ...extEvents];
-  }, [games, practices, leagueEvents, externalEvents, teams]);
+  }, [games, practices, leagueEvents, externalEvents, teams, divisionNameById]);
 
   return {
     events,
