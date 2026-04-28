@@ -4,6 +4,7 @@ import { usePractices } from "@/hooks/usePractices";
 import { useLeagueEvents } from "@/hooks/useLeagueEvents";
 import { useExternalCalendarEvents } from "@/hooks/useExternalCalendars";
 import { useTeams } from "@/hooks/useTeams";
+import { useTeamHierarchy } from "@/hooks/useTeamHierarchy";
 import { CalendarEvent } from "@/data/calendarEvents";
 import { Trophy, Users, Calendar, CalendarDays } from "lucide-react";
 
