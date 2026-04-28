@@ -265,9 +265,14 @@ function findTeam(
           t.name.toLowerCase().includes(lower)),
     );
     if (partial) return partial.id;
+
+    // IMPORTANT: If we know the division but no team matched within it, do NOT
+    // fall back to a same-name team in a different division — that mismatch is
+    // exactly how a Pinto game ends up pointing at the Bronco "Rays".
+    return null;
   }
 
-  // Fall back to any-division exact match
+  // No division detected — fall back to any-division exact match
   const any = teams.find((t) => t.name.toLowerCase() === lower);
   return any?.id ?? null;
 }
