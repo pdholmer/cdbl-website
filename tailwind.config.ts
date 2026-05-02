@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Montserrat', 'system-ui', 'sans-serif'],
-        heading: ['Montserrat', 'system-ui', 'sans-serif'],
+        sans: ['Source Serif 4', 'Georgia', 'serif'],
+        heading: ['Bricolage Grotesque', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
