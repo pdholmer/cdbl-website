@@ -170,6 +170,12 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: theme('fontFamily.sans');
+  }
+
+  h1, h2, h3, h4 {
+    font-family: theme('fontFamily.heading');
+    letter-spacing: -0.02em;
   }
 }
 
