@@ -160,10 +160,10 @@ const NewToCDBL = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">What to Expect</h2>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card>
+              <Card className="md:col-span-2">
                 <CardHeader>
                   <ShoppingBag className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Equipment Needs</CardTitle>
+                  <CardTitle className="font-heading text-2xl md:text-3xl">Equipment Needs</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -172,7 +172,7 @@ const NewToCDBL = () => {
                   <p className="text-sm text-muted-foreground mb-2">
                     <strong>You Provide:</strong>
                   </p>
-                  <ul className="text-sm text-muted-foreground space-y-1 ml-4">
+                  <ul className="text-sm text-muted-foreground grid sm:grid-cols-2 gap-x-6 gap-y-1 ml-4">
                     <li>• Baseball glove (appropriate for age)</li>
                     <li>• Batting helmet (face guard optional)</li>
                     <li>• Baseball pants</li>
@@ -187,7 +187,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Calendar className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Practice & Game Schedule</CardTitle>
+                  <CardTitle className="font-heading">Practice & Game Schedule</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -207,7 +207,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Heart className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Parent Volunteer Duties</CardTitle>
+                  <CardTitle className="font-heading">Parent Volunteer Duties</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -227,7 +227,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Clipboard className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Playing Time Policy</CardTitle>
+                  <CardTitle className="font-heading">Playing Time Policy</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -245,7 +245,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Camera className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Picture Day & Events</CardTitle>
+                  <CardTitle className="font-heading">Picture Day & Events</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -264,7 +264,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Trophy className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Sportsmanship & Conduct</CardTitle>
+                  <CardTitle className="font-heading">Sportsmanship & Conduct</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
