@@ -159,34 +159,35 @@ const RegistrationSection = () => {
           </Button>
         </div>
 
-        {/* Value Props */}
-        <div className="grid sm:grid-cols-3 gap-4 md:gap-6">
-          <div className="text-center p-5 md:p-6 bg-white rounded-lg shadow-sm border border-border hover:shadow-md transition-all">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-carolina/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-              <Calendar className="w-6 h-6 md:w-7 md:h-7 text-carolina" />
-            </div>
-            <h4 className="text-base md:text-lg font-bold mb-2">Flexible Scheduling</h4>
-            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-              Games and practices scheduled around family commitments
+        {/* Value Props — asymmetric */}
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start">
+          {/* Lead item — left, larger */}
+          <div>
+            <Calendar className="w-10 h-10 md:w-12 md:h-12 text-carolina mb-4" aria-hidden="true" />
+            <h4 className="font-heading text-3xl md:text-4xl font-bold mb-3 leading-tight">
+              Flexible scheduling
+            </h4>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-md">
+              Games and practices scheduled around family commitments — because baseball should fit your life, not the other way around.
             </p>
           </div>
-          <div className="text-center p-5 md:p-6 bg-white rounded-lg shadow-sm border border-border hover:shadow-md transition-all">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-              <Users className="w-6 h-6 md:w-7 md:h-7 text-primary" />
+
+          {/* Stacked smaller items — right */}
+          <div className="space-y-8 md:pt-4">
+            <div>
+              <Users className="w-7 h-7 text-primary mb-2" aria-hidden="true" />
+              <h4 className="font-heading text-xl md:text-2xl font-bold mb-1">Expert coaching</h4>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                Experienced coaches dedicated to player development.
+              </p>
             </div>
-            <h4 className="text-base md:text-lg font-bold mb-2">Expert Coaching</h4>
-            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-              Experienced coaches dedicated to player development
-            </p>
-          </div>
-          <div className="text-center p-5 md:p-6 bg-white rounded-lg shadow-sm border border-border hover:shadow-md transition-all">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-carolina/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-              <ClipboardList className="w-6 h-6 md:w-7 md:h-7 text-carolina" />
+            <div>
+              <ClipboardList className="w-7 h-7 text-carolina mb-2" aria-hidden="true" />
+              <h4 className="font-heading text-xl md:text-2xl font-bold mb-1">Community first</h4>
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
+                A welcoming community of players and families.
+              </p>
             </div>
-            <h4 className="text-base md:text-lg font-bold mb-2">Community First</h4>
-            <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-              A welcoming community of players and families
-            </p>
           </div>
         </div>
       </div>
