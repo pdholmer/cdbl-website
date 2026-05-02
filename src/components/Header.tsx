@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import cdblLogo from "@/assets/cdbl-logo-main.png";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -14,19 +14,13 @@ import { useHiddenSlugs } from "@/hooks/usePageVisibility";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showShop, setShowShop] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const hidden = useHiddenSlugs();
   const show = (slug: string) => !hidden.has(slug);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShowShop(prev => !prev);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-  
+
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: "smooth" });
@@ -53,13 +47,22 @@ const Header = () => {
           <div className="flex items-center gap-6 z-10">
             {show('shop') && <Link to="/shop" className="hidden md:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">SHOP</Link>}
             {show('donate') && <Link to="/donate" className="hidden md:block text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase">DONATE</Link>}
-            {/* Mobile rotating */}
-            <Link 
-              to={showShop ? "/shop" : "/donate"} 
-              className="md:hidden text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.8625rem] font-bold uppercase"
-            >
-              {showShop ? "SHOP" : "DONATE"}
-            </Link>
+            {/* Mobile: show both, side-by-side */}
+            <div className="flex md:hidden items-center gap-2">
+              {show('shop') && (
+                <Link to="/shop" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.75rem] font-bold uppercase">
+                  SHOP
+                </Link>
+              )}
+              {show('shop') && show('donate') && (
+                <span aria-hidden="true" className="h-3 w-px bg-primary-foreground/40" />
+              )}
+              {show('donate') && (
+                <Link to="/donate" className="text-primary-foreground hover:text-primary-foreground/80 transition-colors text-[0.75rem] font-bold uppercase">
+                  DONATE
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
