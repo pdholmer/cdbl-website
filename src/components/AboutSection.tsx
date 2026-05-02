@@ -2,13 +2,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import cdblSeal from "@/assets/cdbl-seal.png";
 
-const stats = [
-  { value: "38", label: "Years" },
-  { value: "400+", label: "Players" },
-  { value: "50+", label: "Teams" },
-  { value: "100+", label: "Volunteers" },
-];
-
 const AboutSection = () => {
   return (
     <section id="about" className="py-12 md:py-16 bg-background">
@@ -37,14 +30,14 @@ const AboutSection = () => {
           </div>
         </div>
 
-        {/* Stat strip */}
-        <div className="mt-10 md:mt-14 grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6">
-          {stats.map((stat) => (
-            <div key={stat.label} className="text-center p-4 rounded-xl border border-border bg-card">
-              <p className="text-3xl md:text-4xl font-bold text-primary">{stat.value}</p>
-              <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
-            </div>
-          ))}
+        {/* Narrative stat */}
+        <div className="mt-12 md:mt-16 max-w-3xl">
+          <p className="text-2xl md:text-3xl lg:text-4xl font-heading font-medium leading-tight">
+            Since 1987, more than <span className="text-primary font-bold">400 players</span>,
+            <span className="text-primary font-bold"> 50 teams</span>, and
+            <span className="text-primary font-bold"> 100 volunteers</span> have
+            built CDBL into Burlington's home for youth baseball.
+          </p>
         </div>
       </div>
     </section>

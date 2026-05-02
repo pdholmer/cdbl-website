@@ -28,19 +28,8 @@ const SpiritWearSection = () => {
           </p>
 
           <div className="bg-white/15 backdrop-blur-md rounded-xl p-6 md:p-8 mb-6 md:mb-8 border border-white/20">
-            <div className="grid grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
-              <div>
-                <div className="text-2xl md:text-3xl font-bold mb-1">64+</div>
-                <div className="text-xs md:text-sm opacity-90">Products Available</div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl font-bold mb-1">10%</div>
-                <div className="text-xs md:text-sm opacity-90">Goes to CDBL</div>
-              </div>
-              <div>
-                <div className="text-2xl md:text-3xl font-bold mb-1">100%</div>
-                <div className="text-xs md:text-sm opacity-90">Rockets Pride</div>
-              </div>
+            <div className="text-xl md:text-2xl mb-6 font-medium">
+              64+ products. <span className="opacity-90">10% of every order funds the league.</span>
             </div>
 
             <p className="text-sm md:text-base mb-6 md:mb-8 leading-relaxed max-w-2xl mx-auto">
