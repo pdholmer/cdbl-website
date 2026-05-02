@@ -40,7 +40,7 @@ const NewToCDBL = () => {
             <img src={cdblLogo} alt="CDBL Logo" className="h-16 w-auto" />
             <div>
               <h1 className="text-2xl font-bold">2026 Getting Started Checklist</h1>
-              <p className="text-sm">Carrollton-Durham Baseball League · cdbaseball.org</p>
+              <p className="text-sm">Central District Baseball League · cdbaseball.org</p>
             </div>
           </div>
 
@@ -81,7 +81,7 @@ const NewToCDBL = () => {
           </ul>
 
           <p className="text-xs text-gray-500 mt-8 border-t pt-2">
-            Carrollton-Durham Baseball League — 2026 Season · cdbaseball.org
+            Central District Baseball League — 2026 Season · cdbaseball.org
           </p>
         </div>
 
