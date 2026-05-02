@@ -187,7 +187,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Calendar className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Practice & Game Schedule</CardTitle>
+                  <CardTitle className="font-heading">Practice & Game Schedule</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -207,7 +207,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Heart className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Parent Volunteer Duties</CardTitle>
+                  <CardTitle className="font-heading">Parent Volunteer Duties</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -227,7 +227,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Clipboard className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Playing Time Policy</CardTitle>
+                  <CardTitle className="font-heading">Playing Time Policy</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -245,7 +245,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Camera className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Picture Day & Events</CardTitle>
+                  <CardTitle className="font-heading">Picture Day & Events</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
@@ -264,7 +264,7 @@ const NewToCDBL = () => {
               <Card>
                 <CardHeader>
                   <Trophy className="h-10 w-10 text-primary mb-2" />
-                  <CardTitle>Sportsmanship & Conduct</CardTitle>
+                  <CardTitle className="font-heading">Sportsmanship & Conduct</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-3">
