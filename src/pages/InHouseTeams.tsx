@@ -74,10 +74,7 @@ const InHouseTeams = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div>
-                      <p className="font-semibold text-sm text-muted-foreground">TEAMS</p>
-                      <p className="text-lg">10 Teams</p>
-                    </div>
+
                     <div>
                       <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
                       <p className="text-lg">April - June 2026</p>
