@@ -29,7 +29,6 @@ const Rules = () => {
                 <TabsTrigger value="tball">T-Ball</TabsTrigger>
                 <TabsTrigger value="pinto">Pinto</TabsTrigger>
                 <TabsTrigger value="mustang">Mustang</TabsTrigger>
-                <TabsTrigger value="bronco">Bronco</TabsTrigger>
                 <TabsTrigger value="other">Other Rules</TabsTrigger>
               </TabsList>
 
