@@ -128,34 +128,8 @@ const InHouseTeams = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Bronco Division</CardTitle>
-                  <CardDescription>Ages 11-12 • Player Pitch</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-semibold text-sm text-muted-foreground">TEAMS</p>
-                      <p className="text-lg">12 Teams</p>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm text-muted-foreground">SEASON</p>
-                      <p className="text-lg">April - June 2026</p>
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm text-muted-foreground">TIME COMMITMENT</p>
-                      <p className="text-sm">2 practices + 1-2 games/week</p>
-                    </div>
-                    <p className="text-sm text-muted-foreground pt-2">
-                      Player pitch baseball with focus on game strategy, teamwork, and advanced fundamentals. Pitch counts enforced for player safety.
-                    </p>
-                    <Button variant="link" asChild className="p-0 h-auto text-primary">
-                      <Link to="/in-house/rules">View Rules & Policies →</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+
+
 
               <Card>
                 <CardHeader>
