@@ -605,17 +605,8 @@ const Rules = () => {
                             </AccordionContent>
                           </AccordionItem>
 
-                          <AccordionItem value="bronco-derby">
-                            <AccordionTrigger>Bronco</AccordionTrigger>
-                            <AccordionContent>
-                              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                                <li>5 points = Home Run over fence</li>
-                                <li>2 points = Fence to outfield line</li>
-                                <li>1 point = Outfield line to infield grass edge</li>
-                                <li>0 points = Misses, fouls, or infield dirt</li>
-                              </ul>
-                            </AccordionContent>
-                          </AccordionItem>
+
+
 
                           <AccordionItem value="pony-derby">
                             <AccordionTrigger>Pony</AccordionTrigger>
