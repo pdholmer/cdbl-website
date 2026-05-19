@@ -38,6 +38,7 @@ export const useIsPageVisible = (slug: string) => {
 // Map route paths to page_visibility slugs
 export const routeToSlug: Record<string, string> = {
   '/registration': 'registration',
+  '/teams': 'teams',
   '/travel': 'travel',
   '/travel/registration': 'travel-registration',
   '/travel/faq': 'travel-faq',
