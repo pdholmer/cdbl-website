@@ -111,7 +111,7 @@ const Teams = () => {
 
                   <Card>
                     <CardHeader>
-                      <CardTitle>Bronco Division (formerly Mustang)</CardTitle>
+                      <CardTitle>Mustang Division</CardTitle>
                       <CardDescription>Ages 9-10 • Player Pitch</CardDescription>
                     </CardHeader>
                     <CardContent>
