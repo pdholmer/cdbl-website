@@ -51,7 +51,7 @@ export const contentIndex: ContentItem[] = [
   {
     title: "Teams & Rosters - In-House League",
     path: "/teams",
-    content: "Teams Rosters In-House League T-Ball Division Ages 4-6 Pinto Division Ages 7-8 Coach Pitch Bronco Division Ages 9-10 Player Pitch Mustang Pony Division Ages 11-12 Colt Division Ages 13-14 recreational teams balanced competitive play 2026 Registration Now Open",
+    content: "Teams Rosters In-House League T-Ball Division Ages 4-6 Pinto Division Ages 7-8 Coach Pitch Bronco Division Ages 9-10 Player Pitch Mustang Pony Division Ages 11-12 Colt Division Ages 13-14 recreational teams balanced competitive play 2026 season underway",
     category: "Teams",
     priority: 95,
   },
