@@ -12,7 +12,6 @@ const InHouseRules = () => {
     { value: "tball", label: "T-Ball" },
     { value: "pinto", label: "Pinto" },
     { value: "mustang", label: "Mustang" },
-    { value: "bronco", label: "Bronco" },
     { value: "pony", label: "Pony" },
   ];
 
