@@ -299,7 +299,7 @@ const BoardInfo = () => {
                     <p><strong>T-Ball:</strong> Eric Bohn</p>
                     <p><strong>Pinto:</strong> Josh Rowoldt</p>
                     <p><strong>Mustang:</strong> TBD</p>
-                    <p><strong>Bronco:</strong> TBD</p>
+                    
                     <p><strong>Pony / Colt:</strong> Vinny D'Antonio / Chris Sauceda</p>
                   </CardContent>
                 </Card>
