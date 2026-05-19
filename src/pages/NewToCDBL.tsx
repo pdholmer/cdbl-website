@@ -344,7 +344,7 @@ const NewToCDBL = () => {
                 asChild
                 className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
               >
-                <Link to="/registration">Register Now</Link>
+                <Link to="/registration">Registration Info</Link>
               </Button>
               <Button 
                 variant="outline" 

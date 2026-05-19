@@ -1,44 +1,48 @@
-# Fix "Bronco" mislabel on synced games
+## 1. Pets policy (Fields page)
 
-## What you're seeing
+In `src/pages/Fields.tsx`, the "Visitor Information" card currently says:
+> Pets must be leashed at all times
 
-The Apr 28 card titled **"Bronco: Rays vs White Sox"** is actually a **Pinto** game (`Pinto Rays @ Pinto White Sox`) synced from BlueSombrero. The Bronco label is wrong, and that's also why our Bronco-skip filter didn't catch it — the event's real division is Pinto, not Bronco.
+Replace that single bullet with a clearer, facility-specific policy:
 
-## Root cause
+- **No pets at Plato Fields** (per facility rules).
+- **Pets allowed at Stonecrest and Burlington Central**, leashed at all times.
+- **No pets at any facility during tournaments**, regardless of location.
 
-The same team names (`Rays`, `White Sox`, etc.) exist in multiple in-house divisions, but our sync resolves teams **by name only**. So:
+Implemented as three short bullets inside the existing Visitor Information list (same styling, no layout changes).
 
-- The synced Pinto game's home team "Pinto Rays" gets matched to the single `teams` row named "Rays" — which happens to be the **Bronco** Rays.
-- `useScheduleEvents.ts` then builds the title using the **home team's** division ("Bronco") instead of the **event's** division ("Pinto").
+## 2. Remove "Registration Now Open" messaging (mid-season)
 
-Result: a Pinto game wears a Bronco label, and the Bronco filter (which checks the event's division) lets it through correctly — it's not a Bronco game at all.
+We're mid-season, so anywhere the site advertises 2026 registration as currently open needs to be removed or rephrased to future-tense / "check back later".
 
-## The fix (3 parts)
+### Pages to update
 
-### 1. Title uses the event's own division (display fix — immediate)
+**`src/pages/InHouseTeams.tsx`** (top of the page, lines ~26-37)
+- Remove the entire blue "2026 Registration Now Open!" banner (heading + Early/Regular/Late dates + "Register for In-House" button).
+- Replace with a short neutral mid-season note: *"The 2026 season is underway. Registration for 2027 will open later this year — check back for dates."*
 
-In `src/hooks/useScheduleEvents.ts`, when classifying external events, prefer `e.division_id` (the event's own division) over the team's division for the display prefix. Look up the division name from a `divisions` map (we already have programs/teams; add a quick lookup via existing data or pass through `division_name` from the calendar event).
+**`src/pages/Teams.tsx`** (lines ~29-37)
+- Same banner exists here. Apply the same removal + neutral note replacement.
 
-Effect: the Apr 28 card becomes **"Pinto: Rays vs White Sox"** even with the wrong team match.
+**`src/pages/InHouseTeams.tsx`** (bottom MLB section, line ~208)
+- The CTA `Register for In-House Baseball` implies open registration. Change to `View All Teams` linking to `/teams`, or remove the button entirely. (Will go with relabel → `Learn About In-House` linking to `/in-house`.)
 
-### 2. Sync matches teams by (name + division), not name alone (data fix — correctness)
+**`src/pages/NewToCDBL.tsx`**
+- Line 49 hidden print checklist: keep (it's a 2026-season checklist artifact, dates are historical reference).
+- Line 106 timeline copy "Early registration opens December 1st" — this is the timeline page describing the annual cycle; leave as written (forward-looking, generic).
+- Line 347 `Register Now` button → relabel to `Registration Info` (page itself is evergreen).
 
-In `supabase/functions/sync-external-calendar/index.ts`, change team resolution so that when classifying an event:
-- First determine the event's division from the title keyword (Pinto/Mustang/Bronco/Pony/T-Ball).
-- Then match the home/away team by **name AND division_id** within that division.
-- Fall back to name-only match (current behavior) only if no division was detected.
+**`src/pages/Schedule.tsx`** line 458
+- Calendar item "Registration Opens — Dec 1, 2025" is a past date in a future-events list. Remove that item.
 
-Effect: "Pinto Rays" maps to the Pinto Rays team, "Mustang Rays" to the Mustang Rays team, etc. Subsequent re-syncs will store the correct `home_team_id` / `away_team_id`.
+**`src/data/contentIndex.ts`** lines 54 and 72
+- Remove the phrase "2026 Registration Now Open" / "2026 Registration Now Open" from the search index content strings so site search stops surfacing it.
 
-### 3. Backfill the existing mismatched rows (one-time cleanup)
+### Not touched
+- `RegistrationSection` on the homepage: cards say "Learn More" / "View Tryout Info" — no claim that registration is open. Leave as-is.
+- Admin pages (`ProgramEdit`, `Programs`) — these are the toggle controls for the `registration_open` flag; admins should flip those in the backend separately. Out of scope for this content fix.
+- `ChatAssistant` suggested prompt "When does registration open?" — still a valid question, leave.
 
-After deploying the sync fix, trigger a re-sync of the BlueSombrero calendar so the existing two mis-mapped rows (the Apr 28 Pinto game and the May 9 Mustang game already in the DB) get repointed to the correct team IDs.
-
-## Files to change
-
-- `src/hooks/useScheduleEvents.ts` — prefer event `division_id` for title prefix; surface division name via existing hooks (likely add `useDivisions` or reuse `useTeamHierarchy`'s programs→divisions).
-- `supabase/functions/sync-external-calendar/index.ts` — scope team-by-name lookup to the detected division.
-
-## Note on the Bronco skip filter
-
-The existing filter is still correct and should stay — it skips events where the **event's** division is Bronco. Once team matching is fixed, it'll continue to work as intended. Today's Apr 28 game was never a Bronco game in the source data, so it shouldn't be filtered out — it should just be labeled "Pinto" correctly.
+## Technical notes
+- All edits are content-only in `.tsx` and `.ts` data files. No schema, no new components, no styling system changes.
+- Will use `code--line_replace` for surgical edits on each file.

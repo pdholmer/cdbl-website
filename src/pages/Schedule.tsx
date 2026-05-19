@@ -455,7 +455,7 @@ const Schedule = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
               {[
-                { date: "Dec 1, 2025", title: "Registration Opens", desc: "Early bird registration begins" },
+                
                 { date: "Mar 8-9, 2026", title: "Player Evaluations", desc: "Skill assessments for team placement" },
                 { date: "Mar 15, 2026", title: "Draft Day", desc: "Team rosters finalized" },
                 { date: "Apr 12, 2026", title: "Opening Day", desc: "Season kicks off with ceremony" },
