@@ -191,7 +191,9 @@ export default function Fields() {
                 <CardContent>
                   <ul className="space-y-1.5 text-sm text-muted-foreground">
                     <li>• Arrive 30 minutes before game time for parking and warmups</li>
-                    <li>• Pets must be leashed at all times</li>
+                    <li>• <strong>No pets at Plato Fields</strong> (per facility rules)</li>
+                    <li>• Pets allowed at Stonecrest and Burlington Central — must be leashed at all times</li>
+                    <li>• <strong>No pets at any facility during tournaments</strong>, regardless of location</li>
                     <li>• No glass containers permitted on field grounds</li>
                     <li>• Follow all posted speed limits within field complexes</li>
                     <li>• Designated areas for team warmups - check with coaches</li>
