@@ -200,7 +200,7 @@ const InHouseTeams = () => {
             </p>
             <div className="text-center">
               <Button size="lg" variant="hero" asChild>
-                <Link to="/in-house/registration">Register for In-House Baseball</Link>
+                <Link to="/in-house">Learn About In-House</Link>
               </Button>
             </div>
           </div>
