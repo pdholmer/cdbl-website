@@ -16,7 +16,7 @@ const InHouseTeams = () => {
         >
           <div className="container">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">In-House Teams & Divisions</h1>
-            <p className="text-xl max-w-2xl">Recreational baseball teams organized by age, wearing proud MLB team names from the Cardinals to the Yankees.</p>
+            <p className="text-xl max-w-2xl">Recreational baseball organized by age. T-Ball plays in CDBL-branded jerseys with minor league team hats; Pinto and above wear MLB team names.</p>
           </div>
         </section>
 
