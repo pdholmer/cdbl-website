@@ -601,7 +601,7 @@ const Teams = () => {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">Bronco (Ages 9-10)</CardTitle>
+                    <CardTitle className="text-lg">Mustang (Ages 9-10)</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground mb-4">Focus: Player pitch, strategy, positions</p>
