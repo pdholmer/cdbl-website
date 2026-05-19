@@ -195,8 +195,8 @@ const NewToCDBL = () => {
                   </p>
                   <ul className="text-sm text-muted-foreground space-y-2">
                     <li><strong>T-Ball:</strong> 1 practice + Saturday games</li>
-                    <li><strong>Pinto-Bronco:</strong> 2 practices + 1-2 games</li>
-                    <li><strong>Bronco-Pony:</strong> 2-3 practices + 2 games</li>
+                    <li><strong>Pinto-Mustang:</strong> 2 practices + 1-2 games</li>
+                    <li><strong>Pony-Colt:</strong> 2-3 practices + 2 games</li>
                   </ul>
                   <p className="text-sm text-muted-foreground mt-3">
                     Games typically 6:00pm weeknights or Saturday mornings/afternoons.

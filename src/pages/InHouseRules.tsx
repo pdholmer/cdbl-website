@@ -12,7 +12,6 @@ const InHouseRules = () => {
     { value: "tball", label: "T-Ball" },
     { value: "pinto", label: "Pinto" },
     { value: "mustang", label: "Mustang" },
-    { value: "bronco", label: "Bronco" },
     { value: "pony", label: "Pony" },
   ];
 
@@ -56,7 +55,6 @@ const InHouseRules = () => {
                 <TabsTrigger value="tball">T-Ball</TabsTrigger>
                 <TabsTrigger value="pinto">Pinto</TabsTrigger>
                 <TabsTrigger value="mustang">Mustang</TabsTrigger>
-                <TabsTrigger value="bronco">Bronco</TabsTrigger>
                 <TabsTrigger value="pony">Pony</TabsTrigger>
               </TabsList>
 
@@ -206,52 +204,8 @@ const InHouseRules = () => {
                 </Card>
               </TabsContent>
 
-              {/* Bronco Rules */}
-              <TabsContent value="bronco">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-3xl">Bronco Division Rules</CardTitle>
-                    <p className="text-muted-foreground">Ages 11-12 • Competitive Player Pitch</p>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Game Length</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>6 innings, no new inning after 2 hours (1:45 if back-to-back games)</li>
-                        <li>5 run maximum per inning (no max in last inning)</li>
-                        <li>Mercy rules: 15 after 4, 12 after 5 innings</li>
-                      </ul>
-                    </div>
 
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Pitching Limits</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>75 pitches per game maximum</li>
-                        <li>Required rest: 41-75 pitches = 2 days, 21-40 = 1 day</li>
-                        <li>Pitch counts strictly enforced for player safety</li>
-                      </ul>
-                    </div>
 
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Playing Time</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>9 defensive players</li>
-                        <li>All players must play 2 innings in infield before end of 5th</li>
-                        <li>No player sits more than one inning in a row</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Base Running</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>Stealing allowed after ball crosses home plate</li>
-                        <li>No stealing home</li>
-                        <li>Runners may advance one base on overthrows</li>
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
 
               {/* Pony Rules */}
               <TabsContent value="pony">

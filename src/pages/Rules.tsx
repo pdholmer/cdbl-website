@@ -29,7 +29,6 @@ const Rules = () => {
                 <TabsTrigger value="tball">T-Ball</TabsTrigger>
                 <TabsTrigger value="pinto">Pinto</TabsTrigger>
                 <TabsTrigger value="mustang">Mustang</TabsTrigger>
-                <TabsTrigger value="bronco">Bronco</TabsTrigger>
                 <TabsTrigger value="other">Other Rules</TabsTrigger>
               </TabsList>
 
@@ -544,92 +543,8 @@ const Rules = () => {
                 </Card>
               </TabsContent>
 
-              {/* Bronco Rules */}
-              <TabsContent value="bronco">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-3xl">Bronco Division Rules</CardTitle>
-                    <p className="text-muted-foreground">11 & 12 Year Olds (5th & 6th Graders)</p>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Game Length</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>No new inning after 2 hours (1:45 if game scheduled after)</li>
-                        <li>Hard stop at 2:15 if double-header, regardless of score</li>
-                        <li>Time limit waived for Championship game</li>
-                        <li>Games: 6 innings (complete after 4 innings, 3½ if home ahead)</li>
-                        <li>Complete ½ inning: three (3) outs or seven (7) runs scored</li>
-                        <li>Max 7 runs per inning, except last inning (no maximum)</li>
-                        <li>All runs count on home runs that clear fence</li>
-                      </ul>
-                    </div>
 
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Mercy Rules</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>15 runs after 4 complete innings (3½ if home team ahead)</li>
-                        <li>12 runs after 5 complete innings (4½ if home team ahead)</li>
-                      </ul>
-                    </div>
 
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Field & Players</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>Pitching rubber = 50 feet (CDBL uses 48), Bases 70 feet apart</li>
-                        <li>Defensive team: nine (9) players (minimum eight required)</li>
-                        <li>All players must play 2 innings in infield before end of 5th inning</li>
-                        <li>No player sits out more than one inning in a row</li>
-                        <li>Home team uses 3rd base dugout</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Pitching</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>Maximum 3 innings per game (9 outs), 6 innings in 7-day period</li>
-                        <li>3 outs = one "inning" for a pitcher</li>
-                        <li>If pitcher pitches 2 or less innings, may pitch on consecutive days</li>
-                        <li>If pitcher pitches 3 innings, next 2 calendar days rest are mandatory</li>
-                        <li>May not pitch more than 2 consecutive days under any circumstances</li>
-                        <li>Pitcher removed after 2 hit batters in one inning or 3 total per outing</li>
-                        <li>Curveball/Breaking pitches NOT permitted (dead ball if thrown)</li>
-                        <li>Balk called after one warning per pitcher/per game</li>
-                        <li>One trip to mound per inning (must remove on 2nd trip)</li>
-                        <li>Pitcher removed cannot return to pitch in that game</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Batting & Base Running</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>Continuous batting order (all players)</li>
-                        <li>Bunting permitted (no fake bunt then swing - deemed out)</li>
-                        <li>Drop 3rd strike rule applies (if 1st base unoccupied or 2 outs)</li>
-                        <li>Infield fly rule will be called</li>
-                        <li>Lead-offs permitted</li>
-                        <li>Base runners may steal at any time in any situation</li>
-                        <li>NO SUICIDE SQUEEZES & STRAIGHT STEALS OF HOME at any time</li>
-                        <li>Sliding required for close plays at 2nd, 3rd, and home</li>
-                        <li>No head-first slides at advancing base (head-first dives back allowed)</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold mb-3">Equipment & Safety</h3>
-                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                        <li>USA, USSSA, BBCOR and Wood bats allowed (Max 2-3/4" barrel)</li>
-                        <li>All USA and USSSA bats must be stamped as such</li>
-                        <li>First bat offense: player out + both teams warned</li>
-                        <li>Second offense: player ejected</li>
-                        <li>Rubber spikes only required</li>
-                        <li>All players strongly suggested to wear protective cup</li>
-                        <li>Courtesy runners: must use with 2 outs for catcher, may use for pitcher</li>
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
 
               {/* Other Rules */}
               <TabsContent value="other">
@@ -690,17 +605,8 @@ const Rules = () => {
                             </AccordionContent>
                           </AccordionItem>
 
-                          <AccordionItem value="bronco-derby">
-                            <AccordionTrigger>Bronco</AccordionTrigger>
-                            <AccordionContent>
-                              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                                <li>5 points = Home Run over fence</li>
-                                <li>2 points = Fence to outfield line</li>
-                                <li>1 point = Outfield line to infield grass edge</li>
-                                <li>0 points = Misses, fouls, or infield dirt</li>
-                              </ul>
-                            </AccordionContent>
-                          </AccordionItem>
+
+
 
                           <AccordionItem value="pony-derby">
                             <AccordionTrigger>Pony</AccordionTrigger>

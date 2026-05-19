@@ -221,7 +221,7 @@ const About = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground text-sm">
-                    Managing league finances and serving as Bronco Division Coordinator.
+                    Managing league finances and overseeing division operations.
                   </p>
                 </CardContent>
               </Card>
