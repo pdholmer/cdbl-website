@@ -152,14 +152,27 @@ const InHouseTeams = () => {
           </div>
         </section>
 
-        {/* MLB Team Names Section */}
+        {/* Team Names Section */}
         <section className="py-16 bg-muted/30">
           <div className="container max-w-4xl">
-            <h2 className="text-3xl font-bold mb-6 text-center">Play for Your Favorite MLB Team!</h2>
-            <p className="text-muted-foreground text-center mb-8">
-              All In-House teams are named after Major League Baseball teams. Whether it's the Cardinals, Cubs, Dodgers, Yankees, or Red Sox, 
-              every player gets to wear their favorite team's colors and name with pride!
+            <h2 className="text-3xl font-bold mb-6 text-center">How Team Names & Uniforms Work</h2>
+            <p className="text-muted-foreground text-center mb-4">
+              Players and coaches don't pick their team — assignments are made each season to keep divisions balanced.
             </p>
+            <div className="grid md:grid-cols-2 gap-6 mb-8 text-left">
+              <div className="p-6 rounded-lg bg-background border border-border">
+                <h3 className="font-bold text-lg mb-2">T-Ball</h3>
+                <p className="text-sm text-muted-foreground">
+                  CDBL-branded jerseys paired with minor league team hats that match each team's color-way.
+                </p>
+              </div>
+              <div className="p-6 rounded-lg bg-background border border-border">
+                <h3 className="font-bold text-lg mb-2">Pinto & Above</h3>
+                <p className="text-sm text-muted-foreground">
+                  Teams are named after Major League Baseball clubs — Cardinals, Cubs, Dodgers, Yankees, Red Sox, and more — with matching jerseys and hats.
+                </p>
+              </div>
+            </div>
             <div className="text-center">
               <Button size="lg" variant="hero" asChild>
                 <Link to="/in-house">Learn About In-House</Link>
@@ -167,6 +180,7 @@ const InHouseTeams = () => {
             </div>
           </div>
         </section>
+
       </main>
       <Footer />
     </div>
