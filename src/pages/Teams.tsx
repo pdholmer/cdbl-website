@@ -26,16 +26,11 @@ const Teams = () => {
         <section className="py-16 bg-background">
           <div className="container">
             {/* Registration Reminder Banner */}
-            <div className="mb-12 p-6 bg-primary/10 rounded-lg border border-primary/20 max-w-4xl mx-auto">
-              <h3 className="text-xl font-bold mb-2 text-center">2026 Registration Now Open!</h3>
-              <p className="text-center text-muted-foreground mb-4">
-                <strong>Early Registration:</strong> December 1, 2025 • <strong>Regular:</strong> January 15, 2026 • <strong>Late:</strong> March 1, 2026
+            <div className="mb-12 p-6 bg-muted/40 rounded-lg border border-border max-w-4xl mx-auto">
+              <h3 className="text-xl font-bold mb-2 text-center">2026 Season Underway</h3>
+              <p className="text-center text-muted-foreground">
+                Registration for the 2026 season is closed. Registration for 2027 will open later this year — check back for dates.
               </p>
-              <div className="flex justify-center">
-                <Button asChild>
-                  <Link to="/registration">Register Now</Link>
-                </Button>
-              </div>
             </div>
 
             <Tabs defaultValue="in-house" className="w-full">
