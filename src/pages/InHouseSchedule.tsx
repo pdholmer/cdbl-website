@@ -135,7 +135,7 @@ const InHouseSchedule = () => {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Mustang & Bronco (Ages 9-12)</CardTitle>
+                  <CardTitle>Mustang (Ages 9-10)</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
