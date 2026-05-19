@@ -86,7 +86,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/registration" element={<PageGate slug="registration"><Registration /></PageGate>} />
-          <Route path="/teams" element={<Teams />} />
+          <Route path="/teams" element={<PageGate slug="teams"><Teams /></PageGate>} />
           <Route path="/schedule" element={<PageGate slug="schedule"><Schedule /></PageGate>} />
           <Route path="/fields" element={<PageGate slug="fields"><Fields /></PageGate>} />
           <Route path="/shop" element={<PageGate slug="shop"><Shop /></PageGate>} />
