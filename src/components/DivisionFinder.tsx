@@ -41,12 +41,8 @@ const getDivisionInfoFromBirthYear = (birthYear: number): DivisionInfo | null =>
       schedule: "2 practices + 1-2 games per week",
     };
   } else if (age >= 11 && age <= 12) {
-    return {
-      name: "Bronco",
-      ageRange: "Ages 11-12",
-      description: "Advanced competitive baseball on larger fields. Preparation for middle school baseball programs.",
-      schedule: "2-3 practices + 2 games per week",
-    };
+    return null;
+
   } else if (age >= 13 && age <= 14) {
     return {
       name: "Pony",
