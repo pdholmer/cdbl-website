@@ -24,7 +24,7 @@ export const contentIndex: ContentItem[] = [
   {
     title: "In-House Baseball Program",
     path: "/in-house",
-    content: "In-House recreational baseball MLB teams Cardinals Cubs Dodgers Giants Athletics T-Ball Pinto Bronco Pony Colt ages 4-14 no tryouts all skill levels $75-$155 local games weeknight Saturday affordable family friendly neighborhood baseball fundamentals sportsmanship teamwork April June July",
+    content: "In-House recreational baseball MLB teams Cardinals Cubs Dodgers Giants Athletics T-Ball Pinto Pony Colt ages 4-14 no tryouts all skill levels $75-$155 local games weeknight Saturday affordable family friendly neighborhood baseball fundamentals sportsmanship teamwork April June July",
     category: "Programs",
     priority: 100,
   },
@@ -51,7 +51,7 @@ export const contentIndex: ContentItem[] = [
   {
     title: "Teams & Rosters - In-House League",
     path: "/teams",
-    content: "Teams Rosters In-House League T-Ball Division Ages 4-6 Pinto Division Ages 7-8 Coach Pitch Bronco Division Ages 9-10 Player Pitch Mustang Pony Division Ages 11-12 Colt Division Ages 13-14 recreational teams balanced competitive play 2026 season underway",
+    content: "Teams Rosters In-House League T-Ball Division Ages 4-6 Pinto Division Ages 7-8 Coach Pitch Division Ages 9-10 Player Pitch Mustang Pony Division Ages 11-12 Colt Division Ages 13-14 recreational teams balanced competitive play 2026 season underway",
     category: "Teams",
     priority: 95,
   },
@@ -69,7 +69,7 @@ export const contentIndex: ContentItem[] = [
   {
     title: "Register for 2026 Season",
     path: "/registration",
-    content: "Register Registration 2026 Season SportsConnect Early Registration December 1 2025 Regular Registration January 15 2026 Late Registration March 1 2026 Season Starts April 2026 Registration Fees T-Ball $75 Pinto $95 Bronco $115 Pony $135 Colt $155 Official CDBL jersey team hat 12-16 game season professional coaching tournament opportunities In-House vs Travel Baseball comparison In-House League recreational local fields no tryouts all players accepted Travel Baseball competitive tryouts required regional tournaments weekend trips 50+ games March August $600 per season tournament fees advanced competition elite players experienced players Travel right for my child multiple seasons strong fundamental skills passionate about baseball weekend tournaments practice schedules travel expenses scholarships financial assistance sibling discounts family caps refund policy equipment volunteer commitments evaluations draft",
+    content: "Register Registration 2026 Season SportsConnect Early Registration December 1 2025 Regular Registration January 15 2026 Late Registration March 1 2026 Season Starts April 2026 Registration Fees T-Ball $75 Pinto $95 $115 Pony $135 Colt $155 Official CDBL jersey team hat 12-16 game season professional coaching tournament opportunities In-House vs Travel Baseball comparison In-House League recreational local fields no tryouts all players accepted Travel Baseball competitive tryouts required regional tournaments weekend trips 50+ games March August $600 per season tournament fees advanced competition elite players experienced players Travel right for my child multiple seasons strong fundamental skills passionate about baseball weekend tournaments practice schedules travel expenses scholarships financial assistance sibling discounts family caps refund policy equipment volunteer commitments evaluations draft",
     category: "Registration",
     priority: 100,
   },
@@ -78,7 +78,7 @@ export const contentIndex: ContentItem[] = [
   {
     title: "Rules & Policies",
     path: "/rules",
-    content: "Rules Policies CDBL Constitution playing rules league policies T-Ball Division Pinto Mustang Bronco Other Rules Article Name Objectives Membership League Fees Meetings Executive Board of Directors Committees Officers Duties Powers Managers Coaches Umpires Players Affiliation Financial Accounting Travel and Tournament Teams Travel teams represent CDBL competitive tournaments Try-outs team selection additional fees travel programs tournament teams organized specific events Travel coordinator oversees travel programs Rules Regulations Amendments Code of Conduct Family Code of Conduct sportsmanship respect officials decisions no profane language no violence positive experience pitch counts player safety call-up rules division coordinator",
+    content: "Rules Policies CDBL Constitution playing rules league policies T-Ball Division Pinto Mustang Other Rules Article Name Objectives Membership League Fees Meetings Executive Board of Directors Committees Officers Duties Powers Managers Coaches Umpires Players Affiliation Financial Accounting Travel and Tournament Teams Travel teams represent CDBL competitive tournaments Try-outs team selection additional fees travel programs tournament teams organized specific events Travel coordinator oversees travel programs Rules Regulations Amendments Code of Conduct Family Code of Conduct sportsmanship respect officials decisions no profane language no violence positive experience pitch counts player safety call-up rules division coordinator",
     category: "Rules",
     priority: 85,
   },
@@ -87,7 +87,7 @@ export const contentIndex: ContentItem[] = [
   {
     title: "Season Schedule",
     path: "/schedule",
-    content: "Season Schedule 2026 game schedule practice times field assignments division schedules T-Ball Pinto Bronco Mustang Pony Colt Travel teams calendar events tournament schedule playoffs championship games",
+    content: "Season Schedule 2026 game schedule practice times field assignments division schedules T-Ball Pinto Mustang Pony Colt Travel teams calendar events tournament schedule playoffs championship games",
     category: "Season Info",
     priority: 90,
   },
