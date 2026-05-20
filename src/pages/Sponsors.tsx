@@ -163,13 +163,6 @@ const Sponsors = () => {
               >
                 <a href="mailto:sponsorships@cdbaseball.org">Become a Sponsor</a>
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
-              >
-                Download Sponsorship Packet
-              </Button>
             </div>
           </div>
         </section>
