@@ -159,8 +159,9 @@ const Sponsors = () => {
                 variant="default"
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
+                asChild
               >
-                Become a Sponsor
+                <a href="mailto:sponsorships@cdbaseball.org">Become a Sponsor</a>
               </Button>
               <Button
                 variant="outline"
