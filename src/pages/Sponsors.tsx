@@ -4,13 +4,58 @@ import { Heart, Award, TrendingUp, Users } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+const tiers = [
+  {
+    name: "Grand Slam",
+    amount: "$700",
+    sponsors: [
+      "Climate Control Services",
+      "Five Star Concrete",
+      "Klein Baseball",
+      "Kleins Market",
+      "Koertgen/Currey ReMAX",
+      "Kustom Heating",
+      "Layne Christensen",
+      "Paramount Fence",
+      "Radiant Eye Care",
+      "Realty of America – Jesus Perez",
+      "Spike's Auto Recycling",
+      "State Farm – Tony Mensik",
+      "Village Squire",
+      "Wired Up Party Zone",
+    ],
+  },
+  {
+    name: "Home Run",
+    amount: "$500",
+    sponsors: [
+      "Armond Chauffer Service",
+      "Baird Private Wealth Mgmt – Bingaman",
+      "Floor Coverings International",
+      "Suburban Life Realty",
+      "Tim Metz Farming",
+      "Top Shelf Sports Cards",
+    ],
+  },
+  {
+    name: "Double",
+    amount: "$250",
+    sponsors: [
+      "Baird & Warner Real Estate – Susan Price",
+      "Brittain's Express Oil & Lube",
+      "Niko's Tavern",
+      "Pakk Electric",
+    ],
+  },
+];
+
 const Sponsors = () => {
   return (
     <div className="min-h-screen">
       <Header />
       <main>
         {/* Hero Section */}
-        <section 
+        <section
           className="relative py-16 md:py-24 text-primary-foreground overflow-hidden"
           style={{ background: 'var(--gradient-hero)' }}
         >
@@ -31,114 +76,37 @@ const Sponsors = () => {
           </div>
         </section>
 
-        {/* Premier Sponsors */}
-        <section className="py-16 bg-muted/30">
-          <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Premier Sponsors</h2>
-            
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <Card className="text-center">
-                <CardContent className="pt-8 pb-8">
-                  <div className="bg-muted h-32 rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-muted-foreground font-semibold">Sponsor Logo</span>
+        {/* Sponsor Tiers */}
+        {tiers.map((tier, tierIndex) => (
+          <section
+            key={tier.name}
+            className={`py-16 ${tierIndex % 2 === 0 ? "bg-muted/30" : "bg-background"}`}
+          >
+            <div className="container">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold mb-3">{tier.name}</h2>
+                <p className="text-2xl md:text-3xl font-bold text-primary">{tier.amount}</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+                {tier.sponsors.map((sponsor) => (
+                  <div
+                    key={sponsor}
+                    className="bg-card rounded-lg p-4 text-center border"
+                  >
+                    <p className="text-sm md:text-base font-semibold">{sponsor}</p>
                   </div>
-                  <h3 className="font-bold text-xl mb-2">Burlington Bank & Trust</h3>
-                  <p className="text-sm text-muted-foreground">Proud supporter since 2010</p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center">
-                <CardContent className="pt-8 pb-8">
-                  <div className="bg-muted h-32 rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-muted-foreground font-semibold">Sponsor Logo</span>
-                  </div>
-                  <h3 className="font-bold text-xl mb-2">Miller's Hardware</h3>
-                  <p className="text-sm text-muted-foreground">Field sponsor since 2015</p>
-                </CardContent>
-              </Card>
-
-              <Card className="text-center">
-                <CardContent className="pt-8 pb-8">
-                  <div className="bg-muted h-32 rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-muted-foreground font-semibold">Sponsor Logo</span>
-                  </div>
-                  <h3 className="font-bold text-xl mb-2">Joe's Pizza & Grill</h3>
-                  <p className="text-sm text-muted-foreground">Tournament sponsor</p>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-
-        {/* Gold Sponsors */}
-        <section className="py-16 bg-background">
-          <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Gold Sponsors</h2>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              {[
-                "Smith Family Dentistry",
-                "Burlington Auto Sales",
-                "Valley Insurance Agency",
-                "Peterson Construction",
-                "Main Street Pharmacy",
-                "Anderson Realty Group",
-                "Central IL Landscaping",
-                "Wilson's Sporting Goods"
-              ].map((sponsor, index) => (
-                <Card key={index} className="text-center">
-                  <CardContent className="pt-6 pb-6">
-                    <div className="bg-muted h-20 rounded-lg mb-3 flex items-center justify-center">
-                      <span className="text-xs text-muted-foreground">Logo</span>
-                    </div>
-                    <p className="font-semibold text-sm">{sponsor}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Team Sponsors */}
-        <section className="py-16 bg-muted/30">
-          <div className="container">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Team Sponsors</h2>
-            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-              These local businesses have generously sponsored individual teams, helping provide jerseys, equipment, and support for our players.
-            </p>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
-              {[
-                "Riverside Family Restaurant",
-                "Thompson HVAC Services",
-                "Quality Auto Repair",
-                "Burlington Veterinary Clinic",
-                "First State Bank",
-                "Green Thumb Garden Center",
-                "Elite Fitness Center",
-                "Family Chiropractic Care",
-                "Burlington Ace Hardware",
-                "Sunrise Bakery",
-                "Mitchell Law Offices",
-                "Valley View Farm Supply",
-                "Hometown Insurance",
-                "Pro Tech Computer Services",
-                "Country Kitchen Restaurant",
-                "Central Dental Associates"
-              ].map((sponsor, index) => (
-                <div key={index} className="bg-card rounded-lg p-4 text-center border">
-                  <p className="text-sm font-semibold">{sponsor}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        ))}
 
         {/* Sponsorship Benefits */}
         <section className="py-16 bg-background">
           <div className="container">
             <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Become a Sponsor</h2>
-            
+
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-12">
               <Card>
                 <CardHeader>
@@ -176,54 +144,6 @@ const Sponsors = () => {
                 </CardContent>
               </Card>
             </div>
-
-            {/* Sponsorship Levels */}
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              <Card className="border-2 border-primary">
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">Team Sponsor</CardTitle>
-                  <p className="text-3xl font-bold text-primary mt-2">$250</p>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• Team name sponsorship</li>
-                    <li>• Logo on team banner</li>
-                    <li>• Recognition on website</li>
-                    <li>• Social media mentions</li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-primary">
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">Field Sponsor</CardTitle>
-                  <p className="text-3xl font-bold text-primary mt-2">$500</p>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• All Team Sponsor benefits</li>
-                    <li>• Large field banner (full season)</li>
-                    <li>• Featured on field signage</li>
-                    <li>• Newsletter recognition</li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-primary">
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">Premier Sponsor</CardTitle>
-                  <p className="text-3xl font-bold text-primary mt-2">$1,000+</p>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li>• All Field Sponsor benefits</li>
-                    <li>• Premium website placement</li>
-                    <li>• Tournament naming rights</li>
-                    <li>• Custom recognition package</li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
           </div>
         </section>
 
@@ -235,15 +155,15 @@ const Sponsors = () => {
               Join our community of sponsors supporting youth baseball in Burlington. Contact us to learn more about sponsorship opportunities and custom packages.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button 
-                variant="default" 
+              <Button
+                variant="default"
                 size="lg"
                 className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold"
               >
                 Become a Sponsor
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="lg"
                 className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-carolina hover:border-white font-semibold"
               >
