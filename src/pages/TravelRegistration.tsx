@@ -80,9 +80,13 @@ const TravelRegistration = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Tryout Information</h2>
 
             <div className="space-y-6">
-              <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-accent/5">
+              <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-accent/5">
                 <CardHeader>
-                  <CardTitle className="text-2xl">2027 Season Tryouts (held Fall 2026)</CardTitle>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 rounded-full bg-green-500/15 border border-green-500/30 text-green-700 text-xs font-semibold uppercase tracking-wide w-fit">
+                    <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    Registration Open Now
+                  </div>
+                  <CardTitle className="text-2xl">2027 Season Tryouts (held July 2026)</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-4">
@@ -91,12 +95,19 @@ const TravelRegistration = () => {
                     </div>
                     <div>
                       <p className="text-lg font-semibold mb-1">
-                        Tryouts for the 2027 season will take place in July 2026.
+                        Registration is now open for 2027 Travel Tryouts and Travel Coaches.
                       </p>
-                      <p className="text-muted-foreground">
-                        Specific dates and registration information will be announced in early 2026. Check back for
-                        updates!
+                      <p className="text-muted-foreground mb-4">
+                        Tryouts will take place in July 2026. Specific dates will be announced soon — register now to secure your spot.
                       </p>
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <Button asChild className="font-semibold">
+                          <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Register for Tryouts</a>
+                        </Button>
+                        <Button variant="outline" asChild className="font-semibold">
+                          <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Travel Coach Registration</a>
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
