@@ -15,12 +15,19 @@ const Travel = () => {
       }}>
           <div className="container relative z-10">
             <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-xs sm:text-sm font-semibold uppercase tracking-wide">
+                <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
+                2027 Registration Open
+              </div>
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">CDBL Rockets</h1>
               <p className="text-base sm:text-lg md:text-xl mb-1 leading-relaxed opacity-95">Elite travel baseball building the pipeline to Burlington Central High School and beyond.</p>
               <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-80 italic">Tryouts required. Ages 8–14.</p>
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                 <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                  <Link to="/travel/registration">2027 Season Tryouts (Fall 2026)</Link>
+                  <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Register for 2027 Tryouts</a>
+                </Button>
+                <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold">
+                  <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Travel Coach Registration</a>
                 </Button>
               </div>
             </div>
@@ -154,9 +161,12 @@ const Travel = () => {
             <p className="text-xl mb-8 max-w-2xl mx-auto">
               Join the CDBL Rockets and take your game to the next level. Future stars start here.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/travel/registration">View Tryout Information</Link>
+                <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Register for 2027 Tryouts</a>
+              </Button>
+              <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold">
+                <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Travel Coach Registration</a>
               </Button>
             </div>
           </div>
