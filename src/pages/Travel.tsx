@@ -161,9 +161,12 @@ const Travel = () => {
             <p className="text-xl mb-8 max-w-2xl mx-auto">
               Join the CDBL Rockets and take your game to the next level. Future stars start here.
             </p>
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/travel/registration">View Tryout Information</Link>
+                <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Register for 2027 Tryouts</a>
+              </Button>
+              <Button variant="outline" size="lg" asChild className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold">
+                <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Travel Coach Registration</a>
               </Button>
             </div>
           </div>
