@@ -212,14 +212,14 @@ const TravelRegistration = () => {
           <div className="container text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Join the Rockets?</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Tryouts for the 2027 season will be held in July 2026. Check back for registration details.
+              Registration for 2027 Travel Tryouts and Travel Coaches is open now. Tryouts are held in July 2026.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button variant="default" size="lg" asChild className="bg-white text-primary hover:bg-white/90 shadow-lg font-semibold">
-                <Link to="/travel">Back to Travel Overview</Link>
+                <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Register for Tryouts</a>
               </Button>
               <Button variant="outline" size="lg" asChild className="border-white text-white hover:bg-white/10">
-                <Link to="/travel/faq">Read the FAQ</Link>
+                <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">Travel Coach Registration</a>
               </Button>
             </div>
           </div>
