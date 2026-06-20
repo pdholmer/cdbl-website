@@ -24,12 +24,13 @@ const Rules = () => {
         <section className="py-16 bg-background">
           <div className="container max-w-6xl">
             <Tabs defaultValue="constitution" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 mb-8">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 mb-8">
                 <TabsTrigger value="constitution">Constitution</TabsTrigger>
                 <TabsTrigger value="tball">T-Ball</TabsTrigger>
                 <TabsTrigger value="pinto">Pinto</TabsTrigger>
                 <TabsTrigger value="mustang">Mustang</TabsTrigger>
                 <TabsTrigger value="other">Other Rules</TabsTrigger>
+                <TabsTrigger value="tournament">Tournament</TabsTrigger>
               </TabsList>
 
               {/* Constitution */}
