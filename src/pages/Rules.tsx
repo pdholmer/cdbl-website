@@ -729,7 +729,7 @@ const Rules = () => {
                               For the safety of all players, spectators, and participants, the following rules apply to grills and open flames at all CDBL tournament events:
                             </p>
                             <ul className="list-disc list-inside space-y-1 ml-4">
-                              <li><strong>Personal grills are prohibited</strong> in all spectator areas, parking lots, and within 50 feet of any playing field, dugout, or concession stand.</li>
+                              <li><strong>Personal grills are prohibited</strong> in all spectator areas, parking lots, and on all CDBL facility grounds.</li>
                               <li>Only CDBL-approved and supervised concession operations may use commercial cooking equipment in designated concession areas.</li>
                               <li>No open flames, campfires, fire pits, or charcoal/ propane grills may be brought onto CDBL facility grounds by spectators, coaches, or teams.</li>
                               <li>Teams or individuals violating this policy will be asked to extinguish and remove the equipment immediately. Repeat violations may result in removal from the tournament grounds.</li>
