@@ -194,6 +194,8 @@ export default function Fields() {
                     <li>• <strong>No pets at Plato Fields</strong> (per facility rules)</li>
                     <li>• Pets allowed at Stonecrest and Burlington Central — must be leashed at all times</li>
                     <li>• <strong>No pets at any facility during tournaments</strong>, regardless of location</li>
+                    <li>• <strong>Personal grills and open flames prohibited</strong> on all CDBL facility grounds</li>
+                    <li>• Only CDBL-approved concessions may use commercial cooking equipment in designated areas</li>
                     <li>• No glass containers permitted on field grounds</li>
                     <li>• Follow all posted speed limits within field complexes</li>
                     <li>• Designated areas for team warmups - check with coaches</li>
