@@ -711,6 +711,79 @@ const Rules = () => {
                   </Card>
                 </div>
               </TabsContent>
+
+              {/* Tournament Rules */}
+              <TabsContent value="tournament">
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-2xl">Tournament Policies</CardTitle>
+                      <p className="text-muted-foreground">Rules and procedures for CDBL-hosted and CDBL-participating tournaments</p>
+                    </CardHeader>
+                    <CardContent>
+                      <Accordion type="single" collapsible>
+                        <AccordionItem value="grills">
+                          <AccordionTrigger>Grills & Open Flames</AccordionTrigger>
+                          <AccordionContent className="space-y-3 text-muted-foreground">
+                            <p>
+                              For the safety of all players, spectators, and participants, the following rules apply to grills and open flames at all CDBL tournament events:
+                            </p>
+                            <ul className="list-disc list-inside space-y-1 ml-4">
+                              <li><strong>Personal grills are prohibited</strong> in all spectator areas, parking lots, and within 50 feet of any playing field, dugout, or concession stand.</li>
+                              <li>Only CDBL-approved and supervised concession operations may use commercial cooking equipment in designated concession areas.</li>
+                              <li>No open flames, campfires, fire pits, or charcoal/ propane grills may be brought onto CDBL facility grounds by spectators, coaches, or teams.</li>
+                              <li>Teams or individuals violating this policy will be asked to extinguish and remove the equipment immediately. Repeat violations may result in removal from the tournament grounds.</li>
+                              <li>Questions regarding permitted food options should be directed to the Tournament Director or CDBL Board member on site.</li>
+                            </ul>
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="spectator-conduct">
+                          <AccordionTrigger>Spectator Conduct</AccordionTrigger>
+                          <AccordionContent className="space-y-3 text-muted-foreground">
+                            <p>
+                              All spectators are expected to uphold the highest standards of sportsmanship during tournament play:
+                            </p>
+                            <ul className="list-disc list-inside space-y-1 ml-4">
+                              <li>Spectators must remain behind designated spectator lines and shall not enter the field of play or dugout areas at any time.</li>
+                              <li>No alcohol is permitted on CDBL facility grounds.</li>
+                              <li>Profanity, abusive language, or harassment of players, coaches, umpires, or other spectators will not be tolerated.</li>
+                              <li>Spectators may not coach, direct, or instruct players from the sidelines during tournament games.</li>
+                              <li>Failure to comply may result in ejection from the facility and potential suspension from future CDBL events.</li>
+                            </ul>
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="game-ops">
+                          <AccordionTrigger>Tournament Game Operations</AccordionTrigger>
+                          <AccordionContent className="space-y-3 text-muted-foreground">
+                            <ul className="list-disc list-inside space-y-1 ml-4">
+                              <li>All tournament games operate under CDBL division-specific rules unless otherwise posted by the Tournament Director.</li>
+                              <li>Home team is determined by tournament bracket or coin toss if not predetermined.</li>
+                              <li>Warm-ups are limited to 10 minutes when games are running behind schedule.</li>
+                              <li>Scorecards must be signed by both managers and submitted to the scorer's table immediately following the game.</li>
+                              <li>Protests must be filed with the Tournament Director before the next pitch is thrown. Judgment calls cannot be protested.</li>
+                            </ul>
+                          </AccordionContent>
+                        </AccordionItem>
+
+                        <AccordionItem value="parking">
+                          <AccordionTrigger>Parking & Facility Use</AccordionTrigger>
+                          <AccordionContent className="space-y-3 text-muted-foreground">
+                            <ul className="list-disc list-inside space-y-1 ml-4">
+                              <li>Parking is available on a first-come, first-served basis. Please follow posted signs and staff direction.</li>
+                              <li>Do not block gates, fire lanes, or other team's vehicle access.</li>
+                              <li>Pets are not permitted on CDBL facility grounds during tournaments, with the exception of service animals.</li>
+                              <li>All trash must be disposed of in provided receptacles. Teams are responsible for cleaning their dugout areas after each game.</li>
+                              <li>Smoking and vaping are prohibited within 25 feet of any field, dugout, or spectator seating area.</li>
+                            </ul>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
             </Tabs>
           </div>
         </section>
