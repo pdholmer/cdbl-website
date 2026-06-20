@@ -749,6 +749,7 @@ const Rules = () => {
                               <li>No alcohol is permitted on CDBL facility grounds.</li>
                               <li>Profanity, abusive language, or harassment of players, coaches, umpires, or other spectators will not be tolerated.</li>
                               <li>If an umpire ejects a spectator, that individual is required to move immediately to the parking lot and may not return to the facility for the remainder of the tournament day.</li>
+                              <li>Tents, canopies, and similar structures may not be placed in parking areas or in any location that blocks vehicle or pedestrian traffic.</li>
                               <li>Failure to comply may result in ejection from the facility and potential suspension from future CDBL events.</li>
                             </ul>
                           </AccordionContent>
