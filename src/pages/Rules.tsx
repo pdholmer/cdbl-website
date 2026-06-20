@@ -742,13 +742,13 @@ const Rules = () => {
                           <AccordionTrigger>Spectator Conduct</AccordionTrigger>
                           <AccordionContent className="space-y-3 text-muted-foreground">
                             <p>
-                              All spectators are expected to uphold the highest standards of sportsmanship during tournament play:
+                              All spectators are expected to be respectful and uphold the highest standards of sportsmanship during tournament play:
                             </p>
                             <ul className="list-disc list-inside space-y-1 ml-4">
                               <li>Spectators must remain behind designated spectator lines and shall not enter the field of play or dugout areas at any time.</li>
                               <li>No alcohol is permitted on CDBL facility grounds.</li>
                               <li>Profanity, abusive language, or harassment of players, coaches, umpires, or other spectators will not be tolerated.</li>
-                              <li>Spectators may not coach, direct, or instruct players from the sidelines during tournament games.</li>
+                              <li>If an umpire ejects a spectator, that individual is required to move immediately to the parking lot and may not return to the facility for the remainder of the tournament day.</li>
                               <li>Failure to comply may result in ejection from the facility and potential suspension from future CDBL events.</li>
                             </ul>
                           </AccordionContent>
