@@ -1,0 +1,1 @@
+ALTER TABLE public.players ALTER COLUMN state SET DEFAULT 'IL';
