@@ -70,6 +70,10 @@ import CoachDraftRoom from "./pages/coach/DraftRoom";
 import { FeedbackProvider } from "./contexts/FeedbackContext";
 import { FeedbackFAB, FeedbackSlider } from "./components/feedback";
 import OAuthConsent from "./pages/OAuthConsent";
+import GuardianLogin from "./pages/Login";
+import Household from "./pages/Household";
+import HouseholdNew from "./pages/HouseholdNew";
+import EmailBounces from "./pages/admin/EmailBounces";
 
 const queryClient = new QueryClient();
 
@@ -109,8 +113,13 @@ const App = () => (
           <Route path="/travel/schedule" element={<Navigate to="/schedule" replace />} />
           <Route path="/travel/faq" element={<PageGate slug="travel-faq"><TravelFAQ /></PageGate>} />
           <Route path="/travel/registration" element={<PageGate slug="travel-registration"><TravelRegistration /></PageGate>} />
+          {/* Unified auth */}
+          <Route path="/login" element={<GuardianLogin />} />
+          <Route path="/household" element={<Household />} />
+          <Route path="/household/new" element={<HouseholdNew />} />
           {/* Admin Routes */}
           <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/email-bounces" element={<ProtectedRoute requireBoardMember><EmailBounces /></ProtectedRoute>} />
           
           {/* Board Member Routes - accessible by admin OR board_member */}
           <Route path="/admin" element={<ProtectedRoute requireBoardMember><Dashboard /></ProtectedRoute>} />
