@@ -5,12 +5,18 @@ import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { usePrograms } from "@/hooks/usePrograms";
+import { useAllPrograms } from "@/hooks/useAllPrograms";
 import { useFAQs } from "@/hooks/useFAQs";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Registration = () => {
   const { inHouseProgram, inHouseDivisions, isLoading: programsLoading } = usePrograms();
+  const { travelProgram } = useAllPrograms();
   const { faqs, isLoading: faqsLoading } = useFAQs();
+
+  const tryoutUrl = (travelProgram as any)?.tryout_registration_url?.trim() || null;
+  const coachUrl = (travelProgram as any)?.coach_registration_url?.trim() || null;
+  const showTravelBanner = Boolean(tryoutUrl || coachUrl);
 
   const isLoading = programsLoading || faqsLoading;
 

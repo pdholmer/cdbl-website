@@ -25,6 +25,8 @@ const ProgramEdit = () => {
     season_end: "",
     registration_open: false,
     registration_url: "",
+    tryout_registration_url: "",
+    coach_registration_url: "",
   });
 
   useEffect(() => {
@@ -53,6 +55,8 @@ const ProgramEdit = () => {
       season_end: data.season_end || "",
       registration_open: data.registration_open || false,
       registration_url: data.registration_url || "",
+      tryout_registration_url: (data as any).tryout_registration_url || "",
+      coach_registration_url: (data as any).coach_registration_url || "",
     });
   };
 
@@ -164,13 +168,41 @@ const ProgramEdit = () => {
               </div>
 
               <div>
-                <Label htmlFor="registration_url">Registration URL</Label>
+                <Label htmlFor="registration_url">General Registration URL</Label>
                 <Input
                   id="registration_url"
                   type="url"
                   value={formData.registration_url}
                   onChange={(e) => setFormData({ ...formData, registration_url: e.target.value })}
                 />
+              </div>
+
+              <div>
+                <Label htmlFor="tryout_registration_url">Tryout Registration URL</Label>
+                <Input
+                  id="tryout_registration_url"
+                  type="url"
+                  placeholder="https://..."
+                  value={formData.tryout_registration_url}
+                  onChange={(e) => setFormData({ ...formData, tryout_registration_url: e.target.value })}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Paste the public parent-facing registration link from Sports Connect. Leave empty to hide the button on the site.
+                </p>
+              </div>
+
+              <div>
+                <Label htmlFor="coach_registration_url">Coach Registration URL</Label>
+                <Input
+                  id="coach_registration_url"
+                  type="url"
+                  placeholder="https://..."
+                  value={formData.coach_registration_url}
+                  onChange={(e) => setFormData({ ...formData, coach_registration_url: e.target.value })}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Paste the public parent-facing registration link from Sports Connect. Leave empty to hide the button on the site.
+                </p>
               </div>
 
               <div className="flex items-center space-x-2">
