@@ -34,6 +34,8 @@ export interface ExternalCalendarEvent {
   home_team_id: string | null;
   away_team_id: string | null;
   field_number: string | null;
+  calendar_name?: string | null;
+  calendar_color?: string | null;
   calendar?: { name: string; color: string | null };
 }
 
@@ -58,14 +60,17 @@ export const useExternalCalendarEvents = () => {
       const { data, error } = await supabase
         .from("external_calendar_events" as any)
         .select(
-          "id, calendar_id, external_uid, title, description, location, start_date, start_time, end_date, end_time, all_day, event_category, program_id, division_id, home_team_id, away_team_id, field_number, calendar:external_calendars(name, color, is_active)",
+          "id, calendar_id, external_uid, title, description, location, start_date, start_time, end_date, end_time, all_day, event_category, program_id, division_id, home_team_id, away_team_id, field_number, calendar_name, calendar_color",
         )
         .order("start_date", { ascending: true });
       if (error) throw error;
-      const filtered = ((data ?? []) as any[]).filter(
-        (e) => e.calendar?.is_active !== false,
-      );
-      return filtered as unknown as ExternalCalendarEvent[];
+      const mapped = ((data ?? []) as any[]).map((e) => ({
+        ...e,
+        calendar: e.calendar_name
+          ? { name: e.calendar_name, color: e.calendar_color }
+          : undefined,
+      }));
+      return mapped as unknown as ExternalCalendarEvent[];
     },
   });
 };
