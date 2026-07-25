@@ -738,6 +738,48 @@ export type Database = {
           },
         ]
       }
+      email_bounces: {
+        Row: {
+          bounce_type: string
+          bounced_at: string
+          created_at: string
+          email: string
+          id: string
+          notes: string | null
+          reason: string | null
+          resolved: boolean
+          resolved_at: string | null
+          resolved_by: string | null
+          source: string | null
+        }
+        Insert: {
+          bounce_type?: string
+          bounced_at?: string
+          created_at?: string
+          email: string
+          id?: string
+          notes?: string | null
+          reason?: string | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source?: string | null
+        }
+        Update: {
+          bounce_type?: string
+          bounced_at?: string
+          created_at?: string
+          email?: string
+          id?: string
+          notes?: string | null
+          reason?: string | null
+          resolved?: boolean
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source?: string | null
+        }
+        Relationships: []
+      }
       external_calendar_events: {
         Row: {
           all_day: boolean
@@ -1049,6 +1091,62 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      guardian_household_members: {
+        Row: {
+          created_at: string
+          household_id: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          household_id: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          household_id?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guardian_household_members_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "guardian_households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      guardian_households: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       league_events: {
         Row: {
@@ -2690,6 +2788,14 @@ export type Database = {
       }
       is_commissioner_for: {
         Args: { _division_id?: string; _program_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_household_member: {
+        Args: { _household_id: string; _user_id: string }
+        Returns: boolean
+      }
+      is_household_owner: {
+        Args: { _household_id: string; _user_id: string }
         Returns: boolean
       }
       log_player_access: {
