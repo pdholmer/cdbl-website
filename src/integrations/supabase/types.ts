@@ -1807,6 +1807,7 @@ export type Database = {
       }
       programs: {
         Row: {
+          coach_registration_url: string | null
           created_at: string | null
           id: string
           name: string
@@ -1815,10 +1816,12 @@ export type Database = {
           registration_url: string | null
           season_end: string | null
           season_start: string | null
+          tryout_registration_url: string | null
           type: Database["public"]["Enums"]["program_type"]
           updated_at: string | null
         }
         Insert: {
+          coach_registration_url?: string | null
           created_at?: string | null
           id?: string
           name: string
@@ -1827,10 +1830,12 @@ export type Database = {
           registration_url?: string | null
           season_end?: string | null
           season_start?: string | null
+          tryout_registration_url?: string | null
           type: Database["public"]["Enums"]["program_type"]
           updated_at?: string | null
         }
         Update: {
+          coach_registration_url?: string | null
           created_at?: string | null
           id?: string
           name?: string
@@ -1839,6 +1844,7 @@ export type Database = {
           registration_url?: string | null
           season_end?: string | null
           season_start?: string | null
+          tryout_registration_url?: string | null
           type?: Database["public"]["Enums"]["program_type"]
           updated_at?: string | null
         }
