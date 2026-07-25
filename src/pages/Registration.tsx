@@ -49,36 +49,42 @@ const Registration = () => {
         </section>
 
         {/* 2027 Travel Registration Open Announcement */}
-        <section className="py-8 bg-gradient-to-r from-primary to-accent text-primary-foreground border-y-4 border-white/20">
-          <div className="container">
-            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <span className="mt-1 h-3 w-3 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wide opacity-90 mb-1">Now Open</p>
-                  <h2 className="text-xl md:text-2xl font-bold leading-tight">
-                    2027 Travel Tryouts & Travel Coach Registration
-                  </h2>
-                  <p className="text-sm md:text-base opacity-90 mt-1">
-                    Sign up today for the CDBL Rockets 2027 season. Tryouts held July 2026.
-                  </p>
+        {showTravelBanner && (
+          <section className="py-8 bg-gradient-to-r from-primary to-accent text-primary-foreground border-y-4 border-white/20">
+            <div className="container">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <span className="mt-1 h-3 w-3 rounded-full bg-green-400 animate-pulse flex-shrink-0" />
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wide opacity-90 mb-1">Now Open</p>
+                    <h2 className="text-xl md:text-2xl font-bold leading-tight">
+                      2027 Travel Tryouts & Travel Coach Registration
+                    </h2>
+                    <p className="text-sm md:text-base opacity-90 mt-1">
+                      Sign up today for the CDBL Rockets 2027 season. Tryouts held July 2026.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto flex-shrink-0">
+                  {tryoutUrl && (
+                    <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold">
+                      <a href={tryoutUrl} target="_blank" rel="noopener noreferrer">
+                        Register for Tryouts <ArrowRight className="ml-2 h-4 w-4" />
+                      </a>
+                    </Button>
+                  )}
+                  {coachUrl && (
+                    <Button asChild size="lg" variant="outline" className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold">
+                      <a href={coachUrl} target="_blank" rel="noopener noreferrer">
+                        Coach Registration
+                      </a>
+                    </Button>
+                  )}
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto flex-shrink-0">
-                <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold">
-                  <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">
-                    Register for Tryouts <ArrowRight className="ml-2 h-4 w-4" />
-                  </a>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary font-semibold">
-                  <a href="https://registration-setup.bluesombrero.com/registration-admin/84830/programs" target="_blank" rel="noopener noreferrer">
-                    Coach Registration
-                  </a>
-                </Button>
-              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Key Information Cards */}
         <section className="py-16 bg-background">
