@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -46,11 +46,19 @@ const PlayerEdit = () => {
   const navigate = useNavigate();
   const { data: player, isLoading } = usePlayer(id);
   const { data: guardians } = useGuardians(id);
-  const { programs = [] } = useAllPrograms();
+  const { programs = [], isLoading: programsLoading } = useAllPrograms();
   const { createPlayer, updatePlayer } = usePlayerMutations();
   const { createGuardian, updateGuardian } = useGuardianMutations();
 
-  const { register, handleSubmit, reset, setValue, watch } = useForm<ExtendedPlayerForm>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    control,
+    formState: { dirtyFields },
+  } = useForm<ExtendedPlayerForm>();
   const queryClient = useQueryClient();
 
   const copyPrimaryAddress = () => {
@@ -146,70 +154,92 @@ const PlayerEdit = () => {
       ...playerData
     } = data;
 
-    // Sanitize fields - convert empty strings to null for optional fields and coerce numbers
-    const sanitizedData = {
-      ...playerData,
-      program_id: playerData.program_id || null,
-      division_id: playerData.division_id || null,
-      team_name: playerData.team_name || null,
-      jersey_size: playerData.jersey_size || null,
-      skill_level: playerData.skill_level || null,
-      status: playerData.status || null,
-      payment_status: playerData.payment_status || null,
-      gender: playerData.gender || null,
-      age_at_registration:
-        !playerData.age_at_registration && playerData.age_at_registration !== 0
-          ? null
-          : Number(playerData.age_at_registration),
-      amount_due:
-        !playerData.amount_due && playerData.amount_due !== 0 ? null : Number(playerData.amount_due),
-      amount_paid:
-        !playerData.amount_paid && playerData.amount_paid !== 0 ? null : Number(playerData.amount_paid),
-    };
+    const guardianFieldNames = new Set([
+      "parent_first_name",
+      "parent_last_name",
+      "parent_email",
+      "parent_phone",
+      "parent_relationship",
+      "parent2_first_name",
+      "parent2_last_name",
+      "parent2_email",
+      "parent2_phone",
+      "parent2_relationship",
+      "parent2_address_line1",
+      "parent2_address_line2",
+      "parent2_city",
+      "parent2_state",
+      "parent2_zip_code",
+    ]);
+    const nullableStringFields = new Set([
+      "program_id",
+      "division_id",
+      "team_name",
+      "jersey_size",
+      "skill_level",
+      "status",
+      "payment_status",
+      "gender",
+    ]);
+    const numberFields = new Set(["age_at_registration", "amount_due", "amount_paid"]);
 
-    const submissionData = {
-      ...sanitizedData,
-      parent_guardian_name: `${data.parent_first_name || ''} ${data.parent_last_name || ''}`.trim(),
+    const sanitizeValue = (key: string, value: any) => {
+      if (nullableStringFields.has(key)) return value || null;
+      if (numberFields.has(key)) return !value && value !== 0 ? null : Number(value);
+      return value;
     };
 
     try {
       if (id) {
-        await updatePlayer.mutateAsync({ id, updates: submissionData });
-        
+        // Only send fields the user actually touched — never overwrite with untouched defaults.
+        const dirtyKeys = Object.keys(dirtyFields || {});
+        const dirtyPlayerUpdates: Record<string, any> = {};
+        for (const key of dirtyKeys) {
+          if (guardianFieldNames.has(key)) continue;
+          if (!(key in playerData)) continue;
+          dirtyPlayerUpdates[key] = sanitizeValue(key, (playerData as any)[key]);
+        }
+        if ((dirtyFields as any).parent_first_name || (dirtyFields as any).parent_last_name) {
+          dirtyPlayerUpdates.parent_guardian_name = `${data.parent_first_name || ""} ${
+            data.parent_last_name || ""
+          }`.trim();
+        }
+        if (Object.keys(dirtyPlayerUpdates).length > 0) {
+          await updatePlayer.mutateAsync({ id, updates: dirtyPlayerUpdates });
+        }
+
         // Handle PRIMARY guardian (from player table fields)
-        const existingPrimaryGuardian = guardians?.find(g => g.is_primary);
+        const existingPrimaryGuardian = guardians?.find((g) => g.is_primary);
         const primaryGuardianData = {
           player_id: id,
           first_name: data.parent_first_name,
           last_name: data.parent_last_name,
           email: data.parent_email,
           phone: data.parent_phone,
-          relationship: data.parent_relationship || 'parent',
+          relationship: data.parent_relationship || "parent",
           is_primary: true,
           address_line1: data.address_line1,
           address_line2: data.address_line2,
           city: data.city,
-          state: data.state || 'OH',
+          state: data.state || "OH",
           zip_code: data.zip_code,
         };
 
         if (existingPrimaryGuardian) {
-          // Update existing primary guardian
           const { player_id, ...updateData } = primaryGuardianData;
-          await updateGuardian.mutateAsync({ 
+          await updateGuardian.mutateAsync({
             id: existingPrimaryGuardian.id,
-            ...updateData
+            ...updateData,
           });
         } else {
-          // Create primary guardian
           await createGuardian.mutateAsync(primaryGuardianData);
         }
-        
+
         // Handle SECOND guardian
-        const existingSecondGuardian = guardians?.find(g => !g.is_primary);
-        const hasSecondParentData = parent2_first_name && parent2_last_name && 
-                                     parent2_email && parent2_phone;
-        
+        const existingSecondGuardian = guardians?.find((g) => !g.is_primary);
+        const hasSecondParentData =
+          parent2_first_name && parent2_last_name && parent2_email && parent2_phone;
+
         if (hasSecondParentData) {
           const secondGuardianData = {
             player_id: id,
@@ -217,49 +247,53 @@ const PlayerEdit = () => {
             last_name: parent2_last_name,
             email: parent2_email,
             phone: parent2_phone,
-            relationship: parent2_relationship || 'parent',
+            relationship: parent2_relationship || "parent",
             is_primary: false,
             address_line1: parent2_address_line1,
             address_line2: parent2_address_line2,
             city: parent2_city,
-            state: parent2_state || 'OH',
+            state: parent2_state || "OH",
             zip_code: parent2_zip_code,
           };
-          
+
           if (existingSecondGuardian) {
-            // Update existing second guardian
             const { player_id, ...updateData } = secondGuardianData;
-            await updateGuardian.mutateAsync({ 
+            await updateGuardian.mutateAsync({
               id: existingSecondGuardian.id,
-              ...updateData
+              ...updateData,
             });
           } else {
-            // Create second guardian
             await createGuardian.mutateAsync(secondGuardianData);
           }
         }
       } else {
-        // Creating new player
+        // Creating a new player — sanitize full payload.
+        const sanitizedData: any = { ...playerData };
+        for (const key of Object.keys(sanitizedData)) {
+          sanitizedData[key] = sanitizeValue(key, sanitizedData[key]);
+        }
+        const submissionData = {
+          ...sanitizedData,
+          parent_guardian_name: `${data.parent_first_name || ""} ${data.parent_last_name || ""}`.trim(),
+        };
         const newPlayer = await createPlayer.mutateAsync(submissionData);
-        
+
         if (newPlayer) {
-          // Create primary guardian
           await createGuardian.mutateAsync({
             player_id: newPlayer.id,
             first_name: data.parent_first_name,
             last_name: data.parent_last_name,
             email: data.parent_email,
             phone: data.parent_phone,
-            relationship: data.parent_relationship || 'parent',
+            relationship: data.parent_relationship || "parent",
             is_primary: true,
             address_line1: data.address_line1,
             address_line2: data.address_line2,
             city: data.city,
-            state: data.state || 'OH',
+            state: data.state || "OH",
             zip_code: data.zip_code,
           });
 
-          // Create second guardian if provided
           if (parent2_first_name && parent2_last_name && parent2_email && parent2_phone) {
             await createGuardian.mutateAsync({
               player_id: newPlayer.id,
@@ -267,18 +301,17 @@ const PlayerEdit = () => {
               last_name: parent2_last_name,
               email: parent2_email,
               phone: parent2_phone,
-              relationship: parent2_relationship || 'parent',
+              relationship: parent2_relationship || "parent",
               is_primary: false,
               address_line1: parent2_address_line1,
               address_line2: parent2_address_line2,
               city: parent2_city,
-              state: parent2_state || 'OH',
+              state: parent2_state || "OH",
               zip_code: parent2_zip_code,
             });
           }
         }
-        
-        // Manually invalidate and refetch before navigating
+
         await queryClient.invalidateQueries({ queryKey: ["players"] });
         await queryClient.refetchQueries({ queryKey: ["players"] });
       }
@@ -288,10 +321,16 @@ const PlayerEdit = () => {
     }
   };
 
-  if (isLoading) {
+  // Do not render the form until reference data (programs/divisions) has loaded —
+  // a Radix Select mounted before its SelectItems exist cannot match its value.
+  if (isLoading || programsLoading) {
     return (
       <AdminLayout>
-        <div>Loading...</div>
+        <div className="space-y-4 max-w-4xl">
+          <div className="h-8 w-64 bg-muted rounded animate-pulse" />
+          <div className="h-64 bg-muted rounded animate-pulse" />
+          <div className="h-64 bg-muted rounded animate-pulse" />
+        </div>
       </AdminLayout>
     );
   }
@@ -345,154 +384,182 @@ const PlayerEdit = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="gender">Gender</Label>
-                  <Select
-                    value={watch("gender") ?? ""}
-                    onValueChange={(value) => setValue("gender", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                      <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="gender"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                          <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="program_id">Program</Label>
-                  <Select
-                    value={watch("program_id") ?? ""}
-                    onValueChange={(value) => setValue("program_id", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select program" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {programs.map((program) => (
-                        <SelectItem key={program.id} value={program.id}>
-                          {program.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="program_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select program" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {programs.map((program) => (
+                            <SelectItem key={program.id} value={program.id}>
+                              {program.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="division_id">Division</Label>
-                  <Select
-                    value={watch("division_id") ?? ""}
-                    onValueChange={(value) => setValue("division_id", value)}
-                    disabled={!selectedProgramId}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={selectedProgramId ? "Select division" : "Select a program first"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {selectedProgram?.divisions?.map((division: any) => (
-                        <SelectItem key={division.id} value={division.id}>
-                          {division.name} (Ages {division.age_range})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="division_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
+                        disabled={!selectedProgramId}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={selectedProgramId ? "Select division" : "Select a program first"}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {selectedProgram?.divisions?.map((division: any) => (
+                            <SelectItem key={division.id} value={division.id}>
+                              {division.name} (Ages {division.age_range})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="team_name">Team</Label>
-                  <Select
-                    value={watch("team_name") ?? ""}
-                    onValueChange={(value) => setValue("team_name", value)}
-                    disabled={!selectedProgramId}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={selectedProgramId ? "Select team" : "Select a program first"} />
-                    </SelectTrigger>
-                    <SelectContent className="bg-background z-50">
-                    {selectedProgram?.type === 'in_house' ? (
-                      <>
-                        <SelectItem value="Orioles">Orioles</SelectItem>
-                        <SelectItem value="Red Sox">Red Sox</SelectItem>
-                        <SelectItem value="Yankees">Yankees</SelectItem>
-                        <SelectItem value="Rays">Rays</SelectItem>
-                        <SelectItem value="Blue Jays">Blue Jays</SelectItem>
-                        <SelectItem value="White Sox">White Sox</SelectItem>
-                        <SelectItem value="Guardians">Guardians</SelectItem>
-                        <SelectItem value="Tigers">Tigers</SelectItem>
-                        <SelectItem value="Royals">Royals</SelectItem>
-                        <SelectItem value="Twins">Twins</SelectItem>
-                        <SelectItem value="Astros">Astros</SelectItem>
-                        <SelectItem value="Angels">Angels</SelectItem>
-                        <SelectItem value="Athletics">Athletics</SelectItem>
-                        <SelectItem value="Mariners">Mariners</SelectItem>
-                        <SelectItem value="Rangers">Rangers</SelectItem>
-                        <SelectItem value="Braves">Braves</SelectItem>
-                        <SelectItem value="Marlins">Marlins</SelectItem>
-                        <SelectItem value="Mets">Mets</SelectItem>
-                        <SelectItem value="Phillies">Phillies</SelectItem>
-                        <SelectItem value="Nationals">Nationals</SelectItem>
-                        <SelectItem value="Cubs">Cubs</SelectItem>
-                        <SelectItem value="Reds">Reds</SelectItem>
-                        <SelectItem value="Brewers">Brewers</SelectItem>
-                        <SelectItem value="Pirates">Pirates</SelectItem>
-                        <SelectItem value="Cardinals">Cardinals</SelectItem>
-                        <SelectItem value="Diamondbacks">Diamondbacks</SelectItem>
-                        <SelectItem value="Rockies">Rockies</SelectItem>
-                        <SelectItem value="Dodgers">Dodgers</SelectItem>
-                        <SelectItem value="Padres">Padres</SelectItem>
-                        <SelectItem value="Giants">Giants</SelectItem>
-                      </>
-                    ) : selectedProgram?.type === 'travel' ? (
-                      <>
-                        <SelectItem value="Blue">Blue</SelectItem>
-                        <SelectItem value="White">White</SelectItem>
-                        <SelectItem value="Gray">Gray</SelectItem>
-                        <SelectItem value="IHTT">IHTT</SelectItem>
-                      </>
-                    ) : null}
-                  </SelectContent>
-                </Select>
+                  <Controller
+                    name="team_name"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
+                        disabled={!selectedProgramId}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={selectedProgramId ? "Select team" : "Select a program first"}
+                          />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background z-50">
+                          {selectedProgram?.type === "in_house" ? (
+                            <>
+                              <SelectItem value="Orioles">Orioles</SelectItem>
+                              <SelectItem value="Red Sox">Red Sox</SelectItem>
+                              <SelectItem value="Yankees">Yankees</SelectItem>
+                              <SelectItem value="Rays">Rays</SelectItem>
+                              <SelectItem value="Blue Jays">Blue Jays</SelectItem>
+                              <SelectItem value="White Sox">White Sox</SelectItem>
+                              <SelectItem value="Guardians">Guardians</SelectItem>
+                              <SelectItem value="Tigers">Tigers</SelectItem>
+                              <SelectItem value="Royals">Royals</SelectItem>
+                              <SelectItem value="Twins">Twins</SelectItem>
+                              <SelectItem value="Astros">Astros</SelectItem>
+                              <SelectItem value="Angels">Angels</SelectItem>
+                              <SelectItem value="Athletics">Athletics</SelectItem>
+                              <SelectItem value="Mariners">Mariners</SelectItem>
+                              <SelectItem value="Rangers">Rangers</SelectItem>
+                              <SelectItem value="Braves">Braves</SelectItem>
+                              <SelectItem value="Marlins">Marlins</SelectItem>
+                              <SelectItem value="Mets">Mets</SelectItem>
+                              <SelectItem value="Phillies">Phillies</SelectItem>
+                              <SelectItem value="Nationals">Nationals</SelectItem>
+                              <SelectItem value="Cubs">Cubs</SelectItem>
+                              <SelectItem value="Reds">Reds</SelectItem>
+                              <SelectItem value="Brewers">Brewers</SelectItem>
+                              <SelectItem value="Pirates">Pirates</SelectItem>
+                              <SelectItem value="Cardinals">Cardinals</SelectItem>
+                              <SelectItem value="Diamondbacks">Diamondbacks</SelectItem>
+                              <SelectItem value="Rockies">Rockies</SelectItem>
+                              <SelectItem value="Dodgers">Dodgers</SelectItem>
+                              <SelectItem value="Padres">Padres</SelectItem>
+                              <SelectItem value="Giants">Giants</SelectItem>
+                            </>
+                          ) : selectedProgram?.type === "travel" ? (
+                            <>
+                              <SelectItem value="Blue">Blue</SelectItem>
+                              <SelectItem value="White">White</SelectItem>
+                              <SelectItem value="Gray">Gray</SelectItem>
+                              <SelectItem value="IHTT">IHTT</SelectItem>
+                            </>
+                          ) : null}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
               </div>
             </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="jersey_size">Jersey Size</Label>
-                  <Select
-                    value={watch("jersey_size") ?? ""}
-                    onValueChange={(value) => setValue("jersey_size", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select size" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="YXS">Youth XS</SelectItem>
-                      <SelectItem value="YS">Youth S</SelectItem>
-                      <SelectItem value="YM">Youth M</SelectItem>
-                      <SelectItem value="YL">Youth L</SelectItem>
-                      <SelectItem value="AS">Adult S</SelectItem>
-                      <SelectItem value="AM">Adult M</SelectItem>
-                      <SelectItem value="AL">Adult L</SelectItem>
-                      <SelectItem value="AXL">Adult XL</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="jersey_size"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="YXS">Youth XS</SelectItem>
+                          <SelectItem value="YS">Youth S</SelectItem>
+                          <SelectItem value="YM">Youth M</SelectItem>
+                          <SelectItem value="YL">Youth L</SelectItem>
+                          <SelectItem value="AS">Adult S</SelectItem>
+                          <SelectItem value="AM">Adult M</SelectItem>
+                          <SelectItem value="AL">Adult L</SelectItem>
+                          <SelectItem value="AXL">Adult XL</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="skill_level">Skill Level</Label>
-                  <Select
-                    value={watch("skill_level") ?? ""}
-                    onValueChange={(value) => setValue("skill_level", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select skill level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
-                      <SelectItem value="not_sure">Not Sure</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="skill_level"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select skill level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="beginner">Beginner</SelectItem>
+                          <SelectItem value="intermediate">Intermediate</SelectItem>
+                          <SelectItem value="advanced">Advanced</SelectItem>
+                          <SelectItem value="not_sure">Not Sure</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
               <div className="space-y-2">
@@ -559,22 +626,25 @@ const PlayerEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="parent_relationship">Relationship to Player *</Label>
-                <Select
-                  value={watch("parent_relationship") || ""}
-                  onValueChange={(value) => setValue("parent_relationship", value)}
-                >
-                  <SelectTrigger id="parent_relationship">
-                    <SelectValue placeholder="Select relationship" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mother">Mother</SelectItem>
-                    <SelectItem value="father">Father</SelectItem>
-                    <SelectItem value="guardian">Guardian</SelectItem>
-                    <SelectItem value="stepparent">Step-parent</SelectItem>
-                    <SelectItem value="grandparent">Grandparent</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="parent_relationship"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                      <SelectTrigger id="parent_relationship">
+                        <SelectValue placeholder="Select relationship" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mother">Mother</SelectItem>
+                        <SelectItem value="father">Father</SelectItem>
+                        <SelectItem value="guardian">Guardian</SelectItem>
+                        <SelectItem value="stepparent">Step-parent</SelectItem>
+                        <SelectItem value="grandparent">Grandparent</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
               <Separator />
@@ -685,22 +755,25 @@ const PlayerEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="parent2_relationship">Relationship to Player</Label>
-                <Select
-                  value={watch("parent2_relationship") || ""}
-                  onValueChange={(value) => setValue("parent2_relationship", value)}
-                >
-                  <SelectTrigger id="parent2_relationship">
-                    <SelectValue placeholder="Select relationship" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mother">Mother</SelectItem>
-                    <SelectItem value="father">Father</SelectItem>
-                    <SelectItem value="guardian">Guardian</SelectItem>
-                    <SelectItem value="stepparent">Step-parent</SelectItem>
-                    <SelectItem value="grandparent">Grandparent</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="parent2_relationship"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                      <SelectTrigger id="parent2_relationship">
+                        <SelectValue placeholder="Select relationship" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mother">Mother</SelectItem>
+                        <SelectItem value="father">Father</SelectItem>
+                        <SelectItem value="guardian">Guardian</SelectItem>
+                        <SelectItem value="stepparent">Step-parent</SelectItem>
+                        <SelectItem value="grandparent">Grandparent</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
               <Separator />
@@ -775,37 +848,43 @@ const PlayerEdit = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="status">Status</Label>
-                  <Select
-                    value={watch("status") ?? ""}
-                    onValueChange={(value) => setValue("status", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="waitlist">Waitlist</SelectItem>
-                      <SelectItem value="withdrawn">Withdrawn</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="status"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="approved">Approved</SelectItem>
+                          <SelectItem value="waitlist">Waitlist</SelectItem>
+                          <SelectItem value="withdrawn">Withdrawn</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="payment_status">Payment Status</Label>
-                  <Select
-                    value={watch("payment_status") ?? ""}
-                    onValueChange={(value) => setValue("payment_status", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unpaid">Unpaid</SelectItem>
-                      <SelectItem value="partial">Partial</SelectItem>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="scholarship">Scholarship</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="payment_status"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select payment status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unpaid">Unpaid</SelectItem>
+                          <SelectItem value="partial">Partial</SelectItem>
+                          <SelectItem value="paid">Paid</SelectItem>
+                          <SelectItem value="scholarship">Scholarship</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
