@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,7 +40,7 @@ const TeamEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: team, isLoading } = useTeam(id);
-  const { programs = [] } = usePrograms();
+  const { programs = [], isLoading: programsLoading } = usePrograms();
   const { data: availablePlayers = [] } = usePlayers({ status: "approved" });
   const { data: coaches = [] } = useCoaches({ status: "active" });
   const { createTeam, updateTeam } = useTeamMutations();
@@ -51,7 +51,15 @@ const TeamEdit = () => {
   const [selectedCoachId, setSelectedCoachId] = useState<string>("");
   const [coachRole, setCoachRole] = useState<string>("assistant_coach");
 
-  const { register, handleSubmit, reset, setValue, watch } = useForm<TeamInsert>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    control,
+    formState: { dirtyFields },
+  } = useForm<TeamInsert>();
 
   useEffect(() => {
     if (team) {
@@ -70,7 +78,14 @@ const TeamEdit = () => {
 
   const onSubmit = async (data: TeamInsert) => {
     if (id) {
-      await updateTeam.mutateAsync({ id, updates: data });
+      // Only send fields the user actually touched.
+      const dirtyUpdates: Record<string, any> = {};
+      for (const key of Object.keys(dirtyFields || {})) {
+        dirtyUpdates[key] = (data as any)[key];
+      }
+      if (Object.keys(dirtyUpdates).length > 0) {
+        await updateTeam.mutateAsync({ id, updates: dirtyUpdates as any });
+      }
     } else {
       const result = await createTeam.mutateAsync(data);
       navigate(`/admin/teams/${result.id}`);
@@ -110,10 +125,13 @@ const TeamEdit = () => {
   const selectedProgram = programs.find((p) => p.id === selectedProgramId);
   const unassignedPlayers = availablePlayers.filter((p) => !p.team_id);
 
-  if (isLoading && id) {
+  if ((isLoading && id) || programsLoading) {
     return (
       <AdminLayout>
-        <div>Loading...</div>
+        <div className="space-y-4 max-w-4xl">
+          <div className="h-8 w-64 bg-muted rounded animate-pulse" />
+          <div className="h-64 bg-muted rounded animate-pulse" />
+        </div>
       </AdminLayout>
     );
   }
@@ -153,39 +171,45 @@ const TeamEdit = () => {
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="program_id">Program *</Label>
-                  <Select
-                    value={watch("program_id") || ""}
-                    onValueChange={(value) => setValue("program_id", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select program" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {programs.map((program) => (
-                        <SelectItem key={program.id} value={program.id}>
-                          {program.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="program_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select program" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {programs.map((program) => (
+                            <SelectItem key={program.id} value={program.id}>
+                              {program.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="division_id">Division *</Label>
-                  <Select
-                    value={watch("division_id") || ""}
-                    onValueChange={(value) => setValue("division_id", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select division" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {selectedProgram?.divisions?.map((division: any) => (
-                        <SelectItem key={division.id} value={division.id}>
-                          {division.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="division_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select division" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {selectedProgram?.divisions?.map((division: any) => (
+                            <SelectItem key={division.id} value={division.id}>
+                              {division.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="season_year">Season Year *</Label>
