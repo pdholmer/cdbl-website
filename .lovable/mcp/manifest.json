@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://nqywnfgpwqpczesjkwtp.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "cdbl-mcp",
+      "version": "0.1.0",
+      "title": "CDBL Baseball"
+    },
+    "tools": [
+      {
+        "name": "list_upcoming_games",
+        "title": "List upcoming games",
+        "description": "List upcoming CDBL games ordered by date. Optionally filter by division name (e.g. 'Pinto', 'Mustang', '10U'), team name, or limit.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "division": {
+              "description": "Division name substring to filter by.",
+              "type": "string"
+            },
+            "team": {
+              "description": "Team name substring to filter by.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Max rows to return (default 25).",
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_facilities",
+        "title": "List facilities and field status",
+        "description": "Return CDBL facilities (Stonecrest, Plato, Burlington, etc.) with each field's current open/closed status and any status note.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_faqs",
+        "title": "Search CDBL FAQs",
+        "description": "Search Frequently Asked Questions by keyword. Returns matching question/answer pairs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Keyword or phrase to search for."
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
