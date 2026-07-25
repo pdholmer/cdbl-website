@@ -69,6 +69,7 @@ import CoachDashboard from "./pages/coach/Dashboard";
 import CoachDraftRoom from "./pages/coach/DraftRoom";
 import { FeedbackProvider } from "./contexts/FeedbackContext";
 import { FeedbackFAB, FeedbackSlider } from "./components/feedback";
+import OAuthConsent from "./pages/OAuthConsent";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +86,7 @@ const App = () => (
           <FeedbackSlider />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
           <Route path="/registration" element={<PageGate slug="registration"><Registration /></PageGate>} />
           <Route path="/teams" element={<PageGate slug="teams"><Teams /></PageGate>} />
           <Route path="/schedule" element={<PageGate slug="schedule"><Schedule /></PageGate>} />
