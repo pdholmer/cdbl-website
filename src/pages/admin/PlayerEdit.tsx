@@ -384,59 +384,73 @@ const PlayerEdit = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="gender">Gender</Label>
-                  <Select
-                    value={watch("gender") ?? ""}
-                    onValueChange={(value) => setValue("gender", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                      <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="gender"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                          <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="program_id">Program</Label>
-                  <Select
-                    value={watch("program_id") ?? ""}
-                    onValueChange={(value) => setValue("program_id", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select program" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {programs.map((program) => (
-                        <SelectItem key={program.id} value={program.id}>
-                          {program.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="program_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select program" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {programs.map((program) => (
+                            <SelectItem key={program.id} value={program.id}>
+                              {program.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="division_id">Division</Label>
-                  <Select
-                    value={watch("division_id") ?? ""}
-                    onValueChange={(value) => setValue("division_id", value)}
-                    disabled={!selectedProgramId}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder={selectedProgramId ? "Select division" : "Select a program first"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {selectedProgram?.divisions?.map((division: any) => (
-                        <SelectItem key={division.id} value={division.id}>
-                          {division.name} (Ages {division.age_range})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="division_id"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
+                        disabled={!selectedProgramId}
+                      >
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={selectedProgramId ? "Select division" : "Select a program first"}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {selectedProgram?.divisions?.map((division: any) => (
+                            <SelectItem key={division.id} value={division.id}>
+                              {division.name} (Ages {division.age_range})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="team_name">Team</Label>
@@ -497,41 +511,47 @@ const PlayerEdit = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="jersey_size">Jersey Size</Label>
-                  <Select
-                    value={watch("jersey_size") ?? ""}
-                    onValueChange={(value) => setValue("jersey_size", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select size" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="YXS">Youth XS</SelectItem>
-                      <SelectItem value="YS">Youth S</SelectItem>
-                      <SelectItem value="YM">Youth M</SelectItem>
-                      <SelectItem value="YL">Youth L</SelectItem>
-                      <SelectItem value="AS">Adult S</SelectItem>
-                      <SelectItem value="AM">Adult M</SelectItem>
-                      <SelectItem value="AL">Adult L</SelectItem>
-                      <SelectItem value="AXL">Adult XL</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="jersey_size"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="YXS">Youth XS</SelectItem>
+                          <SelectItem value="YS">Youth S</SelectItem>
+                          <SelectItem value="YM">Youth M</SelectItem>
+                          <SelectItem value="YL">Youth L</SelectItem>
+                          <SelectItem value="AS">Adult S</SelectItem>
+                          <SelectItem value="AM">Adult M</SelectItem>
+                          <SelectItem value="AL">Adult L</SelectItem>
+                          <SelectItem value="AXL">Adult XL</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="skill_level">Skill Level</Label>
-                  <Select
-                    value={watch("skill_level") ?? ""}
-                    onValueChange={(value) => setValue("skill_level", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select skill level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
-                      <SelectItem value="not_sure">Not Sure</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="skill_level"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select skill level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="beginner">Beginner</SelectItem>
+                          <SelectItem value="intermediate">Intermediate</SelectItem>
+                          <SelectItem value="advanced">Advanced</SelectItem>
+                          <SelectItem value="not_sure">Not Sure</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
               <div className="space-y-2">
@@ -598,22 +618,25 @@ const PlayerEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="parent_relationship">Relationship to Player *</Label>
-                <Select
-                  value={watch("parent_relationship") || ""}
-                  onValueChange={(value) => setValue("parent_relationship", value)}
-                >
-                  <SelectTrigger id="parent_relationship">
-                    <SelectValue placeholder="Select relationship" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mother">Mother</SelectItem>
-                    <SelectItem value="father">Father</SelectItem>
-                    <SelectItem value="guardian">Guardian</SelectItem>
-                    <SelectItem value="stepparent">Step-parent</SelectItem>
-                    <SelectItem value="grandparent">Grandparent</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="parent_relationship"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                      <SelectTrigger id="parent_relationship">
+                        <SelectValue placeholder="Select relationship" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mother">Mother</SelectItem>
+                        <SelectItem value="father">Father</SelectItem>
+                        <SelectItem value="guardian">Guardian</SelectItem>
+                        <SelectItem value="stepparent">Step-parent</SelectItem>
+                        <SelectItem value="grandparent">Grandparent</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
               <Separator />
@@ -724,22 +747,25 @@ const PlayerEdit = () => {
 
               <div className="space-y-2">
                 <Label htmlFor="parent2_relationship">Relationship to Player</Label>
-                <Select
-                  value={watch("parent2_relationship") || ""}
-                  onValueChange={(value) => setValue("parent2_relationship", value)}
-                >
-                  <SelectTrigger id="parent2_relationship">
-                    <SelectValue placeholder="Select relationship" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="mother">Mother</SelectItem>
-                    <SelectItem value="father">Father</SelectItem>
-                    <SelectItem value="guardian">Guardian</SelectItem>
-                    <SelectItem value="stepparent">Step-parent</SelectItem>
-                    <SelectItem value="grandparent">Grandparent</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="parent2_relationship"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                      <SelectTrigger id="parent2_relationship">
+                        <SelectValue placeholder="Select relationship" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="mother">Mother</SelectItem>
+                        <SelectItem value="father">Father</SelectItem>
+                        <SelectItem value="guardian">Guardian</SelectItem>
+                        <SelectItem value="stepparent">Step-parent</SelectItem>
+                        <SelectItem value="grandparent">Grandparent</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
               <Separator />
@@ -814,37 +840,43 @@ const PlayerEdit = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="status">Status</Label>
-                  <Select
-                    value={watch("status") ?? ""}
-                    onValueChange={(value) => setValue("status", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="waitlist">Waitlist</SelectItem>
-                      <SelectItem value="withdrawn">Withdrawn</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="status"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="approved">Approved</SelectItem>
+                          <SelectItem value="waitlist">Waitlist</SelectItem>
+                          <SelectItem value="withdrawn">Withdrawn</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="payment_status">Payment Status</Label>
-                  <Select
-                    value={watch("payment_status") ?? ""}
-                    onValueChange={(value) => setValue("payment_status", value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="unpaid">Unpaid</SelectItem>
-                      <SelectItem value="partial">Partial</SelectItem>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="scholarship">Scholarship</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Controller
+                    name="payment_status"
+                    control={control}
+                    render={({ field }) => (
+                      <Select value={field.value ?? ""} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select payment status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unpaid">Unpaid</SelectItem>
+                          <SelectItem value="partial">Partial</SelectItem>
+                          <SelectItem value="paid">Paid</SelectItem>
+                          <SelectItem value="scholarship">Scholarship</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
