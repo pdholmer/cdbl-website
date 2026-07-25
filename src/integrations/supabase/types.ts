@@ -1821,6 +1821,7 @@ export type Database = {
           registration_open: boolean | null
           registration_url: string | null
           season_end: string | null
+          season_id: string | null
           season_start: string | null
           tryout_registration_url: string | null
           type: Database["public"]["Enums"]["program_type"]
@@ -1835,6 +1836,7 @@ export type Database = {
           registration_open?: boolean | null
           registration_url?: string | null
           season_end?: string | null
+          season_id?: string | null
           season_start?: string | null
           tryout_registration_url?: string | null
           type: Database["public"]["Enums"]["program_type"]
@@ -1849,12 +1851,21 @@ export type Database = {
           registration_open?: boolean | null
           registration_url?: string | null
           season_end?: string | null
+          season_id?: string | null
           season_start?: string | null
           tryout_registration_url?: string | null
           type?: Database["public"]["Enums"]["program_type"]
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "programs_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       registration_code_uses: {
         Row: {
@@ -2194,6 +2205,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      seasons: {
+        Row: {
+          age_cutoff_date: string | null
+          created_at: string
+          ends_on: string | null
+          id: string
+          is_current: boolean
+          label: string | null
+          locked_at: string | null
+          school_year_start: string | null
+          starts_on: string | null
+          updated_at: string
+          year: string | null
+        }
+        Insert: {
+          age_cutoff_date?: string | null
+          created_at?: string
+          ends_on?: string | null
+          id?: string
+          is_current?: boolean
+          label?: string | null
+          locked_at?: string | null
+          school_year_start?: string | null
+          starts_on?: string | null
+          updated_at?: string
+          year?: string | null
+        }
+        Update: {
+          age_cutoff_date?: string | null
+          created_at?: string
+          ends_on?: string | null
+          id?: string
+          is_current?: boolean
+          label?: string | null
+          locked_at?: string | null
+          school_year_start?: string | null
+          starts_on?: string | null
+          updated_at?: string
+          year?: string | null
+        }
+        Relationships: []
       }
       site_content: {
         Row: {
@@ -2763,6 +2816,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      current_season: { Args: { p_program_id: string }; Returns: string }
       get_current_pick_team: { Args: { draft_id: string }; Returns: string }
       get_invitation_by_token: {
         Args: { _token: string }
