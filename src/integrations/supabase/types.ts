@@ -784,7 +784,9 @@ export type Database = {
         Row: {
           all_day: boolean
           away_team_id: string | null
+          calendar_color: string | null
           calendar_id: string
+          calendar_name: string | null
           created_at: string
           description: string | null
           division_id: string | null
@@ -806,7 +808,9 @@ export type Database = {
         Insert: {
           all_day?: boolean
           away_team_id?: string | null
+          calendar_color?: string | null
           calendar_id: string
+          calendar_name?: string | null
           created_at?: string
           description?: string | null
           division_id?: string | null
@@ -828,7 +832,9 @@ export type Database = {
         Update: {
           all_day?: boolean
           away_team_id?: string | null
+          calendar_color?: string | null
           calendar_id?: string
+          calendar_name?: string | null
           created_at?: string
           description?: string | null
           division_id?: string | null
