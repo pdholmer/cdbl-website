@@ -455,6 +455,8 @@ Deno.serve(async (req) => {
             if (!c.division_id) unmatched++;
             return {
               calendar_id: cal.id,
+              calendar_name: cal.name,
+              calendar_color: cal.color,
               external_uid: e.uid,
               title: e.summary,
               description: e.description ?? null,
