@@ -24,6 +24,7 @@ import { usePlayers, type PlayerFilters } from "@/hooks/usePlayers";
 import { usePrograms } from "@/hooks/usePrograms";
 import { exportPlayersToCSV } from "@/utils/csvExport";
 import { UserPlus, Download, Search, Users, Clock, AlertCircle, DollarSign } from "lucide-react";
+import { calculateAge } from "@/utils/age";
 
 const Players = () => {
   const [filters, setFilters] = useState<PlayerFilters>({});
@@ -223,7 +224,7 @@ const Players = () => {
                     <TableCell className="font-medium">
                       {player.first_name} {player.last_name}
                     </TableCell>
-                    <TableCell>{player.age_at_registration}</TableCell>
+                    <TableCell>{calculateAge(player.date_of_birth) ?? "-"}</TableCell>
                     <TableCell>{player.program?.name || "-"}</TableCell>
                     <TableCell>{player.division?.name || "-"}</TableCell>
                     <TableCell>

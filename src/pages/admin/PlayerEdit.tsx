@@ -23,6 +23,7 @@ import { GuardianDialog } from "@/components/GuardianDialog";
 import { useGuardianMutations } from "@/hooks/useGuardianMutations";
 import { useGuardians } from "@/hooks/useGuardians";
 import { ArrowLeft, Copy } from "lucide-react";
+import { calculateAge } from "@/utils/age";
 import type { Database } from "@/integrations/supabase/types";
 
 type PlayerInsert = Database["public"]["Tables"]["players"]["Insert"];
@@ -71,7 +72,7 @@ const PlayerEdit = () => {
     setValue("parent2_address_line1", addressLine1 || "");
     setValue("parent2_address_line2", addressLine2 || "");
     setValue("parent2_city", city || "");
-    setValue("parent2_state", state || "OH");
+    setValue("parent2_state", state || "IL");
     setValue("parent2_zip_code", zipCode || "");
   };
 
@@ -94,29 +95,16 @@ const PlayerEdit = () => {
         parent2_address_line1: secondGuardian?.address_line1 || "",
         parent2_address_line2: secondGuardian?.address_line2 || "",
         parent2_city: secondGuardian?.city || "",
-        parent2_state: secondGuardian?.state || "OH",
+        parent2_state: secondGuardian?.state || "IL",
         parent2_zip_code: secondGuardian?.zip_code || "",
       });
     }
   }, [player, guardians, reset]);
 
-  // Auto-calculate age from date of birth
+  // Age is always derived from date_of_birth via calculateAge — never read
+  // or write players.age_at_registration in the UI.
   const dateOfBirth = watch("date_of_birth");
-  useEffect(() => {
-    if (dateOfBirth) {
-      const dob = new Date(dateOfBirth);
-      const today = new Date();
-      let age = today.getFullYear() - dob.getFullYear();
-      const monthDiff = today.getMonth() - dob.getMonth();
-      
-      // Adjust age if birthday hasn't occurred yet this year
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-        age--;
-      }
-      
-      setValue("age_at_registration", age);
-    }
-  }, [dateOfBirth, setValue]);
+  const computedAge = calculateAge(dateOfBirth);
 
   const selectedProgramId = watch("program_id");
   const selectedDivisionId = watch("division_id");
@@ -221,7 +209,7 @@ const PlayerEdit = () => {
           address_line1: data.address_line1,
           address_line2: data.address_line2,
           city: data.city,
-          state: data.state || "OH",
+          state: data.state || "IL",
           zip_code: data.zip_code,
         };
 
@@ -252,7 +240,7 @@ const PlayerEdit = () => {
             address_line1: parent2_address_line1,
             address_line2: parent2_address_line2,
             city: parent2_city,
-            state: parent2_state || "OH",
+            state: parent2_state || "IL",
             zip_code: parent2_zip_code,
           };
 
@@ -290,7 +278,7 @@ const PlayerEdit = () => {
             address_line1: data.address_line1,
             address_line2: data.address_line2,
             city: data.city,
-            state: data.state || "OH",
+            state: data.state || "IL",
             zip_code: data.zip_code,
           });
 
@@ -306,7 +294,7 @@ const PlayerEdit = () => {
               address_line1: parent2_address_line1,
               address_line2: parent2_address_line2,
               city: parent2_city,
-              state: parent2_state || "OH",
+              state: parent2_state || "IL",
               zip_code: parent2_zip_code,
             });
           }
@@ -373,11 +361,11 @@ const PlayerEdit = () => {
                   <Input id="date_of_birth" type="date" {...register("date_of_birth", { required: true })} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="age_at_registration">Age</Label>
-                  <Input 
-                    id="age_at_registration" 
-                    type="number" 
-                    {...register("age_at_registration")} 
+                  <Label htmlFor="age_display">Age</Label>
+                  <Input
+                    id="age_display"
+                    type="text"
+                    value={computedAge ?? ""}
                     readOnly
                     className="bg-muted"
                   />
@@ -683,7 +671,7 @@ const PlayerEdit = () => {
                     <Input
                       id="state"
                       {...register("state")}
-                      defaultValue="OH"
+                      defaultValue="IL"
                       placeholder="State"
                     />
                   </div>
@@ -823,7 +811,7 @@ const PlayerEdit = () => {
                     <Input
                       id="parent2_state"
                       {...register("parent2_state")}
-                      defaultValue="OH"
+                      defaultValue="IL"
                       placeholder="State"
                     />
                   </div>
