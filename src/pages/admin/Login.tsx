@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,10 @@ import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const rawNext = searchParams.get("next");
+  // Only accept same-origin relative paths as the post-login destination.
+  const next = rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : null;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +56,7 @@ const Login = () => {
       setLoginAttempts(0);
       setLockoutUntil(null);
       toast.success("Logged in successfully");
-      navigate("/admin");
+      navigate(next ?? "/admin");
     } catch (error: any) {
       const newAttempts = loginAttempts + 1;
       setLoginAttempts(newAttempts);
