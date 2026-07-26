@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import {
   Table,
@@ -13,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertTriangle, CheckCircle2, Info } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 type Suppression = {
@@ -32,15 +33,36 @@ type League = {
   reply_to_address: string | null;
 };
 
+type Counters = {
+  queued: number;
+  sent30d: number;
+  bounceRate: number | null;
+  complaintRate: number | null;
+  totalAttempted30d: number;
+};
+
 export const HealthTab = () => {
   const [loading, setLoading] = useState(true);
   const [suppressions, setSuppressions] = useState<Suppression[]>([]);
   const [league, setLeague] = useState<League | null>(null);
+  const [counters, setCounters] = useState<Counters | null>(null);
+  const [anySendSucceeded, setAnySendSucceeded] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
-    const [{ data: sup }, { data: lg }] = await Promise.all([
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+    const [
+      { data: sup },
+      { data: lg },
+      { count: queued },
+      { count: sent30 },
+      { count: bounced30 },
+      { count: complained30 },
+      { count: successAny },
+      { count: attempted30 },
+    ] = await Promise.all([
       supabase
         .from("email_suppressions")
         .select("*")
@@ -52,9 +74,56 @@ export const HealthTab = () => {
         .select("sending_domain, sending_from_address, reply_to_address")
         .eq("slug", "cdbl")
         .maybeSingle(),
+      supabase
+        .from("notification_queue")
+        .select("id", { count: "exact", head: true })
+        .in("status", ["pending", "approved", "queued", "sending"]),
+      supabase
+        .from("notification_recipients")
+        .select("id", { count: "exact", head: true })
+        .in("status", ["sent", "delivered", "opened"])
+        .gte("created_at", since),
+      supabase
+        .from("notification_recipients")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "bounced")
+        .gte("created_at", since),
+      supabase
+        .from("notification_recipients")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "complained")
+        .gte("created_at", since),
+      supabase
+        .from("notification_recipients")
+        .select("id", { count: "exact", head: true })
+        .in("status", ["sent", "delivered", "opened"])
+        .limit(1),
+      supabase
+        .from("notification_recipients")
+        .select("id", { count: "exact", head: true })
+        .in("status", [
+          "sent",
+          "delivered",
+          "opened",
+          "bounced",
+          "complained",
+          "failed",
+        ])
+        .gte("created_at", since),
     ]);
+
     setSuppressions((sup ?? []) as Suppression[]);
     setLeague((lg as League) ?? null);
+    setAnySendSucceeded((successAny ?? 0) > 0);
+
+    const total = attempted30 ?? 0;
+    setCounters({
+      queued: queued ?? 0,
+      sent30d: sent30 ?? 0,
+      totalAttempted30d: total,
+      bounceRate: total > 0 ? (bounced30 ?? 0) / total : null,
+      complaintRate: total > 0 ? (complained30 ?? 0) / total : null,
+    });
     setLoading(false);
   };
 
@@ -78,65 +147,70 @@ export const HealthTab = () => {
     load();
   };
 
-  const domainConfigured =
-    !!league?.sending_domain && !!league?.sending_from_address;
+  const configured = !!league?.sending_domain && anySendSucceeded;
+
+  const fmtPct = (v: number | null) =>
+    v === null ? "—" : `${(v * 100).toFixed(1)}%`;
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="rounded-2xl shadow-md">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              {domainConfigured ? (
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-              ) : (
-                <AlertTriangle className="h-4 w-4 text-amber-600" />
-              )}
-              Sending domain
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            {domainConfigured ? (
-              <>
-                <p>
-                  <span className="text-muted-foreground">From:</span>{" "}
-                  <span className="font-medium">
-                    {league?.sending_from_address}
-                  </span>
-                </p>
-                <p>
-                  <span className="text-muted-foreground">Reply-to:</span>{" "}
-                  {league?.reply_to_address ?? "—"}
-                </p>
-                <p className="text-xs text-muted-foreground pt-2">
-                  Domain verification is confirmed in Resend, not here. If sends
-                  fail, check the domain in the Resend dashboard.
-                </p>
-              </>
-            ) : (
-              <p className="text-amber-700">
-                No sending domain configured on the league row. No email will
-                send until this is set.
-              </p>
-            )}
-          </CardContent>
-        </Card>
+      {configured ? (
+        <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
+          <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+          <AlertTitle>Email sending is live</AlertTitle>
+          <AlertDescription>
+            Sending from <code>{league?.sending_from_address}</code> on{" "}
+            <code>{league?.sending_domain}</code>. At least one send has
+            succeeded.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <Alert className="border-amber-200 bg-amber-50 text-amber-900">
+          <AlertTriangle className="h-4 w-4 text-amber-700" />
+          <AlertTitle>Email sending is not configured</AlertTitle>
+          <AlertDescription>
+            No message can currently be delivered. The Compose tab writes to the
+            queue, but nothing is drained until a sending domain is set on the
+            league row and at least one send has succeeded.
+          </AlertDescription>
+        </Alert>
+      )}
 
-        <Card className="rounded-2xl shadow-md">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Info className="h-4 w-4 text-muted-foreground" />
-              Custom SMTP
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-sm space-y-2">
-            <p className="text-muted-foreground">
-              Not configured. Outbound email routes through Resend using{" "}
-              <code>RESEND_API_KEY</code>. Add a custom SMTP integration later if
-              you need to route through your own MTA.
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-3 md:grid-cols-4">
+        <MetricCard
+          label="Currently queued"
+          value={loading ? "…" : counters?.queued.toLocaleString() ?? "0"}
+        />
+        <MetricCard
+          label="Sent (last 30d)"
+          value={loading ? "…" : counters?.sent30d.toLocaleString() ?? "0"}
+        />
+        <MetricCard
+          label="Bounce rate (30d)"
+          value={loading ? "…" : fmtPct(counters?.bounceRate ?? null)}
+          hint={
+            counters && (counters.bounceRate ?? 0) > 0.05
+              ? "Above 5% — investigate"
+              : undefined
+          }
+          hintTone={
+            counters && (counters.bounceRate ?? 0) > 0.05 ? "warn" : undefined
+          }
+        />
+        <MetricCard
+          label="Complaint rate (30d)"
+          value={loading ? "…" : fmtPct(counters?.complaintRate ?? null)}
+          hint={
+            counters && (counters.complaintRate ?? 0) > 0.001
+              ? "Above 0.1% — investigate"
+              : undefined
+          }
+          hintTone={
+            counters && (counters.complaintRate ?? 0) > 0.001
+              ? "warn"
+              : undefined
+          }
+        />
       </div>
 
       <Card className="rounded-2xl shadow-md">
@@ -202,3 +276,35 @@ export const HealthTab = () => {
     </div>
   );
 };
+
+function MetricCard({
+  label,
+  value,
+  hint,
+  hintTone,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+  hintTone?: "warn";
+}) {
+  return (
+    <Card className="rounded-2xl shadow-md">
+      <CardContent className="p-4">
+        <p className="text-xs font-medium uppercase text-muted-foreground tracking-wide">
+          {label}
+        </p>
+        <p className="text-2xl font-heading mt-1">{value}</p>
+        {hint && (
+          <p
+            className={`text-xs mt-1 ${
+              hintTone === "warn" ? "text-amber-700" : "text-muted-foreground"
+            }`}
+          >
+            {hint}
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}

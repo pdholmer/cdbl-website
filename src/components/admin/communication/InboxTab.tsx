@@ -1,12 +1,34 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Inbox, Mail, CheckCheck } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Mail, CheckCheck, Inbox } from "lucide-react";
 import { toast } from "sonner";
-import { formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 type ContactMessage = {
   id: string;
@@ -22,22 +44,55 @@ type ContactMessage = {
   responded_at: string | null;
 };
 
+type AdminUser = {
+  id: string;
+  display_name: string | null;
+  email: string | null;
+};
+
+type Filter = "all" | "unread" | "mine";
+
 export const InboxTab = () => {
   const [loading, setLoading] = useState(true);
   const [rows, setRows] = useState<ContactMessage[]>([]);
-  const [filter, setFilter] = useState<"unread" | "all">("unread");
-  const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [me, setMe] = useState<string | null>(null);
+  const [filter, setFilter] = useState<Filter>("unread");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   const load = async () => {
     setLoading(true);
-    const q = supabase
-      .from("contact_messages")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(200);
-    const { data, error } = await q;
+    const { data: userData } = await supabase.auth.getUser();
+    setMe(userData.user?.id ?? null);
+
+    const [{ data: msgs, error }, { data: roleRows }] = await Promise.all([
+      supabase
+        .from("contact_messages")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(500),
+      supabase
+        .from("user_roles")
+        .select("user_id")
+        .in("role", ["admin", "board_member"]),
+    ]);
+
     if (error) toast.error(error.message);
-    setRows((data ?? []) as ContactMessage[]);
+    setRows((msgs ?? []) as ContactMessage[]);
+
+    const adminIds = Array.from(
+      new Set((roleRows ?? []).map((r: any) => r.user_id)),
+    );
+    if (adminIds.length > 0) {
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, display_name, email")
+        .in("id", adminIds);
+      setAdmins((profs ?? []) as AdminUser[]);
+    } else {
+      setAdmins([]);
+    }
     setLoading(false);
   };
 
@@ -45,90 +100,105 @@ export const InboxTab = () => {
     load();
   }, []);
 
-  const visible = useMemo(
-    () =>
-      filter === "unread"
-        ? rows.filter((r) => !r.read_at && r.status !== "read")
-        : rows,
-    [rows, filter],
-  );
+  const isUnread = (m: ContactMessage) => !m.read_at && m.status !== "read";
 
-  const markBusy = (id: string, on: boolean) =>
-    setBusyIds((prev) => {
-      const next = new Set(prev);
-      on ? next.add(id) : next.delete(id);
-      return next;
-    });
+  const visible = useMemo(() => {
+    switch (filter) {
+      case "unread":
+        return rows.filter(isUnread);
+      case "mine":
+        return rows.filter((m) => m.assigned_to && m.assigned_to === me);
+      default:
+        return rows;
+    }
+  }, [rows, filter, me]);
 
-  const markRead = async (id: string) => {
-    markBusy(id, true);
+  const selected = rows.find((r) => r.id === selectedId) ?? null;
+
+  const openRow = async (row: ContactMessage) => {
+    setSelectedId(row.id);
+    if (isUnread(row)) {
+      await markRead(row.id, { silent: true });
+    }
+  };
+
+  const markRead = async (id: string, opts?: { silent?: boolean }) => {
+    setBusy(true);
     const { error } = await supabase
       .from("contact_messages")
       .update({ status: "read", read_at: new Date().toISOString() })
       .eq("id", id);
-    markBusy(id, false);
+    setBusy(false);
     if (error) {
       toast.error(error.message);
       return;
     }
-    toast.success("Marked as read");
+    if (!opts?.silent) toast.success("Marked as read");
     load();
   };
 
-  const assignToMe = async (id: string) => {
-    markBusy(id, true);
-    const { data: userData } = await supabase.auth.getUser();
-    const uid = userData.user?.id;
-    if (!uid) {
-      toast.error("Not signed in");
-      markBusy(id, false);
-      return;
-    }
+  const assign = async (id: string, userId: string | null) => {
+    setBusy(true);
     const { error } = await supabase
       .from("contact_messages")
-      .update({ assigned_to: uid })
+      .update({ assigned_to: userId })
       .eq("id", id);
-    markBusy(id, false);
+    setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Assigned to you");
+    toast.success(userId ? "Assigned" : "Unassigned");
     load();
   };
 
-  const unreadCount = rows.filter((r) => !r.read_at && r.status !== "read").length;
+  const unreadCount = rows.filter(isUnread).length;
+  const mineCount = rows.filter((m) => m.assigned_to === me).length;
+
+  const displayName = (uid: string | null) => {
+    if (!uid) return null;
+    const a = admins.find((x) => x.id === uid);
+    return a?.display_name || a?.email || "Unknown";
+  };
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 text-sm">
-          <Inbox className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium">
-            {unreadCount} unread
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Inbox className="h-4 w-4" />
+          <span>
+            <span className="font-medium text-foreground">{rows.length}</span>{" "}
+            total · <span className="font-medium text-foreground">{unreadCount}</span>{" "}
+            unread
           </span>
-          <span className="text-muted-foreground">of {rows.length}</span>
         </div>
         <div className="flex-1" />
         <div className="flex gap-2">
-          <Button
-            variant={filter === "unread" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setFilter("unread")}
-          >
-            Unread
-          </Button>
           <Button
             variant={filter === "all" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("all")}
           >
-            All
+            All ({rows.length})
+          </Button>
+          <Button
+            variant={filter === "unread" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter("unread")}
+          >
+            Unread ({unreadCount})
+          </Button>
+          <Button
+            variant={filter === "mine" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setFilter("mine")}
+          >
+            Assigned to me ({mineCount})
           </Button>
         </div>
       </div>
 
       {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-32 w-full rounded-2xl" />
+        <div className="space-y-2">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-12 w-full" />
           ))}
         </div>
       ) : visible.length === 0 ? (
@@ -137,82 +207,165 @@ export const InboxTab = () => {
             <CheckCheck className="mx-auto h-8 w-8 mb-2" />
             {filter === "unread"
               ? "No unread messages."
+              : filter === "mine"
+              ? "Nothing assigned to you."
               : "No contact messages yet."}
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-3">
-          {visible.map((m) => {
-            const isRead = !!m.read_at || m.status === "read";
-            const busy = busyIds.has(m.id);
-            return (
-              <Card
-                key={m.id}
-                className={`rounded-2xl shadow-md transition ${
-                  isRead ? "opacity-70" : ""
-                }`}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <CardTitle className="text-base">{m.subject}</CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {m.name} · {m.email}
-                        {m.phone ? ` · ${m.phone}` : ""}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {!isRead && <Badge variant="destructive">New</Badge>}
-                      <span className="text-xs text-muted-foreground whitespace-nowrap">
-                        {formatDistanceToNow(new Date(m.created_at), {
-                          addSuffix: true,
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <p className="text-sm whitespace-pre-wrap">{m.message}</p>
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        (window.location.href = `mailto:${m.email}?subject=Re: ${encodeURIComponent(m.subject)}`)
+        <Card className="rounded-2xl shadow-md overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Subject</TableHead>
+                <TableHead>Received</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Assigned</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {visible.map((m) => {
+                const unread = isUnread(m);
+                return (
+                  <TableRow
+                    key={m.id}
+                    onClick={() => openRow(m)}
+                    className={`cursor-pointer ${
+                      unread ? "bg-primary/5 font-medium" : ""
+                    }`}
+                  >
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {unread && (
+                          <span className="h-2 w-2 rounded-full bg-primary shrink-0" />
+                        )}
+                        {m.name}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {m.email}
+                    </TableCell>
+                    <TableCell className="max-w-[24rem] truncate">
+                      {m.subject}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground whitespace-nowrap">
+                      {formatDistanceToNow(new Date(m.created_at), {
+                        addSuffix: true,
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      {unread ? (
+                        <Badge variant="destructive">Unread</Badge>
+                      ) : (
+                        <Badge variant="outline">Read</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      {displayName(m.assigned_to) ?? (
+                        <span className="text-muted-foreground">—</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Card>
+      )}
+
+      <Sheet
+        open={!!selected}
+        onOpenChange={(open) => !open && setSelectedId(null)}
+      >
+        <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+          {selected && (
+            <>
+              <SheetHeader>
+                <SheetTitle className="pr-6">{selected.subject}</SheetTitle>
+                <SheetDescription>
+                  From <span className="font-medium">{selected.name}</span> ·{" "}
+                  {selected.email}
+                  {selected.phone ? ` · ${selected.phone}` : ""}
+                  <br />
+                  <span className="text-xs">
+                    Received{" "}
+                    {format(new Date(selected.created_at), "PPpp")}
+                  </span>
+                </SheetDescription>
+              </SheetHeader>
+
+              <div className="mt-6 space-y-6">
+                <div className="rounded-xl bg-muted/50 p-4 text-sm whitespace-pre-wrap">
+                  {selected.message}
+                </div>
+
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs font-medium uppercase text-muted-foreground">
+                      Assign to
+                    </label>
+                    <Select
+                      value={selected.assigned_to ?? "unassigned"}
+                      onValueChange={(v) =>
+                        assign(selected.id, v === "unassigned" ? null : v)
                       }
                     >
-                      <Mail className="h-4 w-4 mr-1" /> Reply
+                      <SelectTrigger className="mt-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unassigned">Unassigned</SelectItem>
+                        {admins.map((a) => (
+                          <SelectItem key={a.id} value={a.id}>
+                            {a.display_name || a.email || "Admin"}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <Button
+                      onClick={() =>
+                        (window.location.href = `mailto:${selected.email}?subject=${encodeURIComponent(
+                          "Re: " + selected.subject,
+                        )}`)
+                      }
+                    >
+                      <Mail className="h-4 w-4 mr-1" /> Reply via email
                     </Button>
-                    {!isRead && (
+                    {isUnread(selected) && (
                       <Button
                         variant="secondary"
-                        size="sm"
                         disabled={busy}
-                        onClick={() => markRead(m.id)}
+                        onClick={() => markRead(selected.id)}
                       >
-                        Mark read
+                        Mark as read
                       </Button>
                     )}
-                    {!m.assigned_to && (
+                    {me && selected.assigned_to !== me && (
                       <Button
-                        variant="ghost"
-                        size="sm"
+                        variant="outline"
                         disabled={busy}
-                        onClick={() => assignToMe(m.id)}
+                        onClick={() => assign(selected.id, me)}
                       >
                         Assign to me
                       </Button>
                     )}
-                    {m.assigned_to && (
-                      <Badge variant="outline">Assigned</Badge>
-                    )}
                   </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+
+                  <p className="text-xs text-muted-foreground pt-4">
+                    Sending email from the app is not wired yet. Reply opens
+                    your mail client.
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

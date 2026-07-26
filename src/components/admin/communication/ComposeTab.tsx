@@ -13,11 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { Users, Send } from "lucide-react";
+import { Users, Send, AlertTriangle, Info } from "lucide-react";
 
 type Scope = "league" | "division" | "team" | "household" | "admins";
-type Priority = "urgent" | "normal" | "digest";
+type Priority = "normal" | "urgent";
 
 type Option = { id: string; label: string };
 
@@ -33,7 +34,7 @@ export const ComposeTab = () => {
   const [teams, setTeams] = useState<Option[]>([]);
   const [households, setHouseholds] = useState<Option[]>([]);
 
-  const [count, setCount] = useState<number | null>(null);
+  const [reach, setReach] = useState<{ households: number; guardians: number } | null>(null);
   const [counting, setCounting] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -90,15 +91,14 @@ export const ComposeTab = () => {
     }
   }, [scope, scopeId, divisions, teams, households]);
 
-  // Live recipient count — counts households (unique guardians per household).
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setCounting(true);
-      setCount(null);
+      setReach(null);
       try {
-        const n = await estimateRecipients(scope, scopeId);
-        if (!cancelled) setCount(n);
+        const r = await estimateReach(scope, scopeId);
+        if (!cancelled) setReach(r);
       } finally {
         if (!cancelled) setCounting(false);
       }
@@ -133,7 +133,7 @@ export const ComposeTab = () => {
     });
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Saved to queue for approval");
+    toast.success("Saved to queue");
     setSubject("");
     setBody("");
   };
@@ -155,7 +155,7 @@ export const ComposeTab = () => {
                   <SelectItem value="division">Division</SelectItem>
                   <SelectItem value="team">Team</SelectItem>
                   <SelectItem value="household">Single household</SelectItem>
-                  <SelectItem value="admins">Admins &amp; board</SelectItem>
+                  <SelectItem value="admins">Admins only</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -165,10 +165,16 @@ export const ComposeTab = () => {
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="urgent">Urgent (bypasses opt-outs)</SelectItem>
-                  <SelectItem value="digest">Digest</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
                 </SelectContent>
               </Select>
+              {priority === "urgent" && (
+                <p className="text-xs text-amber-700 mt-1 flex items-start gap-1">
+                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                  Urgent messages ignore quiet hours and category mutes. Use for
+                  rainouts and safety only.
+                </p>
+              )}
             </div>
           </div>
 
@@ -220,7 +226,7 @@ export const ComposeTab = () => {
               placeholder="league.announcement"
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Used as the category for opt-outs. Segment before the dot (e.g.{" "}
+              Category used for opt-outs. Segment before the dot (e.g.{" "}
               <code>fundraising</code>) is what parents can mute.
             </p>
           </div>
@@ -230,7 +236,7 @@ export const ComposeTab = () => {
             <Input
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="Rainout for tonight"
+              placeholder="Rainout tonight"
             />
           </div>
 
@@ -240,9 +246,17 @@ export const ComposeTab = () => {
               rows={10}
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              placeholder="Markdown supported. **Bold**, *italic*, [links](https://...)."
+              placeholder="Message body. Markdown will render in the eventual email."
             />
           </div>
+
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription className="text-sm">
+              Queued messages are not delivered until email sending is
+              configured. This screen only writes to the queue.
+            </AlertDescription>
+          </Alert>
 
           <div className="flex justify-end">
             <Button onClick={save} disabled={!canSave || saving}>
@@ -265,27 +279,29 @@ export const ComposeTab = () => {
             <p className="text-3xl font-heading">
               {counting
                 ? "…"
-                : count === null
+                : reach === null
                 ? "—"
-                : count.toLocaleString()}
+                : reach.households.toLocaleString()}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
               This will reach{" "}
               <span className="font-medium">
-                {count ?? 0} household{count === 1 ? "" : "s"}
+                {reach?.households ?? 0} household
+                {reach?.households === 1 ? "" : "s"}
+              </span>{" "}
+              (
+              <span className="font-medium">
+                {reach?.guardians ?? 0} guardian
+                {reach?.guardians === 1 ? "" : "s"}
               </span>
-              . One digest per family — never one message per child.
+              ).
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">
+              One digest per family — never one message per child.
             </p>
             <Badge variant="outline" className="mt-3">
               {audienceDescription}
             </Badge>
-          </CardContent>
-        </Card>
-        <Card className="rounded-2xl border-dashed">
-          <CardContent className="p-4 text-xs text-muted-foreground">
-            Saving queues the message with <code>requires_approval=true</code>. An
-            admin drains the queue by invoking the <code>send-notifications</code>{" "}
-            function.
           </CardContent>
         </Card>
       </div>
@@ -293,63 +309,80 @@ export const ComposeTab = () => {
   );
 };
 
-async function estimateRecipients(
+async function estimateReach(
   scope: Scope,
   scopeId: string,
-): Promise<number> {
+): Promise<{ households: number; guardians: number }> {
   if (scope === "league") {
-    const { count } = await supabase
+    const { data } = await supabase
       .from("guardian_households")
-      .select("household_id", { count: "exact", head: true });
-    return count ?? 0;
+      .select("guardian_id, household_id");
+    return summarize(data ?? []);
   }
   if (scope === "admins") {
-    const { count } = await supabase
+    const { data } = await supabase
       .from("user_roles")
-      .select("user_id", { count: "exact", head: true })
+      .select("user_id")
       .in("role", ["admin", "board_member"]);
-    return count ?? 0;
+    const guardians = new Set((data ?? []).map((r: any) => r.user_id)).size;
+    return { households: guardians, guardians };
   }
   if (scope === "household") {
-    if (!scopeId) return 0;
-    const { count } = await supabase
+    if (!scopeId) return { households: 0, guardians: 0 };
+    const { data } = await supabase
       .from("guardian_households")
-      .select("guardian_id", { count: "exact", head: true })
+      .select("guardian_id, household_id")
       .eq("household_id", scopeId);
-    return count ?? 0;
+    return summarize(data ?? []);
   }
   if (scope === "team") {
-    if (!scopeId) return 0;
+    if (!scopeId) return { households: 0, guardians: 0 };
     const { data: roster } = await supabase
       .from("team_rosters")
       .select("player_id")
       .eq("team_id", scopeId)
       .eq("status", "active");
-    return await countHouseholdsForPlayers((roster ?? []).map((r: any) => r.player_id));
+    return reachForPlayers((roster ?? []).map((r: any) => r.player_id));
   }
   if (scope === "division") {
-    if (!scopeId) return 0;
-    const { data: teams } = await supabase
+    if (!scopeId) return { households: 0, guardians: 0 };
+    const { data: teamRows } = await supabase
       .from("teams")
       .select("id")
       .eq("division_id", scopeId);
-    const teamIds = (teams ?? []).map((t: any) => t.id);
-    if (teamIds.length === 0) return 0;
+    const teamIds = (teamRows ?? []).map((t: any) => t.id);
+    if (teamIds.length === 0) return { households: 0, guardians: 0 };
     const { data: roster } = await supabase
       .from("team_rosters")
       .select("player_id")
       .in("team_id", teamIds)
       .eq("status", "active");
-    return await countHouseholdsForPlayers((roster ?? []).map((r: any) => r.player_id));
+    return reachForPlayers((roster ?? []).map((r: any) => r.player_id));
   }
-  return 0;
+  return { households: 0, guardians: 0 };
 }
 
-async function countHouseholdsForPlayers(playerIds: string[]): Promise<number> {
-  if (playerIds.length === 0) return 0;
+async function reachForPlayers(
+  playerIds: string[],
+): Promise<{ households: number; guardians: number }> {
+  if (playerIds.length === 0) return { households: 0, guardians: 0 };
   const { data: hp } = await supabase
     .from("household_players")
     .select("household_id")
     .in("player_id", playerIds);
-  return new Set((hp ?? []).map((r: any) => r.household_id)).size;
+  const householdIds = Array.from(
+    new Set((hp ?? []).map((r: any) => r.household_id)),
+  );
+  if (householdIds.length === 0) return { households: 0, guardians: 0 };
+  const { data: gh } = await supabase
+    .from("guardian_households")
+    .select("guardian_id, household_id")
+    .in("household_id", householdIds);
+  return summarize(gh ?? []);
+}
+
+function summarize(rows: any[]): { households: number; guardians: number } {
+  const households = new Set(rows.map((r) => r.household_id)).size;
+  const guardians = new Set(rows.map((r) => r.guardian_id)).size;
+  return { households, guardians };
 }
