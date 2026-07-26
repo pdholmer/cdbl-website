@@ -4213,6 +4213,7 @@ export type Database = {
       }
       assign_first_user_admin: { Args: { _user_id: string }; Returns: boolean }
       calendar_is_public: { Args: { _calendar_id: string }; Returns: boolean }
+      can_see_player_pii: { Args: { _player_id: string }; Returns: boolean }
       check_schedule_conflict: {
         Args: {
           p_date: string
@@ -4275,7 +4276,9 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_cleared_coach: { Args: { _user_id: string }; Returns: boolean }
       is_coach_of: { Args: { _team_id: string }; Returns: boolean }
+      is_coach_of_player: { Args: { _player_id: string }; Returns: boolean }
       is_commissioner_for: {
         Args: { _division_id?: string; _program_id: string; _user_id: string }
         Returns: boolean
