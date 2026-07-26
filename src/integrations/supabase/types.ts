@@ -2831,6 +2831,132 @@ export type Database = {
           },
         ]
       }
+      registrations: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          baseball_age: number | null
+          created_at: string
+          division_id: string | null
+          external_id: string | null
+          grade_at_registration: number | null
+          hold_reason: string | null
+          id: string
+          jersey_size: string | null
+          kind: string
+          league_id: string
+          lifecycle: string
+          notes: string | null
+          offer: string
+          on_hold_until: string | null
+          payment: string
+          player_id: string
+          program_id: string | null
+          season_id: string
+          seat: string
+          skill_level: string | null
+          source: string | null
+          special_requests: string | null
+          submitted_at: string | null
+          updated_at: string
+          waiver_status: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          baseball_age?: number | null
+          created_at?: string
+          division_id?: string | null
+          external_id?: string | null
+          grade_at_registration?: number | null
+          hold_reason?: string | null
+          id?: string
+          jersey_size?: string | null
+          kind?: string
+          league_id?: string
+          lifecycle?: string
+          notes?: string | null
+          offer?: string
+          on_hold_until?: string | null
+          payment?: string
+          player_id: string
+          program_id?: string | null
+          season_id: string
+          seat?: string
+          skill_level?: string | null
+          source?: string | null
+          special_requests?: string | null
+          submitted_at?: string | null
+          updated_at?: string
+          waiver_status?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          baseball_age?: number | null
+          created_at?: string
+          division_id?: string | null
+          external_id?: string | null
+          grade_at_registration?: number | null
+          hold_reason?: string | null
+          id?: string
+          jersey_size?: string | null
+          kind?: string
+          league_id?: string
+          lifecycle?: string
+          notes?: string | null
+          offer?: string
+          on_hold_until?: string | null
+          payment?: string
+          player_id?: string
+          program_id?: string | null
+          season_id?: string
+          seat?: string
+          skill_level?: string | null
+          source?: string | null
+          special_requests?: string | null
+          submitted_at?: string | null
+          updated_at?: string
+          waiver_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_league_division_fkey"
+            columns: ["league_id", "division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "registrations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registrations_league_player_fkey"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+          {
+            foreignKeyName: "registrations_league_program_fkey"
+            columns: ["league_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "registrations_league_season_fkey"
+            columns: ["league_id", "season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["league_id", "id"]
+          },
+        ]
+      }
       resources: {
         Row: {
           age_group: string | null
