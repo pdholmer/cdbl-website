@@ -62,6 +62,7 @@ import RegistrationCodes from "./pages/admin/RegistrationCodes";
 import RegistrationCodeEdit from "./pages/admin/RegistrationCodeEdit";
 import CommitteeTasks from "./pages/admin/CommitteeTasks";
 import Concessions from "./pages/admin/Concessions";
+import Communication from "./pages/admin/Communication";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { ChatAssistant } from "./components/ChatAssistant";
 import { CoachLayout } from "./components/CoachLayout";
@@ -144,6 +145,7 @@ const App = () => (
           <Route path="/admin/support/:id" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
           <Route path="/admin/feedback" element={<ProtectedRoute requireBoardMember><Feedback /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute requireBoardMember><Users /></ProtectedRoute>} />
+          <Route path="/admin/communication" element={<ProtectedRoute requireBoardMember><Communication /></ProtectedRoute>} />
           
           {/* Admin-Only Routes - restricted to admin role */}
           <Route path="/admin/reports" element={<ProtectedRoute requireAdmin><AdminReports /></ProtectedRoute>} />
