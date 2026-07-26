@@ -3767,6 +3767,7 @@ export type Database = {
         Returns: boolean
       }
       assign_first_user_admin: { Args: { _user_id: string }; Returns: boolean }
+      calendar_is_public: { Args: { _calendar_id: string }; Returns: boolean }
       check_schedule_conflict: {
         Args: {
           p_date: string
