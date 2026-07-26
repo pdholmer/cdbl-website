@@ -6,6 +6,7 @@ import { OutboxTab } from "@/components/admin/communication/OutboxTab";
 import { HealthTab } from "@/components/admin/communication/HealthTab";
 import { Megaphone } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { useUnreadContactCount } from "@/hooks/useUnreadContactCount";
 
 const TABS = ["inbox", "compose", "outbox", "health"] as const;
 type TabKey = (typeof TABS)[number];
@@ -14,6 +15,7 @@ export default function Communication() {
   const [params, setParams] = useSearchParams();
   const initial = (params.get("tab") as TabKey) ?? "inbox";
   const active = TABS.includes(initial) ? initial : "inbox";
+  const unread = useUnreadContactCount();
 
   return (
     <AdminLayout>
@@ -40,7 +42,14 @@ export default function Communication() {
           className="w-full"
         >
           <TabsList className="grid grid-cols-4 w-full max-w-2xl">
-            <TabsTrigger value="inbox">Inbox</TabsTrigger>
+            <TabsTrigger value="inbox" className="gap-2">
+              Inbox
+              {unread > 0 && (
+                <span className="inline-flex items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[10px] font-semibold text-destructive-foreground min-w-[18px]">
+                  {unread}
+                </span>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="compose">Compose</TabsTrigger>
             <TabsTrigger value="outbox">Outbox</TabsTrigger>
             <TabsTrigger value="health">Health</TabsTrigger>
