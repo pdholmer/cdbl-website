@@ -25,6 +25,7 @@ export type Database = {
           id: string
           invited_by: string | null
           last_name: string
+          league_id: string
           phone: string | null
           program_id: string | null
           status: string | null
@@ -41,6 +42,7 @@ export type Database = {
           id?: string
           invited_by?: string | null
           last_name: string
+          league_id?: string
           phone?: string | null
           program_id?: string | null
           status?: string | null
@@ -57,6 +59,7 @@ export type Database = {
           id?: string
           invited_by?: string | null
           last_name?: string
+          league_id?: string
           phone?: string | null
           program_id?: string | null
           status?: string | null
@@ -69,6 +72,13 @@ export type Database = {
             columns: ["division_id"]
             isOneToOne: false
             referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coach_invitations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
             referencedColumns: ["id"]
           },
           {
@@ -100,6 +110,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
+          league_id: string
           phone: string
           status: string | null
           updated_at: string | null
@@ -117,6 +128,7 @@ export type Database = {
           first_name: string
           id?: string
           last_name: string
+          league_id?: string
           phone: string
           status?: string | null
           updated_at?: string | null
@@ -134,12 +146,21 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
+          league_id?: string
           phone?: string
           status?: string | null
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "coaches_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       commissioner_assignments: {
         Row: {
@@ -533,6 +554,7 @@ export type Database = {
           display_order: number | null
           features: Json | null
           id: string
+          league_id: string
           name: string
           program_id: string
           schedule_notes: string | null
@@ -546,6 +568,7 @@ export type Database = {
           display_order?: number | null
           features?: Json | null
           id?: string
+          league_id?: string
           name: string
           program_id: string
           schedule_notes?: string | null
@@ -559,6 +582,7 @@ export type Database = {
           display_order?: number | null
           features?: Json | null
           id?: string
+          league_id?: string
           name?: string
           program_id?: string
           schedule_notes?: string | null
@@ -566,6 +590,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "divisions_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "divisions_program_id_fkey"
             columns: ["program_id"]
@@ -1485,6 +1516,7 @@ export type Database = {
           city: string | null
           created_at: string
           id: string
+          league_id: string
           name: string | null
           state: string | null
           updated_at: string
@@ -1496,6 +1528,7 @@ export type Database = {
           city?: string | null
           created_at?: string
           id?: string
+          league_id?: string
           name?: string | null
           state?: string | null
           updated_at?: string
@@ -1507,12 +1540,21 @@ export type Database = {
           city?: string | null
           created_at?: string
           id?: string
+          league_id?: string
           name?: string | null
           state?: string | null
           updated_at?: string
           zip_code?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "households_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       league_events: {
         Row: {
@@ -2195,6 +2237,7 @@ export type Database = {
           jersey_number: string | null
           jersey_size: string | null
           last_name: string
+          league_id: string
           medical_notes: string | null
           parent_email: string
           parent_first_name: string
@@ -2243,6 +2286,7 @@ export type Database = {
           jersey_number?: string | null
           jersey_size?: string | null
           last_name: string
+          league_id?: string
           medical_notes?: string | null
           parent_email: string
           parent_first_name: string
@@ -2291,6 +2335,7 @@ export type Database = {
           jersey_number?: string | null
           jersey_size?: string | null
           last_name?: string
+          league_id?: string
           medical_notes?: string | null
           parent_email?: string
           parent_first_name?: string
@@ -2330,6 +2375,13 @@ export type Database = {
             columns: ["division_id"]
             isOneToOne: false
             referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "players_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
             referencedColumns: ["id"]
           },
           {
@@ -2445,6 +2497,7 @@ export type Database = {
           coach_registration_url: string | null
           created_at: string | null
           id: string
+          league_id: string
           name: string
           overview: string | null
           registration_open: boolean | null
@@ -2460,6 +2513,7 @@ export type Database = {
           coach_registration_url?: string | null
           created_at?: string | null
           id?: string
+          league_id?: string
           name: string
           overview?: string | null
           registration_open?: boolean | null
@@ -2475,6 +2529,7 @@ export type Database = {
           coach_registration_url?: string | null
           created_at?: string | null
           id?: string
+          league_id?: string
           name?: string
           overview?: string | null
           registration_open?: boolean | null
@@ -2487,6 +2542,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "programs_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "programs_season_id_fkey"
             columns: ["season_id"]
@@ -2843,6 +2905,7 @@ export type Database = {
           id: string
           is_current: boolean
           label: string | null
+          league_id: string
           locked_at: string | null
           school_year_start: string | null
           starts_on: string | null
@@ -2856,6 +2919,7 @@ export type Database = {
           id?: string
           is_current?: boolean
           label?: string | null
+          league_id?: string
           locked_at?: string | null
           school_year_start?: string | null
           starts_on?: string | null
@@ -2869,13 +2933,22 @@ export type Database = {
           id?: string
           is_current?: boolean
           label?: string | null
+          league_id?: string
           locked_at?: string | null
           school_year_start?: string | null
           starts_on?: string | null
           updated_at?: string
           year?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "seasons_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       site_content: {
         Row: {
@@ -2990,6 +3063,7 @@ export type Database = {
           assigned_date: string | null
           coach_id: string
           id: string
+          league_id: string
           primary_contact: boolean | null
           removed_date: string | null
           role: string
@@ -3000,6 +3074,7 @@ export type Database = {
           assigned_date?: string | null
           coach_id: string
           id?: string
+          league_id?: string
           primary_contact?: boolean | null
           removed_date?: string | null
           role: string
@@ -3010,6 +3085,7 @@ export type Database = {
           assigned_date?: string | null
           coach_id?: string
           id?: string
+          league_id?: string
           primary_contact?: boolean | null
           removed_date?: string | null
           role?: string
@@ -3022,6 +3098,13 @@ export type Database = {
             columns: ["coach_id"]
             isOneToOne: false
             referencedRelation: "coaches"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_coaches_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
             referencedColumns: ["id"]
           },
           {
@@ -3083,6 +3166,7 @@ export type Database = {
           id: string
           jersey_number: string | null
           joined_date: string | null
+          league_id: string
           player_id: string
           position_primary: string | null
           position_secondary: string | null
@@ -3098,6 +3182,7 @@ export type Database = {
           id?: string
           jersey_number?: string | null
           joined_date?: string | null
+          league_id?: string
           player_id: string
           position_primary?: string | null
           position_secondary?: string | null
@@ -3113,6 +3198,7 @@ export type Database = {
           id?: string
           jersey_number?: string | null
           joined_date?: string | null
+          league_id?: string
           player_id?: string
           position_primary?: string | null
           position_secondary?: string | null
@@ -3124,6 +3210,13 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "team_rosters_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "team_rosters_player_id_fkey"
             columns: ["player_id"]
@@ -3213,6 +3306,7 @@ export type Database = {
           gamechanger_team_id: string | null
           id: string
           last_synced_at: string | null
+          league_id: string
           logo_url: string | null
           max_roster_size: number | null
           name: string
@@ -3231,6 +3325,7 @@ export type Database = {
           gamechanger_team_id?: string | null
           id?: string
           last_synced_at?: string | null
+          league_id?: string
           logo_url?: string | null
           max_roster_size?: number | null
           name: string
@@ -3249,6 +3344,7 @@ export type Database = {
           gamechanger_team_id?: string | null
           id?: string
           last_synced_at?: string | null
+          league_id?: string
           logo_url?: string | null
           max_roster_size?: number | null
           name?: string
@@ -3264,6 +3360,13 @@ export type Database = {
             columns: ["division_id"]
             isOneToOne: false
             referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teams_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
             referencedColumns: ["id"]
           },
           {
@@ -3355,6 +3458,7 @@ export type Database = {
           has_lights: boolean | null
           has_restrooms: boolean | null
           id: string
+          league_id: string
           name: string
           parking_info: string | null
           season_end: string | null
@@ -3378,6 +3482,7 @@ export type Database = {
           has_lights?: boolean | null
           has_restrooms?: boolean | null
           id?: string
+          league_id?: string
           name: string
           parking_info?: string | null
           season_end?: string | null
@@ -3401,6 +3506,7 @@ export type Database = {
           has_lights?: boolean | null
           has_restrooms?: boolean | null
           id?: string
+          league_id?: string
           name?: string
           parking_info?: string | null
           season_end?: string | null
@@ -3410,7 +3516,15 @@ export type Database = {
           updated_at?: string | null
           zip_code?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "venues_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       volunteer_signups: {
         Row: {
@@ -3493,6 +3607,7 @@ export type Database = {
           id: string
           invited_by: string | null
           last_name: string
+          league_id: string
           phone: string | null
           program_id: string | null
           status: string | null
