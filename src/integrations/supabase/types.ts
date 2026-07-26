@@ -598,18 +598,11 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "divisions_program_id_fkey"
-            columns: ["program_id"]
+            foreignKeyName: "divisions_league_program_fkey"
+            columns: ["league_id", "program_id"]
             isOneToOne: false
             referencedRelation: "programs"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_divisions_program"
-            columns: ["program_id"]
-            isOneToOne: false
-            referencedRelation: "programs"
-            referencedColumns: ["id"]
+            referencedColumns: ["league_id", "id"]
           },
         ]
       }
@@ -1395,6 +1388,7 @@ export type Database = {
           guardian_id: string
           household_id: string
           is_primary: boolean
+          league_id: string
           receives_comms: boolean
         }
         Insert: {
@@ -1402,6 +1396,7 @@ export type Database = {
           guardian_id: string
           household_id: string
           is_primary?: boolean
+          league_id?: string
           receives_comms?: boolean
         }
         Update: {
@@ -1409,21 +1404,29 @@ export type Database = {
           guardian_id?: string
           household_id?: string
           is_primary?: boolean
+          league_id?: string
           receives_comms?: boolean
         }
         Relationships: [
           {
-            foreignKeyName: "guardian_households_guardian_id_fkey"
-            columns: ["guardian_id"]
+            foreignKeyName: "gh_league_guardian_fkey"
+            columns: ["league_id", "guardian_id"]
             isOneToOne: false
             referencedRelation: "guardians"
-            referencedColumns: ["id"]
+            referencedColumns: ["league_id", "id"]
           },
           {
-            foreignKeyName: "guardian_households_household_id_fkey"
-            columns: ["household_id"]
+            foreignKeyName: "gh_league_household_fkey"
+            columns: ["league_id", "household_id"]
             isOneToOne: false
             referencedRelation: "households"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "guardian_households_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
             referencedColumns: ["id"]
           },
         ]
@@ -1437,6 +1440,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          league_id: string
           legacy_player_guardian_id: string | null
           phone: string | null
           updated_at: string
@@ -1449,6 +1453,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          league_id?: string
           legacy_player_guardian_id?: string | null
           phone?: string | null
           updated_at?: string
@@ -1461,17 +1466,27 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          league_id?: string
           legacy_player_guardian_id?: string | null
           phone?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "guardians_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       household_players: {
         Row: {
           can_edit_medical: boolean
           created_at: string
           household_id: string
+          league_id: string
           player_id: string
           role: string
           shares_contact: boolean
@@ -1480,6 +1495,7 @@ export type Database = {
           can_edit_medical?: boolean
           created_at?: string
           household_id: string
+          league_id?: string
           player_id: string
           role?: string
           shares_contact?: boolean
@@ -1488,24 +1504,32 @@ export type Database = {
           can_edit_medical?: boolean
           created_at?: string
           household_id?: string
+          league_id?: string
           player_id?: string
           role?: string
           shares_contact?: boolean
         }
         Relationships: [
           {
-            foreignKeyName: "household_players_household_id_fkey"
-            columns: ["household_id"]
+            foreignKeyName: "household_players_league_id_fkey"
+            columns: ["league_id"]
             isOneToOne: false
-            referencedRelation: "households"
+            referencedRelation: "leagues"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "household_players_player_id_fkey"
-            columns: ["player_id"]
+            foreignKeyName: "hp_league_household_fkey"
+            columns: ["league_id", "household_id"]
             isOneToOne: false
-            referencedRelation: "players"
-            referencedColumns: ["id"]
+            referencedRelation: "households"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "hp_league_player_fkey"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
           },
         ]
       }
@@ -1600,6 +1624,51 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      league_players: {
+        Row: {
+          created_at: string
+          joined_at: string
+          league_id: string
+          left_at: string | null
+          player_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          joined_at?: string
+          league_id?: string
+          left_at?: string | null
+          player_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          joined_at?: string
+          league_id?: string
+          left_at?: string | null
+          player_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_players_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "league_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       leagues: {
         Row: {
@@ -2180,6 +2249,7 @@ export type Database = {
         Row: {
           allergies: string | null
           conditions: string | null
+          league_id: string
           medications: string | null
           notes: string | null
           player_id: string
@@ -2189,6 +2259,7 @@ export type Database = {
         Insert: {
           allergies?: string | null
           conditions?: string | null
+          league_id?: string
           medications?: string | null
           notes?: string | null
           player_id: string
@@ -2198,6 +2269,7 @@ export type Database = {
         Update: {
           allergies?: string | null
           conditions?: string | null
+          league_id?: string
           medications?: string | null
           notes?: string | null
           player_id?: string
@@ -2206,11 +2278,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "player_medical_player_id_fkey"
-            columns: ["player_id"]
-            isOneToOne: true
-            referencedRelation: "players"
+            foreignKeyName: "player_medical_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pm_league_player_fkey"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
           },
         ]
       }
@@ -2237,7 +2316,6 @@ export type Database = {
           jersey_number: string | null
           jersey_size: string | null
           last_name: string
-          league_id: string
           medical_notes: string | null
           parent_email: string
           parent_first_name: string
@@ -2286,7 +2364,6 @@ export type Database = {
           jersey_number?: string | null
           jersey_size?: string | null
           last_name: string
-          league_id?: string
           medical_notes?: string | null
           parent_email: string
           parent_first_name: string
@@ -2335,7 +2412,6 @@ export type Database = {
           jersey_number?: string | null
           jersey_size?: string | null
           last_name?: string
-          league_id?: string
           medical_notes?: string | null
           parent_email?: string
           parent_first_name?: string
@@ -2375,13 +2451,6 @@ export type Database = {
             columns: ["division_id"]
             isOneToOne: false
             referencedRelation: "divisions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "players_league_id_fkey"
-            columns: ["league_id"]
-            isOneToOne: false
-            referencedRelation: "leagues"
             referencedColumns: ["id"]
           },
           {
@@ -2550,11 +2619,11 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "programs_season_id_fkey"
-            columns: ["season_id"]
+            foreignKeyName: "programs_league_season_fkey"
+            columns: ["league_id", "season_id"]
             isOneToOne: false
             referencedRelation: "seasons"
-            referencedColumns: ["id"]
+            referencedColumns: ["league_id", "id"]
           },
         ]
       }
@@ -3218,18 +3287,18 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "team_rosters_player_id_fkey"
-            columns: ["player_id"]
+            foreignKeyName: "tr_league_player_fkey"
+            columns: ["league_id", "player_id"]
             isOneToOne: false
-            referencedRelation: "players"
-            referencedColumns: ["id"]
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
           },
           {
-            foreignKeyName: "team_rosters_team_id_fkey"
-            columns: ["team_id"]
+            foreignKeyName: "tr_league_team_fkey"
+            columns: ["league_id", "team_id"]
             isOneToOne: false
             referencedRelation: "teams"
-            referencedColumns: ["id"]
+            referencedColumns: ["league_id", "id"]
           },
         ]
       }
@@ -3356,11 +3425,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "teams_division_id_fkey"
-            columns: ["division_id"]
+            foreignKeyName: "teams_league_division_fkey"
+            columns: ["league_id", "division_id"]
             isOneToOne: false
             referencedRelation: "divisions"
-            referencedColumns: ["id"]
+            referencedColumns: ["league_id", "id"]
           },
           {
             foreignKeyName: "teams_league_id_fkey"
@@ -3370,11 +3439,11 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "teams_program_id_fkey"
-            columns: ["program_id"]
+            foreignKeyName: "teams_league_program_fkey"
+            columns: ["league_id", "program_id"]
             isOneToOne: false
             referencedRelation: "programs"
-            referencedColumns: ["id"]
+            referencedColumns: ["league_id", "id"]
           },
         ]
       }
@@ -3582,6 +3651,10 @@ export type Database = {
           p_venue_id: string
         }
         Returns: boolean
+      }
+      create_player_in_league: {
+        Args: { _league_id: string; _player: Json }
+        Returns: string
       }
       current_league_id: { Args: never; Returns: string }
       current_season: { Args: { p_program_id: string }; Returns: string }

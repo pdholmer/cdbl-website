@@ -41,7 +41,7 @@ const Divisions = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('divisions')
-        .select('*, programs!divisions_program_id_fkey(name, type)')
+        .select('*, programs!divisions_league_program_fkey(name, type)')
         .order('display_order');
       
       if (error) throw error;
