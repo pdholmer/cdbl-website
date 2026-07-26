@@ -3833,6 +3833,75 @@ export type Database = {
         }
         Relationships: []
       }
+      team_aliases: {
+        Row: {
+          created_at: string
+          external_id: string | null
+          external_name: string
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          league_id: string
+          match_method: string | null
+          matched_at: string | null
+          matched_by: string | null
+          source: string
+          source_division: string | null
+          source_program: string | null
+          team_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          external_id?: string | null
+          external_name: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          match_method?: string | null
+          matched_at?: string | null
+          matched_by?: string | null
+          source: string
+          source_division?: string | null
+          source_program?: string | null
+          team_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          external_id?: string | null
+          external_name?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          match_method?: string | null
+          matched_at?: string | null
+          matched_by?: string | null
+          source?: string
+          source_division?: string | null
+          source_program?: string | null
+          team_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_aliases_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_aliases_league_team_fkey"
+            columns: ["league_id", "team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["league_id", "id"]
+          },
+        ]
+      }
       team_coaches: {
         Row: {
           assigned_date: string | null
