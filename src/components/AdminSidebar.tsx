@@ -94,6 +94,7 @@ const navSections: NavSection[] = [
 export function AdminSidebar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
+  const unreadContacts = useUnreadContactCount();
 
   useEffect(() => {
     const checkAdminRole = async () => {
@@ -171,6 +172,11 @@ export function AdminSidebar() {
                     <div className="flex items-center gap-2">
                       <section.icon className="h-4 w-4" />
                       <span className="font-medium">{section.title}</span>
+                      {section.title === "Communication" && unreadContacts > 0 && (
+                        <span className="ml-1 inline-flex items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[10px] font-semibold text-destructive-foreground min-w-[18px]">
+                          {unreadContacts}
+                        </span>
+                      )}
                     </div>
                     <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 [&[data-state=open]]:rotate-180" />
                   </CollapsibleTrigger>
@@ -181,6 +187,11 @@ export function AdminSidebar() {
                           <NavLink to={item.url} end className={getNavClass}>
                             <item.icon className="h-4 w-4" />
                             <span className="ml-2">{item.title}</span>
+                            {item.url === "/admin/communication" && unreadContacts > 0 && (
+                              <span className="ml-auto inline-flex items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[10px] font-semibold text-destructive-foreground min-w-[18px]">
+                                {unreadContacts}
+                              </span>
+                            )}
                           </NavLink>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
