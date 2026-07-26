@@ -2139,6 +2139,54 @@ export type Database = {
         }
         Relationships: []
       }
+      player_aliases: {
+        Row: {
+          external_id: string
+          external_name: string | null
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          league_id: string
+          player_id: string | null
+          source: string
+        }
+        Insert: {
+          external_id: string
+          external_name?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          player_id?: string | null
+          source: string
+        }
+        Update: {
+          external_id?: string
+          external_name?: string | null
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          player_id?: string | null
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_aliases_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_aliases_league_player_fk"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+        ]
+      }
       player_data_access_log: {
         Row: {
           access_type: string
@@ -2180,6 +2228,73 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "players"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      player_documents: {
+        Row: {
+          created_at: string
+          doc_type: string
+          expires_at: string | null
+          id: string
+          league_id: string
+          player_id: string
+          season_id: string | null
+          storage_path: string | null
+          uploaded_at: string
+          uploaded_by: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          doc_type: string
+          expires_at?: string | null
+          id?: string
+          league_id?: string
+          player_id: string
+          season_id?: string | null
+          storage_path?: string | null
+          uploaded_at?: string
+          uploaded_by?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          doc_type?: string
+          expires_at?: string | null
+          id?: string
+          league_id?: string
+          player_id?: string
+          season_id?: string | null
+          storage_path?: string | null
+          uploaded_at?: string
+          uploaded_by?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_documents_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_documents_league_player_fk"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+          {
+            foreignKeyName: "player_documents_league_season_fk"
+            columns: ["league_id", "season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["league_id", "id"]
           },
         ]
       }
@@ -3879,6 +3994,7 @@ export type Database = {
         Args: { notes?: string; request_id: string }
         Returns: boolean
       }
+      safe_uuid: { Args: { _t: string }; Returns: string }
       unsubscribe_by_token: {
         Args: { _category?: string; _token: string }
         Returns: boolean
