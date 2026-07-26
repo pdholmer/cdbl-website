@@ -668,6 +668,20 @@ export type Database = {
             referencedRelation: "players"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "draft_picks_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "draft_picks_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
+          },
         ]
       }
       draft_player_pool: {
@@ -713,6 +727,20 @@ export type Database = {
             referencedRelation: "players"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "draft_player_pool_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "draft_player_pool_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
+          },
         ]
       }
       draft_player_queues: {
@@ -751,6 +779,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "players"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_player_queues_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "draft_player_queues_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
           },
         ]
       }
@@ -1827,6 +1869,20 @@ export type Database = {
             referencedRelation: "players"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "league_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "league_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
+          },
         ]
       }
       leagues: {
@@ -2388,6 +2444,20 @@ export type Database = {
             referencedRelation: "players"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "player_data_access_log_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "player_data_access_log_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
+          },
         ]
       }
       player_documents: {
@@ -2516,6 +2586,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "players"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_guardians_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "player_guardians_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
           },
         ]
       }
@@ -3005,6 +3089,20 @@ export type Database = {
             referencedRelation: "players"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "registration_code_uses_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "registration_code_uses_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
+          },
         ]
       }
       registration_codes: {
@@ -3153,6 +3251,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "players"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_submissions_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "registration_submissions_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_roster_coach"
+            referencedColumns: ["player_id"]
           },
           {
             foreignKeyName: "registration_submissions_program_id_fkey"
@@ -4165,6 +4277,36 @@ export type Database = {
           },
         ]
       }
+      v_player_current: {
+        Row: {
+          baseball_age: number | null
+          birth_cert_on_file: boolean | null
+          date_of_birth: string | null
+          division_name: string | null
+          first_name: string | null
+          grade_at_registration: number | null
+          household_id: string | null
+          jersey_number: string | null
+          kind: string | null
+          last_name: string | null
+          lifecycle: string | null
+          offer: string | null
+          paid: boolean | null
+          payment: string | null
+          player_id: string | null
+          preferred_name: string | null
+          primary_guardian_email: string | null
+          primary_guardian_name: string | null
+          primary_guardian_phone: string | null
+          program_name: string | null
+          registration_id: string | null
+          seat: string | null
+          team_id: string | null
+          team_name: string | null
+          waiver_status: string | null
+        }
+        Relationships: []
+      }
       v_player_evaluation_summary: {
         Row: {
           division_id: string | null
@@ -4205,6 +4347,33 @@ export type Database = {
           },
         ]
       }
+      v_roster_coach: {
+        Row: {
+          allergies: string | null
+          first_name: string | null
+          jersey_number: string | null
+          last_name: string | null
+          notes: string | null
+          player_id: string | null
+          position_primary: string | null
+          position_secondary: string | null
+          primary_guardian_email: string | null
+          primary_guardian_name: string | null
+          primary_guardian_phone: string | null
+          team_id: string | null
+        }
+        Relationships: []
+      }
+      v_roster_social_export: {
+        Row: {
+          division_name: string | null
+          first_name: string | null
+          jersey_number: string | null
+          last_name: string | null
+          team_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       approve_role_request: {
@@ -4241,6 +4410,14 @@ export type Database = {
         Returns: number
       }
       get_current_pick_team: { Args: { draft_id: string }; Returns: string }
+      get_current_roster_assignment: {
+        Args: { _player_id: string }
+        Returns: {
+          jersey_number: string
+          team_id: string
+          team_name: string
+        }[]
+      }
       get_invitation_by_token: {
         Args: { _token: string }
         Returns: {
@@ -4267,8 +4444,22 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_primary_guardian_for_player: {
+        Args: { _player_id: string }
+        Returns: {
+          email: string
+          first_name: string
+          household_id: string
+          last_name: string
+          phone: string
+        }[]
+      }
       get_user_email: { Args: never; Returns: string }
       has_admin_access: { Args: { _user_id: string }; Returns: boolean }
+      has_document_on_file: {
+        Args: { _doc_type: string; _player_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
