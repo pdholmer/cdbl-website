@@ -1064,6 +1064,165 @@ export type Database = {
         }
         Relationships: []
       }
+      evaluation_events: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          division_id: string | null
+          event_date: string | null
+          event_type: string
+          id: string
+          is_open: boolean
+          league_id: string
+          name: string
+          scale_max: number
+          season_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          division_id?: string | null
+          event_date?: string | null
+          event_type: string
+          id?: string
+          is_open?: boolean
+          league_id?: string
+          name: string
+          scale_max?: number
+          season_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          division_id?: string | null
+          event_date?: string | null
+          event_type?: string
+          id?: string
+          is_open?: boolean
+          league_id?: string
+          name?: string
+          scale_max?: number
+          season_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluation_events_league_division_fk"
+            columns: ["league_id", "division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "evaluation_events_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluation_events_league_season_fk"
+            columns: ["league_id", "season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["league_id", "id"]
+          },
+        ]
+      }
+      evaluations: {
+        Row: {
+          bib_number: string | null
+          catching: number | null
+          created_at: string
+          evaluation_event_id: string
+          evaluator_id: string
+          evaluator_notes: string | null
+          fielding: number | null
+          hitting: number | null
+          id: string
+          is_final: boolean
+          league_id: string
+          overall: number | null
+          parent_summary: string | null
+          player_id: string
+          running: number | null
+          season_id: string | null
+          throwing: number | null
+          updated_at: string
+        }
+        Insert: {
+          bib_number?: string | null
+          catching?: number | null
+          created_at?: string
+          evaluation_event_id: string
+          evaluator_id?: string
+          evaluator_notes?: string | null
+          fielding?: number | null
+          hitting?: number | null
+          id?: string
+          is_final?: boolean
+          league_id?: string
+          overall?: number | null
+          parent_summary?: string | null
+          player_id: string
+          running?: number | null
+          season_id?: string | null
+          throwing?: number | null
+          updated_at?: string
+        }
+        Update: {
+          bib_number?: string | null
+          catching?: number | null
+          created_at?: string
+          evaluation_event_id?: string
+          evaluator_id?: string
+          evaluator_notes?: string | null
+          fielding?: number | null
+          hitting?: number | null
+          id?: string
+          is_final?: boolean
+          league_id?: string
+          overall?: number | null
+          parent_summary?: string | null
+          player_id?: string
+          running?: number | null
+          season_id?: string | null
+          throwing?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluations_league_event_fk"
+            columns: ["league_id", "evaluation_event_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_events"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_player_fk"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_season_fk"
+            columns: ["league_id", "season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["league_id", "id"]
+          },
+        ]
+      }
       external_calendar_events: {
         Row: {
           all_day: boolean
@@ -2405,6 +2564,64 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "league_players"
             referencedColumns: ["league_id", "player_id"]
+          },
+        ]
+      }
+      player_notes: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          league_id: string
+          player_id: string
+          season_id: string | null
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          author_id?: string
+          body: string
+          created_at?: string
+          id?: string
+          league_id?: string
+          player_id: string
+          season_id?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          league_id?: string
+          player_id?: string
+          season_id?: string | null
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_notes_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_notes_league_player_fk"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+          {
+            foreignKeyName: "player_notes_league_season_fk"
+            columns: ["league_id", "season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["league_id", "id"]
           },
         ]
       }
@@ -3874,7 +4091,120 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_parent_evaluation_scores: {
+        Row: {
+          catching: number | null
+          evaluation_event_id: string | null
+          fielding: number | null
+          hitting: number | null
+          is_final: boolean | null
+          league_id: string | null
+          overall: number | null
+          parent_summary: string | null
+          player_id: string | null
+          running: number | null
+          season_id: string | null
+          throwing: number | null
+        }
+        Insert: {
+          catching?: number | null
+          evaluation_event_id?: string | null
+          fielding?: number | null
+          hitting?: number | null
+          is_final?: boolean | null
+          league_id?: string | null
+          overall?: number | null
+          parent_summary?: string | null
+          player_id?: string | null
+          running?: number | null
+          season_id?: string | null
+          throwing?: number | null
+        }
+        Update: {
+          catching?: number | null
+          evaluation_event_id?: string | null
+          fielding?: number | null
+          hitting?: number | null
+          is_final?: boolean | null
+          league_id?: string | null
+          overall?: number | null
+          parent_summary?: string | null
+          player_id?: string | null
+          running?: number | null
+          season_id?: string | null
+          throwing?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluations_league_event_fk"
+            columns: ["league_id", "evaluation_event_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_events"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_player_fk"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_season_fk"
+            columns: ["league_id", "season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["league_id", "id"]
+          },
+        ]
+      }
+      v_player_evaluation_summary: {
+        Row: {
+          division_id: string | null
+          evaluation_event_id: string | null
+          evaluator_count: number | null
+          league_id: string | null
+          mean_catching: number | null
+          mean_fielding: number | null
+          mean_hitting: number | null
+          mean_overall: number | null
+          mean_running: number | null
+          mean_throwing: number | null
+          player_id: string | null
+          scored_overall_count: number | null
+          z_overall: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluations_league_event_fk"
+            columns: ["league_id", "evaluation_event_id"]
+            isOneToOne: false
+            referencedRelation: "evaluation_events"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "evaluations_league_player_fk"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+        ]
+      }
     }
     Functions: {
       approve_role_request: {
@@ -3950,6 +4280,7 @@ export type Database = {
         Args: { _division_id?: string; _program_id: string; _user_id: string }
         Returns: boolean
       }
+      is_evaluator_role: { Args: { _user_id: string }; Returns: boolean }
       is_guardian_of_household: {
         Args: { _household_id: string }
         Returns: boolean
