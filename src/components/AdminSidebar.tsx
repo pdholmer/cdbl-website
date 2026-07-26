@@ -23,6 +23,7 @@ import {
 import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { useUnreadContactCount } from "@/hooks/useUnreadContactCount";
 
 interface NavSection {
   title: string;
@@ -42,19 +43,19 @@ const navSections: NavSection[] = [
     ],
   },
   {
+    title: "Communication",
+    icon: Megaphone,
+    items: [
+      { title: "Communication", url: "/admin/communication", icon: Megaphone },
+    ],
+  },
+  {
     title: "Schedule & Events",
     icon: Calendar,
     items: [
       { title: "Schedule", url: "/admin/schedule", icon: Calendar },
       { title: "Facilities", url: "/admin/facilities", icon: MapPin },
       { title: "Drafts", url: "/admin/drafts", icon: ClipboardList },
-    ],
-  },
-  {
-    title: "Communication",
-    icon: Megaphone,
-    items: [
-      { title: "Communication", url: "/admin/communication", icon: Megaphone },
     ],
   },
   {
