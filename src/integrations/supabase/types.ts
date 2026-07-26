@@ -1781,6 +1781,142 @@ export type Database = {
           },
         ]
       }
+      import_sc_teams: {
+        Row: {
+          allocated_players: number | null
+          allocated_volunteers: number | null
+          id: string
+          imported_at: string
+          league_id: string
+          match_method: string | null
+          matched_team_id: string | null
+          review_note: string | null
+          source: string
+          source_division: string | null
+          source_program: string | null
+          source_team: string | null
+          source_team_code: string | null
+          unallocated_players: number | null
+          unallocated_volunteers: number | null
+        }
+        Insert: {
+          allocated_players?: number | null
+          allocated_volunteers?: number | null
+          id?: string
+          imported_at?: string
+          league_id?: string
+          match_method?: string | null
+          matched_team_id?: string | null
+          review_note?: string | null
+          source?: string
+          source_division?: string | null
+          source_program?: string | null
+          source_team?: string | null
+          source_team_code?: string | null
+          unallocated_players?: number | null
+          unallocated_volunteers?: number | null
+        }
+        Update: {
+          allocated_players?: number | null
+          allocated_volunteers?: number | null
+          id?: string
+          imported_at?: string
+          league_id?: string
+          match_method?: string | null
+          matched_team_id?: string | null
+          review_note?: string | null
+          source?: string
+          source_division?: string | null
+          source_program?: string | null
+          source_team?: string | null
+          source_team_code?: string | null
+          unallocated_players?: number | null
+          unallocated_volunteers?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_sc_teams_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      import_sc_volunteers: {
+        Row: {
+          cell_phone: string | null
+          city: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          imported_at: string
+          last_name: string | null
+          league_id: string
+          match_method: string | null
+          matched_coach_id: string | null
+          phone: string | null
+          postal_code: string | null
+          review_note: string | null
+          risk_status: string | null
+          source: string
+          source_division: string | null
+          source_program: string | null
+          source_role: string | null
+          source_team: string | null
+        }
+        Insert: {
+          cell_phone?: string | null
+          city?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          imported_at?: string
+          last_name?: string | null
+          league_id?: string
+          match_method?: string | null
+          matched_coach_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          review_note?: string | null
+          risk_status?: string | null
+          source?: string
+          source_division?: string | null
+          source_program?: string | null
+          source_role?: string | null
+          source_team?: string | null
+        }
+        Update: {
+          cell_phone?: string | null
+          city?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          imported_at?: string
+          last_name?: string | null
+          league_id?: string
+          match_method?: string | null
+          matched_coach_id?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          review_note?: string | null
+          risk_status?: string | null
+          source?: string
+          source_division?: string | null
+          source_program?: string | null
+          source_role?: string | null
+          source_team?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_sc_volunteers_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       league_events: {
         Row: {
           category: string
@@ -3696,6 +3832,75 @@ export type Database = {
           reason?: string
         }
         Relationships: []
+      }
+      team_aliases: {
+        Row: {
+          created_at: string
+          external_id: string | null
+          external_name: string
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          league_id: string
+          match_method: string | null
+          matched_at: string | null
+          matched_by: string | null
+          source: string
+          source_division: string | null
+          source_program: string | null
+          team_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          external_id?: string | null
+          external_name: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          match_method?: string | null
+          matched_at?: string | null
+          matched_by?: string | null
+          source: string
+          source_division?: string | null
+          source_program?: string | null
+          team_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          external_id?: string | null
+          external_name?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          match_method?: string | null
+          matched_at?: string | null
+          matched_by?: string | null
+          source?: string
+          source_division?: string | null
+          source_program?: string | null
+          team_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_aliases_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_aliases_league_team_fkey"
+            columns: ["league_id", "team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["league_id", "id"]
+          },
+        ]
       }
       team_coaches: {
         Row: {
