@@ -48,14 +48,19 @@ const Login = () => {
       return;
     }
 
-    const { data: membership } = await supabase
-      .from("guardian_household_members")
-      .select("household_id")
-      .eq("user_id", uid)
+    const { data: guardian } = await supabase
+      .from("guardians")
+      .select("id, guardian_households(household_id)")
+      .eq("auth_user_id", uid)
       .limit(1)
       .maybeSingle();
 
-    if (membership?.household_id) {
+    const hasHousehold =
+      !!guardian &&
+      Array.isArray((guardian as any).guardian_households) &&
+      (guardian as any).guardian_households.length > 0;
+
+    if (hasHousehold) {
       navigate("/household", { replace: true });
     } else {
       navigate("/household/new", { replace: true });

@@ -36,30 +36,58 @@ const HouseholdNew = () => {
     setSaving(true);
     const { data: userData } = await supabase.auth.getUser();
     const uid = userData.user?.id;
+    const email = userData.user?.email ?? null;
     if (!uid) {
       toast.error("Session expired. Please sign in again.");
       setSaving(false);
       navigate("/login");
       return;
     }
-    const { data: hh, error } = await supabase
-      .from("guardian_households")
-      .insert({ name: name.trim(), created_by: uid })
+
+    // NOTE: A parent-facing bootstrap policy is not yet in place. Until it lands,
+    // these inserts will only succeed for admins. This UI is scaffolding.
+    const { data: hh, error: hhError } = await supabase
+      .from("households")
+      .insert({ name: name.trim() })
       .select("id")
       .single();
 
-    if (error || !hh) {
-      toast.error(error?.message ?? "Could not create household.");
+    if (hhError || !hh) {
+      toast.error(hhError?.message ?? "Could not create household.");
       setSaving(false);
       return;
     }
 
-    const { error: memberError } = await supabase
-      .from("guardian_household_members")
-      .insert({ household_id: hh.id, user_id: uid, role: "owner" });
+    // Ensure a guardians row for this auth user
+    let guardianId: string | null = null;
+    const { data: existingGuardian } = await supabase
+      .from("guardians")
+      .select("id")
+      .eq("auth_user_id", uid)
+      .maybeSingle();
 
-    if (memberError) {
-      toast.error(memberError.message);
+    if (existingGuardian?.id) {
+      guardianId = existingGuardian.id;
+    } else {
+      const { data: newGuardian, error: gError } = await supabase
+        .from("guardians")
+        .insert({ auth_user_id: uid, email })
+        .select("id")
+        .single();
+      if (gError || !newGuardian) {
+        toast.error(gError?.message ?? "Could not create guardian record.");
+        setSaving(false);
+        return;
+      }
+      guardianId = newGuardian.id;
+    }
+
+    const { error: linkError } = await supabase
+      .from("guardian_households")
+      .insert({ guardian_id: guardianId, household_id: hh.id, is_primary: true });
+
+    if (linkError) {
+      toast.error(linkError.message);
       setSaving(false);
       return;
     }

@@ -1098,59 +1098,159 @@ export type Database = {
           },
         ]
       }
-      guardian_household_members: {
+      guardian_households: {
         Row: {
           created_at: string
+          guardian_id: string
           household_id: string
-          id: string
-          role: string
-          user_id: string
+          is_primary: boolean
+          receives_comms: boolean
         }
         Insert: {
           created_at?: string
+          guardian_id: string
           household_id: string
-          id?: string
-          role?: string
-          user_id: string
+          is_primary?: boolean
+          receives_comms?: boolean
         }
         Update: {
           created_at?: string
+          guardian_id?: string
           household_id?: string
-          id?: string
-          role?: string
-          user_id?: string
+          is_primary?: boolean
+          receives_comms?: boolean
         }
         Relationships: [
           {
-            foreignKeyName: "guardian_household_members_household_id_fkey"
+            foreignKeyName: "guardian_households_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guardian_households_household_id_fkey"
             columns: ["household_id"]
             isOneToOne: false
-            referencedRelation: "guardian_households"
+            referencedRelation: "households"
             referencedColumns: ["id"]
           },
         ]
       }
-      guardian_households: {
+      guardians: {
         Row: {
+          auth_user_id: string | null
+          contact_method: string
           created_at: string
-          created_by: string
+          email: string | null
+          first_name: string | null
           id: string
-          name: string
+          last_name: string | null
+          legacy_player_guardian_id: string | null
+          phone: string | null
           updated_at: string
         }
         Insert: {
+          auth_user_id?: string | null
+          contact_method?: string
           created_at?: string
-          created_by: string
+          email?: string | null
+          first_name?: string | null
           id?: string
-          name: string
+          last_name?: string | null
+          legacy_player_guardian_id?: string | null
+          phone?: string | null
           updated_at?: string
         }
         Update: {
+          auth_user_id?: string | null
+          contact_method?: string
           created_at?: string
-          created_by?: string
+          email?: string | null
+          first_name?: string | null
           id?: string
-          name?: string
+          last_name?: string | null
+          legacy_player_guardian_id?: string | null
+          phone?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      household_players: {
+        Row: {
+          can_edit_medical: boolean
+          created_at: string
+          household_id: string
+          player_id: string
+          role: string
+          shares_contact: boolean
+        }
+        Insert: {
+          can_edit_medical?: boolean
+          created_at?: string
+          household_id: string
+          player_id: string
+          role?: string
+          shares_contact?: boolean
+        }
+        Update: {
+          can_edit_medical?: boolean
+          created_at?: string
+          household_id?: string
+          player_id?: string
+          role?: string
+          shares_contact?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_players_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "household_players_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      households: {
+        Row: {
+          address_line1: string | null
+          address_line2: string | null
+          city: string | null
+          created_at: string
+          id: string
+          name: string | null
+          state: string | null
+          updated_at: string
+          zip_code: string | null
+        }
+        Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name?: string | null
+          state?: string | null
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Update: {
+          address_line1?: string | null
+          address_line2?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name?: string | null
+          state?: string | null
+          updated_at?: string
+          zip_code?: string | null
         }
         Relationships: []
       }
@@ -1549,6 +1649,44 @@ export type Database = {
           },
         ]
       }
+      player_medical: {
+        Row: {
+          allergies: string | null
+          conditions: string | null
+          medications: string | null
+          notes: string | null
+          player_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allergies?: string | null
+          conditions?: string | null
+          medications?: string | null
+          notes?: string | null
+          player_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allergies?: string | null
+          conditions?: string | null
+          medications?: string | null
+          notes?: string | null
+          player_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_medical_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: true
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           address_line1: string | null
@@ -1583,10 +1721,12 @@ export type Database = {
           payment_method: string | null
           payment_notes: string | null
           payment_status: string | null
+          preferred_name: string | null
           previous_divisions_played: string | null
           previous_experience: boolean | null
           program_id: string | null
           registration_date: string | null
+          school: string | null
           skill_level: string | null
           special_requests: string | null
           state: string | null
@@ -1629,10 +1769,12 @@ export type Database = {
           payment_method?: string | null
           payment_notes?: string | null
           payment_status?: string | null
+          preferred_name?: string | null
           previous_divisions_played?: string | null
           previous_experience?: boolean | null
           program_id?: string | null
           registration_date?: string | null
+          school?: string | null
           skill_level?: string | null
           special_requests?: string | null
           state?: string | null
@@ -1675,10 +1817,12 @@ export type Database = {
           payment_method?: string | null
           payment_notes?: string | null
           payment_status?: string | null
+          preferred_name?: string | null
           previous_divisions_played?: string | null
           previous_experience?: boolean | null
           program_id?: string | null
           registration_date?: string | null
+          school?: string | null
           skill_level?: string | null
           special_requests?: string | null
           state?: string | null
@@ -2856,14 +3000,11 @@ export type Database = {
         Args: { _division_id?: string; _program_id: string; _user_id: string }
         Returns: boolean
       }
-      is_household_member: {
-        Args: { _household_id: string; _user_id: string }
+      is_guardian_of_household: {
+        Args: { _household_id: string }
         Returns: boolean
       }
-      is_household_owner: {
-        Args: { _household_id: string; _user_id: string }
-        Returns: boolean
-      }
+      is_guardian_of_player: { Args: { _player_id: string }; Returns: boolean }
       log_player_access: {
         Args: {
           _access_type: string

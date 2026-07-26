@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
 
-type Household = { id: string; name: string };
+type Household = { id: string; name: string | null };
 
 const Household = () => {
   const navigate = useNavigate();
@@ -24,14 +24,27 @@ const Household = () => {
         setLoading(false);
         return;
       }
-      const { data: membership } = await supabase
-        .from("guardian_household_members")
-        .select("household_id, guardian_households:household_id(id, name)")
-        .eq("user_id", session.user.id)
+
+      const { data: guardian } = await supabase
+        .from("guardians")
+        .select("id")
+        .eq("auth_user_id", session.user.id)
+        .maybeSingle();
+
+      if (!guardian) {
+        setNeedsCreate(true);
+        setLoading(false);
+        return;
+      }
+
+      const { data: link } = await supabase
+        .from("guardian_households")
+        .select("household_id, households:household_id(id, name)")
+        .eq("guardian_id", guardian.id)
         .limit(1)
         .maybeSingle();
 
-      const hh = (membership as any)?.guardian_households as Household | undefined;
+      const hh = (link as any)?.households as Household | undefined;
       if (!hh) {
         setNeedsCreate(true);
       } else {
