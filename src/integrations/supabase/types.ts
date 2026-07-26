@@ -234,6 +234,66 @@ export type Database = {
         }
         Relationships: []
       }
+      communication_preferences: {
+        Row: {
+          category_opt_outs: string[]
+          email_enabled: boolean
+          guardian_id: string | null
+          id: string
+          league_id: string
+          push_enabled: boolean
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          sms_enabled: boolean
+          unsubscribe_token: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          category_opt_outs?: string[]
+          email_enabled?: boolean
+          guardian_id?: string | null
+          id?: string
+          league_id?: string
+          push_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean
+          unsubscribe_token?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          category_opt_outs?: string[]
+          email_enabled?: boolean
+          guardian_id?: string | null
+          id?: string
+          league_id?: string
+          push_enabled?: boolean
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          sms_enabled?: boolean
+          unsubscribe_token?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communication_preferences_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communication_preferences_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       concession_employees: {
         Row: {
           created_at: string
@@ -373,39 +433,97 @@ export type Database = {
       }
       contact_messages: {
         Row: {
+          assigned_to: string | null
           created_at: string
           email: string
           id: string
+          league_id: string | null
           message: string
           name: string
           phone: string | null
           read_at: string | null
+          responded_at: string | null
           status: string
           subject: string
         }
         Insert: {
+          assigned_to?: string | null
           created_at?: string
           email: string
           id?: string
+          league_id?: string | null
           message: string
           name: string
           phone?: string | null
           read_at?: string | null
+          responded_at?: string | null
           status?: string
           subject: string
         }
         Update: {
+          assigned_to?: string | null
           created_at?: string
           email?: string
           id?: string
+          league_id?: string | null
           message?: string
           name?: string
           phone?: string | null
           read_at?: string | null
+          responded_at?: string | null
           status?: string
           subject?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "contact_messages_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      device_tokens: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          last_seen_at: string
+          league_id: string
+          platform: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          platform: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          last_seen_at?: string
+          league_id?: string
+          platform?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "device_tokens_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       divisions: {
         Row: {
@@ -745,6 +863,7 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          league_id: string | null
           notes: string | null
           reason: string | null
           resolved: boolean
@@ -758,6 +877,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          league_id?: string | null
           notes?: string | null
           reason?: string | null
           resolved?: boolean
@@ -771,6 +891,7 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          league_id?: string | null
           notes?: string | null
           reason?: string | null
           resolved?: boolean
@@ -778,7 +899,59 @@ export type Database = {
           resolved_by?: string | null
           source?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "email_bounces_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_suppressions: {
+        Row: {
+          created_at: string
+          detail: string | null
+          email: string
+          id: string
+          league_id: string
+          reason: Database["public"]["Enums"]["suppression_reason"]
+          released_at: string | null
+          released_by: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          email: string
+          id?: string
+          league_id?: string
+          reason: Database["public"]["Enums"]["suppression_reason"]
+          released_at?: string | null
+          released_by?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          email?: string
+          id?: string
+          league_id?: string
+          reason?: Database["public"]["Enums"]["suppression_reason"]
+          released_at?: string | null
+          released_by?: string | null
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_suppressions_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       external_calendar_events: {
         Row: {
@@ -1299,15 +1472,64 @@ export type Database = {
         }
         Relationships: []
       }
+      leagues: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+          primary_color: string | null
+          reply_to_address: string | null
+          sending_domain: string | null
+          sending_from_address: string | null
+          sending_from_name: string | null
+          slug: string
+          timezone: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+          primary_color?: string | null
+          reply_to_address?: string | null
+          sending_domain?: string | null
+          sending_from_address?: string | null
+          sending_from_name?: string | null
+          slug: string
+          timezone?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+          primary_color?: string | null
+          reply_to_address?: string | null
+          sending_domain?: string | null
+          sending_from_address?: string | null
+          sending_from_name?: string | null
+          slug?: string
+          timezone?: string
+        }
+        Relationships: []
+      }
       message_templates: {
         Row: {
           active: boolean | null
           body: string
           category: string | null
+          channel: Database["public"]["Enums"]["notification_channel"]
           created_at: string | null
           created_by: string | null
           id: string
+          key: string | null
+          league_id: string | null
           name: string
+          priority: Database["public"]["Enums"]["notification_priority"]
           subject: string
           updated_at: string | null
           variables: Json | null
@@ -1316,10 +1538,14 @@ export type Database = {
           active?: boolean | null
           body: string
           category?: string | null
+          channel?: Database["public"]["Enums"]["notification_channel"]
           created_at?: string | null
           created_by?: string | null
           id?: string
+          key?: string | null
+          league_id?: string | null
           name: string
+          priority?: Database["public"]["Enums"]["notification_priority"]
           subject: string
           updated_at?: string | null
           variables?: Json | null
@@ -1328,15 +1554,27 @@ export type Database = {
           active?: boolean | null
           body?: string
           category?: string | null
+          channel?: Database["public"]["Enums"]["notification_channel"]
           created_at?: string | null
           created_by?: string | null
           id?: string
+          key?: string | null
+          league_id?: string | null
           name?: string
+          priority?: Database["public"]["Enums"]["notification_priority"]
           subject?: string
           updated_at?: string | null
           variables?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "message_templates_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages_sent: {
         Row: {
@@ -1443,6 +1681,166 @@ export type Database = {
             columns: ["template_id"]
             isOneToOne: false
             referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_queue: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          audience_description: string | null
+          body_markdown: string | null
+          created_at: string
+          created_by: string | null
+          dedupe_key: string | null
+          error_message: string | null
+          event_key: string
+          id: string
+          league_id: string
+          payload: Json
+          priority: Database["public"]["Enums"]["notification_priority"]
+          requires_approval: boolean
+          scheduled_for: string | null
+          sent_at: string | null
+          status: Database["public"]["Enums"]["notification_status"]
+          subject: string | null
+          template_key: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          audience_description?: string | null
+          body_markdown?: string | null
+          created_at?: string
+          created_by?: string | null
+          dedupe_key?: string | null
+          error_message?: string | null
+          event_key: string
+          id?: string
+          league_id?: string
+          payload?: Json
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          requires_approval?: boolean
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["notification_status"]
+          subject?: string | null
+          template_key?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          audience_description?: string | null
+          body_markdown?: string | null
+          created_at?: string
+          created_by?: string | null
+          dedupe_key?: string | null
+          error_message?: string | null
+          event_key?: string
+          id?: string
+          league_id?: string
+          payload?: Json
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          requires_approval?: boolean
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["notification_status"]
+          subject?: string | null
+          template_key?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_queue_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_recipients: {
+        Row: {
+          address: string
+          bounced_at: string | null
+          channel: Database["public"]["Enums"]["notification_channel"]
+          created_at: string
+          delivered_at: string | null
+          failure_reason: string | null
+          guardian_id: string | null
+          household_id: string | null
+          id: string
+          league_id: string
+          opened_at: string | null
+          provider_message_id: string | null
+          queue_id: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["delivery_status"]
+          user_id: string | null
+        }
+        Insert: {
+          address: string
+          bounced_at?: string | null
+          channel?: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          delivered_at?: string | null
+          failure_reason?: string | null
+          guardian_id?: string | null
+          household_id?: string | null
+          id?: string
+          league_id?: string
+          opened_at?: string | null
+          provider_message_id?: string | null
+          queue_id: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["delivery_status"]
+          user_id?: string | null
+        }
+        Update: {
+          address?: string
+          bounced_at?: string | null
+          channel?: Database["public"]["Enums"]["notification_channel"]
+          created_at?: string
+          delivered_at?: string | null
+          failure_reason?: string | null
+          guardian_id?: string | null
+          household_id?: string | null
+          id?: string
+          league_id?: string
+          opened_at?: string | null
+          provider_message_id?: string | null
+          queue_id?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["delivery_status"]
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_recipients_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_recipients_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_recipients_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_recipients_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "notification_queue"
             referencedColumns: ["id"]
           },
         ]
@@ -2960,6 +3358,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      current_league_id: { Args: never; Returns: string }
       current_season: { Args: { p_program_id: string }; Returns: string }
       get_current_pick_team: { Args: { draft_id: string }; Returns: string }
       get_invitation_by_token: {
@@ -2996,6 +3395,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_coach_of: { Args: { _team_id: string }; Returns: boolean }
       is_commissioner_for: {
         Args: { _division_id?: string; _program_id: string; _user_id: string }
         Returns: boolean
@@ -3027,6 +3427,10 @@ export type Database = {
         Args: { notes?: string; request_id: string }
         Returns: boolean
       }
+      unsubscribe_by_token: {
+        Args: { _category?: string; _token: string }
+        Returns: boolean
+      }
       validate_registration_code: {
         Args: { _code: string; _division_id?: string; _program_id?: string }
         Returns: {
@@ -3047,6 +3451,25 @@ export type Database = {
         | "commissioner"
         | "board_member"
         | "parent"
+      delivery_status:
+        | "pending"
+        | "sent"
+        | "delivered"
+        | "opened"
+        | "bounced"
+        | "complained"
+        | "failed"
+        | "suppressed"
+      notification_channel: "email" | "sms" | "push" | "call_task"
+      notification_priority: "urgent" | "normal" | "digest"
+      notification_status:
+        | "pending"
+        | "approved"
+        | "queued"
+        | "sending"
+        | "sent"
+        | "failed"
+        | "cancelled"
       program_type: "in_house" | "travel"
       resource_category:
         | "drill"
@@ -3054,6 +3477,12 @@ export type Database = {
         | "safety_guide"
         | "administrative"
       support_type: "donation" | "sponsorship" | "volunteer" | "merchandise"
+      suppression_reason:
+        | "hard_bounce"
+        | "complaint"
+        | "unsubscribe"
+        | "manual"
+        | "invalid"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3190,6 +3619,27 @@ export const Constants = {
         "board_member",
         "parent",
       ],
+      delivery_status: [
+        "pending",
+        "sent",
+        "delivered",
+        "opened",
+        "bounced",
+        "complained",
+        "failed",
+        "suppressed",
+      ],
+      notification_channel: ["email", "sms", "push", "call_task"],
+      notification_priority: ["urgent", "normal", "digest"],
+      notification_status: [
+        "pending",
+        "approved",
+        "queued",
+        "sending",
+        "sent",
+        "failed",
+        "cancelled",
+      ],
       program_type: ["in_house", "travel"],
       resource_category: [
         "drill",
@@ -3198,6 +3648,13 @@ export const Constants = {
         "administrative",
       ],
       support_type: ["donation", "sponsorship", "volunteer", "merchandise"],
+      suppression_reason: [
+        "hard_bounce",
+        "complaint",
+        "unsubscribe",
+        "manual",
+        "invalid",
+      ],
     },
   },
 } as const
