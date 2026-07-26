@@ -51,6 +51,13 @@ const navSections: NavSection[] = [
     ],
   },
   {
+    title: "Communication",
+    icon: Megaphone,
+    items: [
+      { title: "Communication", url: "/admin/communication", icon: Megaphone },
+    ],
+  },
+  {
     title: "Content",
     icon: FileText,
     items: [
