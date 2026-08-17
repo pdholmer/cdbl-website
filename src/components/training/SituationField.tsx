@@ -10,8 +10,15 @@ export interface SituationFieldProps {
     runners?: Runner[];
     ball?: Point | null;
   } | null;
+  /** Quiz mode: makes defender tokens tappable and adds a pulsing hint. */
+  onSelectPosition?: (position: string) => void;
+  /** Per-position result marks shown in quiz mode. */
+  positionStatus?: Record<string, boolean | undefined>;
+  /** Highlighted (correct answer / chosen) position. */
+  highlightPosition?: string | null;
   className?: string;
 }
+
 
 const MOVE_EPSILON = 2;
 
