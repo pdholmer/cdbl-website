@@ -68,11 +68,7 @@ export const SituationField = ({
 
       {/* Outfield warning track arc */}
       <path
-        d="M 200 478 L -40 238 A 340 340 0 0 1 440 238 L 200 478 Z"
-        fill="none"
-      />
-      <path
-        d="M 8 300 A 300 300 0 0 1 392 300"
+        d="M 6 292 A 360 360 0 0 1 394 292"
         fill="none"
         stroke={dirt}
         strokeWidth={10}
