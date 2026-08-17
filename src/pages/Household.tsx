@@ -86,6 +86,19 @@ const Household = () => {
       <div className="max-w-3xl mx-auto space-y-6">
         {loading ? (
           <Skeleton className="h-40 w-full" />
+        ) : loadError ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-heading text-2xl">We couldn't load your household</CardTitle>
+              <CardDescription>{loadError}</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-3">
+              <Button onClick={() => setReloadKey((k) => k + 1)}>Try again</Button>
+              <Button variant="outline" onClick={signOut}>
+                <LogOut className="mr-2 h-4 w-4" /> Sign out
+              </Button>
+            </CardContent>
+          </Card>
         ) : (
           <Card>
             <CardHeader className="flex flex-row items-start justify-between gap-4">
