@@ -1,204 +1,202 @@
-# Durable identity for imported calendar events
+# Roster read access for coaches and guardians
 
-## What I found
+Investigation is complete. Nothing has been changed. The SQL below is a proposal only.
 
-**1. The importer** — edge function `sync-external-calendar` (`supabase/functions/sync-external-calendar/index.ts`), invoked from the admin Schedule screen (Calendars tab). In plain language, per active calendar it:
+Three findings change what can honestly be built, and two of them need your decision before I write anything. They are in "Two things I cannot decide for you" — please read that section before approving.
 
-1. Downloads the Sports Connect `.ics` feed and parses every `VEVENT` (UID, summary, description, location, start/end, all-day), converting UTC times to America/Chicago.
-2. Classifies each event by reading the title and description: game / practice / other, division, program, home and away team, field number. It skips Bronco games.
-3. Upserts rows into `external_calendar_events` on `(calendar_id, external_uid)`.
-4. **Hard-deletes** every row for that calendar whose `external_uid` is not in the batch it just wrote.
-5. Stamps `last_synced_at`, `last_sync_status`, `last_sync_message` on `external_calendars`.
+## 1. Current policies
 
-So the code *intends* to upsert. The reason it behaves as a wipe-and-reload is finding 3.
+**`team_rosters`** — two policies, both `FOR ALL`, both `TO authenticated`, both tenant-scoped to `current_league_id()`:
 
-**2. Current schema**
+- `Admins have full access to team rosters` — `has_role(auth.uid(),'admin')`
+- `Commissioners can manage team rosters in their programs` — program/division match via `commissioner_assignments`
 
-`external_calendar_events`: `id` (uuid pk), `calendar_id`, `external_uid`, `title`, `description`, `location`, `start_date`, `start_time`, `end_date`, `end_time`, `all_day`, `raw_data` (jsonb), `program_id`, `division_id`, `home_team_id`, `away_team_id`, `event_category`, `field_number`, `calendar_name`, `calendar_color`, `created_at`, `updated_at`. Unique index on `(calendar_id, external_uid)`. **No status column and no facility-path column.**
+There is **no SELECT policy for coaches and none for guardians**, and no `anon` policy. Confirmed exactly as you described.
 
-`external_calendars`: `id`, `name`, `ical_url`, `source`, `source_url`, `color`, `is_active`, `last_synced_at`, `last_sync_status`, `last_sync_message`, `created_by`, `created_at`, `updated_at`.
+**`players`** — one SELECT policy, `Players readable by authorized roles`: row must be in the current league, and then admin OR `is_commissioner_for(...)` OR (`is_coach_of_player(id)` AND `is_cleared_coach(auth.uid())`) OR `is_guardian_of_player(id)`. Plus admin insert/update/delete and a commissioner update.
 
-**3. The UIDs are not stable.** Five samples:
+**`player_medical`** — three policies: admin `FOR ALL`; guardians SELECT via `is_guardian_of_player(player_id)`; guardians with `can_edit_medical = true` may UPDATE. **No coach policy of any kind.** Coaches cannot read medical today and nothing proposed here changes that.
 
-```text
-20260817T02000286766881
-20260817T02000287068059
-20260817T02000287100162
-20260817T02000286938379
-20260817T02000286426183
-```
+## 2. `can_see_player_pii`
 
-Every one is `<sync run timestamp>T<HHMMSS><counter>`. All 536 rows carry `created_at = 2026-08-17 02:00:03`. The feed's UID is being stamped with the moment of the sync run, so no UID from one run ever matches the next: the upsert always inserts 536 new rows and step 4 then deletes all 536 old ones. Identity is destroyed on every sync.
+`STABLE SECURITY DEFINER`, `search_path` pinned to `public`, returns true when any of:
 
-Also confirmed: 528 of 536 descriptions carry a facility path such as `Plato > T-Ball - Field 4`, currently stored only as free text in `description`; 55 titles begin `CANCELED-`, and nothing in the codebase reads that prefix today — cancelled events render as ordinary events with an ugly title.
+- caller is `admin`
+- caller is commissioner for that player's program/division
+- `is_coach_of_player(_player_id)` **AND** `is_cleared_coach(auth.uid())`
+- `is_guardian_of_player(_player_id)`
 
-## What I propose
+`is_cleared_coach` requires `background_check_status = 'approved'` and an unexpired (or null) expiry. Since all 99 imported coaches have `background_check_status = NULL`, this function currently returns false for every coach in the league. That is the correct state, but it means the coach path below cannot be exercised with real data until clearances are transcribed.
 
-**Stable key.** The raw ICS UID cannot be used. I will store a derived `event_key`: a SHA-256 over `calendar_id` + normalized title + start date + start time. Normalization strips a leading `CANCELED-`, lowercases, and collapses whitespace — so a cancellation keeps the same identity as the event it cancels, which is the whole point.
+## 3. Existing roster views
 
-Tradeoff, stated plainly: if the league **moves** an event to a different date or time, the key changes. The old row is marked `removed` and a new row appears rather than the existing row being edited. Title and time are the only stable-ish facts this feed gives us, and time is the one that actually identifies "this game". A reschedule is genuinely a different slot, so this is the behaviour I would want anyway — but it means "reschedule" and "cancel + add" look the same to us. Documented in a column comment.
+Five views exist. Two are relevant:
 
-**Importer changes.** Same file, no change to team/division matching:
+- **`v_roster_coach` already exists** (`security_invoker=on`), built earlier this session. It has two problems against your current spec:
+  - **It joins `player_medical` and exposes `allergies` and `notes`.** That is exactly the join constraint 5 forbids. RLS stops a coach reading those values today, but the join is there and would leak the moment a coach policy were added to `player_medical`. It has to go.
+  - Its row filter is `can_see_player_pii(player_id)` for the whole row, so an assigned-but-uncleared coach sees **no rows at all** rather than names without contact details.
+  - It also has no season filter and no `status = 'active'` filter.
+- `v_roster_social_export` — admin-only, D5-approved, unaffected.
 
-- New `normalizeTitle()` and `eventKey()` helpers.
-- One isolated `detectCancellation(summary)` function — the only place the `CANCELED-` prefix is known — returning the clean display title plus a boolean. When the feed one day gains a real `STATUS:CANCELLED` property, that function is the single edit.
-- New `parseFacilityPath(description)` storing the raw path plus its parsed site / area / field parts, for Field Management's resolver to match later.
-- Upsert on `(calendar_id, event_key)` — new events insert, existing ones update in place, keeping `id` and `created_at` and touching `updated_at`.
-- Events missing from the feed get `status = 'removed'` and `removed_at = now()`. **No DELETE anywhere in the function.** A row that comes back in a later feed flips back to `active`.
-- `?dry_run=true` (or `{"dry_run": true}`) runs the whole pipeline against the live feed and writes nothing, returning would-insert / would-update / would-remove / unchanged counts per calendar.
+There is no `v_roster_family`.
 
-**Backfill.** The 536 existing rows get an `event_key` computed in SQL by the same rule, so the first real sync after the migration matches them instead of duplicating them.
+## Two things I cannot decide for you
 
-## Technical detail
+Both come from the same mechanic: a `security_invoker` view applies each base table's RLS to the caller, so a column the caller cannot read arrives as NULL rather than as data.
 
-### Migration SQL (not applied)
+**(a) An uncleared coach will see NULL names, not just NULL contact details.** Your spec says names and jersey numbers may show for any active assigned staff. But the `players` SELECT policy requires `is_cleared_coach`, so first/last name are unreadable to an uncleared coach. I can only change that by widening the `players` policy, and RLS is row-level — widening it to uncleared coaches exposes the whole player row (date of birth, address, `parent_email`, `medical_notes`), which is unacceptable.
+
+My recommendation, per deny-by-default: **accept it.** An uncleared coach gets their roster rows with jersey numbers and positions, and names blank, which is an accurate rendering of "you are not cleared yet." Say if you want the opposite and I will bring you a different mechanism, not a widened policy.
+
+**(b) A guardian cannot see other families' children at all, so `v_roster_family` cannot list the team.** Same reason: the `players` policy scopes a guardian to their own child. Teammates' first names are unreadable, so a team listing would come back as their own child plus a column of NULLs.
+
+Options: **(i)** ship `v_roster_family` as own-child-plus-coaching-staff only — one row, honest, no other family's data; or **(ii)** treat "parents may see teammates' first names and numbers" as a board question in the D5 family, since it is publishing minors' names to an audience wider than the household. I recommend **(i)** now and **(ii)** as a separate decision. The SQL below is written for **(i)**.
+
+**A third, smaller one:** guardians have no read policy on `coaches`, so coach name/phone/email also comes back NULL under invoker RLS. To give a parent their coach's contact details, `coaches` needs a narrow guardian SELECT policy — and RLS cannot restrict that to three columns, so such a guardian could also query `coaches` directly and see `background_check_status`, `certifications` and `admin_notes` for their child's coaches. That is included below as an optional, clearly-marked block; say yes or no to it.
+
+## The SQL
+
+Nothing here is applied. Two policies, one view rewrite, one new view.
 
 ```sql
--- 1. New columns
-ALTER TABLE public.external_calendar_events
-  ADD COLUMN event_key text,
-  ADD COLUMN status text NOT NULL DEFAULT 'active'
-    CHECK (status IN ('active','removed')),
-  ADD COLUMN is_cancelled boolean NOT NULL DEFAULT false,
-  ADD COLUMN removed_at timestamptz,
-  ADD COLUMN last_seen_at timestamptz NOT NULL DEFAULT now(),
-  ADD COLUMN facility_path text,
-  ADD COLUMN facility_site text,
-  ADD COLUMN facility_area text,
-  ADD COLUMN facility_field text;
+-- 1. Coaches read their own team's active roster rows.
+--    is_coach_of() is SECURITY DEFINER over team_coaches/coaches, so no recursion
+--    back into team_rosters. authenticated only; never anon (board decision D5).
+CREATE POLICY "Coaches view their own team roster"
+  ON public.team_rosters
+  FOR SELECT
+  TO authenticated
+  USING (
+    league_id = (SELECT public.current_league_id())
+    AND COALESCE(status, 'active') = 'active'
+    AND public.is_coach_of(team_id)
+  );
 
-COMMENT ON COLUMN public.external_calendar_events.event_key IS
-  'Deterministic identity: sha256(calendar_id || lower(collapsed title with leading CANCELED- stripped) || start_date || coalesce(start_time,'''')). The Sports Connect feed stamps its ICS UID with the sync run time, so the raw UID is not stable. Tradeoff: moving an event to a new date/time yields a new key — the old row is marked removed and a new row is inserted.';
-COMMENT ON COLUMN public.external_calendar_events.status IS
-  'active = present in the most recent successful sync; removed = soft-deleted, no longer in the feed. Rows are never hard-deleted so other tables may safely reference id.';
-COMMENT ON COLUMN public.external_calendar_events.is_cancelled IS
-  'Feed carries no STATUS property; cancellation is detected solely from the CANCELED- title prefix in detectCancellation().';
-COMMENT ON COLUMN public.external_calendar_events.facility_path IS
-  'Raw DESCRIPTION facility path, e.g. "Burlington > Burlington Upper - Mustang/Pinto". Reserved for the Field Management resolver.';
+-- 2. Guardians read their own child's roster row.
+CREATE POLICY "Guardians view their own child roster row"
+  ON public.team_rosters
+  FOR SELECT
+  TO authenticated
+  USING (
+    league_id = (SELECT public.current_league_id())
+    AND public.is_guardian_of_player(player_id)
+  );
 
--- 2. Backfill event_key for the 536 existing rows, using the same rule the importer uses
-UPDATE public.external_calendar_events
-SET event_key = encode(digest(
-      calendar_id::text || '|' ||
-      regexp_replace(lower(regexp_replace(title, '^\s*CANCELED-\s*', '', 'i')), '\s+', ' ', 'g') || '|' ||
-      start_date::text || '|' ||
-      coalesce(start_time::text, ''),
-      'sha256'), 'hex')
-WHERE event_key IS NULL;
+-- 3. v_roster_coach — rebuilt. No player_medical join at any depth.
+DROP VIEW IF EXISTS public.v_roster_coach;
 
--- 3. Backfill cancellation flag, clean titles, and facility path from existing data
-UPDATE public.external_calendar_events
-SET is_cancelled = true,
-    title = regexp_replace(title, '^\s*CANCELED-\s*', '', 'i')
-WHERE title ~* '^\s*CANCELED-';
+CREATE VIEW public.v_roster_coach
+WITH (security_invoker = on) AS
+SELECT
+  tr.team_id,
+  tr.player_id,
+  tr.jersey_number,
+  tr.position_primary,
+  tr.position_secondary,
+  p.first_name,
+  p.last_name,
+  p.preferred_name,
+  -- Contact details only for a caller who passes the PII gate: admin,
+  -- commissioner, CLEARED assigned coach, or the child's own guardian.
+  CASE WHEN public.can_see_player_pii(tr.player_id)
+       THEN pg.guardian_name END  AS primary_guardian_name,
+  CASE WHEN public.can_see_player_pii(tr.player_id)
+       THEN pg.email END          AS primary_guardian_email,
+  CASE WHEN public.can_see_player_pii(tr.player_id)
+       THEN pg.phone END          AS primary_guardian_phone
+FROM public.team_rosters tr
+LEFT JOIN public.players p ON p.id = tr.player_id
+LEFT JOIN LATERAL public.get_primary_guardian_for_player(tr.player_id)
+  AS pg(household_id, first_name, last_name, email, phone) ON true
+LEFT JOIN LATERAL (
+  SELECT NULLIF(TRIM(COALESCE(pg.first_name,'') || ' ' || COALESCE(pg.last_name,'')),'')
+           AS guardian_name,
+         pg.email, pg.phone
+) pgn ON true
+WHERE COALESCE(tr.status,'active') = 'active';
 
-UPDATE public.external_calendar_events
-SET facility_path = split_part(description, E'\n', 1)
-WHERE description LIKE '%>%' AND facility_path IS NULL;
+COMMENT ON VIEW public.v_roster_coach IS
+  'Coach-facing roster. Deliberately does NOT join player_medical: coaches have '
+  'no policy on that table and must never receive allergies or medical notes '
+  'through a roster surface. No date of birth. Contact columns are gated on '
+  'can_see_player_pii, which requires a coach to be background-check cleared.';
 
-UPDATE public.external_calendar_events
-SET facility_site  = btrim(split_part(facility_path, '>', 1)),
-    facility_area  = btrim(split_part(split_part(facility_path, '>', 2), '-', 1)),
-    facility_field = nullif(btrim(regexp_replace(facility_path, '^.*-\s*', '')), '')
-WHERE facility_path IS NOT NULL;
+GRANT SELECT ON public.v_roster_coach TO authenticated;
+REVOKE ALL ON public.v_roster_coach FROM anon;
 
--- 4. Enforce the key
-ALTER TABLE public.external_calendar_events ALTER COLUMN event_key SET NOT NULL;
+-- 4. v_roster_family — what a guardian sees for their own child.
+--    Own child only (option (i) above). No DOB, nothing medical,
+--    no other family's contact information of any kind.
+CREATE VIEW public.v_roster_family
+WITH (security_invoker = on) AS
+SELECT
+  tr.team_id,
+  t.name              AS team_name,
+  tr.player_id,
+  p.first_name,
+  p.preferred_name,
+  tr.jersey_number,
+  NULLIF(TRIM(COALESCE(c.first_name,'') || ' ' || COALESCE(c.last_name,'')),'')
+                      AS coach_name,
+  tc.role             AS coach_role,
+  c.email             AS coach_email,
+  c.phone             AS coach_phone
+FROM public.team_rosters tr
+LEFT JOIN public.teams t        ON t.id = tr.team_id
+LEFT JOIN public.players p      ON p.id = tr.player_id
+LEFT JOIN public.team_coaches tc
+       ON tc.team_id = tr.team_id
+      AND COALESCE(tc.status,'active') = 'active'
+LEFT JOIN public.coaches c      ON c.id = tc.coach_id
+WHERE COALESCE(tr.status,'active') = 'active'
+  AND public.is_guardian_of_player(tr.player_id);
 
-CREATE UNIQUE INDEX external_calendar_events_event_key_uidx
-  ON public.external_calendar_events (calendar_id, event_key);
+COMMENT ON VIEW public.v_roster_family IS
+  'Guardian-facing. Scoped to the caller''s own child by is_guardian_of_player. '
+  'Carries no date of birth, no medical data, and no other family''s contact '
+  'details. Teammate names are deliberately absent — see D5.';
 
-CREATE INDEX idx_ext_cal_events_status ON public.external_calendar_events (status);
-CREATE INDEX idx_ext_cal_events_facility_path ON public.external_calendar_events (facility_path);
-
--- 5. FK readiness: id is already the primary key, so future tables can reference it.
---    Nothing to add here beyond guaranteeing rows are never hard-deleted (status='removed'),
---    which the rewritten importer enforces. Future references should use
---    REFERENCES public.external_calendar_events(id) ON DELETE RESTRICT.
-
--- 6. The old (calendar_id, external_uid) unique index is left in place for one sync
---    cycle so a rollback is possible, then dropped in a follow-up:
---    DROP INDEX public.external_calendar_events_calendar_id_external_uid_key;
+GRANT SELECT ON public.v_roster_family TO authenticated;
+REVOKE ALL ON public.v_roster_family FROM anon;
 ```
 
-`digest()` requires `pgcrypto`; the migration will `CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;` and qualify the call if it is not already installed — I will confirm before applying.
+Optional, only if you say yes to the third question above:
 
-### Importer diff (sketch, not applied)
-
-```ts
-// --- NEW: the ONLY place the feed's cancellation convention lives ---
-function detectCancellation(summary: string): { title: string; isCancelled: boolean } {
-  const m = summary.match(/^\s*CANCELED-\s*(.*)$/i);
-  return m ? { title: m[1].trim(), isCancelled: true }
-           : { title: summary.trim(), isCancelled: false };
-}
-
-// --- NEW: deterministic identity ---
-function normalizeTitle(t: string): string {
-  return detectCancellation(t).title.toLowerCase().replace(/\s+/g, " ").trim();
-}
-async function eventKey(calendarId: string, title: string, date: string, time?: string) {
-  const raw = `${calendarId}|${normalizeTitle(title)}|${date}|${time ?? ""}`;
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw));
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-// --- NEW: facility path out of DESCRIPTION ---
-function parseFacilityPath(description?: string) {
-  const line = description?.split("\n").find((l) => l.includes(">"))?.trim();
-  if (!line) return { facility_path: null, facility_site: null, facility_area: null, facility_field: null };
-  const [site, rest = ""] = line.split(">").map((s) => s.trim());
-  const [area, field] = rest.split(/\s-\s/).map((s) => s?.trim() ?? null);
-  return { facility_path: line, facility_site: site, facility_area: area ?? null, facility_field: field ?? null };
-}
+```sql
+-- Lets a guardian read the coach rows for their own child's team.
+-- Caveat: RLS is row-level, so this also exposes background_check_status,
+-- certifications and admin_notes for those coaches to that guardian.
+CREATE POLICY "Guardians view coaches of their child's team"
+  ON public.coaches
+  FOR SELECT
+  TO authenticated
+  USING (
+    league_id = (SELECT public.current_league_id())
+    AND EXISTS (
+      SELECT 1
+      FROM public.team_coaches tc
+      JOIN public.team_rosters tr ON tr.team_id = tc.team_id
+      WHERE tc.coach_id = coaches.id
+        AND COALESCE(tc.status,'active') = 'active'
+        AND COALESCE(tr.status,'active') = 'active'
+        AND public.is_guardian_of_player(tr.player_id)
+    )
+  );
 ```
 
-Row construction gains `event_key`, `is_cancelled`, `title` (cleaned), the four facility columns, `status: 'active'`, `last_seen_at: now`, and keeps `external_uid` as feed provenance only.
+Without that block, `coach_email` and `coach_phone` in `v_roster_family` will always be NULL for guardians.
 
-Write phase replaces steps 3 and 4:
+## Verification I would run after approval
 
-```ts
-// existing rows for this calendar, keyed
-const { data: existing } = await supabase
-  .from("external_calendar_events")
-  .select("id, event_key, title, start_date, start_time, end_date, end_time, all_day, location, is_cancelled, status, facility_path")
-  .eq("calendar_id", cal.id);
+Execution, not catalog reading, in rolled-back transactions:
 
-const byKey = new Map(existing.map((r) => [r.event_key, r]));
-const feedKeys = new Set(rows.map((r) => r.event_key));
+- Both views report `security_invoker=on`; both raise permission denied as `anon`.
+- `pg_get_viewdef` read back confirms every join is LEFT and that `player_medical` appears nowhere in either view.
+- As a guardian with a real `auth_user_id`: `v_roster_family` returns their child and no one else's; a direct `SELECT` on `player_medical` for another child returns zero rows.
+- As an assigned but **uncleared** coach: roster rows return with jersey numbers, and `primary_guardian_email` is NULL.
+- Same coach set to `background_check_status = 'approved'` inside the transaction: contact columns populate, `player_medical` still returns zero rows. Then roll back.
+- As `anon`: zero rows / permission denied on `team_rosters` and both views.
 
-const toInsert = rows.filter((r) => !byKey.has(r.event_key));
-const toUpdate = rows.filter((r) => byKey.has(r.event_key) && differs(byKey.get(r.event_key), r));
-const unchanged = rows.length - toInsert.length - toUpdate.length;
-const toRemove  = existing.filter((r) => r.status === "active" && !feedKeys.has(r.event_key));
+## Not in scope
 
-if (dryRun) {
-  results.push({ calendar_id: cal.id, name: cal.name, dry_run: true,
-    would_insert: toInsert.length, would_update: toUpdate.length,
-    would_remove: toRemove.length, unchanged });
-  continue; // no writes, and last_sync_* is NOT touched
-}
-
-await supabase.from("external_calendar_events")
-  .upsert(rows.map((r) => ({ ...r, updated_at: new Date().toISOString() })),
-          { onConflict: "calendar_id,event_key" });   // preserves id + created_at
-
-if (toRemove.length) {
-  await supabase.from("external_calendar_events")
-    .update({ status: "removed", removed_at: new Date().toISOString() })
-    .in("id", toRemove.map((r) => r.id));            // soft delete — never DELETE
-}
-```
-
-The Bronco filter keeps working: a filtered-out event simply is not in `feedKeys`, so any previously imported Bronco game becomes `status = 'removed'` instead of being deleted.
-
-### Out of scope, as instructed
-
-No change to team, division or program matching. `games` and `practices` untouched. No UI work — the schedule hooks keep reading the same table, though after this lands they should filter `status = 'active'`; I will flag that as the immediately following change rather than folding it in here.
-
-### Verification after approval
-
-1. Apply the migration; confirm 536 rows carry a non-null `event_key` and that the unique index built without collisions.
-2. Deploy the importer and run it in **dry-run** against the live feed. Expect roughly 536 unchanged, 0 insert, 0 update, 0 remove — proof that the backfilled keys match what the feed produces.
-3. Run it for real, then confirm `created_at` values are still `2026-08-17` and no row count changed.
-4. Run once more and confirm `updated_at` moved while `id` and `created_at` did not.
+`team_rosters.season_year` is still an `integer` compared against `seasons.year::text` inside `is_coach_of_player`. Both new policies avoid that path, so this proposal does not depend on it, but the fragility stands and the `season_id uuid` migration remains the fix.
