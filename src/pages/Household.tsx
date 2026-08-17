@@ -15,9 +15,13 @@ const Household = () => {
   const [authed, setAuthed] = useState(true);
   const [household, setHousehold] = useState<Household | null>(null);
   const [needsCreate, setNeedsCreate] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
+      setLoadError(null);
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         setAuthed(false);
@@ -25,11 +29,17 @@ const Household = () => {
         return;
       }
 
-      const { data: guardian } = await supabase
+      const { data: guardian, error: guardianError } = await supabase
         .from("guardians")
         .select("id")
         .eq("auth_user_id", session.user.id)
         .maybeSingle();
+
+      if (guardianError) {
+        setLoadError(guardianError.message);
+        setLoading(false);
+        return;
+      }
 
       if (!guardian) {
         setNeedsCreate(true);
@@ -37,12 +47,19 @@ const Household = () => {
         return;
       }
 
-      const { data: link } = await supabase
+      const { data: link, error: linkError } = await supabase
         .from("guardian_households")
-        .select("household_id, households:household_id(id, name)")
+        .select("household_id, households:households!gh_league_household_fkey(id, name)")
         .eq("guardian_id", guardian.id)
         .limit(1)
         .maybeSingle();
+
+      if (linkError) {
+        // Never conclude "no household" from a failed query.
+        setLoadError(linkError.message);
+        setLoading(false);
+        return;
+      }
 
       const hh = (link as any)?.households as Household | undefined;
       if (!hh) {
@@ -52,10 +69,11 @@ const Household = () => {
       }
       setLoading(false);
     })();
-  }, []);
+  }, [reloadKey]);
 
   if (!authed) return <Navigate to="/login?next=/household" replace />;
   if (needsCreate) return <Navigate to="/household/new" replace />;
+
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -68,6 +86,19 @@ const Household = () => {
       <div className="max-w-3xl mx-auto space-y-6">
         {loading ? (
           <Skeleton className="h-40 w-full" />
+        ) : loadError ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-heading text-2xl">We couldn't load your household</CardTitle>
+              <CardDescription>{loadError}</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-3">
+              <Button onClick={() => setReloadKey((k) => k + 1)}>Try again</Button>
+              <Button variant="outline" onClick={signOut}>
+                <LogOut className="mr-2 h-4 w-4" /> Sign out
+              </Button>
+            </CardContent>
+          </Card>
         ) : (
           <Card>
             <CardHeader className="flex flex-row items-start justify-between gap-4">

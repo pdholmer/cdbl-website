@@ -74,13 +74,22 @@ export const useTeam = (id: string | undefined) => {
             jersey_number,
             position_primary,
             status,
-            player:players(id, first_name, last_name, date_of_birth, age_at_registration)
+            league_player:league_players!tr_league_player_fkey(
+              player:players(id, first_name, last_name, date_of_birth, age_at_registration)
+            )
           )
         `)
         .eq("id", id)
         .single();
       if (error) throw error;
-      return data;
+      if (!data) return data;
+      return {
+        ...data,
+        team_rosters: ((data as any).team_rosters ?? []).map((r: any) => ({
+          ...r,
+          player: r.league_player?.player ?? null,
+        })),
+      } as any;
     },
     enabled: !!id,
   });
