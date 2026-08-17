@@ -502,12 +502,14 @@ async function resolveRecipients(
     if (playerIds.length === 0) return [];
     const { data: hp } = await admin
       .from("household_players")
-      .select("household_id, player_id, players:player_id(first_name, preferred_name, last_name)")
+      .select(
+        "household_id, player_id, league_player:league_players!hp_league_player_fkey(player:players(first_name, preferred_name, last_name))",
+      )
       .in("player_id", playerIds);
     const ids = new Set<string>();
     (hp ?? []).forEach((row: any) => {
       ids.add(row.household_id);
-      const p = row.players;
+      const p = row.league_player?.player;
       if (p) {
         const first = p.preferred_name || p.first_name || "";
         const last = p.last_name || "";
