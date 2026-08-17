@@ -516,15 +516,22 @@ Deno.serve(async (req) => {
         const parsed = parseICal(text);
 
         if (parsed.length === 0) {
-          await supabase
-            .from("external_calendars")
-            .update({
-              last_synced_at: new Date().toISOString(),
-              last_sync_status: "warning",
-              last_sync_message: "No events parsed from feed",
-            })
-            .eq("id", cal.id);
-          results.push({ calendar_id: cal.id, synced: 0, status: "warning" });
+          if (!dryRun) {
+            await supabase
+              .from("external_calendars")
+              .update({
+                last_synced_at: nowIso,
+                last_sync_status: "warning",
+                last_sync_message: "No events parsed from feed",
+              })
+              .eq("id", cal.id);
+          }
+          results.push({
+            calendar_id: cal.id,
+            synced: 0,
+            status: "warning",
+            dry_run: dryRun,
+          });
           continue;
         }
 
