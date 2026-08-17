@@ -35,7 +35,7 @@ export const ListRow = ({
       )}
     >
       {(initials || icon) && (
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[hsl(217_100%_92%)] text-sm font-bold text-[hsl(217_100%_26%)]">
           {icon ?? initials}
         </span>
       )}
