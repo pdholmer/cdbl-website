@@ -434,74 +434,121 @@ Deno.serve(async (req) => {
         let games = 0, practices = 0, events = 0, unmatched = 0, skippedBronco = 0;
         const divisionNameById = new Map<string, string>();
         divisions.forEach((d) => divisionNameById.set(d.id, d.name));
-        const rows = parsed
-          .map((e) => {
-            const c = classify(e, divisions, teams, programs);
-            return { e, c };
-          })
-          .filter(({ c }) => {
-            // Exclude Bronco games per league policy — there are no Bronco games.
-            const divName = c.division_id ? divisionNameById.get(c.division_id) : null;
-            if (c.event_category === "game" && divName?.toLowerCase() === "bronco") {
-              skippedBronco++;
-              return false;
-            }
-            return true;
-          })
-          .map(({ e, c }) => {
-            if (c.event_category === "game") games++;
-            else if (c.event_category === "practice") practices++;
-            else events++;
-            if (!c.division_id) unmatched++;
-            return {
-              calendar_id: cal.id,
-              calendar_name: cal.name,
-              calendar_color: cal.color,
-              external_uid: e.uid,
-              title: e.summary,
-              description: e.description ?? null,
-              location: e.location ?? null,
-              start_date: e.startDate,
-              start_time: e.startTime ?? null,
-              end_date: e.endDate ?? null,
-              end_time: e.endTime ?? null,
-              all_day: e.allDay,
-              raw_data: e.raw,
-              event_category: c.event_category,
-              program_id: c.program_id,
-              division_id: c.division_id,
-              home_team_id: c.home_team_id,
-              away_team_id: c.away_team_id,
-              field_number: c.field_number,
-            };
-          });
+        const rows = await Promise.all(
+          parsed
+            .map((e) => {
+              const c = classify(e, divisions, teams, programs);
+              return { e, c };
+            })
+            .filter(({ c }) => {
+              // Exclude Bronco games per league policy — there are no Bronco games.
+              const divName = c.division_id ? divisionNameById.get(c.division_id) : null;
+              if (c.event_category === "game" && divName?.toLowerCase() === "bronco") {
+                skippedBronco++;
+                return false;
+              }
+              return true;
+            })
+            .map(async ({ e, c }) => {
+              if (c.event_category === "game") games++;
+              else if (c.event_category === "practice") practices++;
+              else events++;
+              if (!c.division_id) unmatched++;
 
+              const { title, isCancelled } = detectCancellation(e.summary);
+              const facility = parseFacilityPath(e.description);
+
+              return {
+                calendar_id: cal.id,
+                calendar_name: cal.name,
+                calendar_color: cal.color,
+                external_uid: e.uid, // feed provenance only — NOT stable across syncs
+                event_key: await eventKey(cal.id, e.summary, e.startDate, e.startTime),
+                title,
+                is_cancelled: isCancelled,
+                description: e.description ?? null,
+                location: e.location ?? null,
+                start_date: e.startDate,
+                start_time: e.startTime ?? null,
+                end_date: e.endDate ?? null,
+                end_time: e.endTime ?? null,
+                all_day: e.allDay,
+                raw_data: e.raw,
+                event_category: c.event_category,
+                program_id: c.program_id,
+                division_id: c.division_id,
+                home_team_id: c.home_team_id,
+                away_team_id: c.away_team_id,
+                field_number: c.field_number,
+                ...facility,
+                status: "active",
+                last_seen_at: nowIso,
+              };
+            }),
+        );
+
+        // ---- Reconcile against what is already stored ----
+        const { data: existing, error: exErr } = await supabase
+          .from("external_calendar_events")
+          .select(
+            "id, event_key, title, is_cancelled, description, location, start_date, start_time, end_date, end_time, all_day, event_category, program_id, division_id, home_team_id, away_team_id, field_number, facility_path, status",
+          )
+          .eq("calendar_id", cal.id);
+        if (exErr) throw exErr;
+
+        const byKey = new Map((existing ?? []).map((r: any) => [r.event_key, r]));
+        const feedKeys = new Set(rows.map((r) => r.event_key));
+
+        const toInsert = rows.filter((r) => !byKey.has(r.event_key));
+        const toUpdate = rows.filter(
+          (r) => byKey.has(r.event_key) && differs(byKey.get(r.event_key), r),
+        );
+        const unchanged = rows.length - toInsert.length - toUpdate.length;
+        const toRemove = (existing ?? []).filter(
+          (r: any) => r.status === "active" && !feedKeys.has(r.event_key),
+        );
+
+        if (dryRun) {
+          results.push({
+            calendar_id: cal.id,
+            name: cal.name,
+            dry_run: true,
+            feed_events: rows.length,
+            would_insert: toInsert.length,
+            would_update: toUpdate.length,
+            would_remove: toRemove.length,
+            unchanged,
+            skipped_bronco: skippedBronco,
+          });
+          continue; // no writes at all, last_sync_* untouched
+        }
+
+        // Upsert on the stable key — preserves id and created_at for existing rows.
         const { error: upErr } = await supabase
           .from("external_calendar_events")
-          .upsert(rows, { onConflict: "calendar_id,external_uid" });
+          .upsert(
+            rows.map((r) => ({ ...r, removed_at: null, updated_at: nowIso })),
+            { onConflict: "calendar_id,event_key" },
+          );
         if (upErr) throw upErr;
 
-        // Delete events no longer in feed (also removes any previously-synced
-        // Bronco games, since their UIDs are no longer in the kept rows).
-        const keepUids = rows.map((r) => r.external_uid);
-        const { error: delErr } = await supabase
-          .from("external_calendar_events")
-          .delete()
-          .eq("calendar_id", cal.id)
-          .not(
-            "external_uid",
-            "in",
-            `(${keepUids.map((u) => `"${u.replace(/"/g, '\\"')}"`).join(",")})`,
-          );
-        if (delErr) console.error("Delete error:", delErr);
+        // Soft delete anything that vanished from the feed. Never a hard DELETE:
+        // other tables will reference external_calendar_events(id).
+        if (toRemove.length) {
+          const { error: rmErr } = await supabase
+            .from("external_calendar_events")
+            .update({ status: "removed", removed_at: nowIso, updated_at: nowIso })
+            .in("id", toRemove.map((r: any) => r.id));
+          if (rmErr) throw rmErr;
+        }
 
         const summary =
-          `Synced ${rows.length} events (${games} games, ${practices} practices, ${events} other; ${unmatched} unmatched; skipped ${skippedBronco} Bronco game${skippedBronco === 1 ? "" : "s"})`;
+          `Synced ${rows.length} events (${toInsert.length} new, ${toUpdate.length} updated, ${unchanged} unchanged, ${toRemove.length} removed; ${games} games, ${practices} practices, ${events} other; ${unmatched} unmatched; skipped ${skippedBronco} Bronco game${skippedBronco === 1 ? "" : "s"})`;
 
         await supabase
           .from("external_calendars")
           .update({
-            last_synced_at: new Date().toISOString(),
+            last_synced_at: nowIso,
             last_sync_status: "success",
             last_sync_message: summary,
           })
@@ -510,7 +557,11 @@ Deno.serve(async (req) => {
         results.push({
           calendar_id: cal.id,
           name: cal.name,
-          synced: parsed.length,
+          synced: rows.length,
+          inserted: toInsert.length,
+          updated: toUpdate.length,
+          unchanged,
+          removed: toRemove.length,
           games,
           practices,
           events,
