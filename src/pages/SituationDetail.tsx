@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, LockKeyhole, Pause, Play, RotateCcw } from "lucide-react";
+import { ArrowLeft, Brain, LockKeyhole, Pause, Play, RotateCcw } from "lucide-react";
+import SituationQuiz from "@/components/training/SituationQuiz";
 import SituationField from "@/components/training/SituationField";
 import { useSituationDetail, useTrainingAccess, type SituationStep } from "@/hooks/useTraining";
 import {
@@ -58,6 +59,7 @@ const blendFrames = (a: Frame, b: Frame, t: number): Frame => {
 
 const SituationDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [quizOpen, setQuizOpen] = useState(false);
   const { loading, isAuthenticated, canView } = useTrainingAccess();
   const { data: situation, isLoading } = useSituationDetail(slug, canView);
 
