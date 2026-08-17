@@ -21,6 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTeams, type TeamFilters } from "@/hooks/useTeams";
+import { useTeamRosterCounts, formatRosterCount } from "@/hooks/useTeamRosterCounts";
 import { usePrograms } from "@/hooks/usePrograms";
 import { Users, Plus, Search, Shield } from "lucide-react";
 
@@ -29,6 +30,7 @@ const Teams = () => {
   const [filters, setFilters] = useState<TeamFilters>({ season_year: currentYear });
   const { data: teams = [], isLoading } = useTeams(filters);
   const { programs = [] } = usePrograms();
+  const { data: rosterCounts } = useTeamRosterCounts();
 
   const stats = {
     total: teams.length,
@@ -203,7 +205,7 @@ const Teams = () => {
                       <TableCell>{team.division?.name || "-"}</TableCell>
                       <TableCell>{team.program?.name || "-"}</TableCell>
                       <TableCell>
-                        {team.current_roster_count} / {team.max_roster_size}
+                        {formatRosterCount(rosterCounts?.get(team.id))}
                       </TableCell>
                       <TableCell>
                         {headCoach ? (

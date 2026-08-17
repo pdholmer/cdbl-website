@@ -8,11 +8,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Download, FileText, Users, DollarSign, Calendar } from "lucide-react";
 import { exportToCSV } from "@/utils/csvExport";
 import { useToast } from "@/hooks/use-toast";
+import { useTeamRosterCounts } from "@/hooks/useTeamRosterCounts";
 
 export default function Reports() {
   const { toast } = useToast();
   const [selectedProgram, setSelectedProgram] = useState<string>("all");
   const [selectedSeason, setSelectedSeason] = useState<string>(new Date().getFullYear().toString());
+  const { data: rosterCounts } = useTeamRosterCounts();
 
   const { data: programs = [] } = useQuery({
     queryKey: ['programs'],
@@ -112,8 +114,8 @@ export default function Reports() {
       'Division': t.divisions?.name || '',
       'Season': t.season_year,
       'Status': t.status,
-      'Current Roster': t.current_roster_count,
-      'Max Roster': t.max_roster_size,
+      'Current Roster': rosterCounts?.get(t.id)?.active_count ?? 0,
+      'Max Roster': rosterCounts?.get(t.id)?.effective_max ?? '',
     }));
     
     exportToCSV(exportData, `team-rosters-${selectedSeason}.csv`);
