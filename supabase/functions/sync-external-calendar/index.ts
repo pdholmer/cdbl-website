@@ -159,6 +159,99 @@ function parseICal(text: string): ParsedEvent[] {
   return events;
 }
 
+// ---------- Identity, cancellation, facility path ----------
+
+/**
+ * THE ONLY PLACE THE FEED'S CANCELLATION CONVENTION LIVES.
+ * The Sports Connect feed carries no STATUS property; a cancelled event is
+ * published with a "CANCELED-" prefix on the SUMMARY. If the feed ever gains a
+ * real STATUS:CANCELLED property, this function is the single edit.
+ */
+function detectCancellation(summary: string): { title: string; isCancelled: boolean } {
+  const m = summary.match(/^\s*CANCELED-\s*(.*)$/i);
+  return m
+    ? { title: m[1].trim(), isCancelled: true }
+    : { title: summary.trim(), isCancelled: false };
+}
+
+/** Title normalized for identity: cancellation prefix stripped, lowercased, whitespace collapsed. */
+function normalizeTitle(t: string): string {
+  return detectCancellation(t).title.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+/**
+ * Deterministic identity for an imported event. The feed's ICS UID is stamped
+ * with the sync run time and is therefore useless as a key. Tradeoff: moving an
+ * event to a new date/time produces a new key — the old row is marked removed
+ * and a new row inserted. Must stay byte-identical to the SQL backfill rule.
+ */
+async function eventKey(
+  calendarId: string,
+  summary: string,
+  startDate: string,
+  startTime?: string,
+): Promise<string> {
+  const raw = `${calendarId}|${normalizeTitle(summary)}|${startDate}|${startTime ?? ""}`;
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(raw));
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+/** Pulls the DESCRIPTION facility path, e.g. "Plato > T-Ball - Field 4". */
+function parseFacilityPath(description?: string) {
+  const line = description
+    ?.split("\n")
+    .map((l) => l.trim())
+    .find((l) => l.includes(">"));
+  if (!line) {
+    return {
+      facility_path: null,
+      facility_site: null,
+      facility_area: null,
+      facility_field: null,
+    };
+  }
+  const [site, rest = ""] = line.split(">").map((s) => s.trim());
+  const dashIdx = rest.lastIndexOf("-");
+  const area = dashIdx === -1 ? rest.trim() : rest.slice(0, dashIdx).trim();
+  const field = dashIdx === -1 ? null : rest.slice(dashIdx + 1).trim() || null;
+  return {
+    facility_path: line,
+    facility_site: site || null,
+    facility_area: area || null,
+    facility_field: field,
+  };
+}
+
+/** Fields compared to decide whether a stored row needs updating. */
+const COMPARE_FIELDS = [
+  "title",
+  "is_cancelled",
+  "description",
+  "location",
+  "start_date",
+  "start_time",
+  "end_date",
+  "end_time",
+  "all_day",
+  "event_category",
+  "program_id",
+  "division_id",
+  "home_team_id",
+  "away_team_id",
+  "field_number",
+  "facility_path",
+] as const;
+
+function differs(stored: any, incoming: any): boolean {
+  if (!stored) return true;
+  if (stored.status !== "active") return true; // resurrecting a removed row
+  return COMPARE_FIELDS.some(
+    (f) => (stored[f] ?? null) !== ((incoming as any)[f] ?? null),
+  );
+}
+
 // ---------- Classification ----------
 
 interface DivisionRow {
