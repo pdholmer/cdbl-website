@@ -44,8 +44,43 @@ const HouseholdNew = () => {
       return;
     }
 
+    // Belt-and-suspenders: never create a second household for a guardian who
+    // already has one (the old broken embed caused duplicate-creation laps).
+    const { data: existingGuardianRow, error: existingGuardianError } = await supabase
+      .from("guardians")
+      .select("id")
+      .eq("auth_user_id", uid)
+      .maybeSingle();
+
+    if (existingGuardianError) {
+      toast.error(existingGuardianError.message);
+      setSaving(false);
+      return;
+    }
+
+    if (existingGuardianRow?.id) {
+      const { data: existingLink, error: existingLinkError } = await supabase
+        .from("guardian_households")
+        .select("household_id")
+        .eq("guardian_id", existingGuardianRow.id)
+        .limit(1)
+        .maybeSingle();
+
+      if (existingLinkError) {
+        toast.error(existingLinkError.message);
+        setSaving(false);
+        return;
+      }
+
+      if (existingLink?.household_id) {
+        navigate("/household", { replace: true });
+        return;
+      }
+    }
+
     // NOTE: A parent-facing bootstrap policy is not yet in place. Until it lands,
     // these inserts will only succeed for admins. This UI is scaffolding.
+
     const { data: hh, error: hhError } = await supabase
       .from("households")
       .insert({ name: name.trim() })
