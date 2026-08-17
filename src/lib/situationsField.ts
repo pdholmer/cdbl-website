@@ -45,3 +45,24 @@ export const BASE_STATE_ORDER = [
   "2nd_3rd",
   "loaded",
 ];
+
+/** Base bag centres in the canonical 400x500 space. */
+export const BASES = {
+  first: { x: 344, y: 334 },
+  second: { x: 200, y: 190 },
+  third: { x: 56, y: 334 },
+  home: { x: 200, y: 478 },
+} as const;
+
+export type Point = { x: number; y: number };
+export type Runner = { id: string; x: number; y: number };
+
+/** Linear interpolation between two points. */
+export const lerpPoint = (a: Point, b: Point, t: number): Point => ({
+  x: a.x + (b.x - a.x) * t,
+  y: a.y + (b.y - a.y) * t,
+});
+
+/** Ease-in-out cubic, used for keyframe transitions. */
+export const easeInOut = (t: number) =>
+  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
