@@ -18,7 +18,7 @@ const MOVE_EPSILON = 2;
 const moved = (a?: Point | null, b?: Point | null) =>
   !!a && !!b && Math.hypot(a.x - b.x, a.y - b.y) > MOVE_EPSILON;
 
-const Bag = ({ x, y, size = 9 }: { x: number; y: number; size?: number }) => (
+const Bag = ({ x, y, size = 13 }: { x: number; y: number; size?: number }) => (
   <rect
     x={x - size / 2}
     y={y - size / 2}
@@ -27,7 +27,7 @@ const Bag = ({ x, y, size = 9 }: { x: number; y: number; size?: number }) => (
     transform={`rotate(45 ${x} ${y})`}
     fill="hsl(0 0% 100%)"
     stroke="hsl(30 25% 55%)"
-    strokeWidth={1}
+    strokeWidth={1.25}
   />
 );
 
@@ -102,8 +102,8 @@ export const SituationField = ({
       />
 
       {/* Pitcher's mound */}
-      <circle cx={200} cy={334} r={26} fill={dirt} opacity={0.9} />
-      <rect x={195} y={330} width={10} height={4} rx={1} fill="hsl(0 0% 100%)" opacity={0.9} />
+      <circle cx={200} cy={318} r={26} fill={dirt} opacity={0.9} />
+      <rect x={194} y={316} width={12} height={4} rx={1} fill="hsl(0 0% 100%)" opacity={0.9} />
 
       {/* Foul lines */}
       <line x1={200} y1={478} x2={-20} y2={258} stroke="hsl(0 0% 100%)" strokeWidth={2.5} opacity={0.85} />
