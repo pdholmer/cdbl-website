@@ -28,6 +28,7 @@ import InHouseRules from "./pages/InHouseRules";
 
 import TravelFAQ from "./pages/TravelFAQ";
 import TravelRegistration from "./pages/TravelRegistration";
+import SituationDetail from "./pages/SituationDetail";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
@@ -118,6 +119,7 @@ const App = () => (
           {/* Unified auth */}
           <Route path="/login" element={<GuardianLogin />} />
           <Route path="/training" element={<Training />} />
+          <Route path="/training/:slug" element={<SituationDetail />} />
           <Route path="/household" element={<Household />} />
           <Route path="/household/new" element={<HouseholdNew />} />
           {/* Admin Routes */}

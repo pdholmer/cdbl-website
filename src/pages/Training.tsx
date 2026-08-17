@@ -81,8 +81,9 @@ const Training = () => {
                     <ul className="space-y-3">
                       {grouped[base].map((s) => (
                         <li key={s.id}>
-                          <Card className="rounded-2xl shadow-md bg-card/80 backdrop-blur-sm">
-                            <CardContent className="p-4">
+                          <Card className="rounded-2xl shadow-md bg-card/80 backdrop-blur-sm transition-colors hover:bg-card">
+                            <CardContent className="p-0">
+                              <Link to={`/training/${s.slug}`} className="block p-4 min-h-[44px]">
                               <h3 className="font-heading font-semibold text-base mb-1">{s.title}</h3>
                               {s.description && (
                                 <p className="text-sm text-muted-foreground mb-3">{s.description}</p>
@@ -91,6 +92,7 @@ const Training = () => {
                                 <Badge className={difficultyStyles[s.difficulty] ?? ""}>{s.difficulty}</Badge>
                                 <Badge variant="outline">{s.age_band === "all" ? "All ages" : s.age_band}</Badge>
                               </div>
+                              </Link>
                             </CardContent>
                           </Card>
                         </li>
