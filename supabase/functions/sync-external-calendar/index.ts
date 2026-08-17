@@ -675,15 +675,22 @@ Deno.serve(async (req) => {
         });
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        await supabase
-          .from("external_calendars")
-          .update({
-            last_synced_at: new Date().toISOString(),
-            last_sync_status: "error",
-            last_sync_message: msg,
-          })
-          .eq("id", cal.id);
-        results.push({ calendar_id: cal.id, status: "error", error: msg });
+        if (!dryRun) {
+          await supabase
+            .from("external_calendars")
+            .update({
+              last_synced_at: nowIso,
+              last_sync_status: "error",
+              last_sync_message: msg,
+            })
+            .eq("id", cal.id);
+        }
+        results.push({
+          calendar_id: cal.id,
+          status: "error",
+          error: msg,
+          dry_run: dryRun,
+        });
       }
     }
 
