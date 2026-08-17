@@ -1,31 +1,25 @@
 project_id = "nqywnfgpwqpczesjkwtp"
 
-[functions.programs]
-verify_jwt = false
-
-[functions.support]
-verify_jwt = false
-
-[functions.resources]
-verify_jwt = true
-
-[functions.register-player]
-verify_jwt = false
-
-[functions.ai-assistant]
-verify_jwt = false
-
-[functions.generate-feedback-prompt]
-verify_jwt = true
-
-[functions.admin-users]
-verify_jwt = false
-
-[functions.generate-hero-images]
-verify_jwt = false
-
-[functions.sync-external-calendar]
-verify_jwt = false
-
-[functions.process-email-queue]
-verify_jwt = true
+[functions]
+  [functions.admin-users]
+    verify_jwt = false
+  [functions.ai-assistant]
+    verify_jwt = false
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.generate-feedback-prompt]
+    verify_jwt = true
+  [functions.generate-hero-images]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = true
+  [functions.programs]
+    verify_jwt = false
+  [functions.register-player]
+    verify_jwt = false
+  [functions.resources]
+    verify_jwt = true
+  [functions.support]
+    verify_jwt = false
+  [functions.sync-external-calendar]
+    verify_jwt = false
