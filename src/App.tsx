@@ -117,6 +117,7 @@ const App = () => (
           <Route path="/travel/registration" element={<PageGate slug="travel-registration"><TravelRegistration /></PageGate>} />
           {/* Unified auth */}
           <Route path="/login" element={<GuardianLogin />} />
+          <Route path="/training" element={<Training />} />
           <Route path="/household" element={<Household />} />
           <Route path="/household/new" element={<HouseholdNew />} />
           {/* Admin Routes */}
