@@ -280,3 +280,28 @@ export function shuffle<T>(items: T[]): T[] {
   }
   return out;
 }
+
+/** All keyframes for one situation — used by the quiz "Watch the play" player. */
+export function useSituationSteps(situationId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: ["situation-steps", situationId],
+    enabled: enabled && !!situationId,
+    queryFn: async (): Promise<SituationStep[]> => {
+      const { data, error } = await supabase
+        .from("situation_steps")
+        .select("id,step_number,label,note,positions,runners,ball")
+        .eq("situation_id", situationId!)
+        .order("step_number", { ascending: true });
+      if (error) throw error;
+      return ((data ?? []) as Record<string, unknown>[]).map((row) => ({
+        id: String(row.id),
+        step_number: Number(row.step_number),
+        label: (row.label as string) ?? null,
+        note: (row.note as string) ?? null,
+        positions: (row.positions ?? {}) as SituationStep["positions"],
+        runners: (Array.isArray(row.runners) ? row.runners : []) as SituationStep["runners"],
+        ball: (row.ball ?? null) as SituationStep["ball"],
+      }));
+    },
+  });
+}
