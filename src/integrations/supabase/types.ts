@@ -1278,15 +1278,24 @@ export type Database = {
           end_date: string | null
           end_time: string | null
           event_category: string
+          event_key: string
           external_uid: string
+          facility_area: string | null
+          facility_field: string | null
+          facility_path: string | null
+          facility_site: string | null
           field_number: string | null
           home_team_id: string | null
           id: string
+          is_cancelled: boolean
+          last_seen_at: string
           location: string | null
           program_id: string | null
           raw_data: Json | null
+          removed_at: string | null
           start_date: string
           start_time: string | null
+          status: string
           title: string
           updated_at: string
         }
@@ -1302,15 +1311,24 @@ export type Database = {
           end_date?: string | null
           end_time?: string | null
           event_category?: string
+          event_key: string
           external_uid: string
+          facility_area?: string | null
+          facility_field?: string | null
+          facility_path?: string | null
+          facility_site?: string | null
           field_number?: string | null
           home_team_id?: string | null
           id?: string
+          is_cancelled?: boolean
+          last_seen_at?: string
           location?: string | null
           program_id?: string | null
           raw_data?: Json | null
+          removed_at?: string | null
           start_date: string
           start_time?: string | null
+          status?: string
           title: string
           updated_at?: string
         }
@@ -1326,15 +1344,24 @@ export type Database = {
           end_date?: string | null
           end_time?: string | null
           event_category?: string
+          event_key?: string
           external_uid?: string
+          facility_area?: string | null
+          facility_field?: string | null
+          facility_path?: string | null
+          facility_site?: string | null
           field_number?: string | null
           home_team_id?: string | null
           id?: string
+          is_cancelled?: boolean
+          last_seen_at?: string
           location?: string | null
           program_id?: string | null
           raw_data?: Json | null
+          removed_at?: string | null
           start_date?: string
           start_time?: string | null
+          status?: string
           title?: string
           updated_at?: string
         }
