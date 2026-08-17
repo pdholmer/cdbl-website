@@ -628,14 +628,31 @@ Deno.serve(async (req) => {
           continue; // no writes at all, last_sync_* untouched
         }
 
-        // Upsert on the stable key — preserves id and created_at for existing rows.
-        const { error: upErr } = await supabase
-          .from("external_calendar_events")
-          .upsert(
-            rows.map((r) => ({ ...r, removed_at: null, updated_at: nowIso })),
-            { onConflict: "calendar_id,event_key" },
-          );
-        if (upErr) throw upErr;
+        // Upsert only new + changed rows on the stable key — preserves id and
+        // created_at for existing rows, and leaves updated_at alone on rows that
+        // genuinely did not change.
+        const changedRows = [...toInsert, ...toUpdate];
+        if (changedRows.length) {
+          const { error: upErr } = await supabase
+            .from("external_calendar_events")
+            .upsert(
+              changedRows.map((r) => ({ ...r, removed_at: null, updated_at: nowIso })),
+              { onConflict: "calendar_id,event_key" },
+            );
+          if (upErr) throw upErr;
+        }
+
+        // Unchanged rows: only record that the feed still carries them.
+        const unchangedIds = rows
+          .filter((r) => byKey.has(r.event_key) && !differs(byKey.get(r.event_key), r))
+          .map((r) => (byKey.get(r.event_key) as any).id);
+        if (unchangedIds.length) {
+          const { error: seenErr } = await supabase
+            .from("external_calendar_events")
+            .update({ last_seen_at: nowIso })
+            .in("id", unchangedIds);
+          if (seenErr) throw seenErr;
+        }
 
         // Soft delete anything that vanished from the feed. Never a hard DELETE:
         // other tables will reference external_calendar_events(id).
