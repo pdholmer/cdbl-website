@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useTeam } from "@/hooks/useTeams";
+import { useTeamRosterCounts, formatRosterCount } from "@/hooks/useTeamRosterCounts";
 import { useTeamMutations } from "@/hooks/useTeamMutations";
 import { usePrograms } from "@/hooks/usePrograms";
 import { usePlayers } from "@/hooks/usePlayers";
@@ -40,6 +41,7 @@ const TeamEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: team, isLoading } = useTeam(id);
+  const { data: rosterCounts } = useTeamRosterCounts();
   const { programs = [], isLoading: programsLoading } = usePrograms();
   const { data: availablePlayers = [] } = usePlayers({ status: "approved" });
   const { data: coaches = [] } = useCoaches({ status: "active" });
@@ -70,7 +72,6 @@ const TeamEdit = () => {
     } else {
       reset({
         season_year: new Date().getFullYear(),
-        max_roster_size: 12,
         status: "forming",
       });
     }
@@ -222,11 +223,11 @@ const TeamEdit = () => {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="max_roster_size">Max Roster Size</Label>
+                  <Label htmlFor="max_roster_size">Max Roster Size (leave blank to use division default)</Label>
                   <Input
                     id="max_roster_size"
                     type="number"
-                    {...register("max_roster_size", { valueAsNumber: true })}
+                    {...register("max_roster_size", { setValueAs: (v) => (v === "" || v === null ? null : Number(v)) })}
                   />
                 </div>
                 <div className="space-y-2">
@@ -349,7 +350,7 @@ const TeamEdit = () => {
               <CardHeader>
                 <CardTitle>Team Roster</CardTitle>
                 <CardDescription>
-                  Manage players ({team?.current_roster_count || 0} / {team?.max_roster_size || 12})
+                  Manage players ({formatRosterCount(id ? rosterCounts?.get(id) : undefined)})
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">

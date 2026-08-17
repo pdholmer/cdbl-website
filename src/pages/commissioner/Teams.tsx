@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useTeams } from "@/hooks/useTeams";
+import { useTeamRosterCounts, formatRosterCount } from "@/hooks/useTeamRosterCounts";
 import { useTeamMutations } from "@/hooks/useTeamMutations";
 import { useCommissionerAssignments } from "@/hooks/useCommissionerAssignments";
 import { usePrograms } from "@/hooks/usePrograms";
@@ -40,6 +41,7 @@ export default function CommissionerTeams() {
   const navigate = useNavigate();
   const { data: assignments } = useCommissionerAssignments();
   const { data: teams, isLoading } = useTeams();
+  const { data: rosterCounts } = useTeamRosterCounts();
   const { programs } = usePrograms();
   const { createTeam } = useTeamMutations();
   
@@ -211,7 +213,7 @@ export default function CommissionerTeams() {
                     <TableCell>
                       <div className="flex items-center gap-1">
                         <Users className="h-4 w-4 text-muted-foreground" />
-                        {team.current_roster_count || 0} / {team.max_roster_size || 12}
+                        {formatRosterCount(rosterCounts?.get(team.id))}
                       </div>
                     </TableCell>
                     <TableCell>

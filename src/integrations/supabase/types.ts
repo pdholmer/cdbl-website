@@ -92,6 +92,13 @@ export type Database = {
             foreignKeyName: "coach_invitations_team_id_fkey"
             columns: ["team_id"]
             isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
+          },
+          {
+            foreignKeyName: "coach_invitations_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
             referencedRelation: "teams"
             referencedColumns: ["id"]
           },
@@ -551,6 +558,8 @@ export type Database = {
           age_range: string
           cost: number | null
           created_at: string | null
+          default_max_roster_size: number | null
+          default_min_roster_size: number | null
           display_order: number | null
           features: Json | null
           id: string
@@ -565,6 +574,8 @@ export type Database = {
           age_range: string
           cost?: number | null
           created_at?: string | null
+          default_max_roster_size?: number | null
+          default_min_roster_size?: number | null
           display_order?: number | null
           features?: Json | null
           id?: string
@@ -579,6 +590,8 @@ export type Database = {
           age_range?: string
           cost?: number | null
           created_at?: string | null
+          default_max_roster_size?: number | null
+          default_min_roster_size?: number | null
           display_order?: number | null
           features?: Json | null
           id?: string
@@ -813,6 +826,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "drafts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draft_teams_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
           },
           {
             foreignKeyName: "draft_teams_team_id_fkey"
@@ -1563,6 +1583,13 @@ export type Database = {
             foreignKeyName: "games_away_team_id_fkey"
             columns: ["away_team_id"]
             isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
+          },
+          {
+            foreignKeyName: "games_away_team_id_fkey"
+            columns: ["away_team_id"]
+            isOneToOne: false
             referencedRelation: "teams"
             referencedColumns: ["id"]
           },
@@ -1572,6 +1599,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "divisions"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "games_home_team_id_fkey"
+            columns: ["home_team_id"]
+            isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
           },
           {
             foreignKeyName: "games_home_team_id_fkey"
@@ -2914,6 +2948,13 @@ export type Database = {
             foreignKeyName: "fk_players_team"
             columns: ["team_id"]
             isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
+          },
+          {
+            foreignKeyName: "fk_players_team"
+            columns: ["team_id"]
+            isOneToOne: false
             referencedRelation: "teams"
             referencedColumns: ["id"]
           },
@@ -2986,6 +3027,13 @@ export type Database = {
           venue_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "practices_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
+          },
           {
             foreignKeyName: "practices_team_id_fkey"
             columns: ["team_id"]
@@ -4069,6 +4117,13 @@ export type Database = {
             foreignKeyName: "team_coaches_team_id_fkey"
             columns: ["team_id"]
             isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
+          },
+          {
+            foreignKeyName: "team_coaches_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
             referencedRelation: "teams"
             referencedColumns: ["id"]
           },
@@ -4109,6 +4164,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "team_important_dates_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
+          },
           {
             foreignKeyName: "team_important_dates_team_id_fkey"
             columns: ["team_id"]
@@ -4244,6 +4306,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "coaches"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_tasks_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "team_roster_counts"
+            referencedColumns: ["team_id"]
           },
           {
             foreignKeyName: "team_tasks_team_id_fkey"
@@ -4522,6 +4591,15 @@ export type Database = {
       }
     }
     Views: {
+      team_roster_counts: {
+        Row: {
+          active_count: number | null
+          effective_max: number | null
+          effective_min: number | null
+          team_id: string | null
+        }
+        Relationships: []
+      }
       v_parent_evaluation_scores: {
         Row: {
           catching: number | null
