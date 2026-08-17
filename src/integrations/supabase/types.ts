@@ -3764,6 +3764,239 @@ export type Database = {
         }
         Relationships: []
       }
+      situation_articles: {
+        Row: {
+          age_band: string
+          body: string | null
+          category: string | null
+          created_at: string
+          id: string
+          slug: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          age_band?: string
+          body?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          slug?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          age_band?: string
+          body?: string | null
+          category?: string | null
+          created_at?: string
+          id?: string
+          slug?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      situation_quiz_attempts: {
+        Row: {
+          answered_at: string
+          id: string
+          is_correct: boolean
+          question_id: string
+          selected_option: string
+          user_id: string
+        }
+        Insert: {
+          answered_at?: string
+          id?: string
+          is_correct: boolean
+          question_id: string
+          selected_option: string
+          user_id: string
+        }
+        Update: {
+          answered_at?: string
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          selected_option?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "situation_quiz_attempts_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "situation_quiz_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      situation_quiz_questions: {
+        Row: {
+          correct_option: string
+          created_at: string
+          explanation: string | null
+          id: string
+          options: Json
+          position_key: string | null
+          prompt: string
+          situation_id: string
+          sort_order: number
+          updated_at: string
+          why_wrong: Json | null
+        }
+        Insert: {
+          correct_option: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options: Json
+          position_key?: string | null
+          prompt: string
+          situation_id: string
+          sort_order?: number
+          updated_at?: string
+          why_wrong?: Json | null
+        }
+        Update: {
+          correct_option?: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options?: Json
+          position_key?: string | null
+          prompt?: string
+          situation_id?: string
+          sort_order?: number
+          updated_at?: string
+          why_wrong?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "situation_quiz_questions_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "situations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      situation_steps: {
+        Row: {
+          ball: Json | null
+          created_at: string
+          id: string
+          label: string | null
+          note: string | null
+          positions: Json
+          runners: Json
+          situation_id: string
+          step_number: number
+          updated_at: string
+        }
+        Insert: {
+          ball?: Json | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          note?: string | null
+          positions?: Json
+          runners?: Json
+          situation_id: string
+          step_number: number
+          updated_at?: string
+        }
+        Update: {
+          ball?: Json | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          note?: string | null
+          positions?: Json
+          runners?: Json
+          situation_id?: string
+          step_number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "situation_steps_situation_id_fkey"
+            columns: ["situation_id"]
+            isOneToOne: false
+            referencedRelation: "situations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      situations: {
+        Row: {
+          age_band: string
+          base_state: string
+          batted_ball: string | null
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          difficulty: string
+          field_zone: string | null
+          id: string
+          outs: number | null
+          slug: string
+          sort_order: number
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          age_band?: string
+          base_state: string
+          batted_ball?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty?: string
+          field_zone?: string | null
+          id?: string
+          outs?: number | null
+          slug: string
+          sort_order?: number
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          age_band?: string
+          base_state?: string
+          batted_ball?: string | null
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          difficulty?: string
+          field_zone?: string | null
+          id?: string
+          outs?: number | null
+          slug?: string
+          sort_order?: number
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "situations_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       support_options: {
         Row: {
           active: boolean | null
@@ -4685,6 +4918,8 @@ export type Database = {
         Returns: boolean
       }
       is_guardian_of_player: { Args: { _player_id: string }; Returns: boolean }
+      is_training_editor: { Args: { _user_id: string }; Returns: boolean }
+      is_training_viewer: { Args: { _user_id: string }; Returns: boolean }
       log_player_access: {
         Args: {
           _access_type: string

@@ -11,12 +11,14 @@ import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useHiddenSlugs } from "@/hooks/usePageVisibility";
+import { useTrainingAccess } from "@/hooks/useTraining";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const hidden = useHiddenSlugs();
+  const { canView: canViewTraining } = useTrainingAccess();
   const show = (slug: string) => !hidden.has(slug);
 
 
@@ -95,6 +97,14 @@ const Header = () => {
                 Schedule
               </Link>
             )}
+            {canViewTraining && (
+              <>
+                <span className="text-muted-foreground">|</span>
+                <Link to="/training" className="text-[0.8625rem] font-medium text-foreground hover:text-primary transition-colors">
+                  Training
+                </Link>
+              </>
+            )}
             <span className="text-muted-foreground">|</span>
             <UserMenu variant="desktop" />
           </div>
@@ -167,6 +177,9 @@ const Header = () => {
                       {show('contact') && mobileLink("/contact", "Contact")}
                     </CollapsibleContent>
                   </Collapsible>
+                  {canViewTraining && (
+                    <div className="pt-2">{mobileLink("/training", "Training")}</div>
+                  )}
                 </nav>
 
                 <div className="border-t border-border pt-4 mt-2">
