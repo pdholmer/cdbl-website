@@ -2658,75 +2658,6 @@ export type Database = {
           },
         ]
       }
-      player_guardians: {
-        Row: {
-          address_line1: string | null
-          address_line2: string | null
-          city: string | null
-          created_at: string | null
-          email: string
-          first_name: string
-          id: string
-          is_primary: boolean | null
-          last_name: string
-          phone: string
-          player_id: string
-          relationship: string | null
-          state: string | null
-          updated_at: string | null
-          zip_code: string | null
-        }
-        Insert: {
-          address_line1?: string | null
-          address_line2?: string | null
-          city?: string | null
-          created_at?: string | null
-          email: string
-          first_name: string
-          id?: string
-          is_primary?: boolean | null
-          last_name: string
-          phone: string
-          player_id: string
-          relationship?: string | null
-          state?: string | null
-          updated_at?: string | null
-          zip_code?: string | null
-        }
-        Update: {
-          address_line1?: string | null
-          address_line2?: string | null
-          city?: string | null
-          created_at?: string | null
-          email?: string
-          first_name?: string
-          id?: string
-          is_primary?: boolean | null
-          last_name?: string
-          phone?: string
-          player_id?: string
-          relationship?: string | null
-          state?: string | null
-          updated_at?: string | null
-          zip_code?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "player_guardians_player_id_fkey"
-            columns: ["player_id"]
-            isOneToOne: false
-            referencedRelation: "players"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "player_guardians_player_id_fkey"
-            columns: ["player_id"]
-            isOneToOne: false
-            referencedRelation: "v_player_current"
-            referencedColumns: ["player_id"]
-          },
-        ]
-      }
       player_medical: {
         Row: {
           allergies: string | null
@@ -4013,30 +3944,6 @@ export type Database = {
           title?: string
           type?: Database["public"]["Enums"]["support_type"]
           updated_at?: string | null
-        }
-        Relationships: []
-      }
-      suppressed_emails: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          metadata: Json | null
-          reason: string
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          metadata?: Json | null
-          reason: string
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          metadata?: Json | null
-          reason?: string
         }
         Relationships: []
       }
