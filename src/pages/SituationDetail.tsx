@@ -204,7 +204,26 @@ const SituationDetail = () => {
                 )}
               </header>
 
+              <Button
+                size="lg"
+                variant={quizOpen ? "outline" : "default"}
+                className="w-full min-h-12 rounded-2xl mb-4"
+                onClick={() => setQuizOpen((v) => !v)}
+              >
+                <Brain className="h-5 w-5 mr-2" aria-hidden="true" />
+                {quizOpen ? "Back to the play" : "Test Yourself"}
+              </Button>
+
+              {quizOpen ? (
+                <SituationQuiz
+                  situationId={situation.id}
+                  firstStep={steps[0]}
+                  onClose={() => setQuizOpen(false)}
+                />
+              ) : (
+                <>
               <div className="rounded-2xl overflow-hidden shadow-md bg-card/80 backdrop-blur-sm">
+
                 <SituationField
                   positions={currentFrame.positions}
                   runners={currentFrame.runners}
