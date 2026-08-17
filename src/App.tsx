@@ -75,6 +75,7 @@ import GuardianLogin from "./pages/Login";
 import Household from "./pages/Household";
 import HouseholdNew from "./pages/HouseholdNew";
 import EmailBounces from "./pages/admin/EmailBounces";
+import Training from "./pages/Training";
 
 const queryClient = new QueryClient();
 
