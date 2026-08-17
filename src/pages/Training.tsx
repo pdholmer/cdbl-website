@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LockKeyhole, Target } from "lucide-react";
 import { useTrainingAccess, usePublishedSituations, type SituationSummary } from "@/hooks/useTraining";
 import { BASE_STATE_LABELS, BASE_STATE_ORDER } from "@/lib/situationsField";
+import PracticeSession from "@/components/training/PracticeSession";
+import ProgressStrip from "@/components/training/ProgressStrip";
 
 const difficultyStyles: Record<string, string> = {
   easy: "bg-secondary text-secondary-foreground",
@@ -16,7 +18,7 @@ const difficultyStyles: Record<string, string> = {
 };
 
 const Training = () => {
-  const { loading, isAuthenticated, canView } = useTrainingAccess();
+  const { loading, isAuthenticated, canView, canEdit } = useTrainingAccess();
   const { data: situations, isLoading } = usePublishedSituations(canView);
 
   const grouped = (situations ?? []).reduce<Record<string, SituationSummary[]>>((acc, s) => {
@@ -75,6 +77,10 @@ const Training = () => {
               <p className="text-muted-foreground">No published situations yet — check back soon.</p>
             ) : (
               <div className="space-y-8">
+                <div>
+                  <PracticeSession enabled={canView} />
+                  <ProgressStrip enabled={canView} isCoach={canEdit} />
+                </div>
                 {BASE_STATE_ORDER.filter((b) => grouped[b]?.length).map((base) => (
                   <div key={base}>
                     <h2 className="font-heading text-lg font-semibold mb-3">{BASE_STATE_LABELS[base] ?? base}</h2>

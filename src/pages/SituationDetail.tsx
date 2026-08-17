@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, LockKeyhole, Pause, Play, RotateCcw } from "lucide-react";
+import { ArrowLeft, Brain, LockKeyhole, Pause, Play, RotateCcw } from "lucide-react";
+import SituationQuiz from "@/components/training/SituationQuiz";
 import SituationField from "@/components/training/SituationField";
 import { useSituationDetail, useTrainingAccess, type SituationStep } from "@/hooks/useTraining";
 import {
@@ -58,6 +59,7 @@ const blendFrames = (a: Frame, b: Frame, t: number): Frame => {
 
 const SituationDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const [quizOpen, setQuizOpen] = useState(false);
   const { loading, isAuthenticated, canView } = useTrainingAccess();
   const { data: situation, isLoading } = useSituationDetail(slug, canView);
 
@@ -204,7 +206,26 @@ const SituationDetail = () => {
                 )}
               </header>
 
+              <Button
+                size="lg"
+                variant={quizOpen ? "outline" : "default"}
+                className="w-full min-h-12 rounded-2xl mb-4"
+                onClick={() => setQuizOpen((v) => !v)}
+              >
+                <Brain className="h-5 w-5 mr-2" aria-hidden="true" />
+                {quizOpen ? "Back to the play" : "Test Yourself"}
+              </Button>
+
+              {quizOpen ? (
+                <SituationQuiz
+                  situationId={situation.id}
+                  firstStep={steps[0]}
+                  onClose={() => setQuizOpen(false)}
+                />
+              ) : (
+                <>
               <div className="rounded-2xl overflow-hidden shadow-md bg-card/80 backdrop-blur-sm">
+
                 <SituationField
                   positions={currentFrame.positions}
                   runners={currentFrame.runners}
@@ -306,7 +327,10 @@ const SituationDetail = () => {
                   {activeStep.note}
                 </p>
               )}
+                </>
+              )}
             </>
+
           )}
         </div>
       </main>

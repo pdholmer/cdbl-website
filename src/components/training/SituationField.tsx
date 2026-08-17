@@ -10,8 +10,15 @@ export interface SituationFieldProps {
     runners?: Runner[];
     ball?: Point | null;
   } | null;
+  /** Quiz mode: makes defender tokens tappable and adds a pulsing hint. */
+  onSelectPosition?: (position: string) => void;
+  /** Per-position result marks shown in quiz mode. */
+  positionStatus?: Record<string, boolean | undefined>;
+  /** Highlighted (correct answer / chosen) position. */
+  highlightPosition?: string | null;
   className?: string;
 }
+
 
 const MOVE_EPSILON = 2;
 
@@ -40,8 +47,12 @@ export const SituationField = ({
   runners = [],
   ball,
   ghost,
+  onSelectPosition,
+  positionStatus,
+  highlightPosition,
   className,
 }: SituationFieldProps) => {
+
   const grass = "hsl(140 38% 24%)";
   const grassDark = "hsl(140 40% 19%)";
   const dirt = "hsl(28 42% 58%)";
@@ -209,21 +220,91 @@ export const SituationField = ({
       ))}
 
       {/* --- Defenders --- */}
-      {Object.entries(positions).map(([key, p]) => (
-        <g key={key} filter="url(#sf-shadow)">
-          <circle cx={p.x} cy={p.y} r={15} fill="hsl(0 0% 100%)" stroke="hsl(215 30% 22%)" strokeWidth={1.75} />
-          <text
-            x={p.x}
-            y={p.y + 4}
-            textAnchor="middle"
-            fontSize={key.length > 1 ? 9.5 : 11}
-            fontWeight={800}
-            fill="hsl(215 35% 18%)"
+      {Object.entries(positions).map(([key, p]) => {
+        const status = positionStatus?.[key];
+        const answered = status !== undefined;
+        const selectable = !!onSelectPosition;
+        const highlighted = highlightPosition === key;
+        return (
+          <g
+            key={key}
+            filter="url(#sf-shadow)"
+            role={selectable ? "button" : undefined}
+            tabIndex={selectable ? 0 : undefined}
+            aria-label={selectable ? `Answer as ${key}` : undefined}
+            style={selectable ? { cursor: "pointer" } : undefined}
+            onClick={selectable ? () => onSelectPosition!(key) : undefined}
+            onKeyDown={
+              selectable
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onSelectPosition!(key);
+                    }
+                  }
+                : undefined
+            }
           >
-            {key}
-          </text>
-        </g>
-      ))}
+            {selectable && !answered && (
+              <circle cx={p.x} cy={p.y} r={15} fill="none" stroke="hsl(48 100% 60%)" strokeWidth={3}>
+                <animate attributeName="r" values="15;23;15" dur="1.8s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.9;0;0.9" dur="1.8s" repeatCount="indefinite" />
+              </circle>
+            )}
+            {/* Larger transparent hit area for small fingers */}
+            {selectable && <circle cx={p.x} cy={p.y} r={26} fill="transparent" />}
+            <circle
+              cx={p.x}
+              cy={p.y}
+              r={15}
+              fill="hsl(0 0% 100%)"
+              stroke={
+                highlighted
+                  ? "hsl(48 100% 45%)"
+                  : status === true
+                  ? "hsl(142 65% 33%)"
+                  : status === false
+                  ? "hsl(0 72% 46%)"
+                  : "hsl(215 30% 22%)"
+              }
+              strokeWidth={highlighted || answered ? 3 : 1.75}
+            />
+            <text
+              x={p.x}
+              y={p.y + 4}
+              textAnchor="middle"
+              fontSize={key.length > 1 ? 9.5 : 11}
+              fontWeight={800}
+              fill="hsl(215 35% 18%)"
+            >
+              {key}
+            </text>
+            {answered && (
+              <g>
+                <circle
+                  cx={p.x + 12}
+                  cy={p.y - 12}
+                  r={7}
+                  fill={status ? "hsl(142 65% 33%)" : "hsl(0 72% 46%)"}
+                  stroke="hsl(0 0% 100%)"
+                  strokeWidth={1.5}
+                />
+                <text
+                  x={p.x + 12}
+                  y={p.y - 8.5}
+                  textAnchor="middle"
+                  fontSize={9}
+                  fontWeight={800}
+                  fill="hsl(0 0% 100%)"
+                >
+                  {status ? "✓" : "×"}
+                </text>
+              </g>
+            )}
+          </g>
+        );
+      })}
+
 
       {/* --- Ball --- */}
       {ball && (
