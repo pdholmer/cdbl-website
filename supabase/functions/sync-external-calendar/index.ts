@@ -461,6 +461,11 @@ Deno.serve(async (req) => {
       ? await req.json().catch(() => ({}))
       : {};
     const calendarId: string | undefined = body?.calendar_id;
+    // Dry run: parse and reconcile against the live feed, write nothing.
+    const url = new URL(req.url);
+    const dryRun = body?.dry_run === true ||
+      url.searchParams.get("dry_run") === "true";
+    const nowIso = new Date().toISOString();
 
     // Load lookups once
     const [divRes, teamRes, progRes] = await Promise.all([
