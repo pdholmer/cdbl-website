@@ -43,13 +43,14 @@ export const useGuardians = (playerId: string | undefined) => {
         .select(
           `household_id,
            is_primary,
-           guardians:guardian_id ( id, first_name, last_name, email, phone, relationship ),
-           households:household_id ( address_line1, address_line2, city, state, zip_code )`
+           guardians:guardians!gh_league_guardian_fkey ( id, first_name, last_name, email, phone, relationship ),
+           households:households!gh_league_household_fkey ( address_line1, address_line2, city, state, zip_code )`
         )
         .in("household_id", householdIds)
         .order("is_primary", { ascending: false });
 
       if (error) throw error;
+
 
       return (data ?? [])
         .filter((row: any) => row.guardians)
