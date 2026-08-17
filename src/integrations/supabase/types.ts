@@ -1650,6 +1650,7 @@ export type Database = {
           league_id: string
           legacy_player_guardian_id: string | null
           phone: string | null
+          relationship: string | null
           updated_at: string
         }
         Insert: {
@@ -1663,6 +1664,7 @@ export type Database = {
           league_id?: string
           legacy_player_guardian_id?: string | null
           phone?: string | null
+          relationship?: string | null
           updated_at?: string
         }
         Update: {
@@ -1676,6 +1678,7 @@ export type Database = {
           league_id?: string
           legacy_player_guardian_id?: string | null
           phone?: string | null
+          relationship?: string | null
           updated_at?: string
         }
         Relationships: [
