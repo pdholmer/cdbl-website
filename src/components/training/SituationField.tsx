@@ -47,8 +47,12 @@ export const SituationField = ({
   runners = [],
   ball,
   ghost,
+  onSelectPosition,
+  positionStatus,
+  highlightPosition,
   className,
 }: SituationFieldProps) => {
+
   const grass = "hsl(140 38% 24%)";
   const grassDark = "hsl(140 40% 19%)";
   const dirt = "hsl(28 42% 58%)";
