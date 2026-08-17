@@ -325,7 +325,10 @@ const SituationDetail = () => {
                   {activeStep.note}
                 </p>
               )}
+                </>
+              )}
             </>
+
           )}
         </div>
       </main>
