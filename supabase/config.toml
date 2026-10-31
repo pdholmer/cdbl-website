@@ -11,8 +11,6 @@ project_id = "nqywnfgpwqpczesjkwtp"
     verify_jwt = true
   [functions.generate-hero-images]
     verify_jwt = false
-  [functions.process-email-queue]
-    verify_jwt = true
   [functions.programs]
     verify_jwt = false
   [functions.register-player]
