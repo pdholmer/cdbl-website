@@ -4,4 +4,4 @@
 - [x] Re-render authentication transport and scaffold app-email helper/preview.
 - [x] Verify replacement email functions and deploy them.
 - [x] Remove replaced legacy queue files and configuration from source only.
-- [ ] Check final app diagnostics and report review/publish boundary.
+- [x] Check final app diagnostics and report review/publish boundary.
