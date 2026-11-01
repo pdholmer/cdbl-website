@@ -1,4 +1,74 @@
-# Phase A, steps 1 and 2: 2027 season, programs, fees, capacity (plan only)
+# Part 1: sign-in fixes from Paul's live test (plan only)
+
+## 1. No two-step QR on cdbaseball.org
+
+Confirmed. I downloaded the live site's code and searched it: it has no two-step screens and no redesigned Household page. Both exist only in preview.
+
+There is a second cause that would still apply after publishing. The email link always opens `/login`, and `/login` always sends people to Household. The two-step check only runs when someone opens an admin page. So Paul never reaches it, even in preview. Fix 2 below handles this.
+
+Also: until we publish, the live admin panel has no two-step step at all.
+
+What a publish would ship (website changes saved but not yet live):
+- Two-step setup and code screens, and the admin two-step check
+- Redesigned Household page, family header, edit sheet, new household safeguards
+- Situations Trainer: field viewer, playback, quiz, practice, progress
+- Roster count display changes, team edit label
+- Admin and public reading of the new team roster counts
+
+Already live without publishing (these took effect when made):
+- Oct 31 email delivery move: the sign-in email sender and branded templates are deployed and running now. Only the preview-email helper on the website side waits for publish.
+- All database changes: security pass, roles, two-step database rules, roster rules, team renames, calendar sync
+
+I can't produce a line-by-line list of unpublished changes; this list comes from comparing the live code with preview. Publishing ships everything in preview at once.
+
+## 2. Role-aware landing after sign-in
+
+Change `routeAfterLogin` in the sign-in page:
+
+```text
+signed in
+ ├─ safe "next" link given (not /login)        -> go there
+ ├─ admin, registrar, treasurer, background_checks,
+ │  commissioner or board_member                -> /admin
+ │      (admin check sends required roles to /two-step/setup or /two-step/verify first)
+ ├─ coach (role or active team coach link)      -> /coach
+ └─ everyone else                               -> /household (or /household/new)
+```
+
+- Roles read from `user_roles` for the signed-in user (existing policy lets users read their own). If that read fails, show an error with retry, never a silent default.
+- `next=/household` is honored again, so a parent link still works for admins.
+- Admin-who-is-also-a-parent: add a "My household" link in the admin sidebar and account menu, shown when the user has a guardian record. Add "Admin" to the family header for admin roles. Same in the coach area.
+- Commissioner landing: commissioners currently have `/commissioner` pages. I propose `/admin` per your list only if the admin guard admits commissioners; otherwise `/commissioner`. I'll confirm against `ProtectedRoute` before building and tell you which.
+- The two-step routing stays in `ProtectedRoute` (single source: `requires_mfa`).
+
+Verify: sign in as Paul (admin) and land on two-step setup, then admin. Mint a parent-only and coach-only session if test accounts exist and confirm Household and Coach. Each at 390, 768, 1440.
+
+Undo: revert the sign-in page and the two nav links.
+
+## 3. Pages locked to phone width
+
+Audit result (page wrappers, not dialogs or small text limits):
+- Household: page column and family header capped at 640px. This is the main problem.
+- Household new, sign-in, two-step setup, two-step code: single card capped at 448px. This is normal for a form, but the page around it should use the space on tablet and desktop.
+- Situation detail: capped at 672px, so the field is small on desktop.
+- Admin division edit: form capped at 672px (acceptable for a form).
+- Admin panel shell: not capped; I will still check it at 768px, where the sidebar and tables are most at risk.
+- Public pages: caps are on paragraph text only (good reading width), not the page.
+
+Fix pattern:
+- Page wrapper: `container` with phone 16px, tablet 24px, desktop 32px sides; max width about 1200px.
+- Household desktop: two columns from 1024px up. Left: household card, family, guardians. Right: team, coach, upcoming. Tablet: single column at full width with wider cards. Header matches the page width.
+- Sign-in and two-step: keep the narrow form card, centered, with a brand panel beside it on desktop (seal and one plain sentence) so it doesn't look like a phone screen.
+- Situation detail: field and step list side by side on desktop, stacked on phone.
+- Admin: tables scroll sideways inside their card at 768, never the page; sidebar collapses below 1024.
+
+Verify: browser check of each page at 390, 768 and 1440: no sideways page scroll, touch targets at least 44px, screenshots reviewed for each.
+
+Order: fix 2, then 3 (Household, two-step, admin), then publish only when you say so.
+
+---
+
+# Part 2: Phase A, steps 1 and 2: 2027 season, programs, fees, capacity (plan only)
 
 Additive only. No 2026 row is edited or deleted. Nothing below is applied until Paul says "approved".
 
