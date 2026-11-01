@@ -29,6 +29,13 @@
       "when": 1793564594302,
       "tag": "0003_security_c_mfa_helpers",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793566818872,
+      "tag": "0004_programs_unique_per_season",
+      "breakpoints": true
     }
   ]
 }
