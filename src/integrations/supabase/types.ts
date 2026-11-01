@@ -4966,6 +4966,9 @@ export type Database = {
         | "commissioner"
         | "board_member"
         | "parent"
+        | "registrar"
+        | "treasurer"
+        | "background_checks"
       delivery_status:
         | "pending"
         | "sent"
@@ -5133,6 +5136,9 @@ export const Constants = {
         "commissioner",
         "board_member",
         "parent",
+        "registrar",
+        "treasurer",
+        "background_checks",
       ],
       delivery_status: [
         "pending",
