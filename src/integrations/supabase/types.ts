@@ -4990,7 +4990,7 @@ export type Database = {
         | "sent"
         | "failed"
         | "cancelled"
-      program_type: "in_house" | "travel"
+      program_type: "in_house" | "travel" | "ihtt" | "travel_tryout" | "clinic"
       resource_category:
         | "drill"
         | "practice_plan"
@@ -5163,7 +5163,7 @@ export const Constants = {
         "failed",
         "cancelled",
       ],
-      program_type: ["in_house", "travel"],
+      program_type: ["in_house", "travel", "ihtt", "travel_tryout", "clinic"],
       resource_category: [
         "drill",
         "practice_plan",

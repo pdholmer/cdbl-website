@@ -43,6 +43,13 @@
       "when": 1793566836784,
       "tag": "0005_season_2027_and_cutoff_guards",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793566847606,
+      "tag": "0006_program_type_new_values",
+      "breakpoints": true
     }
   ]
 }
