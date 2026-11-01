@@ -1,3 +1,4 @@
+import { AuthShell } from "@/components/AuthShell";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -43,8 +44,8 @@ const TwoStepVerify = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md rounded-2xl shadow-md">
+    <AuthShell>
+      <Card className="w-full rounded-2xl shadow-md">
         <CardHeader>
           <CardTitle className="text-2xl">Enter your code</CardTitle>
           <CardDescription>Open your authenticator app and type the 6-digit code for CDBL.</CardDescription>
@@ -71,7 +72,7 @@ const TwoStepVerify = () => {
           <Button variant="ghost" className="w-full h-11" onClick={signOut}>Sign out</Button>
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 };
 

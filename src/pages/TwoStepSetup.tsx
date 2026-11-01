@@ -1,3 +1,4 @@
+import { AuthShell } from "@/components/AuthShell";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,8 +55,8 @@ const TwoStepSetup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md rounded-2xl shadow-md">
+    <AuthShell>
+      <Card className="w-full rounded-2xl shadow-md">
         <CardHeader>
           <CardTitle className="text-2xl">Set up two-step sign-in</CardTitle>
           <CardDescription>
@@ -98,7 +99,7 @@ const TwoStepSetup = () => {
           </p>
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 };
 

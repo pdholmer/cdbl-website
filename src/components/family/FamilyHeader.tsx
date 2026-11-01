@@ -22,7 +22,7 @@ export const FamilyHeader = ({ context = "Household" }: FamilyHeaderProps) => {
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 w-full max-w-[640px] items-center gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-3 px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
           aria-label="CDBL home"

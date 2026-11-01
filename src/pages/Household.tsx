@@ -83,7 +83,7 @@ const Household = () => {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[hsl(217_30%_97%)] pb-16">
       <FamilyHeader context="Household" />
-      <div className="mx-auto w-full max-w-[640px] px-4 pt-8 sm:px-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 lg:px-8 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
         {isLoading ? (
           <div className="space-y-4">
             <Skeleton className="h-10 w-2/3" />
@@ -147,6 +147,8 @@ const Household = () => {
               </div>
             )}
 
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+            <div className="space-y-8">
             {/* Your family */}
             <section>
               <SectionLabel>Your family</SectionLabel>
@@ -178,6 +180,8 @@ const Household = () => {
               </GroupedCard>
             </section>
 
+            </div>
+            <div className="space-y-8">
             {/* Per-child team + coach */}
             {data?.children.map((c) => (
               <section key={`team-${c.id}`}>
@@ -268,6 +272,8 @@ const Household = () => {
                 )}
               </GroupedCard>
             </section>
+            </div>
+            </div>
 
             {/* Guardians */}
             <section>
