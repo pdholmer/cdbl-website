@@ -239,6 +239,16 @@ export function AdminSidebar() {
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              {hasHousehold && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <NavLink to="/household" className={getNavClass}>
+                      <Users className="h-4 w-4" />
+                      <span className="ml-2">My household</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link to="/" className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
