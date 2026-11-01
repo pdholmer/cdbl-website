@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793564539760,
+      "tag": "0000_security_a_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793564565806,
+      "tag": "0001_security_b_revoke_anon",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793564576567,
+      "tag": "0002_security_b2_anon_insert_policies",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793564594302,
+      "tag": "0003_security_c_mfa_helpers",
+      "breakpoints": true
+    }
+  ]
+}

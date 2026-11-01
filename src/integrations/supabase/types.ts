@@ -4910,6 +4910,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      mfa_satisfied: { Args: never; Returns: boolean }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -4941,6 +4942,7 @@ export type Database = {
         Args: { notes?: string; request_id: string }
         Returns: boolean
       }
+      requires_mfa: { Args: { _user_id: string }; Returns: boolean }
       safe_uuid: { Args: { _t: string }; Returns: string }
       unsubscribe_by_token: {
         Args: { _category?: string; _token: string }
@@ -4966,6 +4968,9 @@ export type Database = {
         | "commissioner"
         | "board_member"
         | "parent"
+        | "registrar"
+        | "treasurer"
+        | "background_checks"
       delivery_status:
         | "pending"
         | "sent"
@@ -5133,6 +5138,9 @@ export const Constants = {
         "commissioner",
         "board_member",
         "parent",
+        "registrar",
+        "treasurer",
+        "background_checks",
       ],
       delivery_status: [
         "pending",
