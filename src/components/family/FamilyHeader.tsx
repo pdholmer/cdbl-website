@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import seal from "@/assets/cdbl-seal.png";
+import { resolveLanding } from "@/lib/landing";
 
 interface FamilyHeaderProps {
   /** Context wordmark shown next to the seal. */
@@ -13,6 +15,19 @@ interface FamilyHeaderProps {
 /** Slim family-portal bar: CDBL seal home link, context wordmark, sign out. */
 export const FamilyHeader = ({ context = "Household" }: FamilyHeaderProps) => {
   const navigate = useNavigate();
+  const [workArea, setWorkArea] = useState<"/admin" | "/coach" | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return;
+      try {
+        const l = await resolveLanding(data.user.id);
+        setWorkArea(l === "/household" ? null : l);
+      } catch {
+        setWorkArea(null);
+      }
+    });
+  }, []);
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -22,7 +37,7 @@ export const FamilyHeader = ({ context = "Household" }: FamilyHeaderProps) => {
 
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 w-full max-w-[640px] items-center gap-3 px-4 sm:px-6">
+      <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-3 px-4 sm:px-6 lg:px-8">
         <Link
           to="/"
           aria-label="CDBL home"
@@ -33,6 +48,11 @@ export const FamilyHeader = ({ context = "Household" }: FamilyHeaderProps) => {
         <span className="min-w-0 flex-1 truncate font-heading text-[13px] font-bold uppercase tracking-[0.14em] text-primary">
           {context}
         </span>
+        {workArea && (
+          <Button asChild variant="outline" size="sm" className="h-11 shrink-0 rounded-xl px-3">
+            <Link to={workArea}>{workArea === "/admin" ? "Admin" : "Coach area"}</Link>
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="sm"

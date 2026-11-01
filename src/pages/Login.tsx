@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Mail, ArrowLeft, RefreshCw, Loader2 } from "lucide-react";
+import { resolveLanding } from "@/lib/landing";
+import { AuthShell } from "@/components/AuthShell";
 
 type Stage = "enter" | "sent";
 
@@ -24,6 +26,7 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [sending, setSending] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [routeError, setRouteError] = useState(false);
 
   // If already signed in, route immediately.
   useEffect(() => {
@@ -43,10 +46,25 @@ const Login = () => {
     if (!uid) return;
 
     // Honor same-origin next if the user was redirected in
-    if (next && !next.startsWith("/login") && !next.startsWith("/household")) {
+    if (next && !next.startsWith("/login") && !next.startsWith("/admin/login")) {
       navigate(next, { replace: true });
       return;
     }
+
+    // Role-aware landing. /admin and /coach run the two-step check themselves.
+    let landing;
+    try {
+      landing = await resolveLanding(uid);
+    } catch {
+      setRouteError(true);
+      return;
+    }
+    setRouteError(false);
+    if (landing !== "/household") {
+      navigate(landing, { replace: true });
+      return;
+    }
+
 
     const { data: guardian } = await supabase
       .from("guardians")
@@ -150,8 +168,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <AuthShell>
+      {routeError && (
+        <div role="alert" className="mb-4 rounded-2xl border border-destructive/40 bg-destructive/5 p-4 text-sm">
+          <p className="font-semibold">You're signed in, but we couldn't check your access.</p>
+          <Button className="mt-3 h-11 rounded-xl" onClick={() => routeAfterLogin()}>Try again</Button>
+        </div>
+      )}
+      <Card className="w-full">
         {stage === "enter" ? (
           <>
             <CardHeader>
@@ -275,7 +299,7 @@ const Login = () => {
           </>
         )}
       </Card>
-    </div>
+    </AuthShell>
   );
 };
 
