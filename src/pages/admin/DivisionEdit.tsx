@@ -42,7 +42,7 @@ const DivisionEdit = () => {
   }, [id]);
 
   const loadPrograms = async () => {
-    const { data } = await supabase.from("programs").select("id, name, seasons(year)");
+    const { data } = await supabase.from("programs").select("id, name, seasons!programs_league_season_fkey(year)");
     setPrograms(data || []);
   };
 
