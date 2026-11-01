@@ -19,7 +19,7 @@ const ProgramEdit = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    type: "in_house" as "in_house" | "travel",
+    type: "in_house" as "in_house" | "travel" | "ihtt" | "travel_tryout" | "clinic",
     overview: "",
     season_start: "",
     season_end: "",
@@ -121,7 +121,7 @@ const ProgramEdit = () => {
                 <Label htmlFor="type">Program Type</Label>
                 <Select
                   value={formData.type}
-                  onValueChange={(value: "in_house" | "travel") =>
+                  onValueChange={(value: "in_house" | "travel" | "ihtt" | "travel_tryout" | "clinic") =>
                     setFormData({ ...formData, type: value })
                   }
                 >
@@ -131,6 +131,9 @@ const ProgramEdit = () => {
                   <SelectContent>
                     <SelectItem value="in_house">In-House</SelectItem>
                     <SelectItem value="travel">Travel</SelectItem>
+                    <SelectItem value="ihtt">In-House Travel Team (IHTT)</SelectItem>
+                    <SelectItem value="travel_tryout">Travel tryout</SelectItem>
+                    <SelectItem value="clinic">Clinic</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
