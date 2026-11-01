@@ -36,6 +36,13 @@
       "when": 1793566818872,
       "tag": "0004_programs_unique_per_season",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793566836784,
+      "tag": "0005_season_2027_and_cutoff_guards",
+      "breakpoints": true
     }
   ]
 }
