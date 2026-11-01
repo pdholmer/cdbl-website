@@ -553,9 +553,55 @@ export type Database = {
           },
         ]
       }
+      division_fee_changes: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          division_id: string
+          id: string
+          league_id: string
+          new_cost: number | null
+          old_cost: number | null
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          division_id: string
+          id?: string
+          league_id?: string
+          new_cost?: number | null
+          old_cost?: number | null
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          division_id?: string
+          id?: string
+          league_id?: string
+          new_cost?: number | null
+          old_cost?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "division_fee_changes_division_id_fkey"
+            columns: ["division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "division_fee_changes_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       divisions: {
         Row: {
           age_range: string
+          capacity: number | null
           cost: number | null
           created_at: string | null
           default_max_roster_size: number | null
@@ -569,9 +615,11 @@ export type Database = {
           schedule_notes: string | null
           season_length: string | null
           updated_at: string | null
+          waitlist_enabled: boolean
         }
         Insert: {
           age_range: string
+          capacity?: number | null
           cost?: number | null
           created_at?: string | null
           default_max_roster_size?: number | null
@@ -585,9 +633,11 @@ export type Database = {
           schedule_notes?: string | null
           season_length?: string | null
           updated_at?: string | null
+          waitlist_enabled?: boolean
         }
         Update: {
           age_range?: string
+          capacity?: number | null
           cost?: number | null
           created_at?: string | null
           default_max_roster_size?: number | null
@@ -601,6 +651,7 @@ export type Database = {
           schedule_notes?: string | null
           season_length?: string | null
           updated_at?: string | null
+          waitlist_enabled?: boolean
         }
         Relationships: [
           {
@@ -2062,6 +2113,7 @@ export type Database = {
           active: boolean
           created_at: string
           id: string
+          ihtt_includes_in_house: boolean
           logo_url: string | null
           name: string
           primary_color: string | null
@@ -2076,6 +2128,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           id?: string
+          ihtt_includes_in_house?: boolean
           logo_url?: string | null
           name: string
           primary_color?: string | null
@@ -2090,6 +2143,7 @@ export type Database = {
           active?: boolean
           created_at?: string
           id?: string
+          ihtt_includes_in_house?: boolean
           logo_url?: string | null
           name?: string
           primary_color?: string | null
@@ -3369,6 +3423,7 @@ export type Database = {
           approved_at: string | null
           approved_by: string | null
           baseball_age: number | null
+          checkout_id: string | null
           created_at: string
           division_id: string | null
           external_id: string | null
@@ -3398,6 +3453,7 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           baseball_age?: number | null
+          checkout_id?: string | null
           created_at?: string
           division_id?: string | null
           external_id?: string | null
@@ -3427,6 +3483,7 @@ export type Database = {
           approved_at?: string | null
           approved_by?: string | null
           baseball_age?: number | null
+          checkout_id?: string | null
           created_at?: string
           division_id?: string | null
           external_id?: string | null

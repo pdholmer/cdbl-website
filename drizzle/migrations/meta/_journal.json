@@ -50,6 +50,13 @@
       "when": 1793566847606,
       "tag": "0006_program_type_new_values",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793566880780,
+      "tag": "0007_ihtt_fees_capacity_fee_log",
+      "breakpoints": true
     }
   ]
 }
