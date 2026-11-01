@@ -15,6 +15,13 @@
       "when": 1793564565806,
       "tag": "0001_security_b_revoke_anon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793564576567,
+      "tag": "0002_security_b2_anon_insert_policies",
+      "breakpoints": true
     }
   ]
 }
