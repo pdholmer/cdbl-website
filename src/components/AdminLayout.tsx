@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
+import { SeasonCutoffBanner } from "@/components/admin/SeasonCutoffBanner";
 import sidebarLogo from "@/assets/cdbl-sidebar-logo.png";
 
 interface AdminLayoutProps {
@@ -20,7 +21,8 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <span className="font-semibold text-primary-foreground text-sm">Admin</span>
             </Link>
           </header>
-          <main className="flex-1 p-4 md:p-6">
+          <main className="flex-1 min-w-0 p-4 md:p-6">
+            <SeasonCutoffBanner />
             {children}
           </main>
         </div>
