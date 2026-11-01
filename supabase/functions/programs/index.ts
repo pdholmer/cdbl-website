@@ -59,7 +59,7 @@ serve(async (req) => {
       .from('programs')
       .select(`
         *,
-        divisions!divisions_program_id_fkey (*)
+        divisions!divisions_league_program_fkey (*)
       `);
 
     if (programType) {
