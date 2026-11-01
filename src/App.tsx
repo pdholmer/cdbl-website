@@ -1,3 +1,4 @@
+import ResetPassword from "./pages/ResetPassword";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -120,6 +121,7 @@ const App = () => (
           <Route path="/travel/registration" element={<PageGate slug="travel-registration"><TravelRegistration /></PageGate>} />
           {/* Unified auth */}
           <Route path="/login" element={<GuardianLogin />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/two-step/setup" element={<TwoStepSetup />} />
           <Route path="/two-step/verify" element={<TwoStepVerify />} />
           <Route path="/training" element={<Training />} />
