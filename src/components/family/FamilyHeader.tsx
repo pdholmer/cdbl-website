@@ -43,7 +43,7 @@ export const FamilyHeader = ({ context = "Household" }: FamilyHeaderProps) => {
           aria-label="CDBL home"
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-opacity hover:opacity-80"
         >
-          <img src={seal} alt="Central DuPage Baseball League" className="h-10 w-10 object-contain" />
+          <img src={seal} alt="Central District Baseball League" className="h-10 w-10 object-contain" />
         </Link>
         <span className="min-w-0 flex-1 truncate font-heading text-[13px] font-bold uppercase tracking-[0.14em] text-primary">
           {context}
