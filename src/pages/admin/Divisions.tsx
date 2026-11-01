@@ -91,7 +91,7 @@ const Divisions = () => {
 
   return (
     <AdminLayout>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-wrap justify-between items-start gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Manage Divisions</h1>
           <p className="text-muted-foreground">Add, edit, or remove age divisions</p>
@@ -173,7 +173,7 @@ const Divisions = () => {
             <CollapsibleTrigger className="flex w-full items-center justify-between p-4 hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-2">
                 <ChevronDown className={`h-5 w-5 transition-transform ${openTravel ? '' : '-rotate-90'}`} />
-                <h3 className="text-lg font-semibold">Travel Program</h3>
+                <h3 className="text-lg font-semibold">Travel and other programs</h3>
                 <span className="text-sm text-muted-foreground">({travelDivisions.length} divisions)</span>
               </div>
             </CollapsibleTrigger>
