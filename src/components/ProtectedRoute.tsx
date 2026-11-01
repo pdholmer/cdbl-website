@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getMfaStatus } from "@/lib/mfa";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -16,11 +17,13 @@ export const ProtectedRoute = ({
   requireBoardMember = false,
   requireCoach = false 
 }: ProtectedRouteProps) => {
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isBoardMember, setIsBoardMember] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
+  const [mfaRedirect, setMfaRedirect] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,6 +36,17 @@ export const ProtectedRoute = ({
       }
 
       setIsAuthenticated(true);
+
+      // Two-step sign-in gate for admin, registrar, treasurer, background_checks.
+      try {
+        const status = await getMfaStatus(session.user.id);
+        setMfaRedirect(
+          status === "needs_setup" ? "/two-step/setup" : status === "needs_code" ? "/two-step/verify" : null
+        );
+      } catch {
+        // Fail closed: if we cannot confirm, ask for the code.
+        setMfaRedirect("/two-step/verify");
+      }
 
       // Check for admin role
       const { data: hasAdminRole } = await supabase
@@ -91,6 +105,11 @@ export const ProtectedRoute = ({
 
   if (!isAuthenticated) {
     return <Navigate to="/admin/login" replace />;
+  }
+
+  if (mfaRedirect) {
+    const next = encodeURIComponent(location.pathname + location.search);
+    return <Navigate to={`${mfaRedirect}?next=${next}`} replace />;
   }
 
   if (requireAdmin && !isAdmin) {

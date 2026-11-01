@@ -73,6 +73,8 @@ import { FeedbackProvider } from "./contexts/FeedbackContext";
 import { FeedbackFAB, FeedbackSlider } from "./components/feedback";
 import OAuthConsent from "./pages/OAuthConsent";
 import GuardianLogin from "./pages/Login";
+import TwoStepSetup from "./pages/TwoStepSetup";
+import TwoStepVerify from "./pages/TwoStepVerify";
 import Household from "./pages/Household";
 import HouseholdNew from "./pages/HouseholdNew";
 import EmailBounces from "./pages/admin/EmailBounces";
@@ -118,6 +120,8 @@ const App = () => (
           <Route path="/travel/registration" element={<PageGate slug="travel-registration"><TravelRegistration /></PageGate>} />
           {/* Unified auth */}
           <Route path="/login" element={<GuardianLogin />} />
+          <Route path="/two-step/setup" element={<TwoStepSetup />} />
+          <Route path="/two-step/verify" element={<TwoStepVerify />} />
           <Route path="/training" element={<Training />} />
           <Route path="/training/:slug" element={<SituationDetail />} />
           <Route path="/household" element={<Household />} />
