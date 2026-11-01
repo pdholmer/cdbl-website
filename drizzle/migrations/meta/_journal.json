@@ -22,6 +22,13 @@
       "when": 1793564576567,
       "tag": "0002_security_b2_anon_insert_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793564594302,
+      "tag": "0003_security_c_mfa_helpers",
+      "breakpoints": true
     }
   ]
 }
