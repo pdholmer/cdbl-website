@@ -43,10 +43,25 @@ const Login = () => {
     if (!uid) return;
 
     // Honor same-origin next if the user was redirected in
-    if (next && !next.startsWith("/login") && !next.startsWith("/household")) {
+    if (next && !next.startsWith("/login") && !next.startsWith("/admin/login")) {
       navigate(next, { replace: true });
       return;
     }
+
+    // Role-aware landing. /admin and /coach run the two-step check themselves.
+    let landing;
+    try {
+      landing = await resolveLanding(uid);
+    } catch {
+      setRouteError(true);
+      return;
+    }
+    setRouteError(false);
+    if (landing !== "/household") {
+      navigate(landing, { replace: true });
+      return;
+    }
+
 
     const { data: guardian } = await supabase
       .from("guardians")
