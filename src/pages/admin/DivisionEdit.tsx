@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
@@ -27,7 +28,11 @@ const DivisionEdit = () => {
     season_length: "",
     schedule_notes: "",
     display_order: 0,
+    capacity: "",
+    waitlist_enabled: true,
   });
+  const [feeHistory, setFeeHistory] = useState<{ id: string; old_cost: number | null; new_cost: number | null; changed_at: string; who: string }[]>([]);
+  const [feeHistoryError, setFeeHistoryError] = useState(false);
 
   useEffect(() => {
     loadPrograms();
@@ -37,7 +42,7 @@ const DivisionEdit = () => {
   }, [id]);
 
   const loadPrograms = async () => {
-    const { data } = await supabase.from("programs").select("id, name");
+    const { data } = await supabase.from("programs").select("id, name, seasons!programs_league_season_fkey(year)");
     setPrograms(data || []);
   };
 
@@ -61,13 +66,38 @@ const DivisionEdit = () => {
       season_length: data.season_length || "",
       schedule_notes: data.schedule_notes || "",
       display_order: data.display_order || 0,
+      capacity: data.capacity?.toString() ?? "",
+      waitlist_enabled: data.waitlist_enabled ?? true,
     });
+    loadFeeHistory();
     
     // Safely parse features as string array
     if (Array.isArray(data.features)) {
       setFeatures(data.features.filter((f): f is string => typeof f === 'string'));
     }
   };
+
+  const loadFeeHistory = async () => {
+    const { data, error } = await supabase
+      .from("division_fee_changes")
+      .select("id, old_cost, new_cost, changed_at, changed_by")
+      .eq("division_id", id!)
+      .order("changed_at", { ascending: false });
+    if (error) { setFeeHistoryError(true); return; }
+    setFeeHistoryError(false);
+    const ids = [...new Set((data ?? []).map((r) => r.changed_by).filter(Boolean))] as string[];
+    const names = new Map<string, string>();
+    if (ids.length) {
+      const { data: profs } = await supabase.from("profiles").select("id, display_name, email").in("id", ids);
+      (profs ?? []).forEach((p: any) => names.set(p.id, p.display_name || p.email));
+    }
+    setFeeHistory((data ?? []).map((r) => ({
+      id: r.id, old_cost: r.old_cost, new_cost: r.new_cost, changed_at: r.changed_at,
+      who: (r.changed_by && names.get(r.changed_by)) || "System",
+    })));
+  };
+
+  const money = (v: number | null) => (v === null ? "no fee" : `$${Number(v).toFixed(2)}`);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +106,8 @@ const DivisionEdit = () => {
     try {
       const payload = {
         ...formData,
-        cost: parseFloat(formData.cost),
+        cost: formData.cost.trim() === "" ? null : parseFloat(formData.cost),
+        capacity: formData.capacity.trim() === "" ? null : parseInt(formData.capacity, 10),
         features: features,
       };
 
@@ -155,7 +186,7 @@ const DivisionEdit = () => {
                   <SelectContent>
                     {programs.map((program) => (
                       <SelectItem key={program.id} value={program.id}>
-                        {program.name}
+                        {program.name}{program.seasons?.year ? ` (${program.seasons.year})` : ""}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -181,8 +212,50 @@ const DivisionEdit = () => {
                   step="0.01"
                   value={formData.cost}
                   onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
-                  required
                 />
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Leave blank to keep this division hidden from registration.
+                </p>
+                {id && (
+                  <div className="mt-3 rounded-xl border p-3">
+                    <p className="text-sm font-semibold">Fee history</p>
+                    {feeHistoryError ? (
+                      <p className="mt-1 text-sm text-destructive">Couldn't load fee history.</p>
+                    ) : feeHistory.length === 0 ? (
+                      <p className="mt-1 text-sm text-muted-foreground">No fee changes recorded yet.</p>
+                    ) : (
+                      <ul className="mt-2 space-y-1 text-sm">
+                        {feeHistory.map((h) => (
+                          <li key={h.id}>
+                            {new Date(h.changed_at).toLocaleString()}: {h.who} changed {money(h.old_cost)} to {money(h.new_cost)}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <Label htmlFor="capacity">Capacity</Label>
+                  <Input
+                    id="capacity"
+                    type="number"
+                    min={0}
+                    value={formData.capacity}
+                    onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
+                    placeholder="No limit"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-3 rounded-xl border p-3 sm:mt-6">
+                  <Label htmlFor="waitlist">Waitlist when full</Label>
+                  <Switch
+                    id="waitlist"
+                    checked={formData.waitlist_enabled}
+                    onCheckedChange={(v) => setFormData({ ...formData, waitlist_enabled: v })}
+                  />
+                </div>
               </div>
 
               <div>

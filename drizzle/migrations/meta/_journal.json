@@ -29,6 +29,34 @@
       "when": 1793564594302,
       "tag": "0003_security_c_mfa_helpers",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793566818872,
+      "tag": "0004_programs_unique_per_season",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793566836784,
+      "tag": "0005_season_2027_and_cutoff_guards",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793566847606,
+      "tag": "0006_program_type_new_values",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793566880780,
+      "tag": "0007_ihtt_fees_capacity_fee_log",
+      "breakpoints": true
     }
   ]
 }

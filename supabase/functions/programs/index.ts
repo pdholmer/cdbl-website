@@ -59,12 +59,20 @@ serve(async (req) => {
       .from('programs')
       .select(`
         *,
-        divisions!divisions_program_id_fkey (*)
+        divisions!divisions_league_program_fkey (*)
       `);
 
     if (programType) {
       query = query.eq('type', programType);
     }
+
+    // Public lists show the current season only (plus legacy rows with no season),
+    // so next season's programs never appear beside this season's.
+    const { data: current } = await supabase
+      .from('seasons').select('id').eq('is_current', true).limit(1).maybeSingle();
+    query = current?.id
+      ? query.or(`season_id.is.null,season_id.eq.${current.id}`)
+      : query.is('season_id', null);
 
     const { data: programs, error } = await query.order('type');
 

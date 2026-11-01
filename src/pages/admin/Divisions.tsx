@@ -41,7 +41,7 @@ const Divisions = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('divisions')
-        .select('*, programs!divisions_league_program_fkey(name, type)')
+        .select('*, programs!divisions_league_program_fkey(name, type, season_id)')
         .order('display_order');
       
       if (error) throw error;
@@ -49,8 +49,22 @@ const Divisions = () => {
     },
   });
 
-  const inHouseDivisions = divisions?.filter(d => d.programs?.type === 'in_house') || [];
-  const travelDivisions = divisions?.filter(d => d.programs?.type === 'travel') || [];
+  const { data: seasons } = useQuery({
+    queryKey: ['admin-seasons'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('seasons').select('id, year, label, is_current').order('year');
+      if (error) throw error;
+      return data;
+    },
+  });
+  const currentSeasonId = seasons?.find(s => s.is_current)?.id ?? null;
+  const [seasonId, setSeasonId] = useState<string | null>(null);
+  const shownSeason = seasonId ?? currentSeasonId;
+  // Programs without a season are legacy rows that belong to the current season.
+  const inSeason = (d: any) => (d.programs?.season_id ?? currentSeasonId) === shownSeason;
+  const inHouseDivisions = divisions?.filter(d => inSeason(d) && d.programs?.type === 'in_house') || [];
+  const travelDivisions = divisions?.filter(d => inSeason(d) && d.programs?.type !== 'in_house') || [];
+  const fee = (c: number | null) => (c === null || c === undefined ? 'No fee set, hidden from registration' : `$${c}`);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -77,10 +91,19 @@ const Divisions = () => {
 
   return (
     <AdminLayout>
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-wrap justify-between items-start gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Manage Divisions</h1>
           <p className="text-muted-foreground">Add, edit, or remove age divisions</p>
+          {seasons && seasons.length > 1 && (
+            <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Season">
+              {seasons.map(s => (
+                <Button key={s.id} size="sm" className="h-11 rounded-xl" variant={s.id === shownSeason ? 'default' : 'outline'} onClick={() => setSeasonId(s.id)}>
+                  {s.label ?? s.year}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
         <Button asChild>
           <Link to="/admin/divisions/new">
@@ -117,7 +140,7 @@ const Divisions = () => {
                     <TableRow key={division.id}>
                       <TableCell className="font-medium">{division.name}</TableCell>
                       <TableCell>{division.age_range}</TableCell>
-                      <TableCell>${division.cost}</TableCell>
+                      <TableCell>{fee(division.cost)}</TableCell>
                       <TableCell>{division.season_length || 'Not set'}</TableCell>
                       <TableCell className="text-center">{division.display_order}</TableCell>
                       <TableCell className="text-right">
@@ -150,7 +173,7 @@ const Divisions = () => {
             <CollapsibleTrigger className="flex w-full items-center justify-between p-4 hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-2">
                 <ChevronDown className={`h-5 w-5 transition-transform ${openTravel ? '' : '-rotate-90'}`} />
-                <h3 className="text-lg font-semibold">Travel Program</h3>
+                <h3 className="text-lg font-semibold">Travel and other programs</h3>
                 <span className="text-sm text-muted-foreground">({travelDivisions.length} divisions)</span>
               </div>
             </CollapsibleTrigger>
@@ -171,7 +194,7 @@ const Divisions = () => {
                     <TableRow key={division.id}>
                       <TableCell className="font-medium">{division.name}</TableCell>
                       <TableCell>{division.age_range}</TableCell>
-                      <TableCell>${division.cost}</TableCell>
+                      <TableCell>{fee(division.cost)}</TableCell>
                       <TableCell>{division.season_length || 'Not set'}</TableCell>
                       <TableCell className="text-center">{division.display_order}</TableCell>
                       <TableCell className="text-right">

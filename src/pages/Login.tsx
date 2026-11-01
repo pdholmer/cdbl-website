@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Mail, ArrowLeft, RefreshCw, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Mail } from "lucide-react";
 import { resolveLanding } from "@/lib/landing";
 import { AuthShell } from "@/components/AuthShell";
+import { PasswordInput } from "@/components/PasswordInput";
+import { MIN_PASSWORD_LENGTH, passwordProblem } from "@/lib/password";
 
-type Stage = "enter" | "sent";
+type Mode = "signin" | "signup" | "forgot" | "forgot-sent" | "signup-sent";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -20,18 +22,17 @@ const Login = () => {
   const rawNext = params.get("next");
   const next = rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : null;
 
-  const [stage, setStage] = useState<Stage>("enter");
+  const [mode, setMode] = useState<Mode>(params.get("mode") === "signup" ? "signup" : "signin");
   const [email, setEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [sending, setSending] = useState(false);
-  const [verifying, setVerifying] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [busy, setBusy] = useState(false);
   const [routeError, setRouteError] = useState(false);
 
   // If already signed in, route immediately.
   useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) routeAfterLogin();
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session && event === "SIGNED_IN") routeAfterLogin();
     });
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) routeAfterLogin();
@@ -45,127 +46,98 @@ const Login = () => {
     const uid = userData.user?.id;
     if (!uid) return;
 
-    // Honor same-origin next if the user was redirected in
     if (next && !next.startsWith("/login") && !next.startsWith("/admin/login")) {
       navigate(next, { replace: true });
       return;
     }
 
     // Role-aware landing. /admin and /coach run the two-step check themselves.
-    let landing;
     try {
-      landing = await resolveLanding(uid);
+      const landing = await resolveLanding(uid);
+      setRouteError(false);
+      navigate(landing, { replace: true });
     } catch {
       setRouteError(true);
-      return;
-    }
-    setRouteError(false);
-    if (landing !== "/household") {
-      navigate(landing, { replace: true });
-      return;
-    }
-
-
-    const { data: guardian } = await supabase
-      .from("guardians")
-      .select("id, guardian_households(household_id)")
-      .eq("auth_user_id", uid)
-      .limit(1)
-      .maybeSingle();
-
-    const hasHousehold =
-      !!guardian &&
-      Array.isArray((guardian as any).guardian_households) &&
-      (guardian as any).guardian_households.length > 0;
-
-    if (hasHousehold) {
-      navigate("/household", { replace: true });
-    } else {
-      navigate("/household/new", { replace: true });
     }
   };
 
-  const sendCode = async (targetEmail: string) => {
-    // Check hard-bounce list first (best-effort; RLS may hide, that's fine)
-    const { data: bounce } = await supabase
-      .from("email_bounces")
-      .select("id")
-      .ilike("email", targetEmail)
-      .eq("resolved", false)
-      .limit(1)
-      .maybeSingle();
-    if (bounce) {
+  const cleanEmail = () => email.trim().toLowerCase();
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const a = cleanEmail();
+    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    if (!password) return toast.error("Enter your password.");
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithPassword({ email: a, password });
+    setBusy(false);
+    if (error) {
       toast.error(
-        "We can't reach that email address. Please contact an administrator so we can look into it."
+        error.message === "Invalid login credentials"
+          ? "That email and password don't match. If you've never set a password, use Forgot password."
+          : error.message,
       );
-      return false;
     }
-
-    const { error } = await supabase.auth.signInWithOtp({
-      email: targetEmail,
-      options: {
-        emailRedirectTo: `${window.location.origin}/login`,
-        shouldCreateUser: true,
-      },
-    });
-    if (error) {
-      toast.error(error.message);
-      return false;
-    }
-    return true;
+    // onAuthStateChange routes on success
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    const a = email.trim().toLowerCase();
-    const b = confirmEmail.trim().toLowerCase();
-
-    if (!emailRegex.test(a)) {
-      toast.error("Please enter a valid email address.");
-      return;
-    }
-    if (a !== b) {
-      toast.error("The two email addresses don't match.");
-      return;
-    }
-
-    setSending(true);
-    const ok = await sendCode(a);
-    setSending(false);
-    if (ok) {
-      setEmail(a);
-      setStage("sent");
-      toast.success("Login link and code sent.");
-    }
-  };
-
-  const handleResend = async () => {
-    setSending(true);
-    const ok = await sendCode(email);
-    setSending(false);
-    if (ok) toast.success("Sent again — check your inbox.");
-  };
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const token = otp.trim();
-    if (!/^\d{6}$/.test(token)) {
-      toast.error("Enter the 6-digit code from your email.");
-      return;
-    }
-    setVerifying(true);
-    const { error } = await supabase.auth.verifyOtp({
-      email,
-      token,
-      type: "email",
+    const a = cleanEmail();
+    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    const problem = passwordProblem(password, confirm);
+    if (problem) return toast.error(problem);
+    setBusy(true);
+    const { data, error } = await supabase.auth.signUp({
+      email: a,
+      password,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
     });
-    setVerifying(false);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    // onAuthStateChange will route
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    if (!data.session) setMode("signup-sent");
+    // With a session, onAuthStateChange routes.
   };
+
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const a = cleanEmail();
+    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    setBusy(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(a, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    setMode("forgot-sent");
+  };
+
+  const switchTo = (m: Mode) => {
+    setPassword("");
+    setConfirm("");
+    setMode(m);
+  };
+
+  const emailField = (
+    <div>
+      <Label htmlFor="email">Email</Label>
+      <Input
+        id="email"
+        type="email"
+        autoComplete="email"
+        className="h-11"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+    </div>
+  );
+
+  const backLink = (
+    <Button variant="ghost" className="h-11 w-full" onClick={() => switchTo("signin")}>
+      <ArrowLeft className="mr-2 h-4 w-4" /> Back to sign in
+    </Button>
+  );
 
   return (
     <AuthShell>
@@ -175,127 +147,114 @@ const Login = () => {
           <Button className="mt-3 h-11 rounded-xl" onClick={() => routeAfterLogin()}>Try again</Button>
         </div>
       )}
-      <Card className="w-full">
-        {stage === "enter" ? (
+      <Card className="w-full rounded-2xl shadow-md">
+        {mode === "signin" && (
           <>
             <CardHeader>
-              <CardTitle className="font-heading">Sign in to CDBL</CardTitle>
+              <CardTitle className="font-heading text-2xl">Sign in to CDBL</CardTitle>
+              <CardDescription>Use your email and password.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSignIn} className="space-y-4">
+                {emailField}
+                <div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">Password</Label>
+                    <button
+                      type="button"
+                      className="min-h-11 px-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                      onClick={() => switchTo("forgot")}
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                  <PasswordInput id="password" autoComplete="current-password" value={password} onChange={setPassword} />
+                </div>
+                <Button type="submit" className="h-12 w-full" disabled={busy}>
+                  {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Sign in
+                </Button>
+              </form>
+              <p className="mt-6 text-center text-sm text-muted-foreground">
+                New to CDBL?{" "}
+                <button
+                  type="button"
+                  className="min-h-11 font-semibold text-primary underline-offset-4 hover:underline"
+                  onClick={() => switchTo("signup")}
+                >
+                  Create account
+                </button>
+              </p>
+              <p className="text-center text-xs text-muted-foreground">
+                Used an email link before? Choose Forgot password to set a password.
+              </p>
+            </CardContent>
+          </>
+        )}
+
+        {mode === "signup" && (
+          <>
+            <CardHeader>
+              <CardTitle className="font-heading text-2xl">Create your account</CardTitle>
+              <CardDescription>Passwords need at least {MIN_PASSWORD_LENGTH} characters.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSignUp} className="space-y-4">
+                {emailField}
+                <div>
+                  <Label htmlFor="new-password">Password</Label>
+                  <PasswordInput id="new-password" autoComplete="new-password" value={password} onChange={setPassword} />
+                </div>
+                <div>
+                  <Label htmlFor="confirm-password">Confirm password</Label>
+                  <PasswordInput id="confirm-password" autoComplete="new-password" value={confirm} onChange={setConfirm} />
+                </div>
+                <Button type="submit" className="h-12 w-full" disabled={busy}>
+                  {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create account
+                </Button>
+              </form>
+              <div className="mt-4">{backLink}</div>
+            </CardContent>
+          </>
+        )}
+
+        {mode === "forgot" && (
+          <>
+            <CardHeader>
+              <CardTitle className="font-heading text-2xl">Reset your password</CardTitle>
               <CardDescription>
-                Enter your email twice. We'll send you a magic link and a 6-digit code — use whichever
-                is easier.
+                We'll email you a link to set a new password. This also works if you've never had one.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="confirm">Confirm email</Label>
-                  <Input
-                    id="confirm"
-                    type="email"
-                    autoComplete="email"
-                    value={confirmEmail}
-                    onChange={(e) => setConfirmEmail(e.target.value)}
-                    onPaste={(e) => {
-                      // Discourage paste to catch typos.
-                      e.preventDefault();
-                      toast.info("Please retype your email to confirm.");
-                    }}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full" disabled={sending}>
-                  {sending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending…
-                    </>
-                  ) : (
-                    "Send login link & code"
-                  )}
+              <form onSubmit={handleForgot} className="space-y-4">
+                {emailField}
+                <Button type="submit" className="h-12 w-full" disabled={busy}>
+                  {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Send reset link
                 </Button>
               </form>
+              <div className="mt-4">{backLink}</div>
             </CardContent>
           </>
-        ) : (
+        )}
+
+        {(mode === "forgot-sent" || mode === "signup-sent") && (
           <>
             <CardHeader>
-              <div className="mx-auto h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
                 <Mail className="h-6 w-6 text-primary" />
               </div>
-              <CardTitle className="font-heading text-center">Check your email</CardTitle>
-              <CardDescription className="text-center">
-                We sent a magic link and a 6-digit code to:
+              <CardTitle className="font-heading text-2xl">Check your email</CardTitle>
+              <CardDescription>
+                {mode === "forgot-sent"
+                  ? "If there's an account for this address, a reset link is on its way to:"
+                  : "Confirm your address to finish creating your account. We sent a link to:"}
               </CardDescription>
-              <p className="mt-3 text-center text-xl md:text-2xl font-heading font-semibold break-all">
-                {email}
-              </p>
+              <p className="mt-2 break-all font-heading text-xl font-semibold">{cleanEmail()}</p>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <form onSubmit={handleVerifyOtp} className="space-y-3">
-                <Label htmlFor="otp">Enter the 6-digit code</Label>
-                <Input
-                  id="otp"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  maxLength={6}
-                  pattern="\d{6}"
-                  placeholder="123456"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  className="text-center text-2xl tracking-[0.5em] font-mono"
-                />
-                <Button type="submit" className="w-full" disabled={verifying}>
-                  {verifying ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Verifying…
-                    </>
-                  ) : (
-                    "Verify code"
-                  )}
-                </Button>
-              </form>
-
-              <p className="text-xs text-muted-foreground text-center">
-                Or just click the magic link in the email — it'll sign you in automatically.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => {
-                    setStage("enter");
-                    setOtp("");
-                    setConfirmEmail("");
-                  }}
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" /> Edit email
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={handleResend}
-                  disabled={sending}
-                >
-                  {sending ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                  )}
-                  Resend
-                </Button>
-              </div>
-            </CardContent>
+            <CardContent>{backLink}</CardContent>
           </>
         )}
       </Card>
