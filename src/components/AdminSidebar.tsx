@@ -93,6 +93,7 @@ const navSections: NavSection[] = [
 
 export function AdminSidebar() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [hasHousehold, setHasHousehold] = useState(false);
   const location = useLocation();
   const unreadContacts = useUnreadContactCount();
 
@@ -106,6 +107,7 @@ export function AdminSidebar() {
             _role: 'admin'
           });
         setIsAdmin(!!hasAdminRole);
+        setHasHousehold(await hasGuardianRecord(session.user.id));
       }
     };
 
