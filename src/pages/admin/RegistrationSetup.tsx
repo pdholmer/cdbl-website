@@ -11,6 +11,7 @@ import { StatusChip } from "@/components/family";
 import { gradeRangeLabel, longDate } from "@/lib/registration";
 import { useMyRoles } from "@/lib/adminAccess";
 import { toast } from "sonner";
+import FormVersions from "@/components/admin/FormVersions";
 
 /** Registration setup: working values to confirm, open-gate issues, and placement reviews. */
 const RegistrationSetup = () => {
@@ -167,6 +168,8 @@ const RegistrationSetup = () => {
                 </div>
               </section>
             ))}
+
+            <FormVersions isAdmin={isAdmin} />
 
             <section className="space-y-3" aria-label="Placement reviews">
               <p className="font-label text-[17px] font-semibold">Placement reviews</p>
