@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { LogOut } from "lucide-react";
+import { LogOut, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,12 @@ export const FamilyHeader = ({ context = "Household" }: FamilyHeaderProps) => {
             <Link to={workArea}>{workArea === "/admin" ? "Admin" : "Coach area"}</Link>
           </Button>
         )}
+        <Button asChild variant="ghost" size="sm" className="h-11 shrink-0 rounded-xl px-3 text-muted-foreground">
+          <Link to="/account" aria-label="Account">
+            <UserRound className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Account</span>
+          </Link>
+        </Button>
         <Button
           variant="ghost"
           size="sm"
