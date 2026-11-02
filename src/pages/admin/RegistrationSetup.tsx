@@ -13,6 +13,7 @@ import { useMyRoles } from "@/lib/adminAccess";
 import { toast } from "sonner";
 import FormVersions from "@/components/admin/FormVersions";
 import MoneySetup from "@/components/admin/MoneySetup";
+import PaymentsDesk from "@/components/admin/PaymentsDesk";
 
 /** Registration setup: working values to confirm, open-gate issues, and placement reviews. */
 const RegistrationSetup = () => {
@@ -171,6 +172,7 @@ const RegistrationSetup = () => {
             ))}
 
             <MoneySetup seasonId={s.id} roles={roles} />
+            {roles.some((r) => ["admin", "treasurer", "registrar"].includes(r)) && <PaymentsDesk />}
 
             <FormVersions isAdmin={isAdmin} />
 
