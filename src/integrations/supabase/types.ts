@@ -14,6 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      assistance_requests: {
+        Row: {
+          cart_id: string
+          contact_name: string
+          contact_phone: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision_note: string | null
+          guardian_id: string | null
+          household_id: string
+          id: string
+          league_id: string
+          status: string
+        }
+        Insert: {
+          cart_id: string
+          contact_name: string
+          contact_phone: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          guardian_id?: string | null
+          household_id: string
+          id?: string
+          league_id?: string
+          status?: string
+        }
+        Update: {
+          cart_id?: string
+          contact_name?: string
+          contact_phone?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision_note?: string | null
+          guardian_id?: string | null
+          household_id?: string
+          id?: string
+          league_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistance_requests_cart_id_fkey"
+            columns: ["cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistance_requests_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistance_requests_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistance_requests_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assistant_conversations: {
         Row: {
           expires_at: string
@@ -165,6 +239,162 @@ export type Database = {
             columns: ["league_id"]
             isOneToOne: false
             referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cart_items: {
+        Row: {
+          amount: number
+          cart_id: string
+          created_at: string
+          discount_id: string | null
+          id: string
+          label: string
+          league_id: string
+          line_type: string
+          lock_id: string
+          registration_id: string | null
+        }
+        Insert: {
+          amount: number
+          cart_id: string
+          created_at?: string
+          discount_id?: string | null
+          id?: string
+          label: string
+          league_id?: string
+          line_type: string
+          lock_id: string
+          registration_id?: string | null
+        }
+        Update: {
+          amount?: number
+          cart_id?: string
+          created_at?: string
+          discount_id?: string | null
+          id?: string
+          label?: string
+          league_id?: string
+          line_type?: string
+          lock_id?: string
+          registration_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_cart_id_fkey"
+            columns: ["cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_items_discount_id_fkey"
+            columns: ["discount_id"]
+            isOneToOne: false
+            referencedRelation: "discounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_items_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_items_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_items_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["registration_id"]
+          },
+        ]
+      }
+      carts: {
+        Row: {
+          created_at: string
+          created_by_guardian: string | null
+          discount_code_id: string | null
+          household_id: string
+          id: string
+          league_id: string
+          lock_expires_at: string | null
+          lock_id: string | null
+          locked_at: string | null
+          locked_total: number | null
+          season_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_guardian?: string | null
+          discount_code_id?: string | null
+          household_id: string
+          id?: string
+          league_id?: string
+          lock_expires_at?: string | null
+          lock_id?: string | null
+          locked_at?: string | null
+          locked_total?: number | null
+          season_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by_guardian?: string | null
+          discount_code_id?: string | null
+          household_id?: string
+          id?: string
+          league_id?: string
+          lock_expires_at?: string | null
+          lock_id?: string | null
+          locked_at?: string | null
+          locked_total?: number | null
+          season_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carts_created_by_guardian_fkey"
+            columns: ["created_by_guardian"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "carts_discount_code_id_fkey"
+            columns: ["discount_code_id"]
+            isOneToOne: false
+            referencedRelation: "discounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "carts_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "carts_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "carts_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
             referencedColumns: ["id"]
           },
         ]
@@ -477,6 +707,78 @@ export type Database = {
           },
         ]
       }
+      comps: {
+        Row: {
+          amount: number
+          approved_at: string
+          approved_by: string
+          assistance_request_id: string | null
+          cart_id: string | null
+          id: string
+          league_id: string
+          reason: string
+          registration_id: string
+        }
+        Insert: {
+          amount: number
+          approved_at?: string
+          approved_by: string
+          assistance_request_id?: string | null
+          cart_id?: string | null
+          id?: string
+          league_id?: string
+          reason: string
+          registration_id: string
+        }
+        Update: {
+          amount?: number
+          approved_at?: string
+          approved_by?: string
+          assistance_request_id?: string | null
+          cart_id?: string | null
+          id?: string
+          league_id?: string
+          reason?: string
+          registration_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comps_assistance_request_id_fkey"
+            columns: ["assistance_request_id"]
+            isOneToOne: false
+            referencedRelation: "assistance_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comps_cart_id_fkey"
+            columns: ["cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comps_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comps_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comps_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["registration_id"]
+          },
+        ]
+      }
       concession_employees: {
         Row: {
           created_at: string
@@ -704,6 +1006,148 @@ export type Database = {
             columns: ["league_id"]
             isOneToOne: false
             referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discount_redemptions: {
+        Row: {
+          amount: number
+          applied_by: string | null
+          cart_id: string | null
+          created_at: string
+          discount_id: string
+          household_id: string | null
+          id: string
+          league_id: string
+          note: string | null
+          registration_id: string
+        }
+        Insert: {
+          amount: number
+          applied_by?: string | null
+          cart_id?: string | null
+          created_at?: string
+          discount_id: string
+          household_id?: string | null
+          id?: string
+          league_id?: string
+          note?: string | null
+          registration_id: string
+        }
+        Update: {
+          amount?: number
+          applied_by?: string | null
+          cart_id?: string | null
+          created_at?: string
+          discount_id?: string
+          household_id?: string | null
+          id?: string
+          league_id?: string
+          note?: string | null
+          registration_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discount_redemptions_cart_id_fkey"
+            columns: ["cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_redemptions_discount_id_fkey"
+            columns: ["discount_id"]
+            isOneToOne: false
+            referencedRelation: "discounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_redemptions_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_redemptions_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_redemptions_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_redemptions_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["registration_id"]
+          },
+        ]
+      }
+      discounts: {
+        Row: {
+          amount: number
+          code: string | null
+          created_at: string
+          id: string
+          in_house_only: boolean
+          is_active: boolean
+          kind: string
+          league_id: string
+          max_redemptions: number | null
+          name: string
+          per_household_limit: number | null
+          season_id: string | null
+        }
+        Insert: {
+          amount: number
+          code?: string | null
+          created_at?: string
+          id?: string
+          in_house_only?: boolean
+          is_active?: boolean
+          kind: string
+          league_id?: string
+          max_redemptions?: number | null
+          name: string
+          per_household_limit?: number | null
+          season_id?: string | null
+        }
+        Update: {
+          amount?: number
+          code?: string | null
+          created_at?: string
+          id?: string
+          in_house_only?: boolean
+          is_active?: boolean
+          kind?: string
+          league_id?: string
+          max_redemptions?: number | null
+          name?: string
+          per_household_limit?: number | null
+          season_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discounts_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discounts_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
             referencedColumns: ["id"]
           },
         ]
@@ -4318,6 +4762,66 @@ export type Database = {
           },
         ]
       }
+      season_settings: {
+        Row: {
+          confirmed_at: string | null
+          created_at: string
+          early_bird_amount: number
+          early_bird_ends_on: string | null
+          id: string
+          ihtt_also_pays_in_house: boolean
+          late_fee_amount: number
+          league_id: string
+          season_id: string
+          seat_hold_minutes: number
+          sibling_amount: number
+          updated_at: string
+        }
+        Insert: {
+          confirmed_at?: string | null
+          created_at?: string
+          early_bird_amount?: number
+          early_bird_ends_on?: string | null
+          id?: string
+          ihtt_also_pays_in_house?: boolean
+          late_fee_amount?: number
+          league_id?: string
+          season_id: string
+          seat_hold_minutes?: number
+          sibling_amount?: number
+          updated_at?: string
+        }
+        Update: {
+          confirmed_at?: string | null
+          created_at?: string
+          early_bird_amount?: number
+          early_bird_ends_on?: string | null
+          id?: string
+          ihtt_also_pays_in_house?: boolean
+          late_fee_amount?: number
+          league_id?: string
+          season_id?: string
+          seat_hold_minutes?: number
+          sibling_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "season_settings_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "season_settings_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: true
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       seasons: {
         Row: {
           age_cutoff_date: string | null
@@ -5512,6 +6016,24 @@ export type Database = {
         }
         Returns: string
       }
+      add_to_my_cart: { Args: { _registration_id: string }; Returns: string }
+      apply_cart_code: {
+        Args: { _cart_id: string; _code: string }
+        Returns: Json
+      }
+      apply_role_discount: {
+        Args: { _discount_id: string; _note: string; _registration_id: string }
+        Returns: string
+      }
+      approve_comp: {
+        Args: {
+          _amount: number
+          _assistance_request_id?: string
+          _reason: string
+          _registration_id: string
+        }
+        Returns: string
+      }
       approve_role_request: {
         Args: { notes?: string; request_id: string }
         Returns: boolean
@@ -5527,6 +6049,7 @@ export type Database = {
         Returns: boolean
       }
       can_see_player_pii: { Args: { _player_id: string }; Returns: boolean }
+      cart_lines: { Args: { _cart_id: string }; Returns: Json }
       change_season_dates: {
         Args: {
           _acknowledged_moves: number
@@ -5581,6 +6104,10 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      family_group_households: {
+        Args: { _household_id: string }
+        Returns: string[]
       }
       form_min_valid_version: { Args: { _form_key: string }; Returns: number }
       get_coach_contact_for_guardian: {
@@ -5672,6 +6199,7 @@ export type Database = {
       is_guardian_of_player: { Args: { _player_id: string }; Returns: boolean }
       is_training_editor: { Args: { _user_id: string }; Returns: boolean }
       is_training_viewer: { Args: { _user_id: string }; Returns: boolean }
+      lock_my_cart: { Args: { _cart_id: string }; Returns: Json }
       log_player_access: {
         Args: {
           _access_type: string
@@ -5689,6 +6217,15 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      price_cart_lines: {
+        Args: {
+          _as_of: string
+          _cart_id: string
+          _items: Json
+          _settings: Json
+        }
+        Returns: Json
       }
       program_open_issues: { Args: { _program_id: string }; Returns: string[] }
       publish_form_version: {
@@ -5725,6 +6262,10 @@ export type Database = {
       }
       reject_role_request: {
         Args: { notes?: string; request_id: string }
+        Returns: boolean
+      }
+      request_payment_help: {
+        Args: { _cart_id: string; _name: string; _phone: string }
         Returns: boolean
       }
       requires_mfa: { Args: { _user_id: string }; Returns: boolean }

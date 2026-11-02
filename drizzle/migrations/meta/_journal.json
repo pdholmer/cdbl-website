@@ -120,6 +120,20 @@
       "when": 1793647754989,
       "tag": "0016_phase3_signatures_select_only",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1793648550240,
+      "tag": "0017_phase4_fees_discounts_carts_holds_comps",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1793648607416,
+      "tag": "0018_phase4_price_rule_without_temp_table",
+      "breakpoints": true
     }
   ]
 }

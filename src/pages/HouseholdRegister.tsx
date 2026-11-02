@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/shell/AppShell";
@@ -26,6 +26,7 @@ const PROGRAM_LABEL: Record<string, string> = { in_house: "In-House", ihtt: "IHT
 
 const HouseholdRegister = () => {
   const { playerId } = useParams();
+  const navigate = useNavigate();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["register-setup", playerId],
@@ -212,6 +213,18 @@ const HouseholdRegister = () => {
                   </div>
                 )}
               </section>
+            )}
+            {existingForProgram && (
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={async () => {
+                    const { error: ce } = await supabase.rpc("add_to_my_cart", { _registration_id: existingForProgram.id });
+                    if (ce) return setErr(ce.message);
+                    navigate("/household/checkout");
+                  }}
+                  className="h-11 rounded-full border border-border px-5 font-label text-[15px] font-semibold">
+                  Add to checkout
+                </button>
+              </div>
             )}
             {existingForProgram && (
               <RegistrationForms registrationId={existingForProgram.id} childName={name} />

@@ -12,6 +12,7 @@ import { gradeRangeLabel, longDate } from "@/lib/registration";
 import { useMyRoles } from "@/lib/adminAccess";
 import { toast } from "sonner";
 import FormVersions from "@/components/admin/FormVersions";
+import MoneySetup from "@/components/admin/MoneySetup";
 
 /** Registration setup: working values to confirm, open-gate issues, and placement reviews. */
 const RegistrationSetup = () => {
@@ -168,6 +169,8 @@ const RegistrationSetup = () => {
                 </div>
               </section>
             ))}
+
+            <MoneySetup seasonId={s.id} roles={roles} />
 
             <FormVersions isAdmin={isAdmin} />
 
