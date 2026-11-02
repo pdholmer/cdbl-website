@@ -26,23 +26,14 @@ const Training = () => {
   }, {});
 
   return (
-    <AppShell area="auto" title="Training">
+    <AppShell area="auto" label="CDBL Training" title="Situations trainer">
       <div className="flex-1">
-        <section className="py-10 md:py-16 text-primary-foreground" style={{ background: "var(--gradient-hero)" }}>
-          <div className="container px-4">
-            <div className="flex items-center gap-3 mb-3">
-              
-              <span className="text-xs font-bold uppercase tracking-widest opacity-90">CDBL Training</span>
-            </div>
-            <h1 className="font-heading text-3xl md:text-5xl font-bold mb-3">Situations Trainer</h1>
-            <p className="text-base md:text-lg max-w-2xl opacity-95">
-              Know where to go before the ball is hit. Walk through defensive situations and test yourself position by position.
-            </p>
-          </div>
-        </section>
 
         <section className="py-8 md:py-12 bg-background">
           <div className="container px-4 max-w-3xl">
+            <p className="mb-6 max-w-2xl text-base text-muted-foreground">
+              Know where to go before the ball is hit. Walk through defensive situations and test yourself position by position.
+            </p>
             {loading || (canView && isLoading) ? (
               <div className="space-y-3">
                 <Skeleton className="h-20 w-full rounded-2xl" />

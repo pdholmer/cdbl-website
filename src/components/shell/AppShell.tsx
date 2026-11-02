@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import seal from "@/assets/cdbl-seal.png";
+import { LitHeader } from "@/components/shell/LitHeader";
 import { fetchMyRoles } from "@/lib/adminAccess";
 import { hasGuardianRecord, resolveLanding } from "@/lib/landing";
 import { adminGroupLabel, adminGroupsFor, tabsFor, type NavLinkItem, type ShellArea } from "@/lib/shellNav";
@@ -134,29 +135,21 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
       </aside>
 
       <div className="min-w-0 flex-1">
-        {/* Lit header */}
-        <header className="ngb-stage tex-twill">
-          <div className="mx-auto flex w-full max-w-6xl items-start gap-3 px-4 pb-5 pt-4 sm:px-6 lg:px-8">
-            <Link to="/" aria-label="CDBL home" className="flex h-11 w-11 shrink-0 items-center justify-center md:hidden">
-              <img src={seal} alt="Central District Baseball League" className="h-9 w-9 object-contain" />
-            </Link>
-            <div className="min-w-0 flex-1 pt-1">
-              <p className="font-label text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                {label ?? AREA_LABEL[area]}
-              </p>
-              <p className="ngb-headline mt-1 truncate font-display font-black uppercase leading-[0.95] text-foreground" role="heading" aria-level={1}>
-                {headline}
-              </p>
-            </div>
-            <Link to="/account" aria-label="Account" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
-              <UserRound className="h-5 w-5" aria-hidden />
-            </Link>
-            <button type="button" onClick={signOut} aria-label="Sign out" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
-              <LogOut className="h-5 w-5" aria-hidden />
-            </button>
-          </div>
-          <div className="ngb-piping" aria-hidden />
-        </header>
+        <LitHeader
+          label={label ?? AREA_LABEL[area]}
+          title={headline}
+          sealPhoneOnly
+          actions={
+            <>
+              <Link to="/account" aria-label="Account" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
+                <UserRound className="h-5 w-5" aria-hidden />
+              </Link>
+              <button type="button" onClick={signOut} aria-label="Sign out" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
+                <LogOut className="h-5 w-5" aria-hidden />
+              </button>
+            </>
+          }
+        />
 
         <main className="pb-[calc(88px+env(safe-area-inset-bottom))] md:pb-10">
           {banner}

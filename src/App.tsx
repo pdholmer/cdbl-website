@@ -1,3 +1,4 @@
+import AdminLoginRedirect from "./pages/admin/Login";
 import ResetPassword from "./pages/ResetPassword";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -132,7 +133,7 @@ const App = () => (
           <Route path="/household" element={<Household />} />
           <Route path="/household/new" element={<HouseholdNew />} />
           {/* Admin Routes */}
-          <Route path="/admin/login" element={<Login />} />
+          <Route path="/admin/login" element={<AdminLoginRedirect />} />
           <Route path="/admin/email-bounces" element={<ProtectedRoute requireBoardMember><EmailBounces /></ProtectedRoute>} />
           
           {/* Board Member Routes - accessible by admin OR board_member */}

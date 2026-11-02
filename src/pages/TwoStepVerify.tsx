@@ -1,4 +1,11 @@
 import { AuthShell } from "@/components/AuthShell";
+
+/** On-screen masking only: p•••@gmail.com. Leaves non-addresses (e.g. "your email") as-is. */
+const maskEmail = (v: string) => {
+  const at = v.indexOf("@");
+  if (at < 1) return v;
+  return `${v[0]}\u2022\u2022\u2022${v.slice(at)}`;
+};
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -121,19 +128,19 @@ const TwoStepVerify = () => {
   const switchMode = (m: Mode) => { setMode(m); setCode(""); setError(null); };
 
   return (
-    <AuthShell>
-      <div className="w-full rounded-lg border border-border bg-card p-6 sm:p-8">
-        <h1 className="font-display text-4xl font-extrabold leading-none text-foreground">Enter your code</h1>
+    <AuthShell title="Check your email">
+      <div className="tex-mesh w-full rounded-xl border border-border bg-card p-6 sm:p-8">
+        <h2 className="font-label text-xl font-semibold text-foreground">Enter your code</h2>
         <p className="mt-3 text-base text-muted-foreground" aria-live="polite">
           {mode === "app"
             ? "Open your authenticator app and type the 6-digit code for CDBL."
             : sentTo
-              ? `We emailed a 6-digit code to ${sentTo}. It works for 10 minutes.`
+              ? `We emailed a 6-digit code to ${maskEmail(sentTo)}.`
               : sending ? "Sending your code…" : "We'll email you a 6-digit code."}
         </p>
 
         {error && (
-          <div role="alert" className="mt-5 rounded-lg border border-destructive/40 p-3 text-sm">
+          <div role="alert" className="mt-5 text-sm">
             <p className="text-destructive">{error}</p>
             <p className="mt-1 text-muted-foreground">{MFA_HELP}</p>
           </div>
@@ -150,10 +157,14 @@ const TwoStepVerify = () => {
             aria-label="6-digit code"
           >
             <InputOTPGroup>
-              {[0, 1, 2, 3, 4, 5].map((i) => <InputOTPSlot key={i} index={i} className="h-12 w-11 text-lg" />)}
+              {[0, 1, 2, 3, 4, 5].map((i) => <InputOTPSlot key={i} index={i} className="h-14 w-12 text-2xl" />)}
             </InputOTPGroup>
           </InputOTP>
         </div>
+
+        {mode === "email" && sentTo && (
+          <p className="mt-4 text-center text-sm text-muted-foreground">The code expires in 10 minutes.</p>
+        )}
 
         {mode === "email" && (
           <label className="mt-6 flex min-h-11 cursor-pointer items-center gap-3 text-sm text-foreground">
@@ -169,12 +180,12 @@ const TwoStepVerify = () => {
 
         <div className="mt-3 flex flex-col gap-1">
           {mode === "email" && (
-            <Button variant="ghost" className="h-11" disabled={sending || wait > 0} onClick={send}>
+            <Button variant="link" className="h-11" disabled={sending || wait > 0} onClick={send}>
               {wait > 0 ? `Send a new code in ${wait}s` : "Send a new code"}
             </Button>
           )}
           {factorId && (
-            <Button variant="ghost" className="h-11" onClick={() => switchMode(mode === "email" ? "app" : "email")}>
+            <Button variant="link" className="h-11" onClick={() => switchMode(mode === "email" ? "app" : "email")}>
               {mode === "email" ? "Use authenticator app instead" : "Email me a code instead"}
             </Button>
           )}

@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+const TITLES: Record<string, string> = { signin: "Sign in", signup: "Create account", forgot: "Reset password", "forgot-sent": "Check your email", "signup-sent": "Check your email", unconfirmed: "Confirm your email" };
 import { toast } from "sonner";
-import { ArrowLeft, Loader2, Mail } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { resolveLanding } from "@/lib/landing";
 import { AuthShell } from "@/components/AuthShell";
 import { PasswordInput } from "@/components/PasswordInput";
@@ -158,18 +160,18 @@ const Login = () => {
   );
 
   return (
-    <AuthShell>
+    <AuthShell title={TITLES[mode]}>
       {routeError && (
-        <div role="alert" className="mb-4 rounded-2xl border border-destructive/40 bg-destructive/5 p-4 text-sm">
-          <p className="font-semibold">You're signed in, but we couldn't check your access.</p>
-          <Button className="mt-3 h-11 rounded-xl" onClick={() => routeAfterLogin()}>Try again</Button>
+        <div role="alert" className="tex-mesh mb-4 rounded-xl border border-border bg-card p-4 text-sm">
+          <p className="font-semibold text-destructive">You're signed in, but we couldn't check your access.</p>
+          <Button className="mt-3 h-11 w-full" onClick={() => routeAfterLogin()}>Try again</Button>
         </div>
       )}
-      <Card className="w-full rounded-2xl shadow-md">
+      <Card className="tex-mesh w-full rounded-xl">
         {mode === "signin" && (
           <>
             <CardHeader>
-              <CardTitle className="font-heading text-2xl">Sign in to CDBL</CardTitle>
+              <CardTitle className="font-label text-xl">Sign in to CDBL</CardTitle>
               <CardDescription>Use your email and password.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -193,16 +195,6 @@ const Login = () => {
                   Sign in
                 </Button>
               </form>
-              <p className="mt-6 text-center text-sm text-muted-foreground">
-                New to CDBL?{" "}
-                <button
-                  type="button"
-                  className="min-h-11 font-semibold text-primary underline-offset-4 hover:underline"
-                  onClick={() => switchTo("signup")}
-                >
-                  Create account
-                </button>
-              </p>
               <p className="text-center text-xs text-muted-foreground">
                 Used an email link before? Choose Forgot password to set a password.
               </p>
@@ -213,7 +205,7 @@ const Login = () => {
         {mode === "signup" && (
           <>
             <CardHeader>
-              <CardTitle className="font-heading text-2xl">Create your account</CardTitle>
+              <CardTitle className="font-label text-xl">Create your account</CardTitle>
               <CardDescription>Passwords need at least {MIN_PASSWORD_LENGTH} characters.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -240,7 +232,7 @@ const Login = () => {
         {mode === "forgot" && (
           <>
             <CardHeader>
-              <CardTitle className="font-heading text-2xl">Reset your password</CardTitle>
+              <CardTitle className="font-label text-xl">Reset your password</CardTitle>
               <CardDescription>
                 We'll email you a link to set a new password. This also works if you've never had one.
               </CardDescription>
@@ -261,16 +253,13 @@ const Login = () => {
         {(mode === "forgot-sent" || mode === "signup-sent") && (
           <>
             <CardHeader>
-              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Mail className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="font-heading text-2xl">Check your email</CardTitle>
+              <CardTitle className="font-label text-xl">Check your email</CardTitle>
               <CardDescription>
                 {mode === "forgot-sent"
                   ? "If there's an account for this address, a reset link is on its way to:"
                   : "Check your email to confirm your account. We sent a link to:"}
               </CardDescription>
-              <p className="mt-2 break-all font-heading text-xl font-semibold">{cleanEmail()}</p>
+              <p className="mt-2 break-all font-label text-lg font-semibold">{cleanEmail()}</p>
             </CardHeader>
             <CardContent>{backLink}</CardContent>
           </>
@@ -279,17 +268,14 @@ const Login = () => {
         {mode === "unconfirmed" && (
           <>
             <CardHeader>
-              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <Mail className="h-6 w-6 text-primary" />
-              </div>
-              <CardTitle className="font-heading text-2xl">Confirm your email first</CardTitle>
+              <CardTitle className="font-label text-xl">Check your email to confirm your account</CardTitle>
               <CardDescription>
                 This account isn't confirmed yet. We sent a confirmation link to:
               </CardDescription>
-              <p className="mt-2 break-all font-heading text-xl font-semibold">{cleanEmail()}</p>
+              <p className="mt-2 break-all font-label text-lg font-semibold">{cleanEmail()}</p>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="h-12 w-full" onClick={handleResendConfirmation} disabled={busy}>
+              <Button variant="outline" className="h-12 w-full" onClick={handleResendConfirmation} disabled={busy}>
                 {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Resend confirmation email
               </Button>
@@ -298,6 +284,18 @@ const Login = () => {
           </>
         )}
       </Card>
+      {mode === "signin" && (
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          New to CDBL?{" "}
+          <button
+            type="button"
+            className="min-h-11 font-semibold text-primary underline-offset-4 hover:underline dark:text-foreground"
+            onClick={() => switchTo("signup")}
+          >
+            Create account
+          </button>
+        </p>
+      )}
     </AuthShell>
   );
 };
