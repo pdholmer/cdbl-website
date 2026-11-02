@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -14,7 +14,13 @@ type Doc = { id: string; form_key: string; version: number; title: string; body:
 type Sig = { id: string; form_key: string; form_version: number; guardian_id: string; typed_name: string | null; photo_release_consent: boolean | null; signed_at: string; attested: boolean };
 
 /** Form rows for one registration. Signing goes only through sign_registration_form. */
-export const RegistrationForms = ({ registrationId, childName }: { registrationId: string; childName: string }) => {
+export type NextForm = { title: string; open: () => void } | null;
+
+export const RegistrationForms = ({ registrationId, childName, onNext }: {
+  registrationId: string; childName: string;
+  /** Reports the next required form (or null when every required form is signed) for the action bar. */
+  onNext?: (next: NextForm, ready: boolean) => void;
+}) => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["registration-forms", registrationId],
     queryFn: async () => {
@@ -50,6 +56,14 @@ export const RegistrationForms = ({ registrationId, childName }: { registrationI
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!onNext) return;
+    if (!data) { onNext(null, false); return; }
+    const nd = data.docs.find((d) => d.required && !data.sigs.find((s) => s.form_key === d.form_key && s.form_version >= (data.minValid.get(d.form_key) ?? 1)));
+    onNext(nd ? { title: nd.title, open: () => { setOpen(nd); setName(""); setAttested(false); setPhoto(null); setErr(null); } } : null, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
   if (isLoading) return <p className="text-[15px] text-muted-foreground">Loading forms</p>;
   if (error || !data) return <p className="text-[15px]">We couldn't load the forms. <button className="min-h-[44px] underline" onClick={() => refetch()}>Try again</button></p>;
 
@@ -80,6 +94,7 @@ export const RegistrationForms = ({ registrationId, childName }: { registrationI
   return (
     <section aria-label="Forms" className="space-y-3">
       <p className="font-label text-[17px] font-semibold">Forms for {childName}</p>
+      <p className="text-sm text-muted-foreground">Signed rows show a chip. The next one to sign is highlighted.</p>
       <ul className="space-y-3">
         {data.docs.map((d) => {
           const s = current(d);
