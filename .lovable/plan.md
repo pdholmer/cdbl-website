@@ -1,363 +1,141 @@
-# Part 1: sign-in fixes from Paul's live test (plan only)
+# Role-scoped admin access (plan only)
 
-## 1. No two-step QR on cdbaseball.org
+## What I found (read from the live database and code)
 
-Confirmed. I downloaded the live site's code and searched it: it has no two-step screens and no redesigned Household page. Both exist only in preview.
+- `/admin` routes use `requireBoardMember` (admin or board_member) or `requireAdmin`. `landing.ts` only sends admin and board_member to `/admin`.
+- `requires_mfa` covers admin, registrar, treasurer, background_checks. **It does not cover commissioner** (or board_member).
+- `has_admin_access` = admin or board_member. Used by the divisions UPDATE and registration-codes SELECT policies.
+- Commissioners already have many policies, all keyed to `commissioner_assignments` (program and division scope): drafts, draft_picks, games, teams, team_coaches, team_rosters, players (read and update), registrations (**view and update**), player_documents (view), coaches (view), league_players (view).
+- Registrar, treasurer and background_checks have **no policies anywhere**.
+- `programs` and `divisions` are already readable by everyone in the league.
+- `coaches` holds the clearance fields (`background_check_status/date/expiry`) next to email, phone and `admin_notes`.
+- `src/pages/commissioner/*` (9 pages) exists, but only `/admin/commissioner` is routed, and that route requires admin.
 
-There is a second cause that would still apply after publishing. The email link always opens `/login`, and `/login` always sends people to Household. The two-step check only runs when someone opens an admin page. So Paul never reaches it, even in preview. Fix 2 below handles this.
+## Answer 4 first: what doesn't map to anything yet
 
-Also: until we publish, the live admin panel has no two-step step at all.
+1. **Payments, refunds, financial reports (treasurer)**: there are no payment, refund or ledger tables. Stripe is not built. The treasurer would get fee history, registrations (read) and registration codes (read). Payments and refunds stay empty until the ledger module exists.
+2. **Volunteer background checks**: only coaches have a clearance status. `volunteer_signups` has none, and `import_sc_volunteers` is staging. The background_checks role gets coaches only.
+3. **Documents in storage**: the files behind `player_documents` sit in a storage bucket. The registrar needs a storage read policy too. I'll check the bucket's current policies before writing it.
+4. **Commissioner "for their league"**: commissioners are scoped by program and division assignment, not league-wide. I'm keeping that, which is stricter. Several existing commissioner policies (drafts, draft_picks, games, team_coaches, commissioner_assignments) don't check `current_league_id()`. I'm flagging that and not changing it.
+5. **Commissioner on divisions**: no commissioner edit path exists. Division edits include the fee, which conflicts with "no payments", so I propose read-only. Tell me if commissioners should edit non-fee fields.
+6. **Treasurer "fees"**: editing a fee today means a full divisions UPDATE. I propose a narrow function that changes only `cost`, logged by the existing fee-change trigger, instead of a row-level UPDATE grant.
+7. **Two-step for commissioner**: not covered today. It needs a one-line function change (below). Board_member is also outside two-step. Tell me whether to add it.
 
-What a publish would ship (website changes saved but not yet live):
-- Two-step setup and code screens, and the admin two-step check
-- Redesigned Household page, family header, edit sheet, new household safeguards
-- Situations Trainer: field viewer, playback, quiz, practice, progress
-- Roster count display changes, team edit label
-- Admin and public reading of the new team roster counts
+## Answer 1: new SQL (all additive, league-scoped)
 
-Already live without publishing (these took effect when made):
-- Oct 31 email delivery move: the sign-in email sender and branded templates are deployed and running now. Only the preview-email helper on the website side waits for publish.
-- All database changes: security pass, roles, two-step database rules, roster rules, team renames, calendar sync
+```sql
+-- Helper
+CREATE OR REPLACE FUNCTION public.has_any_role(_user_id uuid, _roles app_role[])
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT _user_id = auth.uid() AND EXISTS (SELECT 1 FROM public.user_roles
+    WHERE user_id = _user_id AND role = ANY(_roles)) $$;
+REVOKE ALL ON FUNCTION public.has_any_role(uuid, app_role[]) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.has_any_role(uuid, app_role[]) TO authenticated;
 
-I can't produce a line-by-line list of unpublished changes; this list comes from comparing the live code with preview. Publishing ships everything in preview at once.
+-- Two-step for commissioner
+CREATE OR REPLACE FUNCTION public.requires_mfa(_user_id uuid)
+RETURNS boolean LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+  SELECT _user_id = auth.uid() AND EXISTS (SELECT 1 FROM public.user_roles
+    WHERE user_id = _user_id AND role IN ('admin','registrar','treasurer','background_checks','commissioner')) $$;
 
-## 2. Role-aware landing after sign-in
+-- REGISTRAR: registrations, players, households, documents (read and edit, no delete)
+CREATE POLICY "Registrar reads registrations" ON public.registrations FOR SELECT TO authenticated
+  USING (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'registrar')));
+CREATE POLICY "Registrar inserts registrations" ON public.registrations FOR INSERT TO authenticated
+  WITH CHECK (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'registrar')));
+CREATE POLICY "Registrar updates registrations" ON public.registrations FOR UPDATE TO authenticated
+  USING (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'registrar')))
+  WITH CHECK (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'registrar')));
+-- Same SELECT/INSERT/UPDATE trio, same expression, on:
+--   households, guardians, guardian_households, household_players, player_documents, league_players
+-- players has no league_id column, so it is scoped through league_players:
+CREATE POLICY "Registrar reads players" ON public.players FOR SELECT TO authenticated
+  USING ((SELECT has_role(auth.uid(),'registrar')) AND EXISTS (SELECT 1 FROM public.league_players lp
+         WHERE lp.player_id = players.id AND lp.league_id = (SELECT current_league_id())));
+CREATE POLICY "Registrar updates players" ON public.players FOR UPDATE TO authenticated
+  USING (<same expression>) WITH CHECK (<same expression>);
+-- New players: through the existing create_player_in_league() function, after adding registrar to its role check.
+-- Storage: SELECT/INSERT on the documents bucket for registrar (written after reading the current bucket policies).
+-- Not granted: player_medical, payments, programs/divisions writes.
 
-Change `routeAfterLogin` in the sign-in page:
+-- TREASURER: registrations read, fee history, fee edit, codes read. No documents, no players.
+CREATE POLICY "Treasurer reads registrations" ON public.registrations FOR SELECT TO authenticated
+  USING (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'treasurer')));
+CREATE POLICY "Treasurer reads fee changes" ON public.division_fee_changes FOR SELECT TO authenticated
+  USING (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'treasurer')));
+CREATE POLICY "Treasurer reads registration codes" ON public.registration_codes FOR SELECT TO authenticated
+  USING (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'treasurer')));
+CREATE OR REPLACE FUNCTION public.set_division_fee(_division_id uuid, _cost numeric)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF NOT public.has_any_role(auth.uid(), ARRAY['admin','treasurer']::app_role[]) OR NOT public.mfa_satisfied() THEN
+    RAISE EXCEPTION 'not allowed' USING ERRCODE = '42501'; END IF;
+  UPDATE public.divisions SET cost = _cost
+   WHERE id = _division_id AND league_id = public.current_league_id();
+END $$;
+REVOKE ALL ON FUNCTION public.set_division_fee(uuid, numeric) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.set_division_fee(uuid, numeric) TO authenticated;
+
+-- BACKGROUND_CHECKS: coaches only, clearance fields only
+CREATE POLICY "Background checks read coaches" ON public.coaches FOR SELECT TO authenticated
+  USING (league_id = (SELECT current_league_id()) AND (SELECT has_role(auth.uid(),'background_checks')));
+CREATE OR REPLACE FUNCTION public.set_coach_clearance(_coach_id uuid, _status text, _date date, _expiry date)
+RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+BEGIN
+  IF NOT public.has_any_role(auth.uid(), ARRAY['admin','background_checks']::app_role[]) OR NOT public.mfa_satisfied() THEN
+    RAISE EXCEPTION 'not allowed' USING ERRCODE = '42501'; END IF;
+  UPDATE public.coaches SET background_check_status = _status,
+         background_check_date = _date, background_check_expiry = _expiry
+   WHERE id = _coach_id AND league_id = public.current_league_id();
+END $$;
+REVOKE ALL ON FUNCTION public.set_coach_clearance(uuid, text, date, date) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.set_coach_clearance(uuid, text, date, date) TO authenticated;
+-- The existing CHECK constraint still limits status to pending/approved/expired/rejected.
+
+-- COMMISSIONER: the existing policies already cover divisions (read), teams, draft, schedule, coaches.
+-- One gap: let commissioners read the list of their own assigned divisions' teams' practices.
+CREATE POLICY "Commissioners view practices in their programs" ON public.practices FOR SELECT TO authenticated
+  USING (league_id = (SELECT current_league_id()) AND EXISTS (SELECT 1 FROM public.teams t
+         WHERE t.id = practices.team_id AND public.is_commissioner_for(auth.uid(), t.program_id, t.division_id)));
+```
+
+**Undo:** `DROP POLICY` each new policy by name. `DROP FUNCTION` `has_any_role`, `set_division_fee` and `set_coach_clearance`. Re-run the previous `requires_mfa` body, which lists admin, registrar, treasurer and background_checks.
+
+## Answer 2: existing policies that change (named)
+
+1. **`registrations` "Commissioners update assigned registrations"**: dropped, so commissioners are read-only on registrations as you asked. Undo: recreate it with its current USING and CHECK (both saved in the plan record).
+2. No other existing policy changes. Every grant above is a new permissive policy alongside the old ones.
+3. Function changes (not policies): `requires_mfa` (adds commissioner), and `create_player_in_league` (adds registrar), if you approve it.
+
+Note: commissioners keep the existing "Commissioners view documents in their scope" policy on `player_documents`. You didn't exclude documents for commissioners. Tell me if you want it removed.
+
+## Answer 3: code files that change
+
+- `src/lib/adminAccess.ts` (new): one map from role to allowed admin sections, plus `canAccess(roles, section)`.
+- `src/lib/landing.ts`: `/admin` for admin, board_member, commissioner, registrar, treasurer and background_checks.
+- `src/components/ProtectedRoute.tsx`: new `section` prop. Not allowed shows the "No access" page, not a redirect. The two-step check stays first.
+- `src/pages/admin/NoAccess.tsx` (new): a plain message and a link back to the admin home.
+- `src/App.tsx`: each `/admin/*` route declares its section.
+- `src/components/AdminSidebar.tsx`: filters sections by role.
+- `src/pages/admin/Dashboard.tsx`: shows only the cards for allowed sections, so limited roles don't hit permission errors.
+- `src/pages/admin/Divisions.tsx` / `DivisionEdit.tsx`: read-only for commissioner and registrar; fee field calls `set_division_fee` for the treasurer.
+- `src/pages/admin/Coaches.tsx` / `CoachEdit.tsx`: a clearance-only view for background_checks, saved through `set_coach_clearance`.
+- Registrations: no admin registrations screen exists. The registrar's section would be Players plus Households/Documents read views. A full registrations screen is a separate request.
+- `src/lib/adminAccess.test.ts` (new): one test per role rule, for example treasurer can't open players and background_checks can't open players.
+- `AGENTS.md`: one rule saying admin section access is decided only in `adminAccess.ts` and enforced by database policies.
+
+## Section map (proposed)
 
 ```text
-signed in
- ├─ safe "next" link given (not /login)        -> go there
- ├─ admin, registrar, treasurer, background_checks,
- │  commissioner or board_member                -> /admin
- │      (admin check sends required roles to /two-step/setup or /two-step/verify first)
- ├─ coach (role or active team coach link)      -> /coach
- └─ everyone else                               -> /household (or /household/new)
+admin, board_member : everything (unchanged)
+commissioner        : Teams, Drafts, Schedule, Coaches, Divisions (read), Commissioner
+registrar           : Players, Households, Documents, Programs (read), Divisions (read)
+treasurer           : Divisions (fees), Fee history, Registration codes (read), Reports (finance, once built)
+background_checks   : Coaches (clearance only)
 ```
 
-- Roles read from `user_roles` for the signed-in user (existing policy lets users read their own). If that read fails, show an error with retry, never a silent default.
-- `next=/household` is honored again, so a parent link still works for admins.
-- Admin-who-is-also-a-parent: add a "My household" link in the admin sidebar and account menu, shown when the user has a guardian record. Add "Admin" to the family header for admin roles. Same in the coach area.
-- Commissioner landing: commissioners currently have `/commissioner` pages. I propose `/admin` per your list only if the admin guard admits commissioners; otherwise `/commissioner`. I'll confirm against `ProtectedRoute` before building and tell you which.
-- The two-step routing stays in `ProtectedRoute` (single source: `requires_mfa`).
+## How I'll verify (after approval)
 
-Verify: sign in as Paul (admin) and land on two-step setup, then admin. Mint a parent-only and coach-only session if test accounts exist and confirm Household and Coach. Each at 390, 768, 1440.
-
-Undo: revert the sign-in page and the two nav links.
-
-## 3. Pages locked to phone width
-
-Audit result (page wrappers, not dialogs or small text limits):
-- Household: page column and family header capped at 640px. This is the main problem.
-- Household new, sign-in, two-step setup, two-step code: single card capped at 448px. This is normal for a form, but the page around it should use the space on tablet and desktop.
-- Situation detail: capped at 672px, so the field is small on desktop.
-- Admin division edit: form capped at 672px (acceptable for a form).
-- Admin panel shell: not capped; I will still check it at 768px, where the sidebar and tables are most at risk.
-- Public pages: caps are on paragraph text only (good reading width), not the page.
-
-Fix pattern:
-- Page wrapper: `container` with phone 16px, tablet 24px, desktop 32px sides; max width about 1200px.
-- Household desktop: two columns from 1024px up. Left: household card, family, guardians. Right: team, coach, upcoming. Tablet: single column at full width with wider cards. Header matches the page width.
-- Sign-in and two-step: keep the narrow form card, centered, with a brand panel beside it on desktop (seal and one plain sentence) so it doesn't look like a phone screen.
-- Situation detail: field and step list side by side on desktop, stacked on phone.
-- Admin: tables scroll sideways inside their card at 768, never the page; sidebar collapses below 1024.
-
-Verify: browser check of each page at 390, 768 and 1440: no sideways page scroll, touch targets at least 44px, screenshots reviewed for each.
-
-Order: fix 2, then 3 (Household, two-step, admin), then publish only when you say so.
-
----
-
-# Part 2: Phase A, steps 1 and 2: 2027 season, programs, fees, capacity (plan only)
-
-Additive only. No 2026 row is edited or deleted. Nothing below is applied until Paul says "approved".
-
-## What I found first (read from the live database)
-
-- `seasons` has `year` (text), `label`, `is_current`, `age_cutoff_date`, `starts_on`, `ends_on`, `locked_at`. One row today: 2026, current, and `age_cutoff_date` is NULL.
-- `programs.type` is a Postgres enum (`program_type`: in_house, travel). Registration opens per program (`programs.registration_open`), not per season.
-- The 2026 in-house program has `season_id` NULL. The 2026 travel program points at the 2026 season. I will not fix the in-house one (that would be a 2026 edit). Say so if you want it fixed as a separate step.
-- 2026 divisions: in-house T-Ball 195, Pinto 250, Mustang 275, Bronco 290, Pony 335, Colt NULL. Travel 8U–14U 1500–2250, 15U NULL. Your fee list matches these.
-- There is no "checkout" concept in the schema yet. `registrations` has a `payment` text field but nothing that ties two registrations into one checkout.
-- Admins already edit fees on the division edit page (cost field). There is no fee history.
-
-## Points that need your answer before I build
-
-1. **Same checkout.** Nothing groups registrations into one checkout today. I propose a nullable `checkout_id uuid` on `registrations`. The IHTT rule then says: an in-house registration for the same player and season must exist, and must share the IHTT row's `checkout_id` or already be paid or waived. When Stripe arrives (test mode), the checkout fills that column. The alternative is to wait for the Stripe step. I recommend the column now.
-2. **Bronco in 2027.** Project memory says Bronco was not offered in 2026 and its copy was removed. You listed Bronco 290 for 2027. I will create it. Should it be visible to families, or hidden like Colt until the board confirms?
-3. **Which registrations the age-cutoff block applies to.** The 2026 season also has no cutoff. If the block applied to every new registration, it would stop 2026 imports. I propose it applies only to registrations entered on this site (`source = 'platform'`) and to programs being switched to open. Imports from Sports Connect still go through.
-4. **IHTT division names.** I propose "8U IHTT" … "14U IHTT", with the same age ranges as the travel divisions.
-
-## Step 1: 2027 season
-
-### Migration 1a: season row, programs, cutoff guard
-
-```sql
--- 2027 season (data row, part of this additive step)
-INSERT INTO public.seasons (league_id, year, label, starts_on, ends_on, is_current, age_cutoff_date)
-VALUES (public.current_league_id(), '2027', '2027 Season', '2027-04-05', '2027-06-28', false, NULL);
-COMMENT ON COLUMN public.seasons.age_cutoff_date IS
-  'NULL = PLACEHOLDER. 2027 must match the travel cutoff in Sports Connect. Registration cannot open while NULL.';
-
--- 2027 in-house and travel programs, copied from 2026
-INSERT INTO public.programs (league_id, type, name, overview, season_start, season_end,
-                             registration_open, season_id)
-SELECT p.league_id, p.type, p.name, p.overview, DATE '2027-04-05', DATE '2027-06-28', false,
-       (SELECT id FROM public.seasons WHERE year = '2027' AND league_id = public.current_league_id())
-FROM public.programs p
-WHERE p.id IN ('0a379f62-be88-4f89-87fc-03e621b6e786',   -- 2026 in-house
-               '09dbe257-e659-4184-b217-fa9a15707bb5');  -- 2026 travel
--- registration URLs are left NULL on purpose (2026 links point at Sports Connect).
-
--- Guard 1: a program cannot be opened for a season with no age cutoff
-CREATE OR REPLACE FUNCTION public.guard_program_registration_open()
-RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$
-BEGIN
-  IF NEW.registration_open IS TRUE
-     AND (TG_OP = 'INSERT' OR OLD.registration_open IS DISTINCT FROM true) THEN
-    IF NEW.season_id IS NULL OR EXISTS (
-         SELECT 1 FROM public.seasons s WHERE s.id = NEW.season_id AND s.age_cutoff_date IS NULL) THEN
-      RAISE EXCEPTION 'Registration cannot open: the season has no age cutoff date set'
-        USING ERRCODE = 'check_violation';
-    END IF;
-  END IF;
-  RETURN NEW;
-END $$;
-CREATE TRIGGER trg_programs_guard_registration_open
-  BEFORE INSERT OR UPDATE OF registration_open, season_id ON public.programs
-  FOR EACH ROW EXECUTE FUNCTION public.guard_program_registration_open();
-
--- Guard 2: no on-site registration for a season with no age cutoff
-CREATE OR REPLACE FUNCTION public.guard_registration_season_cutoff()
-RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$
-BEGIN
-  IF COALESCE(NEW.source, 'platform') = 'platform' AND EXISTS (
-       SELECT 1 FROM public.seasons s WHERE s.id = NEW.season_id AND s.age_cutoff_date IS NULL) THEN
-    RAISE EXCEPTION 'Registration is not open: the season has no age cutoff date set'
-      USING ERRCODE = 'check_violation';
-  END IF;
-  RETURN NEW;
-END $$;
-CREATE TRIGGER trg_registrations_guard_season_cutoff
-  BEFORE INSERT ON public.registrations
-  FOR EACH ROW EXECUTE FUNCTION public.guard_registration_season_cutoff();
-```
-
-Both triggers are not SECURITY DEFINER: they read `seasons`, which every signed-in user can already read. No new table, no RLS change.
-
-### Code: admin warning banner
-
-- New `src/components/admin/SeasonCutoffBanner.tsx`: reads seasons where `starts_on >= today` (or `is_current`) and `age_cutoff_date IS NULL`. Shows a warning card: "The 2027 season has no age cutoff date. Registration can't open until it's set." with a link to where seasons are edited.
-- Mounted once at the top of the admin layout so it shows on every admin page. Query errors show nothing rather than a false warning, and the error is logged.
-
-### Verify step 1
-
-- Read back the season row and the two 2027 programs; confirm 2026 rows are byte-identical (compare `row_to_json` before and after).
-- In a rolled-back transaction: `UPDATE programs SET registration_open = true` on a 2027 program raises the error; set the 2027 cutoff to a date and the same update succeeds.
-- In a rolled-back transaction: insert a `source='platform'` registration for 2027 and confirm it is rejected; an `import` source row for 2026 still inserts.
-- Banner shows on the admin dashboard in the browser at 390px and desktop.
-
-### Undo step 1
-
-```sql
-DROP TRIGGER trg_registrations_guard_season_cutoff ON public.registrations;
-DROP TRIGGER trg_programs_guard_registration_open ON public.programs;
-DROP FUNCTION public.guard_registration_season_cutoff();
-DROP FUNCTION public.guard_program_registration_open();
-DELETE FROM public.programs WHERE season_id = (SELECT id FROM public.seasons WHERE year='2027');
-DELETE FROM public.seasons WHERE year = '2027';
-```
-Remove the banner file and its one mount line.
-
-## Step 2: programs, fees, capacity
-
-### Migration 2a: new program types (must run on its own)
-
-Postgres cannot use a new enum value in the same transaction that adds it, so this is its own migration.
-
-```sql
-ALTER TYPE public.program_type ADD VALUE IF NOT EXISTS 'ihtt';
-ALTER TYPE public.program_type ADD VALUE IF NOT EXISTS 'travel_tryout';
-ALTER TYPE public.program_type ADD VALUE IF NOT EXISTS 'clinic';
-```
-in_house and travel stay valid. Undo: enum values cannot be removed without rebuilding the type; leaving unused values in place is harmless.
-
-### Migration 2b: columns, settings, IHTT program, divisions, rule, fee log
-
-```sql
--- League setting (PLACEHOLDER pending board)
-ALTER TABLE public.leagues ADD COLUMN ihtt_includes_in_house boolean NOT NULL DEFAULT false;
-COMMENT ON COLUMN public.leagues.ihtt_includes_in_house IS
-  'PLACEHOLDER pending board. true = in-house fee waived for IHTT players; false = family pays both.';
-
--- Capacity
-ALTER TABLE public.divisions ADD COLUMN capacity integer NULL CHECK (capacity IS NULL OR capacity >= 0);
-ALTER TABLE public.divisions ADD COLUMN waitlist_enabled boolean NOT NULL DEFAULT true;
-
--- Checkout grouping (see question 1)
-ALTER TABLE public.registrations ADD COLUMN checkout_id uuid NULL;
-CREATE INDEX registrations_checkout_idx ON public.registrations (checkout_id) WHERE checkout_id IS NOT NULL;
-
--- 2027 IHTT program
-INSERT INTO public.programs (league_id, type, name, overview, season_start, season_end, registration_open, season_id)
-VALUES (public.current_league_id(), 'ihtt', 'CDBL In-House Travel Team (IHTT)', NULL,
-        '2027-04-05', '2027-06-28', false,
-        (SELECT id FROM public.seasons WHERE year='2027' AND league_id = public.current_league_id()));
--- overview left NULL: no approved IHTT copy exists; Paul/Notion to supply.
-
--- IHTT divisions 8U-14U, fee = travel fee for the same age, age_range copied from 2026 travel
-INSERT INTO public.divisions (league_id, program_id, name, age_range, cost, display_order)
-SELECT d.league_id,
-       (SELECT id FROM public.programs WHERE type='ihtt' AND season_id =
-          (SELECT id FROM public.seasons WHERE year='2027')),
-       replace(d.name, 'Travel', 'IHTT'), d.age_range, v.fee, d.display_order
-FROM public.divisions d
-JOIN (VALUES ('8U Travel',1500),('9U Travel',1625),('10U Travel',1750),('11U Travel',1875),
-             ('12U Travel',2000),('13U Travel',2125),('14U Travel',2250)) v(name, fee) ON v.name = d.name
-WHERE d.program_id = '09dbe257-e659-4184-b217-fa9a15707bb5';
-
--- 2027 in-house divisions (copy 2026, explicit fees; Colt cost NULL)
-INSERT INTO public.divisions (league_id, program_id, name, age_range, cost, season_length, features,
-                              schedule_notes, display_order, default_min_roster_size, default_max_roster_size)
-SELECT d.league_id,
-       (SELECT id FROM public.programs WHERE type='in_house' AND season_id=(SELECT id FROM public.seasons WHERE year='2027')),
-       d.name, d.age_range, v.fee, d.season_length, d.features, d.schedule_notes, d.display_order,
-       d.default_min_roster_size, d.default_max_roster_size
-FROM public.divisions d
-JOIN (VALUES ('T-Ball',195::numeric),('Pinto',250),('Mustang',275),('Bronco',290),('Pony',335),('Colt',NULL))
-     v(name, fee) ON v.name = d.name
-WHERE d.program_id = '0a379f62-be88-4f89-87fc-03e621b6e786';
-
--- 2027 travel divisions (copy 2026 fees; 15U cost NULL)
-INSERT INTO public.divisions (league_id, program_id, name, age_range, cost, season_length, features,
-                              schedule_notes, display_order, default_min_roster_size, default_max_roster_size)
-SELECT d.league_id,
-       (SELECT id FROM public.programs WHERE type='travel' AND season_id=(SELECT id FROM public.seasons WHERE year='2027')),
-       d.name, d.age_range, CASE WHEN d.name='15U Travel' THEN NULL ELSE d.cost END,
-       d.season_length, d.features, d.schedule_notes, d.display_order,
-       d.default_min_roster_size, d.default_max_roster_size
-FROM public.divisions d
-WHERE d.program_id = '09dbe257-e659-4184-b217-fa9a15707bb5';
-
--- Rule: no registration into a division with no fee (keeps Colt and 15U hidden in the database, not just the UI)
-CREATE OR REPLACE FUNCTION public.guard_registration_division_fee()
-RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$
-BEGIN
-  IF NEW.division_id IS NOT NULL AND COALESCE(NEW.source,'platform') = 'platform'
-     AND EXISTS (SELECT 1 FROM public.divisions WHERE id = NEW.division_id AND cost IS NULL) THEN
-    RAISE EXCEPTION 'This division is not open for registration yet (no fee set)' USING ERRCODE='check_violation';
-  END IF;
-  RETURN NEW;
-END $$;
-CREATE TRIGGER trg_registrations_guard_division_fee
-  BEFORE INSERT ON public.registrations
-  FOR EACH ROW EXECUTE FUNCTION public.guard_registration_division_fee();
-
--- Rule: IHTT requires an in-house registration, same player and season, same checkout (or already paid/waived)
-CREATE OR REPLACE FUNCTION public.guard_ihtt_requires_in_house()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM public.programs WHERE id = NEW.program_id AND type = 'ihtt') THEN
-    RETURN NEW;
-  END IF;
-  IF NOT EXISTS (
-    SELECT 1 FROM public.registrations r
-    JOIN public.programs p ON p.id = r.program_id AND p.type = 'in_house'
-    WHERE r.player_id = NEW.player_id AND r.season_id = NEW.season_id
-      AND r.league_id = NEW.league_id AND r.lifecycle <> 'withdrawn'
-      AND ( (NEW.checkout_id IS NOT NULL AND r.checkout_id = NEW.checkout_id)
-            OR r.payment IN ('paid','waived') )
-  ) THEN
-    RAISE EXCEPTION 'IHTT registration needs an in-house registration for the same player and season in the same checkout'
-      USING ERRCODE = 'check_violation';
-  END IF;
-  RETURN NEW;
-END $$;
-REVOKE ALL ON FUNCTION public.guard_ihtt_requires_in_house() FROM PUBLIC, anon, authenticated;
-CREATE TRIGGER trg_registrations_ihtt_requires_in_house
-  BEFORE INSERT OR UPDATE OF program_id, checkout_id, season_id, player_id ON public.registrations
-  FOR EACH ROW EXECUTE FUNCTION public.guard_ihtt_requires_in_house();
-```
-
-This trigger is SECURITY DEFINER so a family's check sees the in-house row regardless of their read rights. It is a trigger function, returns nothing to the caller, and EXECUTE is revoked from every role, so it is not an RPC endpoint (our standing rule). The value of `lifecycle` for withdrawn rows will be confirmed against the live check constraint before applying. Whether the in-house fee is charged or waived (`ihtt_includes_in_house`) is a pricing step at checkout; this migration only stores the setting.
-
-```sql
--- Fee change log: insert-only, league-scoped, admin-readable
-CREATE TABLE public.division_fee_changes (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  league_id uuid NOT NULL DEFAULT public.current_league_id() REFERENCES public.leagues(id),
-  division_id uuid NOT NULL REFERENCES public.divisions(id),
-  old_cost numeric NULL,
-  new_cost numeric NULL,
-  changed_by uuid NULL,
-  changed_at timestamptz NOT NULL DEFAULT now()
-);
-GRANT SELECT ON public.division_fee_changes TO authenticated;
-GRANT ALL ON public.division_fee_changes TO service_role;
-REVOKE ALL ON public.division_fee_changes FROM anon;
-ALTER TABLE public.division_fee_changes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Admins read fee changes in their league" ON public.division_fee_changes
-  FOR SELECT TO authenticated
-  USING (league_id = public.current_league_id() AND public.has_admin_access(auth.uid()));
--- no INSERT/UPDATE/DELETE policies: only the trigger writes, nobody edits or deletes
-
-CREATE OR REPLACE FUNCTION public.log_division_fee_change()
-RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
-BEGIN
-  IF NEW.cost IS DISTINCT FROM OLD.cost THEN
-    INSERT INTO public.division_fee_changes (league_id, division_id, old_cost, new_cost, changed_by)
-    VALUES (NEW.league_id, NEW.id, OLD.cost, NEW.cost, auth.uid());
-  END IF;
-  RETURN NEW;
-END $$;
-REVOKE ALL ON FUNCTION public.log_division_fee_change() FROM PUBLIC, anon, authenticated;
-CREATE TRIGGER trg_divisions_log_fee_change
-  AFTER UPDATE OF cost ON public.divisions
-  FOR EACH ROW EXECUTE FUNCTION public.log_division_fee_change();
-```
-
-No existing RLS policy is changed. Who may edit a fee stays exactly as the current `divisions` policy allows.
-
-### Code changes for step 2
-
-- `src/pages/admin/ProgramEdit.tsx` / `Programs.tsx`: add the three new types to the type picker and labels (IHTT, Travel tryout, Clinic).
-- `src/pages/admin/DivisionEdit.tsx`: fee field accepts blank (saves NULL instead of `NaN`); add Capacity (blank = no limit) and "Waitlist when full" switch; add a "Fee history" list under the fee (date, who, old, new) read from the new log, names resolved through `profiles`.
-- `src/pages/admin/Divisions.tsx`: show "No fee set, hidden from registration" instead of `$null`.
-- Public registration and division-finder lists: filter out divisions with `cost IS NULL` (database trigger is the real gate).
-- No IHTT checkout UI this turn.
-
-### Verify step 2
-
-- Read back: 1 IHTT program, 7 IHTT divisions with the exact fees; 2027 in-house fees 195/250/275/290/335/NULL; 2027 travel 1500–2250 and 15U NULL. 2026 rows unchanged (before/after `row_to_json` comparison).
-- Rolled-back transactions:
-  - IHTT registration with no in-house row is rejected; with an in-house row sharing `checkout_id` it passes; with a paid in-house row and no checkout it passes.
-  - Registration into 2027 Colt or 15U is rejected.
-  - Updating a division fee as an admin writes one log row with old, new, who; updating name only writes none; an authenticated non-admin reads zero log rows; anon gets permission denied.
-  - `guard_ihtt_requires_in_house` and `log_division_fee_change` are not executable by `anon` or `authenticated`.
-- Browser: edit a fee on the admin division page and see the history line appear.
-
-### Undo step 2
-
-```sql
-DROP TRIGGER trg_divisions_log_fee_change ON public.divisions;
-DROP FUNCTION public.log_division_fee_change();
-DROP TABLE public.division_fee_changes;           -- log only; empty until fees are edited
-DROP TRIGGER trg_registrations_ihtt_requires_in_house ON public.registrations;
-DROP FUNCTION public.guard_ihtt_requires_in_house();
-DROP TRIGGER trg_registrations_guard_division_fee ON public.registrations;
-DROP FUNCTION public.guard_registration_division_fee();
-DELETE FROM public.divisions WHERE program_id IN
-  (SELECT id FROM public.programs WHERE season_id = (SELECT id FROM public.seasons WHERE year='2027'));
-DELETE FROM public.programs WHERE type = 'ihtt';
-ALTER TABLE public.registrations DROP COLUMN checkout_id;
-ALTER TABLE public.divisions DROP COLUMN waitlist_enabled, DROP COLUMN capacity;
-ALTER TABLE public.leagues DROP COLUMN ihtt_includes_in_house;
-```
-Undo is safe only while these columns hold no real data; after registrations open, columns are deprecated instead of dropped. Revert the four admin/public files.
-
-## Order of application
-
-1. Migration 1a, verify, banner code, verify.
-2. Migration 2a (enum), verify.
-3. Migration 2b, verify, code changes, verify.
-After each: list of what changed and the undo above.
+- In tests that are rolled back, impersonate one user per role and confirm allowed tables return rows. Confirm denied tables return zero rows or a permission error: treasurer on players and player_documents, background_checks on players, commissioner registration update fails.
+- Confirm anon still can't call the new functions.
+- Check the sidebar and a direct URL per role in the browser at 390, 768 and 1440 widths.
