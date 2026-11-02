@@ -26,6 +26,6 @@
 - [ ] Pending test runs (board, end of build): new family + two kids; second family can't see them; split-household contact/medical; conflict review end to end; sign a form, reload, status stays; commissioner cannot read signatures; re-sign after a required new version; real cart lock, help request hold and comp with test families; screens at 390/768/1280 light and dark
 - [x] Phase 3: forms and waivers (built Nov 2; five forms carry PLACEHOLDER wording until the league supplies final text)
 - [x] Phase 4: fees, discounts, cart total, help-paying holds, comps (built Nov 2; values are working values to confirm)
-- [ ] Phase 5: Stripe test checkout + paid status (needs Stripe test key)
+- [x] Phase 5: Stripe test checkout, ledger, holds, offline, plans (built; waiting on Stripe test key + webhook secret for live card/bank tests)
 - [ ] Phase 6: league office registration views; Household to-dos read real status
 - [ ] Phase 7: builder layout on top of real steps

@@ -54,7 +54,7 @@ export const MoneySetup = ({ seasonId, roles }: { seasonId: string; roles: strin
             <div><dt className="text-muted-foreground">Early bird</dt><dd>${Number(s.early_bird_amount).toFixed(0)} off each registration until {longDate(s.early_bird_ends_on)}</dd></div>
             <div><dt className="text-muted-foreground">Sibling discount</dt><dd>${Number(s.sibling_amount).toFixed(0)} off each additional child</dd></div>
             <div><dt className="text-muted-foreground">Late fee</dt><dd>${Number(s.late_fee_amount).toFixed(0)} after the close date</dd></div>
-            <div><dt className="text-muted-foreground">Seat hold</dt><dd>{s.seat_hold_minutes} minutes at checkout</dd></div>
+            <div><dt className="text-muted-foreground">Seat hold</dt><dd>{Math.round(s.seat_hold_minutes / 60)} hours, shown to families as a stated time</dd></div>
           </dl>
           {canEdit ? (
             <div className="space-y-3 border-t border-border pt-4">

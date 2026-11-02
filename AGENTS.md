@@ -13,3 +13,4 @@
 - Sign-in, reset and two-step screens use `src/components/AuthShell.tsx`, which shares `src/components/shell/LitHeader.tsx` with AppShell; /admin/login only redirects to /login. Why: one header for every signed-in-look screen and one sign-in address.
 
 - Division placement is decided only by the database function `division_eligibility` (mode per division, ages derived from the season cutoff); families start registrations only through `start_my_registration`. Why: one placement rule the registrar can trust, never chosen in the browser.
+- Money enters the ledger only through `ingest_payment_event` (Stripe webhook and nightly sweep, both via `supabase/functions/_shared/stripe-ledger.ts`) or `record_offline_payment`; registration payment status is derived from the `payments` ledger by `recompute_cart_payment`, and `payments` rows are insert-only. Why: one idempotent path, so redelivered events and sweeps never double-count.
