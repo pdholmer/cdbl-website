@@ -153,17 +153,18 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
           label={label ?? AREA_LABEL[area]}
           title={headline}
           sealPhoneOnly
+          notice={
+            area === "family" ? (
+              /* Family phones have no More sheet, so the way back to the public site lives here. */
+              <Link
+                to="/"
+                className="md:hidden -mr-1 inline-flex min-h-[44px] items-center px-1 text-[13px] font-semibold text-foreground/90 underline decoration-foreground/40 underline-offset-2 hover:decoration-foreground"
+              >
+                Back to cdbaseball.org
+              </Link>
+            ) : undefined
+          }
           actions={
-            <>
-              {/* Family phones have no More sheet, so the way back to the public site lives here. */}
-              {area === "family" && (
-                <Link
-                  to="/"
-                  className="md:hidden mr-auto inline-flex min-h-[44px] items-center self-start text-[13px] font-semibold text-foreground/90 underline decoration-foreground/40 underline-offset-2 hover:decoration-foreground"
-                >
-                  Back to cdbaseball.org
-                </Link>
-              )}
               <Link to="/account" aria-label="Account" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
                 <UserRound className="h-5 w-5" aria-hidden />
               </Link>
