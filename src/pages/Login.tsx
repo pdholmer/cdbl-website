@@ -12,7 +12,7 @@ import { AuthShell } from "@/components/AuthShell";
 import { PasswordInput } from "@/components/PasswordInput";
 import { MIN_PASSWORD_LENGTH, passwordProblem } from "@/lib/password";
 
-type Mode = "signin" | "signup" | "forgot" | "forgot-sent" | "signup-sent";
+type Mode = "signin" | "signup" | "forgot" | "forgot-sent" | "signup-sent" | "unconfirmed";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -72,6 +72,10 @@ const Login = () => {
     const { error } = await supabase.auth.signInWithPassword({ email: a, password });
     setBusy(false);
     if (error) {
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        setMode("unconfirmed");
+        return;
+      }
       toast.error(
         error.message === "Invalid login credentials"
           ? "That email and password don't match. If you've never set a password, use Forgot password."
@@ -79,6 +83,20 @@ const Login = () => {
       );
     }
     // onAuthStateChange routes on success
+  };
+
+  const handleResendConfirmation = async () => {
+    const a = cleanEmail();
+    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    setBusy(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: a,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
+    });
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success("Confirmation email sent. Check your inbox.");
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -250,11 +268,33 @@ const Login = () => {
               <CardDescription>
                 {mode === "forgot-sent"
                   ? "If there's an account for this address, a reset link is on its way to:"
-                  : "Confirm your address to finish creating your account. We sent a link to:"}
+                  : "Check your email to confirm your account. We sent a link to:"}
               </CardDescription>
               <p className="mt-2 break-all font-heading text-xl font-semibold">{cleanEmail()}</p>
             </CardHeader>
             <CardContent>{backLink}</CardContent>
+          </>
+        )}
+
+        {mode === "unconfirmed" && (
+          <>
+            <CardHeader>
+              <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Mail className="h-6 w-6 text-primary" />
+              </div>
+              <CardTitle className="font-heading text-2xl">Confirm your email first</CardTitle>
+              <CardDescription>
+                This account isn't confirmed yet. We sent a confirmation link to:
+              </CardDescription>
+              <p className="mt-2 break-all font-heading text-xl font-semibold">{cleanEmail()}</p>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button className="h-12 w-full" onClick={handleResendConfirmation} disabled={busy}>
+                {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Resend confirmation email
+              </Button>
+              {backLink}
+            </CardContent>
           </>
         )}
       </Card>
