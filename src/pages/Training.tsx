@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { AppShell } from "@/components/shell/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,9 +26,8 @@ const Training = () => {
   }, {});
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1">
+    <AppShell area="auto" title="Training">
+      <div className="flex-1">
         <section className="py-10 md:py-16 text-primary-foreground" style={{ background: "var(--gradient-hero)" }}>
           <div className="container px-4">
             <div className="flex items-center gap-3 mb-3">
@@ -110,9 +108,8 @@ const Training = () => {
             )}
           </div>
         </section>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppShell>
   );
 };
 

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { AppShell } from "@/components/shell/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -155,9 +154,8 @@ const SituationDetail = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1 bg-background">
+    <AppShell area="auto" title="Training">
+      <div className="flex-1 bg-background">
         <div className="container px-4 max-w-2xl py-4 md:py-8">
           <Link
             to="/training"
@@ -333,9 +331,8 @@ const SituationDetail = () => {
 
           )}
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AppShell>
   );
 };
 

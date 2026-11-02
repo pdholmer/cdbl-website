@@ -1,3 +1,4 @@
+import { AppShell } from "@/components/shell/AppShell";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,7 +12,6 @@ import {
   ListRow,
   StatusChip,
   EmptyStateBlock,
-  FamilyHeader,
 } from "@/components/family";
 import HouseholdEditSheet from "@/components/family/HouseholdEditSheet";
 import { useHouseholdOverview, type FamilyEvent } from "@/hooks/useHouseholdOverview";
@@ -81,8 +81,7 @@ const Household = () => {
   );
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background pb-16">
-      <FamilyHeader context="Household" />
+    <AppShell area="auto" title="Household">
       <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 lg:px-8 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
         {isLoading ? (
           <div className="space-y-4">
@@ -150,7 +149,7 @@ const Household = () => {
             <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
             <div className="space-y-8">
             {/* Your family */}
-            <section>
+            <section id="family" className="scroll-mt-4">
               <SectionLabel>Your family</SectionLabel>
               <GroupedCard flush>
                 {data && data.children.length > 0 ? (
@@ -181,7 +180,7 @@ const Household = () => {
             </section>
 
             {/* Guardians */}
-            <section>
+            <section id="guardians" className="scroll-mt-4">
               <SectionLabel>Guardians</SectionLabel>
               <GroupedCard flush>
                 {data?.guardians.map((g) => (
@@ -212,7 +211,7 @@ const Household = () => {
             <div className="space-y-8">
             {/* Per-child team + coach */}
             {data?.children.map((c) => (
-              <section key={`team-${c.id}`}>
+              <section id="team" className="scroll-mt-4" key={`team-${c.id}`}>
                 <SectionLabel>{c.display_name}'s team</SectionLabel>
                 <GroupedCard flush>
                   {c.team_name ? (
@@ -274,7 +273,7 @@ const Household = () => {
             ))}
 
             {/* Schedule */}
-            <section>
+            <section id="upcoming" className="scroll-mt-4">
               <SectionLabel>Upcoming</SectionLabel>
               <GroupedCard flush>
                 {data && data.children.some((c) => c.next_events.length > 0) ? (
@@ -315,7 +314,7 @@ const Household = () => {
           onSaved={() => refetch()}
         />
       )}
-    </div>
+    </AppShell>
   );
 };
 

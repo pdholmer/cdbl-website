@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import seal from "@/assets/cdbl-seal.png";
 import { fetchMyRoles } from "@/lib/adminAccess";
-import { resolveLanding } from "@/lib/landing";
+import { hasGuardianRecord, resolveLanding } from "@/lib/landing";
 import { adminGroupLabel, adminGroupsFor, tabsFor, type NavLinkItem, type ShellArea } from "@/lib/shellNav";
 import { cn } from "@/lib/utils";
 
@@ -39,8 +39,7 @@ const useShellIdentity = (fixed: AppShellProps["area"]) => {
           if (alive) setArea(l === "/admin" ? "admin" : l === "/coach" ? "coach" : "family");
         } catch { /* stay family */ }
       }
-      const { count } = await supabase.from("guardians").select("id", { count: "exact", head: true }).eq("auth_user_id", session.user.id);
-      if (alive) setHasHousehold((count ?? 0) > 0);
+      try { const h = await hasGuardianRecord(session.user.id); if (alive) setHasHousehold(h); } catch { /* hide link */ }
     });
     return () => { alive = false; };
   }, [fixed]);
@@ -94,7 +93,6 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
   const footerLinks: NavLinkItem[] = [
     { label: "Account", to: "/account" },
     ...(area === "admin" && hasHousehold ? [{ label: "My household", to: "/household" }] : []),
-    ...(area === "family" && roles.length > 0 && area !== "family" ? [] : []),
     { label: "Return to site", to: "/" },
   ];
 
