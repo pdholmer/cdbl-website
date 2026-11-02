@@ -1,7 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-/** Roles the /admin guard admits today (ProtectedRoute requireBoardMember). */
-export const ADMIN_PANEL_ROLES = ["admin", "board_member"] as const;
+import { ADMIN_PANEL_ROLES } from "@/lib/adminAccess";
 
 export type Landing = "/admin" | "/coach" | "/household";
 
