@@ -301,6 +301,8 @@ All colors MUST be HSL.
     background-color: #003DA5 !important; color: #fff !important; border-color: transparent !important;
   }
   html.ngb.dark .text-destructive { color: #F2B8B5; }
+  /* CDBL Blue is too dark for text on dark surfaces; links use foreground with an underline there. */
+  html.ngb.dark .text-primary:not(.is-selected) { color: hsl(var(--foreground)); text-decoration-line: underline; text-underline-offset: 4px; }
 
   /*
    * EDGE-BAR BAN (Night Game Builder, Paul Nov 2 2026). Applies to every signed-in surface.
