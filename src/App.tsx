@@ -83,6 +83,8 @@ import HouseholdNew from "./pages/HouseholdNew";
 import EmailBounces from "./pages/admin/EmailBounces";
 import Requests from "./pages/admin/Requests";
 import RequestDetail from "./pages/admin/RequestDetail";
+import RegistrationSetup from "./pages/admin/RegistrationSetup";
+import HouseholdRegister from "./pages/HouseholdRegister";
 import Training from "./pages/Training";
 
 const queryClient = new QueryClient();
@@ -132,6 +134,7 @@ const App = () => (
           <Route path="/account" element={<Account />} />
           <Route path="/household" element={<Household />} />
           <Route path="/household/new" element={<HouseholdNew />} />
+          <Route path="/household/register/:playerId" element={<HouseholdRegister />} />
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLoginRedirect />} />
           <Route path="/admin/email-bounces" element={<ProtectedRoute requireBoardMember><EmailBounces /></ProtectedRoute>} />
@@ -157,6 +160,7 @@ const App = () => (
           <Route path="/admin/support" element={<ProtectedRoute requireBoardMember><Support /></ProtectedRoute>} />
           <Route path="/admin/support/new" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
           <Route path="/admin/support/:id" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
+          <Route path="/admin/registration-setup" element={<ProtectedRoute requireBoardMember><RegistrationSetup /></ProtectedRoute>} />
           <Route path="/admin/requests" element={<ProtectedRoute requireBoardMember><Requests /></ProtectedRoute>} />
           <Route path="/admin/requests/:id" element={<ProtectedRoute requireBoardMember><RequestDetail /></ProtectedRoute>} />
           <Route path="/admin/feedback" element={<ProtectedRoute requireBoardMember><Feedback /></ProtectedRoute>} />

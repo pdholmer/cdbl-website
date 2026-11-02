@@ -14,6 +14,7 @@ export const ADMIN_GROUPS: NavGroup[] = [
   { label: "Run the season", items: [
     { label: "Registrations", to: "/admin/commissioner?tab=registrations" },
     { label: "Players", to: "/admin/players" },
+    { label: "Registration setup", to: "/admin/registration-setup" },
     { label: "Teams and coaches", to: "/admin/teams" },
     { label: "Coaches", to: "/admin/coaches" },
     { label: "Draft", to: "/admin/drafts" },
