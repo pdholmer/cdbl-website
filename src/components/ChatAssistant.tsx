@@ -250,7 +250,7 @@ export const ChatAssistant = () => {
       {!isOpen && (
         <Button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 [.ngb_className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"]:max-md:bottom-[calc(88px+env(safe-area-inset-bottom))]"
           size="icon"
           aria-label="Chat with CDBL Assistant"
         >

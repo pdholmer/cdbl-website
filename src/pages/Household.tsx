@@ -210,8 +210,8 @@ const Household = () => {
             </div>
             <div className="space-y-8">
             {/* Per-child team + coach */}
-            {data?.children.map((c) => (
-              <section id="team" className="scroll-mt-4" key={`team-${c.id}`}>
+            {data?.children.map((c, ci) => (
+              <section id={ci === 0 ? "team" : undefined} className="scroll-mt-4" key={`team-${c.id}`}>
                 <SectionLabel>{c.display_name}'s team</SectionLabel>
                 <GroupedCard flush>
                   {c.team_name ? (

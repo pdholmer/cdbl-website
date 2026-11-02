@@ -301,6 +301,38 @@ All colors MUST be HSL.
     background-color: #003DA5 !important; color: #fff !important; border-color: transparent !important;
   }
   html.ngb.dark .text-destructive { color: #F2B8B5; }
+
+  /*
+   * EDGE-BAR BAN (Night Game Builder, Paul Nov 2 2026). Applies to every signed-in surface.
+   * Never put a colored bar on the left, right or top edge of a card, list row, menu item,
+   * tab, sidebar link or table row. That means: no colored border-left / border-top /
+   * border-right accents, no ::before / ::after strips, no inset box-shadow bars, no thin
+   * absolutely positioned colored divs along an edge.
+   * Selection and emphasis are shown only by a full flood: .is-selected (selected states),
+   * .card-flood (the one most important card on a screen), .card-alert (problems needing action).
+   * Neutral 1px borders in the border token are allowed. At most one flood card per screen.
+   */
+
+  /* Lit header ("stage") and piping line. */
+  html.ngb .ngb-stage {
+    background-color: #E2E7EE;
+    background-image: radial-gradient(ellipse 70% 120% at 100% 0%, rgba(255,255,255,.85), transparent 60%),
+      repeating-linear-gradient(135deg, var(--twill) 0 1px, transparent 1px 5px);
+  }
+  html.ngb.dark .ngb-stage {
+    background-color: #0E1518;
+    background-image: radial-gradient(ellipse 70% 120% at 100% 0%, rgba(255,255,255,.22), transparent 60%),
+      radial-gradient(ellipse 60% 120% at 0% 0%, rgba(80,140,150,.22), transparent 60%),
+      repeating-linear-gradient(135deg, var(--twill) 0 1px, transparent 1px 5px);
+  }
+  html.ngb .ngb-headline { font-size: 40px; }
+  @media (min-width: 768px) { html.ngb .ngb-headline { font-size: clamp(34px, 4.2vw, 56px); } }
+  html.ngb .ngb-piping {
+    height: 3px;
+    --pipe-gap: #221F20;
+    background: linear-gradient(90deg, #003DA5 0 70%, var(--pipe-gap) 70% 76%, #003DA5 76% 100%);
+  }
+  html.ngb.dark .ngb-piping { --pipe-gap: #FFFFFF; }
   /* One outline icon style, current color. */
   html.ngb svg.lucide { stroke-width: 1.75; }
 }
