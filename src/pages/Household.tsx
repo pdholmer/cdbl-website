@@ -47,6 +47,16 @@ const Household = () => {
   const [adding, setAdding] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  // Registration, forms, payment and seat status come only from my_registration_status().
+  const { data: regs } = useQuery({
+    queryKey: ["my-registration-status"],
+    enabled: !!data?.household,
+    queryFn: async () => {
+      const { data: rows, error: e } = await supabase.rpc("my_registration_status");
+      if (e) throw e;
+      return (rows ?? []) as RegStatus[];
+    },
+  });
   const signOut = async () => {
     await supabase.auth.signOut();
     toast.success("Signed out");
@@ -65,16 +75,6 @@ const Household = () => {
   const children = data?.children ?? [];
   const selected = children.find((c) => c.id === selectedId) ?? children[0] ?? null;
 
-  // Registration, forms, payment and seat status come only from my_registration_status().
-  const { data: regs } = useQuery({
-    queryKey: ["my-registration-status"],
-    enabled: !!household,
-    queryFn: async () => {
-      const { data: rows, error: e } = await supabase.rpc("my_registration_status");
-      if (e) throw e;
-      return (rows ?? []) as RegStatus[];
-    },
-  });
   const nameOf = (pid: string) => children.find((c) => c.id === pid)?.display_name ?? "your player";
 
   // To-dos come only from data this page already loads.
