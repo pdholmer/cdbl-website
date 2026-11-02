@@ -16,4 +16,6 @@ describe("admin section access", () => {
   });
   it("board member still blocked from admin-only reports", () => expect(canAccessAdminPath(["board_member"], "/admin/reports")).toBe(false));
   it("parent cannot open the admin home", () => expect(canAccessAdminPath(["parent"], "/admin")).toBe(false));
+  it("treasurer cannot open requests", () => expect(canAccessAdminPath(["treasurer"], "/admin/requests")).toBe(false));
+  it("board member can open requests", () => expect(canAccessAdminPath(["board_member"], "/admin/requests/abc")).toBe(true));
 });

@@ -7,3 +7,4 @@
 - Where a user lands after sign-in is decided only in `src/lib/landing.ts` (staff roles -> /admin, coach -> /coach, else /household). Why: one place to change routing; /admin and /coach guards still run the two-step check.
 - Which admin sections a role may open is decided only in `src/lib/adminAccess.ts`; the database policies are the real enforcement and the UI map must never grant more than they do. Why: hidden menus are not security.
 - Public program lists come only from the `programs` function, filtered to the current season. Why: next season's programs must never show beside this season's.
+- Site assistant conversations and help requests are written only by the ai-assistant and submit-assistant-request backend functions (service role) and read only by admin and board_member. Why: signed-out visitors use the assistant, so the browser must never write or read these logs directly.

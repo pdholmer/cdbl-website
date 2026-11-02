@@ -71,7 +71,6 @@ import { CoachLayout } from "./components/CoachLayout";
 import CoachDashboard from "./pages/coach/Dashboard";
 import CoachDraftRoom from "./pages/coach/DraftRoom";
 import { FeedbackProvider } from "./contexts/FeedbackContext";
-import { FeedbackFAB, FeedbackSlider } from "./components/feedback";
 import OAuthConsent from "./pages/OAuthConsent";
 import GuardianLogin from "./pages/Login";
 import TwoStepSetup from "./pages/TwoStepSetup";
@@ -79,6 +78,8 @@ import TwoStepVerify from "./pages/TwoStepVerify";
 import Household from "./pages/Household";
 import HouseholdNew from "./pages/HouseholdNew";
 import EmailBounces from "./pages/admin/EmailBounces";
+import Requests from "./pages/admin/Requests";
+import RequestDetail from "./pages/admin/RequestDetail";
 import Training from "./pages/Training";
 
 const queryClient = new QueryClient();
@@ -92,8 +93,6 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <ChatAssistant />
-          <FeedbackFAB />
-          <FeedbackSlider />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
@@ -153,6 +152,8 @@ const App = () => (
           <Route path="/admin/support" element={<ProtectedRoute requireBoardMember><Support /></ProtectedRoute>} />
           <Route path="/admin/support/new" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
           <Route path="/admin/support/:id" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
+          <Route path="/admin/requests" element={<ProtectedRoute requireBoardMember><Requests /></ProtectedRoute>} />
+          <Route path="/admin/requests/:id" element={<ProtectedRoute requireBoardMember><RequestDetail /></ProtectedRoute>} />
           <Route path="/admin/feedback" element={<ProtectedRoute requireBoardMember><Feedback /></ProtectedRoute>} />
           <Route path="/admin/users" element={<ProtectedRoute requireBoardMember><Users /></ProtectedRoute>} />
           <Route path="/admin/communication" element={<ProtectedRoute requireBoardMember><Communication /></ProtectedRoute>} />

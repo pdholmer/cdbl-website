@@ -13,6 +13,16 @@ interface Message {
   errorType?: 'credits_exhausted' | 'rate_limited' | 'gateway_rate_limited' | 'server_error';
 }
 
+interface Draft { kind: 'help' | 'problem' | 'feedback'; name: string; email: string; summary: string; details: string; page: string }
+
+const SESSION_STORE = 'cdbl-assistant-session';
+const getSessionKey = () => {
+  let k = sessionStorage.getItem(SESSION_STORE);
+  if (!k) { k = crypto.randomUUID(); sessionStorage.setItem(SESSION_STORE, k); }
+  return k;
+};
+const kindLabel = (k: Draft['kind']) => (k === 'problem' ? 'Problem report' : k === 'feedback' ? 'Feedback' : 'Help request');
+
 // Map routes to context labels for the AI
 const getPageContext = (pathname: string): { page: string; module: string } => {
   if (pathname.startsWith('/admin')) {
@@ -59,6 +69,10 @@ export const ChatAssistant = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userRoles, setUserRoles] = useState<string[]>([]);
+  const [draft, setDraft] = useState<Draft | null>(null);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Fetch user roles when component mounts
@@ -96,6 +110,8 @@ export const ChatAssistant = () => {
     try {
       const { data, error } = await supabase.functions.invoke('ai-assistant', {
         body: { 
+          sessionKey: getSessionKey(),
+          website: honeypot,
           messages: [...messages.filter(m => m.role !== 'error'), { role: 'user', content: userMessage }],
           context: {
             page: pageContext.page,
@@ -129,6 +145,7 @@ export const ChatAssistant = () => {
       }
 
       setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+      if (data.draft) { setDraft({ ...data.draft, page: data.draft.page || location.pathname }); setSendError(null); }
     } catch (error: any) {
       console.error('Chat error:', error);
       
@@ -158,10 +175,33 @@ export const ChatAssistant = () => {
     }
   };
 
+  const sendRequest = async () => {
+    if (!draft || sending) return;
+    setSending(true);
+    setSendError(null);
+    const { data, error } = await supabase.functions.invoke('submit-assistant-request', {
+      body: { sessionKey: getSessionKey(), website: honeypot, ...draft },
+    });
+    setSending(false);
+    if (error || !data?.ok) {
+      setSendError("That didn't go through. Check the email address and try again.");
+      return;
+    }
+    setDraft(null);
+    setMessages(prev => [...prev, { role: 'assistant', content: `Sent. The league has your ${kindLabel(draft.kind).toLowerCase()} and will reply to ${draft.email}.` }]);
+  };
+
+  const editRequest = () => {
+    setDraft(null);
+    setMessages(prev => [...prev, { role: 'assistant', content: 'No problem. Tell me what to change.' }]);
+  };
+
   const suggestedQuestions = [
     "What's the difference between In-House and Travel?",
     "When does registration open?",
-    "How much does it cost to join?"
+    "How much does it cost to join?",
+    "I need help from a person",
+    "Something on the site isn't working"
   ];
 
   const renderMessage = (msg: Message, idx: number) => {
@@ -219,7 +259,7 @@ export const ChatAssistant = () => {
       )}
 
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-xl z-50 flex flex-col">
+        <Card className="fixed inset-x-2 bottom-2 sm:inset-x-auto sm:bottom-6 sm:right-6 sm:w-96 h-[min(560px,85vh)] shadow-xl z-50 flex flex-col">
           <div className="flex items-center justify-between p-4 border-b">
             <h3 className="font-semibold">CDBL Assistant</h3>
             <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
@@ -242,6 +282,25 @@ export const ChatAssistant = () => {
                 </div>
               )}
               
+              {draft && (
+                <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 space-y-2" aria-live="polite">
+                  <p className="text-sm font-semibold text-primary">{kindLabel(draft.kind)}</p>
+                  <p className="text-sm text-foreground">{draft.summary}</p>
+                  <dl className="text-xs text-muted-foreground space-y-1">
+                    <div><dt className="inline font-medium">From: </dt><dd className="inline">{draft.name} ({draft.email})</dd></div>
+                    {draft.page && <div><dt className="inline font-medium">Page: </dt><dd className="inline">{draft.page}</dd></div>}
+                    {draft.details && <div><dt className="inline font-medium">Details: </dt><dd className="inline">{draft.details}</dd></div>}
+                  </dl>
+                  {sendError && <p className="text-xs text-destructive">{sendError}</p>}
+                  <div className="flex gap-2 pt-1">
+                    <Button size="sm" className="min-h-11 flex-1" onClick={sendRequest} disabled={sending}>
+                      {sending ? 'Sending...' : sendError ? 'Try again' : 'Send request'}
+                    </Button>
+                    <Button size="sm" variant="outline" className="min-h-11" onClick={editRequest} disabled={sending}>Edit</Button>
+                  </div>
+                </div>
+              )}
+
               {messages.length === 1 && (
                 <div className="space-y-2 mt-4">
                   <p className="text-sm text-muted-foreground">Try asking:</p>
@@ -250,7 +309,7 @@ export const ChatAssistant = () => {
                       key={idx}
                       variant="outline"
                       size="sm"
-                      className="w-full text-left justify-start h-auto py-2"
+                      className="w-full text-left justify-start h-auto min-h-11 py-2 whitespace-normal"
                       onClick={() => setInput(q)}
                     >
                       {q}
@@ -262,6 +321,8 @@ export const ChatAssistant = () => {
           </ScrollArea>
 
           <div className="p-4 border-t">
+            <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"
+              className="hidden" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
             <div className="flex gap-2">
               <Input
                 value={input}
