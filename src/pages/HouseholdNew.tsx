@@ -1,171 +1,104 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { AppShell } from "@/components/shell/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
+/** First-time family setup. Writes only through the create_my_household function. */
 const HouseholdNew = () => {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const [authed, setAuthed] = useState<boolean | null>(null);
-  const [name, setName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [f, setF] = useState({
+    first: "", last: "", phone: "", relationship: "",
+    a1: "", a2: "", city: "", state: "IL", zip: "", d301: "",
+  });
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setAuthed(!!data.session);
-      if (data.session?.user?.email && !name) {
-        const guess = data.session.user.email.split("@")[0];
-        setName(`${guess.charAt(0).toUpperCase()}${guess.slice(1)} Household`);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    supabase.auth.getSession().then(({ data }) => setAuthed(!!data.session));
   }, []);
 
   if (authed === false) return <Navigate to="/login?next=/household/new" replace />;
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setF((s) => ({ ...s, [k]: e.target.value }));
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      toast.error("Please enter a household name.");
-      return;
-    }
+    setErr(null);
     setSaving(true);
-    const { data: userData } = await supabase.auth.getUser();
-    const uid = userData.user?.id;
-    const email = userData.user?.email ?? null;
-    if (!uid) {
-      toast.error("Session expired. Please sign in again.");
-      setSaving(false);
-      navigate("/login");
-      return;
-    }
-
-    // Belt-and-suspenders: never create a second household for a guardian who
-    // already has one (the old broken embed caused duplicate-creation laps).
-    const { data: existingGuardianRow, error: existingGuardianError } = await supabase
-      .from("guardians")
-      .select("id")
-      .eq("auth_user_id", uid)
-      .maybeSingle();
-
-    if (existingGuardianError) {
-      toast.error(existingGuardianError.message);
-      setSaving(false);
-      return;
-    }
-
-    if (existingGuardianRow?.id) {
-      const { data: existingLink, error: existingLinkError } = await supabase
-        .from("guardian_households")
-        .select("household_id")
-        .eq("guardian_id", existingGuardianRow.id)
-        .limit(1)
-        .maybeSingle();
-
-      if (existingLinkError) {
-        toast.error(existingLinkError.message);
-        setSaving(false);
-        return;
-      }
-
-      if (existingLink?.household_id) {
+    const { error } = await supabase.rpc("create_my_household", {
+      _first_name: f.first, _last_name: f.last, _phone: f.phone, _relationship: f.relationship,
+      _address_line1: f.a1, _address_line2: f.a2, _city: f.city, _state: f.state, _zip_code: f.zip,
+      _d301_attestation: f.d301,
+    });
+    setSaving(false);
+    if (error) {
+      if (error.message.includes("already have a household")) {
         navigate("/household", { replace: true });
         return;
       }
-    }
-
-    // NOTE: A parent-facing bootstrap policy is not yet in place. Until it lands,
-    // these inserts will only succeed for admins. This UI is scaffolding.
-
-    const { data: hh, error: hhError } = await supabase
-      .from("households")
-      .insert({ name: name.trim() })
-      .select("id")
-      .single();
-
-    if (hhError || !hh) {
-      toast.error(hhError?.message ?? "Could not create household.");
-      setSaving(false);
+      setErr(error.message);
       return;
     }
-
-    // Ensure a guardians row for this auth user
-    let guardianId: string | null = null;
-    const { data: existingGuardian } = await supabase
-      .from("guardians")
-      .select("id")
-      .eq("auth_user_id", uid)
-      .maybeSingle();
-
-    if (existingGuardian?.id) {
-      guardianId = existingGuardian.id;
-    } else {
-      const { data: newGuardian, error: gError } = await supabase
-        .from("guardians")
-        .insert({ auth_user_id: uid, email })
-        .select("id")
-        .single();
-      if (gError || !newGuardian) {
-        toast.error(gError?.message ?? "Could not create guardian record.");
-        setSaving(false);
-        return;
-      }
-      guardianId = newGuardian.id;
-    }
-
-    const { error: linkError } = await supabase
-      .from("guardian_households")
-      .insert({ guardian_id: guardianId, household_id: hh.id, is_primary: true });
-
-    if (linkError) {
-      toast.error(linkError.message);
-      setSaving(false);
-      return;
-    }
-
-    toast.success("Household created!");
+    await qc.invalidateQueries({ queryKey: ["household-overview"] });
     navigate("/household", { replace: true });
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="font-heading">Create your household</CardTitle>
-          <CardDescription>
-            Welcome! Let's set up your family record so you can register players and manage roster
-            details.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleCreate} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Household name</Label>
-              <Input
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="The Smith Family"
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={saving}>
-              {saving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating…
-                </>
-              ) : (
-                "Create household"
-              )}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+  const field = (id: keyof typeof f, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}) => (
+    <div className="space-y-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <Input id={id} value={f[id]} onChange={set(id)} className="h-11" {...props} />
     </div>
+  );
+
+  return (
+    <AppShell area="family" label="2027 season, In-House" title="Set up your household">
+      <div className="mx-auto w-full max-w-xl px-4 py-8 sm:px-6">
+        <form onSubmit={submit} className="tex-mesh space-y-6 rounded-xl border border-border bg-card p-5">
+          <p className="text-[15px] text-muted-foreground">
+            Tell us who you are and where you live. You can add your players next.
+          </p>
+          <fieldset className="space-y-4">
+            <legend className="mb-2 font-label text-[17px] font-semibold">You</legend>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {field("first", "First name", { required: true, autoComplete: "given-name" })}
+              {field("last", "Last name", { required: true, autoComplete: "family-name" })}
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {field("phone", "Mobile phone", { type: "tel", autoComplete: "tel", inputMode: "tel" })}
+              {field("relationship", "Relationship to players", { placeholder: "Parent" })}
+            </div>
+          </fieldset>
+          <fieldset className="space-y-4">
+            <legend className="mb-2 font-label text-[17px] font-semibold">Home address</legend>
+            {field("a1", "Street address", { required: true, autoComplete: "address-line1" })}
+            {field("a2", "Apartment or unit (optional)", { autoComplete: "address-line2" })}
+            <div className="grid grid-cols-[1fr_72px_110px] gap-3">
+              {field("city", "City", { required: true, autoComplete: "address-level2" })}
+              {field("state", "State", { required: true, maxLength: 2, autoComplete: "address-level1" })}
+              {field("zip", "ZIP", { required: true, inputMode: "numeric", autoComplete: "postal-code" })}
+            </div>
+          </fieldset>
+          <fieldset className="space-y-2">
+            <legend className="mb-2 font-label text-[17px] font-semibold">Residency</legend>
+            <p className="text-sm text-muted-foreground">
+              CDBL is for families who live in Community Unit School District 301. Type D301 to confirm that you do.
+            </p>
+            {field("d301", "Type D301", { required: true, autoCapitalize: "characters", autoComplete: "off" })}
+          </fieldset>
+          {err && <p role="alert" className="text-sm font-semibold text-destructive">{err}</p>}
+          <Button type="submit" disabled={saving} className="h-12 w-full rounded-full text-base">
+            {saving ? "Saving" : "Save household"}
+          </Button>
+        </form>
+      </div>
+    </AppShell>
   );
 };
 
