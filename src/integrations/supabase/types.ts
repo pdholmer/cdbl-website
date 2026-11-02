@@ -332,6 +332,7 @@ export type Database = {
           locked_total: number | null
           season_id: string
           status: string
+          stripe_session_id: string | null
         }
         Insert: {
           created_at?: string
@@ -346,6 +347,7 @@ export type Database = {
           locked_total?: number | null
           season_id: string
           status?: string
+          stripe_session_id?: string | null
         }
         Update: {
           created_at?: string
@@ -360,6 +362,7 @@ export type Database = {
           locked_total?: number | null
           season_id?: string
           status?: string
+          stripe_session_id?: string | null
         }
         Relationships: [
           {
@@ -2712,6 +2715,41 @@ export type Database = {
           },
         ]
       }
+      job_heartbeats: {
+        Row: {
+          detail: Json
+          id: string
+          job_key: string
+          league_id: string
+          ok: boolean
+          ran_at: string
+        }
+        Insert: {
+          detail?: Json
+          id?: string
+          job_key: string
+          league_id?: string
+          ok: boolean
+          ran_at?: string
+        }
+        Update: {
+          detail?: Json
+          id?: string
+          job_key?: string
+          league_id?: string
+          ok?: boolean
+          ran_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_heartbeats_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       league_events: {
         Row: {
           category: string
@@ -3372,6 +3410,161 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      payment_expectations: {
+        Row: {
+          amount: number
+          cancelled_at: string | null
+          cart_id: string
+          created_at: string
+          created_by: string | null
+          due_on: string
+          household_id: string
+          id: string
+          kind: string
+          league_id: string
+          reference_code: string
+        }
+        Insert: {
+          amount: number
+          cancelled_at?: string | null
+          cart_id: string
+          created_at?: string
+          created_by?: string | null
+          due_on: string
+          household_id: string
+          id?: string
+          kind: string
+          league_id?: string
+          reference_code: string
+        }
+        Update: {
+          amount?: number
+          cancelled_at?: string | null
+          cart_id?: string
+          created_at?: string
+          created_by?: string | null
+          due_on?: string
+          household_id?: string
+          id?: string
+          kind?: string
+          league_id?: string
+          reference_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_expectations_cart_id_fkey"
+            columns: ["cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_expectations_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_expectations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          cart_id: string | null
+          created_at: string
+          currency: string
+          household_id: string | null
+          id: string
+          kind: string
+          league_id: string
+          livemode: boolean
+          method: string | null
+          note: string | null
+          occurred_at: string
+          provider: string
+          provider_payment_id: string
+          raw: Json | null
+          recorded_by: string | null
+          registration_ids: string[]
+          related_payment_id: string | null
+          revenue_class: string
+          status: string
+        }
+        Insert: {
+          amount: number
+          cart_id?: string | null
+          created_at?: string
+          currency?: string
+          household_id?: string | null
+          id?: string
+          kind: string
+          league_id?: string
+          livemode?: boolean
+          method?: string | null
+          note?: string | null
+          occurred_at?: string
+          provider: string
+          provider_payment_id: string
+          raw?: Json | null
+          recorded_by?: string | null
+          registration_ids?: string[]
+          related_payment_id?: string | null
+          revenue_class?: string
+          status: string
+        }
+        Update: {
+          amount?: number
+          cart_id?: string | null
+          created_at?: string
+          currency?: string
+          household_id?: string | null
+          id?: string
+          kind?: string
+          league_id?: string
+          livemode?: boolean
+          method?: string | null
+          note?: string | null
+          occurred_at?: string
+          provider?: string
+          provider_payment_id?: string
+          raw?: Json | null
+          recorded_by?: string | null
+          registration_ids?: string[]
+          related_payment_id?: string | null
+          revenue_class?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_cart_id_fkey"
+            columns: ["cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       placement_reviews: {
         Row: {
@@ -6049,6 +6242,8 @@ export type Database = {
         Returns: boolean
       }
       can_see_player_pii: { Args: { _player_id: string }; Returns: boolean }
+      cart_balance: { Args: { _cart_id: string }; Returns: Json }
+      cart_expected_amount: { Args: { _cart_id: string }; Returns: number }
       cart_lines: { Args: { _cart_id: string }; Returns: Json }
       change_season_dates: {
         Args: {
@@ -6070,6 +6265,9 @@ export type Database = {
         }
         Returns: boolean
       }
+      checkout_session_input: { Args: { _cart_id: string }; Returns: Json }
+      choose_offline_payment: { Args: { _cart_id: string }; Returns: Json }
+      complete_call_task: { Args: { _id: string }; Returns: undefined }
       create_my_household: {
         Args: {
           _address_line1: string
@@ -6105,6 +6303,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      expire_stale_holds: { Args: never; Returns: Json }
       family_group_households: {
         Args: { _household_id: string }
         Returns: string[]
@@ -6184,6 +6383,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      ingest_payment_event: { Args: { _e: Json }; Returns: Json }
       is_cleared_coach: { Args: { _user_id: string }; Returns: boolean }
       is_coach_of: { Args: { _team_id: string }; Returns: boolean }
       is_coach_of_player: { Args: { _player_id: string }; Returns: boolean }
@@ -6199,6 +6399,18 @@ export type Database = {
       is_guardian_of_player: { Args: { _player_id: string }; Returns: boolean }
       is_training_editor: { Args: { _user_id: string }; Returns: boolean }
       is_training_viewer: { Args: { _user_id: string }; Returns: boolean }
+      list_call_tasks: {
+        Args: never
+        Returns: {
+          body: string
+          cart_id: string
+          contact: string
+          created_at: string
+          done: boolean
+          household_name: string
+          id: string
+        }[]
+      }
       lock_my_cart: { Args: { _cart_id: string }; Returns: Json }
       log_player_access: {
         Args: {
@@ -6238,6 +6450,14 @@ export type Database = {
         Returns: string
       }
       purge_expired_assistant_data: { Args: never; Returns: undefined }
+      queue_call_task: {
+        Args: { _cart_id: string; _key: string; _reason: string }
+        Returns: undefined
+      }
+      queue_registration_confirmation: {
+        Args: { _cart_id: string }
+        Returns: undefined
+      }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
@@ -6245,6 +6465,20 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      recompute_cart_payment: { Args: { _cart_id: string }; Returns: string }
+      record_heartbeat: {
+        Args: { _detail: Json; _job_key: string; _ok: boolean }
+        Returns: undefined
+      }
+      record_offline_payment: {
+        Args: {
+          _amount: number
+          _cart_id: string
+          _method: string
+          _note: string
+        }
+        Returns: Json
       }
       redeem_registration_code: {
         Args: {
@@ -6274,6 +6508,10 @@ export type Database = {
         Args: { _new_cutoff: string; _season_id: string }
         Returns: number
       }
+      set_cart_stripe_session: {
+        Args: { _cart_id: string; _session_id: string }
+        Returns: undefined
+      }
       set_coach_clearance: {
         Args: {
           _coach_id: string
@@ -6286,6 +6524,10 @@ export type Database = {
       set_division_fee: {
         Args: { _cost: number; _division_id: string }
         Returns: undefined
+      }
+      set_payment_plan: {
+        Args: { _cart_id: string; _schedule: Json }
+        Returns: Json
       }
       sign_registration_form: {
         Args: {
