@@ -1,107 +1,81 @@
-# Night Game Builder, Prompt 3: lit header, shared shell, Prompt 2 follow-ups
+# Prompt 3 cleanup and Night Game Builder Prompt 4 (sign-in screens)
 
-Visual and navigation only. Nothing here touches the database, auth, RLS, edge functions or payments. Role checks reuse the existing role read (`fetchMyRoles`) and the `adminAccess` map; no new queries, no guard changes. Seal and wordmark images are used unaltered.
+Styling and layout only. No change to auth behavior, the mfa-email-code function, guards (ProtectedRoute), RLS or the database. Sign-in, sign-up, reset, resend, code send/verify, 60-second resend lock, trust-device and authenticator switch keep their current logic line for line; only the markup around them changes.
 
-## Part 1: Prompt 2 follow-ups
+## Part 1: cleanup from Prompt 3
 
-a) Admin dashboard: when urgent feedback and a live draft are both present, only the urgent card is `card-alert`. The live draft renders as a normal textured card (card surface, mesh, 1px border) with a blue pill "Open live draft" button. A live draft alone keeps the blue flood. HeroAlertCard gets a `flood` prop; Dashboard decides.
-b) Re-measure dark-mode `text-destructive` (#F2B8B5) on the two-step screen against the dark background and card; expected about 10:1. Report the measured ratio.
-c) Training at 768: Training and Situation detail currently use the public site header, whose link causes the sideways scroll. Both move into the new shell (parent/coach variant), so the public header is no longer on those pages. The public header itself stays untouched.
-d) Add a full comment block in index.css: no colored bar on the left, right or top edge of any card, list row, menu item, tab or table row; no border-left/border-t accent colors, pseudo-element strips, or inset box-shadow bars; selection and emphasis are shown only by a full flood (`.is-selected`, `.card-flood`, `.card-alert`); neutral 1px borders are allowed.
+a) Duplicate headlines. Remove a page's own big title only where it repeats the lit-header title:
+- Account: remove "Account" H1 (header says ACCOUNT).
+- Training list: removed with the banner (b).
+- Coach dashboard: header headline becomes "Coach dashboard"; remove its "Coach Dashboard" H1, keep the subtitle.
+- Household: "Hi, Paul" is a greeting, not a repeat, so it stays. The error-state title stays.
+- Situation detail: the situation's own title stays (header says TRAINING).
+- Admin pages: the header shows the group ("Run the season"), and page H1s ("Players") are different words, so they stay. No admin page files change.
+The lit-header headline becomes the page's heading for screen readers on Account, Training and Coach (it is already marked as a level-1 heading).
 
-## Part 2: shared signed-in shell
+b) Training list: delete the full-width blue gradient banner. Header label becomes "CDBL TRAINING", headline "SITUATIONS TRAINER". The banner's sentence ("Know where to go before the ball is hit...") moves to a plain subtitle line at the top of the content. Uses a new optional `label` and `title` already supported by AppShell.
 
-One `AppShell` component wraps /household, /account, /training, /training/:slug, /coach/* and /admin/*. It replaces FamilyHeader, AdminLayout's header/sidebar and CoachLayout's header/sidebar. Page content and data loading are unchanged; pages only drop their old wrapper and pass `label` and `title` to the shell.
+c) Coach "My Team" tab unchanged. Roadmap gets an open item: "Coach My Team tab: waiting on a real team section".
 
-### Registration flow: flag
-There is no signed-in registration flow today. /registration is a public page (public header, PageGate) and outside the signed-in look. Plan: leave it alone in this step; the shell is ready to wrap it when the signed-in registration flow is built. Say if you want /registration moved into the shell now (it would also need adding to the signed-in path list).
+## Part 2: sign-in screens
 
-### 1. Lit header ("stage")
-- Dark: #0E1518, radial white 22% from top right, radial rgba(80,140,150,.22) from top left, plus `.tex-twill`.
-- Light: #E2E7EE, radial white from top right, plus twill.
-- Contents: seal 36px (home link, 44px tap area), label in Barlow Semi Condensed 11px, 0.16em, uppercase, muted (for example "2027 SPRING · IN-HOUSE"), headline Big Shoulders Display 900 uppercase, 40px phone, clamp 34 to 56px desktop. Right side: account and sign-out (44px icon buttons, aria-labels).
-- Label source: the current season name and program type already loaded on the page where available; otherwise a fixed area label ("LEAGUE OFFICE", "COACH", "FAMILY"). No new data reads.
-- Note on your ban list: the westmark workspace rules forbid uppercase letterspaced labels and middle-dot strings, but they do not apply here because CDBL has its own system and you specified these. I will follow your spec.
+### New frame
+`AuthShell` is rebuilt: the shell's lit header (seal 36px as home link, label "CENTRAL DISTRICT BASEBALL LEAGUE", headline per screen) and the piping line, then one centered card (max 440px, full width on phone with 16px gutters). No sidebar, no tabs, no blue half-panel, no slogan. Card uses the card surface, mesh texture and 1px border; no flood (the Sign in button is the only blue).
 
-### 2. Piping line
-3px line under the header: CDBL Blue, with a break at 70 to 76% of the width filled white on dark and #221F20 on light. Pure CSS gradient.
+To get the Night Game Builder colors and fonts, /login, /reset-password and /two-step/* are added to the signed-in look path list (theme.ts and the matching pre-paint list in index.html). This is a look-only switch; it does not change who can open those pages. Light/Dark/Device follows the saved device choice.
 
-### 3. Phone tab bar (under 768px)
-Fixed bottom, 5 tabs, 44px+ targets, 10px labels, 20px outline icons, `padding-bottom: env(safe-area-inset-bottom)` (adds `viewport-fit=cover` to the viewport meta). Active tab is a blue flood pill with white icon and label. Page content gets bottom padding so nothing hides behind the bar. The floating help button moves above the bar.
+The lit header and piping styles move out of AppShell into a shared `LitHeader` component so both shells use the same one.
 
-Role is picked the same way landing works: staff roles get the admin set, coaches the coach set, everyone else the parent set.
+### /login (sign in)
+Headline "SIGN IN". One card: email, password with show toggle (eye icon, kept), "Forgot password?" link (44px target), full-width CDBL Blue pill "Sign in". Below the card: "New to CDBL? Create account".
+Other modes of the same page, same card:
+- Create account: headline "CREATE ACCOUNT"; existing fields and 10-character rule unchanged.
+- Forgot password / link sent: headline "RESET PASSWORD".
+- Signup sent: "Check your email to confirm your account."
+- Unconfirmed: "Check your email to confirm your account" with the existing resend button as a full-width outline pill.
+- "Couldn't check your access" notice: plain text in the card with a "Try again" pill.
 
-Parent:
-- Home: /household
-- Schedule: no family schedule page. Points to /household#upcoming (the Upcoming section already on Household).
-- Players: no page. Points to /household#family (Your family section).
-- Messages: no page. Points to /household#team (the team section that shows coach contact). Label stays "Messages" per spec; say if you prefer "Coach".
-- Account: /account
+### /reset-password
+Headline "NEW PASSWORD". Same card, existing fields, blue pill "Save password".
 
-Coach:
-- Home: /coach
-- My Team: no page. Points to /coach (team activity section anchor).
-- Schedule: no coach schedule page. Points to the public /schedule.
-- Messages: no page. Proposal: hide the tab label "Messages" and use "Training" (/training) instead, or keep "Messages" pointing to /coach. Your choice; default is Training.
-- More: a bottom sheet with Training, Account, Sign out.
+### /two-step/verify (emailed code)
+Headline "CHECK YOUR EMAIL".
+- "We emailed a 6-digit code to p•••@gmail.com". Masking is done on screen only: first letter of the name, three dots, then the domain. Whatever the function returns today is shown masked; the function itself is not touched.
+- Six large digit boxes (56px tall, 48px wide on phone), paste fills all six (existing behavior of the code input, verified in testing).
+- "The code expires in 10 minutes." on its own line.
+- "Trust this device for 30 days" checkbox row, 44px.
+- Blue pill "Continue" (unchanged logic, including auto-continue on the sixth digit).
+- "Send a new code" text link, disabled with "Send a new code in 42s" until the existing 60-second timer ends.
+- "Use authenticator app instead" link when the account has one (unchanged switch), and "Sign out".
+Who sees this screen is still decided only by the database's `requires_mfa` list, which today covers admin, board member, commissioner, registrar, treasurer and background checks. Families never reach it. Your note says "admins and board only"; narrowing the list would be a database change, so it is not in this plan.
 
-Board and admin:
-- Home: /admin
-- Registrations: no /admin/registrations page. Points to /admin/commissioner (its Registrations tab) for roles that can open it, otherwise /admin/players.
-- Teams: /admin/teams
-- Schedule: /admin/schedule
-- More: bottom sheet listing the sidebar groups below (role-filtered).
+### /two-step/setup (optional authenticator)
+Headline "AUTHENTICATOR APP". Same card: QR code on a white tile (so it scans in dark mode), manual key, code boxes, blue pill "Turn on", "Skip for now" link. Logic unchanged.
 
-Tabs a role cannot open (per `canAccessAdminPath`) are replaced by the next allowed link, never shown disabled.
+### /admin/login retired
+The /admin/login route already renders the same sign-in page. It becomes a redirect to /login that keeps any `?next=` value. The few places that link to /admin/login (account menu on public pages, OAuth consent page) are pointed at /login. The guard file (ProtectedRoute) still redirects to /admin/login and is not edited; the redirect forwards those users to /login. After sign-in, landing stays as today (staff to /admin, coach to /coach, others to /household).
 
-### 4. iPad and desktop sidebar (768px and up)
-220px, card surface with mesh, seal plus "LEAGUE OFFICE" in Big Shoulders. Group labels small letterspaced uppercase muted. Active item is a full blue flood. Groups with no allowed links are hidden (`canAccessAdminPath`). Coach and parent get a short sidebar with their 5 tab destinations.
-
-Every current admin sidebar link and where it lands:
-
-| Current link | Route | New group / label |
-|---|---|---|
-| Dashboard | /admin | Top: Home |
-| Players | /admin/players | Run the season: Players |
-| Teams | /admin/teams | Run the season: Teams and coaches |
-| Coaches | /admin/coaches | Run the season: Coaches (flag, see below) |
-| Drafts | /admin/drafts | Run the season: Draft |
-| Commissioner | /admin/commissioner | Run the season: Registrations (flag) |
-| Schedule | /admin/schedule | Game days: Schedule |
-| Facilities | /admin/facilities | Game days: Facilities (flag) |
-| Concessions | /admin/concessions | Game days: Concessions |
-| Communication | /admin/communication | Talk to families: Messages |
-| Requests | /admin/requests | Talk to families: Help requests (flag) |
-| (not in sidebar today) | /admin/email-bounces | Talk to families: Email problems |
-| Programs | /admin/programs | League setup: Seasons and programs |
-| Divisions | /admin/divisions | League setup: Divisions |
-| Registration Codes | /admin/registration-codes | League setup: Fees and codes |
-| Site Content | /admin/site-content | League setup: Site pages |
-| FAQs | /admin/faqs | League setup: FAQs |
-| Support | /admin/support | League setup: Sponsors and donations (flag) |
-| GameChanger | /admin/gamechanger | Game days: GameChanger import (flag) |
-| Committee Tasks | /admin/committee-tasks | Board: Committee tasks |
-| Reports | /admin/reports | Board: Reports |
-| Feedback (archive) | /admin/feedback | Board: Feedback |
-| Users | /admin/users | Board: People and roles |
-| Profile, My household, Account | /admin/profile, /household, /account | Sidebar footer (account area) |
-
-Flags:
-- "Teams and coaches" is two pages. Plan keeps one "Teams and coaches" link to /admin/teams plus a separate "Coaches" link, because the background-checks role can open Coaches but not Teams.
-- "Registrations" has no page of its own; it lands on the Commissioner page. Board/admin and commissioners can open it; registrars cannot today (the guard admits admin only), so they get Players instead.
-- "Fields": project memory says the UI always says "Facilities". Plan keeps "Facilities"; say if you want "Fields".
-- Requests, Support and GameChanger were not in your grouping; placements above are proposals.
-- /admin/profile is linked today but has no route (lands on Not Found). Plan drops it from the footer; Account covers it.
-- Coach sidebar's "My Drafts" (/coach/drafts) also has no route; dropped.
-
-### 5. Shared rules
-44px tap targets everywhere in the shell; icons per Prompt 2 (outline, 1.75, currentColor, only on tabs, sidebar links and actions); no edge bars; tab-pill and sheet motion turned off under prefers-reduced-motion.
+### Errors and icons
+Errors are destructive-token text inside the card (dark mode uses the lighter red already measured at 10.3:1), no icons, no tinted boxes; the MFA help sentence stays below in muted text. Only the show-password eye, a back arrow (Situation-style "Back to sign in" in forgot mode) and the loading spinner on buttons remain.
 
 ## Acceptance checks
-Light and dark at 390, 768 and 1280 on Household, Account, Training, Situation detail, Coach, Admin dashboard and one admin list page (admin pages need a completed emailed code in the test session; if the test session cannot pass it, I will say those were not checked). No sideways scroll, text contrast at least 4.5:1 (including on the lit header and piping), at most one flood per screen, no edge accent bars (scripted scan for colored border-left/top), seal file unchanged.
+Light and dark at 390, 768 and 1280 for: sign in, create account, forgot, unconfirmed, reset, two-step verify, two-step setup, Account, Training, Coach. No sideways scroll, contrast at least 4.5:1 (including the lit-header label and muted text), every tap target at least 44px (scripted size check), no edge accent bars (scripted scan), paste of a 6-digit code fills all boxes, /admin/login?next=/admin lands on /login?next=/admin. Seal file unchanged.
 
-## Technical details
-- New: `src/components/shell/AppShell.tsx`, `LitHeader.tsx`, `TabBar.tsx`, `ShellSidebar.tsx`, `MoreSheet.tsx`, `src/lib/shellNav.ts` (tab and group config, filtered by `canAccessAdminPath` and `pickLanding` role logic).
-- Changed: `AdminLayout.tsx` and `CoachLayout.tsx` become thin wrappers around AppShell; `AdminSidebar.tsx` retired; `FamilyHeader.tsx` retired (export removed from family index); Household, Account, Training, SituationDetail wrap in AppShell; HeroAlertCard and admin Dashboard (follow-up a); `src/index.css` (stage, piping, ban-rule comment); `index.html` viewport-fit; `AGENTS.md` rule: signed-in pages use AppShell only.
-- Admin pages keep using AdminLayout, so their files do not change.
-- Undo: revert these files; no data or settings.
+## Files to change
+- `src/components/AuthShell.tsx` (rebuilt frame)
+- `src/components/shell/LitHeader.tsx` (new, shared header and piping)
+- `src/components/shell/AppShell.tsx` (use LitHeader)
+- `src/pages/Login.tsx` (markup only)
+- `src/pages/ResetPassword.tsx` (markup only)
+- `src/pages/TwoStepVerify.tsx` (markup and on-screen masking only)
+- `src/pages/TwoStepSetup.tsx` (markup only)
+- `src/pages/admin/Login.tsx` (already a redirect; kept) and `src/App.tsx` (/admin/login route uses it)
+- `src/components/UserMenu.tsx`, `src/pages/OAuthConsent.tsx` (link target /login)
+- `src/lib/theme.ts` and `index.html` (add /login, /reset-password to the look path list)
+- `src/pages/Account.tsx`, `src/pages/Training.tsx`, `src/pages/coach/Dashboard.tsx` (Part 1)
+- `src/index.css` (code boxes size, QR tile)
+- `roadmap.md`, `AGENTS.md` (sign-in screens use AuthShell with the shared LitHeader)
+
+Not changed: ProtectedRoute, mfa-email-code, `src/lib/mfa.ts` logic, landing rules, database.
+
+Undo: revert these files.
