@@ -47,11 +47,11 @@ import { Plus, X } from "lucide-react";
 import { format } from "date-fns";
 
 const statusIcons: Record<TaskStatus, React.ReactNode> = {
-  pending: ,
-  in_progress: ,
-  completed: ,
-  cancelled: <X className="h-4 w-4 text-red-500" />,
-  blocked: ,
+  pending: <span className="text-xs font-label">Pending</span>,
+  in_progress: <span className="text-xs font-label">In progress</span>,
+  completed: <span className="text-xs font-label">Done</span>,
+  cancelled: <span className="text-xs font-label">Cancelled</span>,
+  blocked: <span className="text-xs font-label">Blocked</span>,
 };
 
 const priorityColors: Record<TaskPriority, string> = {

@@ -46,10 +46,10 @@ const priorityColors: Record<string, string> = {
 };
 
 const statusIcons: Record<string, React.ReactNode> = {
-  pending: ,
-  in_progress: ,
-  completed: ,
-  cancelled: <X className="h-4 w-4 text-red-500" />,
+  pending: <span className="text-xs font-label">Pending</span>,
+  in_progress: <span className="text-xs font-label">In progress</span>,
+  completed: <span className="text-xs font-label">Done</span>,
+  cancelled: <span className="text-xs font-label">Cancelled</span>,
 };
 
 export function TeamTasksCard({ teamId }: TeamTasksCardProps) {
