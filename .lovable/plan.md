@@ -1,71 +1,58 @@
-# Prompt 4 follow-ups and Prompt 5: parent Home (/household)
+# Prompt 6: registration "builder" — findings and plan
 
-Layout and styling only. No data queries, auth, guards, RLS, functions, payments or database changes.
+## What the registration flow is today
 
-## Stop-and-say items (please decide before approval)
+**Files**
+- `src/pages/Registration.tsx` (/registration, public, behind the page-visibility switch)
+- `src/pages/TravelRegistration.tsx` (/travel/registration, public)
+- `src/components/RegistrationSection.tsx` (home page teaser)
+- `/in-house/registration` only redirects to /registration
 
-1. **The page has no registration, forms or payment data.** The Household page loads only: the household record, guardians, linked players (name, birth date), team placement, coaches and upcoming events. It loads nothing about registrations, signed forms, balances or payments. So "Sign now", "Due", "Unpaid" and "Paid" cannot be shown truthfully without a new data query. Building those would need a data change, which this step forbids. The plan below uses only what the page already loads, and lists the unknowable steps.
-2. **There is no add-player flow for parents.** Players reach a household only when staff process a registration (the current empty state says so). The only "add" screens are admin tools. Option A (default): the dashed "+ Add" circle opens the public /registration page, which is how a child gets added today. Option B: leave the "+ Add" circle out until a real flow exists.
+**Real steps:** none. /registration is an information page that says "2026 Registration is Closed". It shows season dates, a per-division fee list (read from the programs and divisions tables), a "what's included" list, an In-House vs Travel comparison table, FAQs, and links to Schedule, Teams and Volunteer. Travel tryouts and travel coach sign-up are outside links to Sports Connect (bluesombrero.com).
 
-## Part 1: Prompt 4 follow-ups
+**Signed-in user or household:** not used at all. No form, no player picker, no validation, no fee calculation, no forms/waivers, no payment step. A backend sign-up function (`register-player`) exists, but no page calls it.
 
-- a) Measure the contrast of the light underlined links in dark mode on /login, /reset-password and the two-step screens. Report the ratio. If it falls below 4.5:1, lighten only the dark-mode link token.
-- b) On /login, show the sign-in errors (wrong password, invalid email, missing password, email not confirmed, and resend/reset/sign-up failures) as destructive-token text inside the card, under the button, with `role="alert"`. The wording stays the same. The sign-in calls and branching stay exactly as they are; only the display changes from popup to inline text. Success messages ("Confirmation email sent") stay as popups. The error clears when the person edits a field.
-- c) Re-run the edge-bar scan across signed-in pages (border-l/border-t accent classes, left/top accent pseudo-elements, inset box-shadow bars) and report any hits by file.
+## Where the brief does not match
 
-## Part 2: /household rebuild
+| Brief | Reality | What I'd do instead |
+|---|---|---|
+| Steps Player, Program, Forms, Pay | No steps exist | Build nothing step-based now (it needs list B) |
+| "Keep every validation, fee calculation, payment step" | There are none to keep | Nothing to preserve; fees are display-only |
+| Player round pickers | Page has no access to the family's players | Needs sign-in and household (list B) |
+| Program chips from the programs table | Table exists; types are in_house, travel, ihtt, travel_tryout, clinic | Usable read-only (list A) |
+| Forms rows, next form as flood | No forms or waiver data or table in use | Needs a forms source (list B) |
+| "3 OF 4" counter and "Sign the medical waiver" action | No step state | Needs list B |
+| Phone action bar above the tab bar | /registration is public, so there is no tab bar | Fixed above the bottom edge instead, if built |
 
-### Header
-- **Label:** "2027 season, In-House". Fixed text: the page loads no program per player, so it cannot be read from data.
-- **Headline:** a count of open to-dos, for example "TWO THINGS TO DO". There is no deadline field in loaded data, so the headline won't name a date. Using the board's Dec 21 opening date would need it written into the page as fixed text, so tell me if you want "BEFORE DEC 21".
-- **Fallback when nothing is open:** if there are players but no to-dos, the headline reads "YOU'RE ALL SET". If no players are linked yet, it reads "HI, {FIRST NAME}".
+## List A: layout only (can build without touching data, auth, routes, guards, RLS or fees)
 
-### To-dos (only from loaded data)
+1. Restyle /registration in the builder look as a **season info stage**, using only what the page already reads:
+   - Left (desktop/iPad) or top (phone): a stage with "2027 SEASON" label in blue, a big "REGISTRATION" headline in Big Shoulders 900, the status line from existing copy ("Closed" today), and a faint oversized "27" behind it. No progress bar, since there are no steps.
+   - Right: program pill chips from the programs table. Choosing one only switches which fee list and details are shown below (local, on-screen choice, nothing saved). Selected chip is a blue flood.
+   - Division fees as textured rows with the existing "TBD" fallback.
+   - Travel tryout and coach links shown as the single flood card only when those links are set (as today).
+   - FAQs and comparison kept, restyled as textured rows; the comparison table gets its own scroll on phones so the page never scrolls sideways.
+2. Remove the gradient hero and the gradient travel banner (retired tokens), the pulsing green dot, and decorative icons (calendar, dollar, people, arrows on buttons).
+3. Keep the public Header and Footer; the page stays public, same address, same page-visibility switch.
+4. Decision for you: this page keeps the public look today. Making it use the Night Game Builder look needs its path added to the theme list, which is still visual only. I'd add it unless you want public pages untouched until Stage 3.
 
-| To-do | Shows when | Source | Chip |
-|---|---|---|---|
-| Link your player | the household has no linked players | household_players (via the page's existing query) | Due (warning) |
-| Add your address | household has no address line | households record | Due (warning) |
-| Waiting for team placement | a player has no team | v_roster_family | Pending (neutral) |
+## List B: data or flow (not built until you approve separately)
 
-Payment and form to-dos aren't shown (see stop item 1). "Paid" and "Unpaid" chip styles get built and tested, but nothing uses them yet.
+1. Require sign-in for an actual registration and attach it to the user's household.
+2. A parent add-player step (Household "+ Add" currently lands on the info page).
+3. Reading the household's players for the round pickers.
+4. Registration records per player, program and season, and a real step state for the progress bar and counter.
+5. A forms/waivers source (medical waiver, etc.) with signed status.
+6. Payment step (Stripe test mode per the Oct 31 decision) and paid/unpaid status.
+7. Wiring or retiring the unused `register-player` backend function.
+8. Opening/closing by date (Dec 21 2026 to Mar 6 2027) instead of the fixed "Closed" text.
 
-### How "most important" is chosen
-It's the first match in this fixed order: Link your player, then Add your address, then Waiting for team placement for the oldest player. That card gets the one `.card-flood` on the page: a small "MOST IMPORTANT" label, the task in Big Shoulders 24px, one sentence on why it matters, and a white pill button ("Add address" opens the existing edit sheet; "Start registration" opens /registration). A waiting-only card has no button. If there are no to-dos, the page has no flood card. The current blue next-event card becomes a normal textured card, so there's still at most one flood.
+Once B exists, the full builder (player stage, 4-segment progress, forms flood row, action bar) drops onto it.
 
-### Players row
-- Each player is a 48px circle with initials in Big Shoulders and the name below in Barlow Semi Condensed, with a 44px or larger tap area. The selected player gets a CDBL Blue flood and a 2px ring. The first player is selected by default. The row scrolls sideways inside itself if it's too wide, never the page.
-- The dashed "+ Add" circle follows stop item 2.
-- Under the selected player, the numbered steps:
-  1. Player info: Done (success) when the player is linked with a name and birth date.
-  2. Program: Placed (success) with the team name when the player is on a team. Otherwise Not yet (neutral).
-  3. Forms: **can't be known yet.** It shows a neutral "Not tracked yet" chip.
-  4. Pay: **can't be known yet.** It shows a neutral "Not tracked yet" chip.
-
-### Sections kept
-Family (#family), Guardians, team and coach (#team, on the first player), and Upcoming (#upcoming). The ids, contact buttons, edit sheet, loading skeleton, error card and Try again button stay unchanged. The page's own "Hi, name" heading moves into the shell headline, so the title isn't repeated.
-
-### Empty states (one specific sentence)
-- No players: "No players are linked yet; they appear here once a registration is processed."
-- No events: "No games or practices are scheduled for your players yet."
-- No coach: unchanged.
-
-## Acceptance checks
-- Light and dark at 390, 768 and 1280 widths.
-- No sideways scroll.
-- Text contrast of 4.5:1 or better, including the links from a).
-- Tap targets of 44px or larger.
-- At most one flood card.
-- No edge accent bars.
-- The #upcoming, #family and #team tab links still scroll to their sections.
+## Acceptance for list A
+Light and dark at 390, 768, 1280; no sideways scroll; 4.5:1 contrast; 44px tap targets; at most one flood card; no edge accent bars; no decorative icons; seal unaltered.
 
 ## Technical details
-Files changed:
-- `src/pages/Login.tsx`: inline error state.
-- `src/index.css`: dark link token (only if needed), player-picker styles and the dashed add circle.
-- `src/pages/Household.tsx`: new layout and a to-do list built from the existing `useHouseholdOverview` data.
-- `src/components/family/StatusChip.tsx`: warning, destructive and success tones, if they're missing.
-- `src/components/family/PlayerPicker.tsx`: new, display only.
-- `roadmap.md`: note that forms and payment status are waiting on a data source.
-
-`useHouseholdOverview.ts`, `AppShell` logic, the routes and all backend files stay untouched.
+- Files changed in A: `src/pages/Registration.tsx`; possibly `src/lib/theme.ts` and `index.html` path lists (only if item A4 is approved); `roadmap.md` to log list B.
+- Reuse existing `usePrograms`, `useAllPrograms`, `useFAQs`; no new queries. Program chips read `useAllPrograms` data already loaded.
+- No changes to TravelRegistration in this pass unless you want it matched.
