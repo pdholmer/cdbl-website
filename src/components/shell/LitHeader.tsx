@@ -12,10 +12,14 @@ interface LitHeaderProps {
   /** Hide the seal at md+ (the sidebar shows it there). */
   sealPhoneOnly?: boolean;
   className?: string;
+  /** Extra classes on the headline (for example hide it where a stage shows the same name). */
+  titleClassName?: string;
+  /** Extra content below the headline (registration progress on phones). */
+  extra?: React.ReactNode;
 }
 
 /** Shared lit header ("stage") with the piping line, used by AppShell and AuthShell. */
-export const LitHeader = ({ label, title, actions, notice, sealPhoneOnly, className }: LitHeaderProps) => (
+export const LitHeader = ({ label, title, actions, notice, sealPhoneOnly, className, titleClassName, extra }: LitHeaderProps) => (
   <header className={cn("ngb-stage tex-twill", className)}>
     <div className="mx-auto flex w-full max-w-6xl items-start gap-3 px-4 pb-5 pt-4 sm:px-6 lg:px-8">
       <Link
@@ -30,7 +34,8 @@ export const LitHeader = ({ label, title, actions, notice, sealPhoneOnly, classN
           <p className="font-label pt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
           {notice}
         </div>
-        <h1 className="ngb-headline mt-1 break-words font-display font-black uppercase leading-[0.95] text-foreground">{title}</h1>
+        <h1 className={cn("ngb-headline mt-1 break-words font-display font-black uppercase leading-[0.95] text-foreground", titleClassName)}>{title}</h1>
+        {extra}
       </div>
       {actions}
     </div>
