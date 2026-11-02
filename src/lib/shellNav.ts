@@ -12,7 +12,8 @@ export interface NavGroup { label: string; items: NavLinkItem[] }
 
 export const ADMIN_GROUPS: NavGroup[] = [
   { label: "Run the season", items: [
-    { label: "Registrations", to: "/admin/commissioner?tab=registrations" },
+    { label: "Worklist", to: "/admin/worklist" },
+    { label: "Registrations", to: "/admin/registrations" },
     { label: "Players", to: "/admin/players" },
     { label: "Registration setup", to: "/admin/registration-setup" },
     { label: "Teams and coaches", to: "/admin/teams" },
@@ -40,6 +41,7 @@ export const ADMIN_GROUPS: NavGroup[] = [
   ] },
   { label: "Board", items: [
     { label: "Committee tasks", to: "/admin/committee-tasks" },
+    { label: "Treasurer report", to: "/admin/treasurer" },
     { label: "Reports", to: "/admin/reports" },
     { label: "Feedback", to: "/admin/feedback" },
     { label: "People and roles", to: "/admin/users" },
@@ -66,7 +68,7 @@ export const tabsFor = (area: ShellArea, roles: string[]): NavLinkItem[] => {
     { label: "More", to: "", icon: MoreHorizontal, more: true },
   ];
   const ok = (p: string) => canAccessAdminPath(roles, p.split("?")[0]);
-  const reg = ok("/admin/commissioner") ? "/admin/commissioner?tab=registrations" : "/admin/players";
+  const reg = ok("/admin/registrations") ? "/admin/registrations" : "/admin/players";
   const candidates: NavLinkItem[] = [
     { label: "Registrations", to: reg, icon: ClipboardList },
     { label: "Teams", to: "/admin/teams", icon: UsersRound },
