@@ -18,12 +18,12 @@ import {
   useVenueFieldMutations,
   useBulkUpdateFieldStatus,
 } from "@/hooks/useVenueFields";
-import {  Plus, Search, Pencil, CircleCheck, CircleX, AlertTriangle } from "lucide-react";
+import {  Plus, Search, Pencil, } from "lucide-react";
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof CircleCheck }> = {
-  open: { label: "Open", color: "bg-emerald-500/15 text-emerald-700 border-emerald-300", icon: CircleCheck },
-  closed: { label: "Closed", color: "bg-destructive/15 text-destructive border-destructive/30", icon: CircleX },
-  maintenance: { label: "Maintenance", color: "bg-yellow-500/15 text-yellow-700 border-yellow-400", icon: AlertTriangle },
+const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
+  open: { label: "Open", color: "bg-emerald-500/15 text-emerald-700 border-emerald-300" },
+  closed: { label: "Closed", color: "bg-destructive/15 text-destructive border-destructive/30" },
+  maintenance: { label: "Maintenance", color: "bg-yellow-500/15 text-yellow-700 border-yellow-400" },
 };
 
 const Venues = () => {
