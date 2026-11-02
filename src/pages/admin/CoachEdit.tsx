@@ -17,6 +17,9 @@ import {
 import { useCoach } from "@/hooks/useCoaches";
 import { useCoachMutations } from "@/hooks/useCoachMutations";
 import { ArrowLeft } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { hasFullAccess, useMyRoles } from "@/lib/adminAccess";
 import type { Database } from "@/integrations/supabase/types";
 
 type CoachInsert = Database["public"]["Tables"]["coaches"]["Insert"];
@@ -35,8 +38,21 @@ const CoachEdit = () => {
     }
   }, [coach, reset]);
 
+  const roles = useMyRoles();
+  const clearanceOnly = !!roles && !hasFullAccess(roles) && roles.includes("background_checks");
+
   const onSubmit = async (data: CoachInsert) => {
-    if (id) {
+    if (id && clearanceOnly) {
+      // Background-check role: clearance fields only, through the database function.
+      const { error } = await supabase.rpc("set_coach_clearance", {
+        _coach_id: id,
+        _status: data.background_check_status ?? null,
+        _date: data.background_check_date || null,
+        _expiry: data.background_check_expiry || null,
+      } as never);
+      if (error) { toast.error(error.message); return; }
+      toast.success("Clearance updated");
+    } else if (id) {
       await updateCoach.mutateAsync({ id, updates: data });
     } else {
       await createCoach.mutateAsync(data);

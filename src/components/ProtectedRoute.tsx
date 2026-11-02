@@ -3,6 +3,8 @@ import { Navigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getMfaStatus } from "@/lib/mfa";
+import { canAccessAdminPath, fetchMyRoles, isStaff } from "@/lib/adminAccess";
+import NoAccess from "@/pages/admin/NoAccess";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -23,6 +25,8 @@ export const ProtectedRoute = ({
   const [isAdmin, setIsAdmin] = useState(false);
   const [isBoardMember, setIsBoardMember] = useState(false);
   const [isCoach, setIsCoach] = useState(false);
+  const [isStaffUser, setIsStaffUser] = useState(false);
+  const [pathAllowed, setPathAllowed] = useState(false);
   const [mfaRedirect, setMfaRedirect] = useState<string | null>(null);
 
   useEffect(() => {
@@ -48,28 +52,14 @@ export const ProtectedRoute = ({
         setMfaRedirect("/two-step/verify");
       }
 
-      // Check for admin role
-      const { data: hasAdminRole } = await supabase
-        .rpc('has_role', {
-          _user_id: session.user.id,
-          _role: 'admin'
-        });
-      
-      setIsAdmin(!!hasAdminRole);
-
-      // If user is admin, they have board member access too
-      if (hasAdminRole) {
-        setIsBoardMember(true);
-      } else if (requireBoardMember) {
-        // Check for board_member role
-        const { data: hasBoardMemberRole } = await supabase
-          .rpc('has_role', {
-            _user_id: session.user.id,
-            _role: 'board_member'
-          });
-        
-        setIsBoardMember(!!hasBoardMemberRole);
-      }
+      // Admin panel: section access decided only in src/lib/adminAccess.ts.
+      let roles: string[] = [];
+      try { roles = await fetchMyRoles(session.user.id); } catch { roles = []; }
+      const hasAdminRole = roles.includes("admin");
+      setIsAdmin(hasAdminRole);
+      setIsStaffUser(isStaff(roles));
+      setPathAllowed(canAccessAdminPath(roles, location.pathname));
+      setIsBoardMember(hasAdminRole || roles.includes("board_member"));
 
       if (requireCoach) {
         // Check for coach role
@@ -93,7 +83,7 @@ export const ProtectedRoute = ({
     });
 
     return () => subscription.unsubscribe();
-  }, [requireAdmin, requireBoardMember, requireCoach]);
+  }, [requireAdmin, requireBoardMember, requireCoach, location.pathname]);
 
   if (isLoading) {
     return (
@@ -112,12 +102,9 @@ export const ProtectedRoute = ({
     return <Navigate to={`${mfaRedirect}?next=${next}`} replace />;
   }
 
-  if (requireAdmin && !isAdmin) {
-    return <Navigate to="/admin" replace />;
-  }
-
-  if (requireBoardMember && !isBoardMember) {
-    return <Navigate to="/" replace />;
+  if (requireAdmin || requireBoardMember) {
+    if (!isStaffUser) return <Navigate to="/" replace />;
+    if (!pathAllowed) return <NoAccess />;
   }
 
   if (requireCoach && !isCoach) {

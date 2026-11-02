@@ -4933,6 +4933,13 @@ export type Database = {
       }
       get_user_email: { Args: never; Returns: string }
       has_admin_access: { Args: { _user_id: string }; Returns: boolean }
+      has_any_role: {
+        Args: {
+          _roles: Database["public"]["Enums"]["app_role"][]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_document_on_file: {
         Args: { _doc_type: string; _player_id: string }
         Returns: boolean
@@ -5001,6 +5008,19 @@ export type Database = {
       }
       requires_mfa: { Args: { _user_id: string }; Returns: boolean }
       safe_uuid: { Args: { _t: string }; Returns: string }
+      set_coach_clearance: {
+        Args: {
+          _coach_id: string
+          _date: string
+          _expiry: string
+          _status: string
+        }
+        Returns: undefined
+      }
+      set_division_fee: {
+        Args: { _cost: number; _division_id: string }
+        Returns: undefined
+      }
       unsubscribe_by_token: {
         Args: { _category?: string; _token: string }
         Returns: boolean

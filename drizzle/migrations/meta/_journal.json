@@ -64,6 +64,13 @@
       "when": 1793577963797,
       "tag": "0008_ihtt_registration_kind",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793587680308,
+      "tag": "0009_role_scoped_admin_access",
+      "breakpoints": true
     }
   ]
 }

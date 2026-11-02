@@ -1,4 +1,5 @@
 import { hasGuardianRecord } from "@/lib/landing";
+import { canAccessAdminPath, fetchMyRoles } from "@/lib/adminAccess";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -93,7 +94,7 @@ const navSections: NavSection[] = [
 ];
 
 export function AdminSidebar() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [roles, setRoles] = useState<string[]>([]);
   const [hasHousehold, setHasHousehold] = useState(false);
   const location = useLocation();
   const unreadContacts = useUnreadContactCount();
@@ -102,12 +103,7 @@ export function AdminSidebar() {
     const checkAdminRole = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        const { data: hasAdminRole } = await supabase
-          .rpc('has_role', {
-            _user_id: session.user.id,
-            _role: 'admin'
-          });
-        setIsAdmin(!!hasAdminRole);
+        try { setRoles(await fetchMyRoles(session.user.id)); } catch { setRoles([]); }
         setHasHousehold(await hasGuardianRecord(session.user.id));
       }
     };
@@ -132,7 +128,9 @@ export function AdminSidebar() {
   };
 
   // Filter sections based on admin status
-  const visibleSections = navSections.filter(section => !section.adminOnly || isAdmin);
+  const visibleSections = navSections
+    .map(section => ({ ...section, items: section.items.filter(item => canAccessAdminPath(roles, item.url)) }))
+    .filter(section => section.items.length > 0);
 
   return (
     <Sidebar className="w-60">
@@ -204,7 +202,7 @@ export function AdminSidebar() {
               ))}
 
               {/* Admin Only Indicator */}
-              {isAdmin && (
+              {roles.includes("admin") && (
                 <div className="flex items-center gap-1 px-2 py-2 mt-2 text-xs text-primary-foreground/40 uppercase tracking-wider">
                   <Lock className="h-3 w-3" />
                   <span>Admin sections above</span>
