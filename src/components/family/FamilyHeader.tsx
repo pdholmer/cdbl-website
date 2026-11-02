@@ -45,7 +45,7 @@ export const FamilyHeader = ({ context = "Household" }: FamilyHeaderProps) => {
         >
           <img src={seal} alt="Central District Baseball League" className="h-10 w-10 object-contain" />
         </Link>
-        <span className="min-w-0 flex-1 truncate font-label text-[15px] font-bold uppercase tracking-[0.08em] text-primary">
+        <span className="min-w-0 flex-1 truncate font-label text-[15px] font-bold uppercase tracking-[0.08em] text-primary dark:text-foreground">
           {context}
         </span>
         {workArea && (
