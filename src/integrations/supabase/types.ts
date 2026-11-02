@@ -313,6 +313,13 @@ export type Database = {
             foreignKeyName: "cart_items_registration_id_fkey"
             columns: ["registration_id"]
             isOneToOne: false
+            referencedRelation: "roster_eligible"
+            referencedColumns: ["registration_id"]
+          },
+          {
+            foreignKeyName: "cart_items_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
             referencedRelation: "v_player_current"
             referencedColumns: ["registration_id"]
           },
@@ -777,6 +784,13 @@ export type Database = {
             foreignKeyName: "comps_registration_id_fkey"
             columns: ["registration_id"]
             isOneToOne: false
+            referencedRelation: "roster_eligible"
+            referencedColumns: ["registration_id"]
+          },
+          {
+            foreignKeyName: "comps_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
             referencedRelation: "v_player_current"
             referencedColumns: ["registration_id"]
           },
@@ -972,6 +986,41 @@ export type Database = {
           },
         ]
       }
+      coverage_mode_events: {
+        Row: {
+          changed_by: string | null
+          created_at: string
+          id: string
+          league_id: string
+          note: string | null
+          turned_on: boolean
+        }
+        Insert: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          league_id?: string
+          note?: string | null
+          turned_on: boolean
+        }
+        Update: {
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          league_id?: string
+          note?: string | null
+          turned_on?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coverage_mode_events_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       device_tokens: {
         Row: {
           active: boolean
@@ -1085,6 +1134,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "registrations"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discount_redemptions_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "roster_eligible"
+            referencedColumns: ["registration_id"]
           },
           {
             foreignKeyName: "discount_redemptions_registration_id_fkey"
@@ -2895,6 +2951,41 @@ export type Database = {
         }
         Relationships: []
       }
+      ledger_period_closes: {
+        Row: {
+          closed_at: string
+          closed_by: string | null
+          id: string
+          league_id: string
+          period: string
+          snapshot: Json
+        }
+        Insert: {
+          closed_at?: string
+          closed_by?: string | null
+          id?: string
+          league_id?: string
+          period: string
+          snapshot: Json
+        }
+        Update: {
+          closed_at?: string
+          closed_by?: string | null
+          id?: string
+          league_id?: string
+          period?: string
+          snapshot?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ledger_period_closes_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       message_templates: {
         Row: {
           active: boolean | null
@@ -3673,6 +3764,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "registrations"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "roster_eligible"
+            referencedColumns: ["registration_id"]
           },
           {
             foreignKeyName: "placement_reviews_registration_id_fkey"
@@ -4587,6 +4685,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "registrations"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_forms_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "roster_eligible"
+            referencedColumns: ["registration_id"]
           },
           {
             foreignKeyName: "registration_forms_registration_id_fkey"
@@ -5994,8 +6099,103 @@ export type Database = {
         }
         Relationships: []
       }
+      worklist_done: {
+        Row: {
+          done_at: string
+          done_by: string | null
+          id: string
+          item_key: string
+          league_id: string
+        }
+        Insert: {
+          done_at?: string
+          done_by?: string | null
+          id?: string
+          item_key: string
+          league_id?: string
+        }
+        Update: {
+          done_at?: string
+          done_by?: string | null
+          id?: string
+          item_key?: string
+          league_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "worklist_done_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
+      roster_eligible: {
+        Row: {
+          division_id: string | null
+          league_id: string | null
+          player_id: string | null
+          program_id: string | null
+          registration_id: string | null
+          season_id: string | null
+        }
+        Insert: {
+          division_id?: string | null
+          league_id?: string | null
+          player_id?: string | null
+          program_id?: string | null
+          registration_id?: string | null
+          season_id?: string | null
+        }
+        Update: {
+          division_id?: string | null
+          league_id?: string | null
+          player_id?: string | null
+          program_id?: string | null
+          registration_id?: string | null
+          season_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_league_division_fkey"
+            columns: ["league_id", "division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "registrations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registrations_league_player_fkey"
+            columns: ["league_id", "player_id"]
+            isOneToOne: false
+            referencedRelation: "league_players"
+            referencedColumns: ["league_id", "player_id"]
+          },
+          {
+            foreignKeyName: "registrations_league_program_fkey"
+            columns: ["league_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["league_id", "id"]
+          },
+          {
+            foreignKeyName: "registrations_league_season_fkey"
+            columns: ["league_id", "season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["league_id", "id"]
+          },
+        ]
+      }
       team_roster_counts: {
         Row: {
           active_count: number | null
@@ -6242,6 +6442,7 @@ export type Database = {
         Returns: boolean
       }
       can_see_player_pii: { Args: { _player_id: string }; Returns: boolean }
+      cart_amount_due: { Args: { _cart_id: string }; Returns: number }
       cart_balance: { Args: { _cart_id: string }; Returns: Json }
       cart_expected_amount: { Args: { _cart_id: string }; Returns: number }
       cart_lines: { Args: { _cart_id: string }; Returns: Json }
@@ -6267,7 +6468,9 @@ export type Database = {
       }
       checkout_session_input: { Args: { _cart_id: string }; Returns: Json }
       choose_offline_payment: { Args: { _cart_id: string }; Returns: Json }
+      close_ledger_period: { Args: { _period: string }; Returns: Json }
       complete_call_task: { Args: { _id: string }; Returns: undefined }
+      coverage_mode_on: { Args: never; Returns: boolean }
       create_my_household: {
         Args: {
           _address_line1: string
@@ -6399,6 +6602,7 @@ export type Database = {
       is_guardian_of_player: { Args: { _player_id: string }; Returns: boolean }
       is_training_editor: { Args: { _user_id: string }; Returns: boolean }
       is_training_viewer: { Args: { _user_id: string }; Returns: boolean }
+      ledger_period_totals: { Args: { _period: string }; Returns: Json }
       list_call_tasks: {
         Args: never
         Returns: {
@@ -6411,6 +6615,30 @@ export type Database = {
           id: string
         }[]
       }
+      list_registrations: {
+        Args: never
+        Returns: {
+          amount_due: number
+          division_id: string
+          division_name: string
+          forms_required: number
+          forms_signed: number
+          hold_reason: string
+          household_id: string
+          household_name: string
+          lifecycle: string
+          on_hold_until: string
+          payment: string
+          player_id: string
+          player_name: string
+          program_id: string
+          program_name: string
+          program_type: string
+          registration_id: string
+          seat: string
+          waiver_status: string
+        }[]
+      }
       lock_my_cart: { Args: { _cart_id: string }; Returns: Json }
       log_player_access: {
         Args: {
@@ -6420,6 +6648,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      mark_worklist_done: { Args: { _item_key: string }; Returns: undefined }
       mfa_satisfied: { Args: never; Returns: boolean }
       move_to_dlq: {
         Args: {
@@ -6429,6 +6658,38 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      my_registration_status: {
+        Args: never
+        Returns: {
+          amount_due: number
+          checkout_id: string
+          division_name: string
+          due_on: string
+          forms_required: number
+          forms_signed: number
+          hold_reason: string
+          lifecycle: string
+          next_form_title: string
+          on_hold_until: string
+          pay_by_check: boolean
+          payment: string
+          player_id: string
+          program_name: string
+          reference_code: string
+          registration_id: string
+          seat: string
+        }[]
+      }
+      my_team_waiver_badges: {
+        Args: never
+        Returns: {
+          player_id: string
+          player_name: string
+          team_id: string
+          team_name: string
+          waiver: string
+        }[]
       }
       price_cart_lines: {
         Args: {
@@ -6494,6 +6755,28 @@ export type Database = {
         Args: { _registration_id: string }
         Returns: string
       }
+      registrar_worklist: {
+        Args: never
+        Returns: {
+          amount: number
+          detail: string
+          due_at: string
+          item_key: string
+          kind: string
+          ref_id: string
+          title: string
+        }[]
+      }
+      registration_forms_progress: {
+        Args: { _registration_id: string }
+        Returns: {
+          next_form_key: string
+          next_title: string
+          required: number
+          signed: number
+        }[]
+      }
+      registration_readiness: { Args: never; Returns: Json }
       reject_role_request: {
         Args: { notes?: string; request_id: string }
         Returns: boolean
@@ -6520,6 +6803,10 @@ export type Database = {
           _status: string
         }
         Returns: undefined
+      }
+      set_coverage_mode: {
+        Args: { _note?: string; _on: boolean }
+        Returns: boolean
       }
       set_division_fee: {
         Args: { _cost: number; _division_id: string }
@@ -6550,6 +6837,7 @@ export type Database = {
         }
         Returns: Json
       }
+      treasurer_report: { Args: { _months?: number }; Returns: Json }
       unsubscribe_by_token: {
         Args: { _category?: string; _token: string }
         Returns: boolean
