@@ -82,7 +82,7 @@ export const BuilderActionBar = ({ step, label, onClick, disabled, aside }: Acti
         type="button"
         onClick={onClick}
         disabled={disabled}
-        className="min-h-12 min-w-0 flex-1 rounded-full bg-primary px-4 py-2 font-label text-[14px] font-bold uppercase leading-tight tracking-[0.04em] text-primary-foreground disabled:opacity-50"
+        className="min-h-[48px] min-w-0 flex-1 rounded-full bg-primary px-4 py-2 font-label text-[14px] font-bold uppercase leading-tight tracking-[0.04em] text-primary-foreground disabled:opacity-50"
       >
         {label}
       </button>
