@@ -84,6 +84,9 @@ import EmailBounces from "./pages/admin/EmailBounces";
 import Requests from "./pages/admin/Requests";
 import RequestDetail from "./pages/admin/RequestDetail";
 import RegistrationSetup from "./pages/admin/RegistrationSetup";
+import Worklist from "./pages/admin/Worklist";
+import RegistrationsList from "./pages/admin/RegistrationsList";
+import TreasurerReport from "./pages/admin/TreasurerReport";
 import HouseholdRegister from "./pages/HouseholdRegister";
 import HouseholdCheckout from "./pages/HouseholdCheckout";
 import Training from "./pages/Training";
@@ -162,6 +165,9 @@ const App = () => (
           <Route path="/admin/support" element={<ProtectedRoute requireBoardMember><Support /></ProtectedRoute>} />
           <Route path="/admin/support/new" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
           <Route path="/admin/support/:id" element={<ProtectedRoute requireBoardMember><SupportEdit /></ProtectedRoute>} />
+          <Route path="/admin/worklist" element={<ProtectedRoute requireBoardMember><Worklist /></ProtectedRoute>} />
+          <Route path="/admin/registrations" element={<ProtectedRoute requireBoardMember><RegistrationsList /></ProtectedRoute>} />
+          <Route path="/admin/treasurer" element={<ProtectedRoute requireBoardMember><TreasurerReport /></ProtectedRoute>} />
           <Route path="/admin/registration-setup" element={<ProtectedRoute requireBoardMember><RegistrationSetup /></ProtectedRoute>} />
           <Route path="/admin/requests" element={<ProtectedRoute requireBoardMember><Requests /></ProtectedRoute>} />
           <Route path="/admin/requests/:id" element={<ProtectedRoute requireBoardMember><RequestDetail /></ProtectedRoute>} />

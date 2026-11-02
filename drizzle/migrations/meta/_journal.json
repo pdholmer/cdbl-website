@@ -155,6 +155,13 @@
       "when": 1793652569413,
       "tag": "0021_phase6_league_office_views_family_status",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1793654951242,
+      "tag": "0022_phase6_readiness_uses_registration_season",
+      "breakpoints": true
     }
   ]
 }

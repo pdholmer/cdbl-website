@@ -27,5 +27,5 @@
 - [x] Phase 3: forms and waivers (built Nov 2; five forms carry PLACEHOLDER wording until the league supplies final text)
 - [x] Phase 4: fees, discounts, cart total, help-paying holds, comps (built Nov 2; values are working values to confirm)
 - [x] Phase 5: Stripe test checkout, ledger, holds, offline, plans (built; waiting on Stripe test key + webhook secret for live card/bank tests)
-- [ ] Phase 6: league office registration views; Household to-dos read real status
+- [x] Phase 6: league office registration views; Household to-dos read real status (built in preview; browser checks of league office pages pending a two-step sign-in)
 - [ ] Phase 7: builder layout on top of real steps

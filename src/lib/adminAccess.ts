@@ -22,12 +22,16 @@ export const SECTION_ROLES: Record<string, readonly string[]> = {
   "/admin/programs": ["registrar"],
   "/admin/registration-setup": ["registrar", "treasurer"],
   "/admin/registration-codes": ["treasurer"],
+  "/admin/worklist": ["registrar"],
+  "/admin/registrations": ["registrar", "commissioner"],
+  "/admin/treasurer": ["treasurer"],
 };
 
 /** Routes that today require the admin role specifically (board_member excluded). */
 const ADMIN_ONLY_PREFIXES = [
   "/admin/reports", "/admin/gamechanger", "/admin/programs", "/admin/divisions", "/admin/drafts",
   "/admin/commissioner", "/admin/registration-codes", "/admin/committee-tasks", "/admin/concessions",
+  "/admin/worklist", "/admin/registrations",
 ];
 
 const matchPrefix = (path: string, prefix: string) => path === prefix || path.startsWith(prefix + "/");

@@ -8,11 +8,22 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Play } from "lucide-react";
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { StatusChip } from "@/components/family/StatusChip";
 
 const CoachDashboard = () => {
   const [coachTeamIds, setCoachTeamIds] = useState<string[]>([]);
   const [isLoadingCoach, setIsLoadingCoach] = useState(true);
   const { data: allDrafts, isLoading: draftsLoading } = useDrafts();
+  // Waiver badges for the coach's own team only; the database function returns nothing else.
+  const { data: badges } = useQuery({
+    queryKey: ["my-team-waiver-badges"],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("my_team_waiver_badges");
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
 
   useEffect(() => {
     const loadCoachTeams = async () => {
@@ -104,8 +115,24 @@ const CoachDashboard = () => {
         </Card>
       )}
 
+      <section id="team" className="tex-mesh scroll-mt-4 rounded-xl border border-border bg-card p-5" aria-label="My team forms">
+        <p className="font-label text-[17px] font-semibold">My team</p>
+        {!badges || badges.length === 0 ? (
+          <p className="mt-2 text-[15px] text-muted-foreground">Your roster shows here once players are placed on your team.</p>
+        ) : (
+          <ul className="mt-2 divide-y divide-border">
+            {badges.map((b) => (
+              <li key={b.player_id + b.team_id} className="flex min-h-[44px] items-center justify-between gap-3 py-2 text-[15px]">
+                <span className="min-w-0">{b.player_name}<span className="block text-sm text-muted-foreground">{b.team_name}</span></span>
+                <StatusChip tone={b.waiver === "signed" ? "success" : "warning"}>{b.waiver === "signed" ? "Forms signed" : "Forms pending"}</StatusChip>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
       {/* Upcoming Drafts */}
-      <Card id="team" className="scroll-mt-4">
+      <Card className="scroll-mt-4">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             

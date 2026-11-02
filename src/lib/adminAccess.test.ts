@@ -19,3 +19,20 @@ describe("admin section access", () => {
   it("treasurer cannot open requests", () => expect(canAccessAdminPath(["treasurer"], "/admin/requests")).toBe(false));
   it("board member can open requests", () => expect(canAccessAdminPath(["board_member"], "/admin/requests/abc")).toBe(true));
 });
+
+describe("phase 6 league office pages", () => {
+  it("worklist is registrar and admin only", () => {
+    expect(canAccessAdminPath(["registrar"], "/admin/worklist")).toBe(true);
+    expect(canAccessAdminPath(["board_member"], "/admin/worklist")).toBe(false);
+    expect(canAccessAdminPath(["commissioner"], "/admin/worklist")).toBe(false);
+  });
+  it("registrations list: registrar and commissioner, not treasurer", () => {
+    expect(canAccessAdminPath(["commissioner"], "/admin/registrations")).toBe(true);
+    expect(canAccessAdminPath(["treasurer"], "/admin/registrations")).toBe(false);
+  });
+  it("treasurer report: treasurer and board, not commissioner", () => {
+    expect(canAccessAdminPath(["treasurer"], "/admin/treasurer")).toBe(true);
+    expect(canAccessAdminPath(["board_member"], "/admin/treasurer")).toBe(true);
+    expect(canAccessAdminPath(["commissioner"], "/admin/treasurer")).toBe(false);
+  });
+});
