@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ClipboardList, Play, Clock, CheckCircle } from "lucide-react";
+import { Play } from "lucide-react";
 import { format } from "date-fns";
 
 const CoachDashboard = () => {
@@ -109,7 +109,7 @@ const CoachDashboard = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+            
             Upcoming Drafts
           </CardTitle>
           <CardDescription>Drafts you're scheduled to participate in</CardDescription>
@@ -148,7 +148,7 @@ const CoachDashboard = () => {
             </div>
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              <ClipboardList className="h-12 w-12 mx-auto mb-3 opacity-50" />
+              
               <p>No upcoming drafts</p>
             </div>
           )}
@@ -160,7 +160,7 @@ const CoachDashboard = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5" />
+              
               Completed Drafts
             </CardTitle>
           </CardHeader>

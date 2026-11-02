@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AlertTriangle, Radio, MessageSquareWarning } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 interface HeroAlertCardProps {
@@ -61,9 +61,9 @@ export function HeroAlertCard({ type, title, description, href, meta }: HeroAler
             )}
           >
             {isLiveDraft ? (
-              <Radio className={cn("h-6 w-6", "text-primary")} />
+              
             ) : (
-              <MessageSquareWarning className={cn("h-6 w-6", "text-destructive")} />
+              
             )}
           </div>
 

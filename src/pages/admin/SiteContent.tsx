@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, FileText, Eye, EyeOff } from "lucide-react";
+import { Plus, Search, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
@@ -265,7 +265,7 @@ const SiteContent = () => {
                         <TableCell className="text-right">
                           <Link to={`/admin/site-content/${item.id}`}>
                             <Button variant="ghost" size="sm">
-                              <FileText className="h-4 w-4" />
+                              
                             </Button>
                           </Link>
                         </TableCell>

@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Mail, CheckCheck, Inbox } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 import { toast } from "sonner";
 import { format, formatDistanceToNow } from "date-fns";
 
@@ -162,7 +162,7 @@ export const InboxTab = () => {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Inbox className="h-4 w-4" />
+          
           <span>
             <span className="font-medium text-foreground">{rows.length}</span>{" "}
             total · <span className="font-medium text-foreground">{unreadCount}</span>{" "}
@@ -334,7 +334,7 @@ export const InboxTab = () => {
                         )}`)
                       }
                     >
-                      <Mail className="h-4 w-4 mr-1" /> Reply via email
+                       Reply via email
                     </Button>
                     {isUnread(selected) && (
                       <Button

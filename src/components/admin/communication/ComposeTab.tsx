@@ -15,7 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { Users, Send, AlertTriangle, Info } from "lucide-react";
+import { Send } from "lucide-react";
 
 type Scope = "league" | "division" | "team" | "household" | "admins";
 type Priority = "normal" | "urgent";
@@ -170,7 +170,7 @@ export const ComposeTab = () => {
               </Select>
               {priority === "urgent" && (
                 <p className="text-xs text-amber-700 mt-1 flex items-start gap-1">
-                  <AlertTriangle className="h-3 w-3 mt-0.5 shrink-0" />
+                  
                   Urgent messages ignore quiet hours and category mutes. Use for
                   rainouts and safety only.
                 </p>
@@ -251,7 +251,7 @@ export const ComposeTab = () => {
           </div>
 
           <Alert>
-            <Info className="h-4 w-4" />
+            
             <AlertDescription className="text-sm">
               Queued messages are not delivered until email sending is
               configured. This screen only writes to the queue.
@@ -271,7 +271,7 @@ export const ComposeTab = () => {
         <Card className="rounded-2xl shadow-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <Users className="h-4 w-4" />
+              
               Live reach
             </CardTitle>
           </CardHeader>

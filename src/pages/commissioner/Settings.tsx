@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Save, Clock, Users, Calendar } from "lucide-react";
+import { Save } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -87,7 +87,7 @@ export default function CommissionerSettings() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Clock className="h-5 w-5" />
+            
             Game Settings
           </CardTitle>
           <CardDescription>
@@ -142,7 +142,7 @@ export default function CommissionerSettings() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+            
             Roster Settings
           </CardTitle>
           <CardDescription>
@@ -186,7 +186,7 @@ export default function CommissionerSettings() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+            
             Registration Settings
           </CardTitle>
           <CardDescription>

@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LockKeyhole, Target } from "lucide-react";
+
 import { useTrainingAccess, usePublishedSituations, type SituationSummary } from "@/hooks/useTraining";
 import { BASE_STATE_LABELS, BASE_STATE_ORDER } from "@/lib/situationsField";
 import PracticeSession from "@/components/training/PracticeSession";
@@ -33,7 +33,7 @@ const Training = () => {
         <section className="py-10 md:py-16 text-primary-foreground" style={{ background: "var(--gradient-hero)" }}>
           <div className="container px-4">
             <div className="flex items-center gap-3 mb-3">
-              <Target className="h-7 w-7" aria-hidden="true" />
+              
               <span className="text-xs font-bold uppercase tracking-widest opacity-90">CDBL Training</span>
             </div>
             <h1 className="font-heading text-3xl md:text-5xl font-bold mb-3">Situations Trainer</h1>
@@ -53,7 +53,7 @@ const Training = () => {
             ) : !isAuthenticated ? (
               <Card className="rounded-2xl shadow-md">
                 <CardContent className="p-6 text-center">
-                  <LockKeyhole className="h-8 w-8 mx-auto mb-3 text-primary" aria-hidden="true" />
+                  
                   <h2 className="font-heading text-xl font-semibold mb-2">Sign in to start training</h2>
                   <p className="text-muted-foreground mb-5">
                     The Situations Trainer is for CDBL players, families and coaches. Sign in with your league account to get in.
@@ -66,7 +66,7 @@ const Training = () => {
             ) : !canView ? (
               <Card className="rounded-2xl shadow-md">
                 <CardContent className="p-6 text-center">
-                  <LockKeyhole className="h-8 w-8 mx-auto mb-3 text-primary" aria-hidden="true" />
+                  
                   <h2 className="font-heading text-xl font-semibold mb-2">Not available on your account yet</h2>
                   <p className="text-muted-foreground">
                     Training content is available to coaches and registered CDBL families. If that should be you, contact the league.

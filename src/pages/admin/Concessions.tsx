@@ -47,7 +47,7 @@ import {
   type InventoryItem,
   type ConcessionEmployee,
 } from "@/hooks/useConcessions";
-import { Plus, Package, Users, Calendar, AlertTriangle, DollarSign } from "lucide-react";
+import { Plus } from "lucide-react";
 import { format } from "date-fns";
 
 const Concessions = () => {
@@ -66,15 +66,15 @@ const Concessions = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
             <TabsTrigger value="inventory" className="flex items-center gap-2">
-              <Package className="h-4 w-4" />
+              
               Inventory
             </TabsTrigger>
             <TabsTrigger value="employees" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
+              
               Employees
             </TabsTrigger>
             <TabsTrigger value="shifts" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
+              
               Shifts
             </TabsTrigger>
           </TabsList>
@@ -156,7 +156,7 @@ function InventoryTab() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-1">
-              <AlertTriangle className="h-4 w-4 text-orange-500" />
+              
               Low Stock
             </CardTitle>
           </CardHeader>
@@ -167,7 +167,7 @@ function InventoryTab() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-1">
-              <DollarSign className="h-4 w-4" />
+              
               Inventory Value
             </CardTitle>
           </CardHeader>

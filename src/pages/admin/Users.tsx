@@ -226,7 +226,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Admins</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.admins}</div>
@@ -244,7 +244,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Coaches</CardTitle>
-              <UserCog className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.coaches}</div>
@@ -253,7 +253,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Parents</CardTitle>
-              <UserCheck className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.parents}</div>

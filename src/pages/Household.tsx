@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { LogOut, MapPin, Pencil, Phone, Mail, CalendarDays, Shield } from "lucide-react";
+import { LogOut, Pencil, Phone, Mail } from "lucide-react";
 import {
   SectionLabel,
   GroupedCard,
@@ -69,7 +69,7 @@ const Household = () => {
       {(e.facility_site || e.location) && (
         <div className="mt-4 space-y-1 rounded-xl bg-primary-foreground/10 p-3 text-sm">
           <p className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 shrink-0" />
+            
             {e.facility_site ?? e.location}
           </p>
           {e.facility_field && (
@@ -263,7 +263,7 @@ const Household = () => {
                     </>
                   ) : (
                     <div className="p-4">
-                      <EmptyStateBlock icon={<Shield className="h-5 w-5" />}>
+                      <EmptyStateBlock icon={}>
                         When {c.display_name} is placed on a team, his schedule, coach contact,
                         and development updates will appear here.
                       </EmptyStateBlock>
@@ -282,7 +282,7 @@ const Household = () => {
                     c.next_events.map((e) => (
                       <ListRow
                         key={e.id}
-                        icon={<CalendarDays className="h-5 w-5" />}
+                        icon={}
                         title={e.title}
                         subtitle={`${dayWord(e.start_date)}${
                           e.all_day ? "" : ` · ${formatTime(e.start_time) ?? ""}`
@@ -293,7 +293,7 @@ const Household = () => {
                   )
                 ) : (
                   <div className="p-4">
-                    <EmptyStateBlock icon={<CalendarDays className="h-5 w-5" />}>
+                    <EmptyStateBlock icon={}>
                       No upcoming events yet — the 2027 season is coming.
                     </EmptyStateBlock>
                   </div>

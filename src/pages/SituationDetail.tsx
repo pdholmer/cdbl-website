@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Brain, LockKeyhole, Pause, Play, RotateCcw } from "lucide-react";
+import { ArrowLeft, Pause, Play, RotateCcw } from "lucide-react";
 import SituationQuiz from "@/components/training/SituationQuiz";
 import SituationField from "@/components/training/SituationField";
 import { useSituationDetail, useTrainingAccess, type SituationStep } from "@/hooks/useTraining";
@@ -142,7 +142,7 @@ const SituationDetail = () => {
   const gate = (title: string, body: string, cta?: boolean) => (
     <Card className="rounded-2xl shadow-md">
       <CardContent className="p-6 text-center">
-        <LockKeyhole className="h-8 w-8 mx-auto mb-3 text-primary" aria-hidden="true" />
+        
         <h1 className="font-heading text-xl font-semibold mb-2">{title}</h1>
         <p className="text-muted-foreground mb-5">{body}</p>
         {cta && (
@@ -212,7 +212,7 @@ const SituationDetail = () => {
                 className="w-full min-h-12 rounded-2xl mb-4"
                 onClick={() => setQuizOpen((v) => !v)}
               >
-                <Brain className="h-5 w-5 mr-2" aria-hidden="true" />
+                
                 {quizOpen ? "Back to the play" : "Test Yourself"}
               </Button>
 

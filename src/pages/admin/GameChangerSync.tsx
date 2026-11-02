@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, Download, Link2, RefreshCw } from "lucide-react";
+import { Upload, Download, RefreshCw } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function GameChangerSync() {
@@ -131,7 +131,7 @@ export default function GameChangerSync() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Link2 className="h-5 w-5" />
+              
               Sync Team Data
             </CardTitle>
             <CardDescription>
