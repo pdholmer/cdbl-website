@@ -66,13 +66,17 @@ const TwoStepSetup = () => {
 
   return (
     <AuthShell>
-      <Card className="w-full rounded-2xl shadow-md">
+      <Card className="w-full rounded-lg border bg-card">
         <CardHeader>
-          <CardTitle className="text-2xl">Set up two-step sign-in</CardTitle>
+          <p className="font-label text-sm font-semibold text-muted-foreground">Optional</p>
+          <CardTitle className="font-display text-4xl font-extrabold">Add an authenticator app</CardTitle>
           <CardDescription>
-            Your role can see family and payment records, so the league asks for a code from an
-            authenticator app each time you sign in.
+            You don't need this. We email you a sign-in code by default. If you'd rather use an
+            authenticator app, scan the code below.
           </CardDescription>
+          <Button variant="link" className="h-11 justify-start px-0" onClick={() => navigate(`/two-step/verify?next=${encodeURIComponent(next)}`, { replace: true })}>
+            Skip and use email codes
+          </Button>
         </CardHeader>
         <CardContent className="space-y-6">
           {error && (
