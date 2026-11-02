@@ -1,8 +1,3 @@
-import { 
-  Users, Shield, Calendar, MessageSquare, 
-  UserPlus, CalendarPlus, MapPin, FileText,
-  UserCog, ClipboardList
-} from "lucide-react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { useAdminDashboardStats } from "@/hooks/useAdminDashboardStats";
 import {
@@ -72,7 +67,6 @@ const Dashboard = () => {
                   ? `${stats.unpaidRegistrations} awaiting payment` 
                   : "All payments received"
                 }
-                icon={Users}
                 href="/admin/players?status=pending"
                 accentColor={stats.pendingRegistrations > 0 ? "warning" : "success"}
               />
@@ -83,7 +77,6 @@ const Dashboard = () => {
                   ? `${stats.teamsNeedingCoaches} need coaches` 
                   : "All teams staffed"
                 }
-                icon={Shield}
                 href="/admin/teams"
                 accentColor={stats.teamsNeedingCoaches > 0 ? "warning" : "default"}
               />
@@ -94,7 +87,6 @@ const Dashboard = () => {
                   ? `${stats.upcomingGames.length} games this week` 
                   : "No games scheduled"
                 }
-                icon={Calendar}
                 href="/admin/schedule"
                 accentColor="default"
               />
@@ -105,7 +97,6 @@ const Dashboard = () => {
                   ? `${stats.criticalFeedback} critical priority` 
                   : "No critical items"
                 }
-                icon={MessageSquare}
                 href="/admin/feedback"
                 accentColor={stats.criticalFeedback > 0 ? "destructive" : "default"}
               />
@@ -122,37 +113,31 @@ const Dashboard = () => {
             <QuickActionCard
               title="Add Player"
               description="Register new player"
-              icon={UserPlus}
               href="/admin/players/new"
             />
             <QuickActionCard
               title="Schedule Game"
               description="Create new game"
-              icon={CalendarPlus}
               href="/admin/schedule/new"
             />
             <QuickActionCard
               title="Add Facility"
               description="Register new location"
-              icon={MapPin}
               href="/admin/facilities/new"
             />
             <QuickActionCard
               title="Invite Coach"
               description="Send invitation"
-              icon={UserCog}
               href="/admin/coaches"
             />
             <QuickActionCard
               title="Run Draft"
               description="Start or manage drafts"
-              icon={ClipboardList}
               href="/admin/drafts"
             />
             <QuickActionCard
               title="Generate Report"
               description="Analytics & exports"
-              icon={FileText}
               href="/admin/reports"
             />
           </div>
