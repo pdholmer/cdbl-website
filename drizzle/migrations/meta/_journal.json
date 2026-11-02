@@ -57,6 +57,13 @@
       "when": 1793566880780,
       "tag": "0007_ihtt_fees_capacity_fee_log",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793577963797,
+      "tag": "0008_ihtt_registration_kind",
+      "breakpoints": true
     }
   ]
 }
