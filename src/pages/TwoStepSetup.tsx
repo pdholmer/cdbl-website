@@ -65,11 +65,11 @@ const TwoStepSetup = () => {
   };
 
   return (
-    <AuthShell>
-      <Card className="w-full rounded-lg border bg-card">
+    <AuthShell title="Authenticator app">
+      <Card className="tex-mesh w-full rounded-xl border bg-card">
         <CardHeader>
           <p className="font-label text-sm font-semibold text-muted-foreground">Optional</p>
-          <CardTitle className="font-display text-4xl font-extrabold">Add an authenticator app</CardTitle>
+          <CardTitle className="font-label text-xl">Add an authenticator app</CardTitle>
           <CardDescription>
             You don't need this. We email you a sign-in code by default. If you'd rather use an
             authenticator app, scan the code below.
@@ -80,7 +80,7 @@ const TwoStepSetup = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           {error && (
-            <div role="alert" className="rounded-lg border border-destructive/40 p-3 text-sm">
+            <div role="alert" className="text-sm">
               <p className="text-destructive">{error}</p>
               <p className="mt-1 text-muted-foreground">{MFA_HELP}</p>
               <Button variant="outline" className="mt-3 h-11 w-full" onClick={() => window.location.reload()}>Try again</Button>
@@ -93,7 +93,7 @@ const TwoStepSetup = () => {
           </ol>
           <div className="flex justify-center">
             {qr ? (
-              <img src={qr} alt="Setup code for your authenticator app" className="h-48 w-48 rounded-lg bg-card p-2" />
+              <img src={qr} alt="Setup code for your authenticator app" className="h-48 w-48 rounded-lg bg-white p-2" />
             ) : (
               !error && <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             )}
@@ -106,13 +106,13 @@ const TwoStepSetup = () => {
           <div className="flex justify-center">
             <InputOTP maxLength={6} value={code} onChange={setCode} inputMode="numeric" autoComplete="one-time-code">
               <InputOTPGroup>
-                {[0, 1, 2, 3, 4, 5].map((i) => <InputOTPSlot key={i} index={i} className="h-12 w-11 text-lg" />)}
+                {[0, 1, 2, 3, 4, 5].map((i) => <InputOTPSlot key={i} index={i} className="h-14 w-12 text-2xl" />)}
               </InputOTPGroup>
             </InputOTP>
           </div>
           <Button className="w-full h-12" disabled={busy || code.length !== 6 || !factorId} onClick={confirm}>
             {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Turn on two-step sign-in
+            Turn on
           </Button>
           <p className="text-xs text-muted-foreground">
             If you lose your phone, ask another league admin to reset your two-step sign-in.

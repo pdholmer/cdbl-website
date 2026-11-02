@@ -3,7 +3,7 @@
 export type ThemePref = "light" | "dark" | "system";
 
 export const THEME_KEY = "cdbl-theme";
-export const SIGNED_IN_PREFIXES = ["/household", "/two-step", "/training", "/coach", "/account", "/admin"];
+export const SIGNED_IN_PREFIXES = ["/household", "/two-step", "/training", "/coach", "/account", "/admin", "/login", "/reset-password"];
 
 export const isSignedInPath = (path: string) =>
   path !== "/admin/login" && SIGNED_IN_PREFIXES.some((p) => path === p || path.startsWith(p + "/"));

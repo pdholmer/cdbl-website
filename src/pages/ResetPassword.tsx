@@ -43,10 +43,10 @@ const ResetPassword = () => {
   };
 
   return (
-    <AuthShell>
-      <Card className="w-full rounded-2xl shadow-md">
+    <AuthShell title="New password">
+      <Card className="tex-mesh w-full rounded-xl">
         <CardHeader>
-          <CardTitle className="font-heading text-2xl">Set a new password</CardTitle>
+          <CardTitle className="font-label text-xl">Set a new password</CardTitle>
           <CardDescription>At least {MIN_PASSWORD_LENGTH} characters.</CardDescription>
         </CardHeader>
         <CardContent>
