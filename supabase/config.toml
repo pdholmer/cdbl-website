@@ -26,3 +26,6 @@ project_id = "nqywnfgpwqpczesjkwtp"
 
   [functions.submit-assistant-request]
   verify_jwt = false
+
+[functions.mfa-email-code]
+verify_jwt = false
