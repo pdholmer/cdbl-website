@@ -48,28 +48,14 @@ export const ProtectedRoute = ({
         setMfaRedirect("/two-step/verify");
       }
 
-      // Check for admin role
-      const { data: hasAdminRole } = await supabase
-        .rpc('has_role', {
-          _user_id: session.user.id,
-          _role: 'admin'
-        });
-      
-      setIsAdmin(!!hasAdminRole);
-
-      // If user is admin, they have board member access too
-      if (hasAdminRole) {
-        setIsBoardMember(true);
-      } else if (requireBoardMember) {
-        // Check for board_member role
-        const { data: hasBoardMemberRole } = await supabase
-          .rpc('has_role', {
-            _user_id: session.user.id,
-            _role: 'board_member'
-          });
-        
-        setIsBoardMember(!!hasBoardMemberRole);
-      }
+      // Admin panel: section access decided only in src/lib/adminAccess.ts.
+      let roles: string[] = [];
+      try { roles = await fetchMyRoles(session.user.id); } catch { roles = []; }
+      const hasAdminRole = roles.includes("admin");
+      setIsAdmin(hasAdminRole);
+      setIsStaffUser(isStaff(roles));
+      setPathAllowed(canAccessAdminPath(roles, location.pathname));
+      setIsBoardMember(hasAdminRole || roles.includes("board_member"));
 
       if (requireCoach) {
         // Check for coach role
