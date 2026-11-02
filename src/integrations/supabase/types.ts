@@ -14,6 +14,161 @@ export type Database = {
   }
   public: {
     Tables: {
+      assistant_conversations: {
+        Row: {
+          expires_at: string
+          first_page: string | null
+          id: string
+          last_message_at: string
+          league_id: string
+          session_key: string
+          started_at: string
+          user_id: string | null
+        }
+        Insert: {
+          expires_at?: string
+          first_page?: string | null
+          id?: string
+          last_message_at?: string
+          league_id: string
+          session_key: string
+          started_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          expires_at?: string
+          first_page?: string | null
+          id?: string
+          last_message_at?: string
+          league_id?: string
+          session_key?: string
+          started_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_conversations_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assistant_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          league_id: string
+          page_path: string | null
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          league_id: string
+          page_path?: string | null
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          league_id?: string
+          page_path?: string | null
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "assistant_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistant_messages_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assistant_requests: {
+        Row: {
+          admin_notes: string | null
+          conversation_id: string | null
+          created_at: string
+          details: string | null
+          expires_at: string
+          id: string
+          kind: string
+          league_id: string
+          owner_emailed_at: string | null
+          page_path: string | null
+          requester_email: string
+          requester_name: string
+          status: string
+          summary: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          details?: string | null
+          expires_at?: string
+          id?: string
+          kind: string
+          league_id: string
+          owner_emailed_at?: string | null
+          page_path?: string | null
+          requester_email: string
+          requester_name: string
+          status?: string
+          summary: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          details?: string | null
+          expires_at?: string
+          id?: string
+          kind?: string
+          league_id?: string
+          owner_emailed_at?: string | null
+          page_path?: string | null
+          requester_email?: string
+          requester_name?: string
+          status?: string
+          summary?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assistant_requests_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "assistant_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assistant_requests_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coach_invitations: {
         Row: {
           accepted_at: string | null
@@ -4984,6 +5139,7 @@ export type Database = {
         }
         Returns: number
       }
+      purge_expired_assistant_data: { Args: never; Returns: undefined }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
