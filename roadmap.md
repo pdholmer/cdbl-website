@@ -15,3 +15,5 @@
 - [ ] Stage 3: delete retired tokens and restyle public pages (waiting on Paul)
 - [x] Stage 2: textures, flood cards, blue selected states, icon cleanup
 - [x] Stage 3 shell: lit header, piping, tab bar, grouped sidebar, Prompt 2 follow-ups
+- [ ] Prompt 4: sign-in screens restyle + Prompt 3 cleanup (approved Nov 2)
+- [ ] Coach My Team tab: waiting on a real team section
