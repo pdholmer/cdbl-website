@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import seal from "@/assets/cdbl-seal.png";
 import { LitHeader } from "@/components/shell/LitHeader";
-import { fetchMyRoles } from "@/lib/adminAccess";
+import { canAccessAdminPath, fetchMyRoles } from "@/lib/adminAccess";
 import { hasGuardianRecord, resolveLanding } from "@/lib/landing";
 import { adminGroupLabel, adminGroupsFor, tabsFor, type NavLinkItem, type ShellArea } from "@/lib/shellNav";
 import { cn } from "@/lib/utils";
@@ -29,6 +29,7 @@ const useShellIdentity = (fixed: AppShellProps["area"]) => {
   const [roles, setRoles] = useState<string[]>([]);
   const [area, setArea] = useState<ShellArea>(fixed === "auto" ? "family" : fixed);
   const [hasHousehold, setHasHousehold] = useState(false);
+  const [isTeamCoach, setIsTeamCoach] = useState(false);
   useEffect(() => {
     let alive = true;
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -41,10 +42,15 @@ const useShellIdentity = (fixed: AppShellProps["area"]) => {
         } catch { /* stay family */ }
       }
       try { const h = await hasGuardianRecord(session.user.id); if (alive) setHasHousehold(h); } catch { /* hide link */ }
+      // Same coach read resolveLanding uses, for the "Coach" switch link.
+      try {
+        const c = await supabase.from("coaches").select("id").eq("user_id", session.user.id).limit(1);
+        if (alive) setIsTeamCoach(!c.error && (c.data?.length ?? 0) > 0);
+      } catch { /* hide link */ }
     });
     return () => { alive = false; };
   }, [fixed]);
-  return { roles, area, hasHousehold };
+  return { roles, area, hasHousehold, isTeamCoach };
 };
 
 const isActive = (item: NavLinkItem, pathname: string, hash: string) => {
@@ -63,7 +69,7 @@ const scrollToHash = (to: string) => {
 export const AppShell = ({ area: fixedArea, label, title, children, banner }: AppShellProps) => {
   const { pathname, hash } = useLocation();
   const navigate = useNavigate();
-  const { roles, area, hasHousehold } = useShellIdentity(fixedArea);
+  const { roles, area, hasHousehold, isTeamCoach } = useShellIdentity(fixedArea);
   const [moreOpen, setMoreOpen] = useState(false);
 
   const tabs = tabsFor(area, roles);
@@ -91,10 +97,18 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
     </NavLink>
   );
 
+  // Area switches: show only areas this person can open, and not the one they are in.
+  const canOpenAdmin = canAccessAdminPath(roles, "/admin");
+  const canOpenCoach = roles.includes("coach") || isTeamCoach;
+  const areaSwitches: NavLinkItem[] = [];
+  if (canOpenAdmin && area !== "admin") areaSwitches.push({ label: "League office", to: "/admin" });
+  if (canOpenCoach && area !== "coach") areaSwitches.push({ label: "Coach", to: "/coach" });
+  if (hasHousehold && area !== "family") areaSwitches.push({ label: "My household", to: "/household" });
+
   const footerLinks: NavLinkItem[] = [
     { label: "Account", to: "/account" },
-    ...(area === "admin" && hasHousehold ? [{ label: "My household", to: "/household" }] : []),
-    { label: "Return to site", to: "/" },
+    ...areaSwitches,
+    { label: "Back to cdbaseball.org", to: "/" },
   ];
 
   const nav = (
@@ -139,6 +153,17 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
           label={label ?? AREA_LABEL[area]}
           title={headline}
           sealPhoneOnly
+          notice={
+            area === "family" ? (
+              /* Family phones have no More sheet, so the way back to the public site lives here. */
+              <Link
+                to="/"
+                className="md:hidden -mr-1 inline-flex min-h-[44px] items-center px-1 text-[13px] font-semibold text-foreground/90 underline decoration-foreground/40 underline-offset-2 hover:decoration-foreground"
+              >
+                Back to cdbaseball.org
+              </Link>
+            ) : undefined
+          }
           actions={
             <>
               <Link to="/account" aria-label="Account" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
