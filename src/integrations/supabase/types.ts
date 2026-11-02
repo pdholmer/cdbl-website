@@ -5154,6 +5154,23 @@ export type Database = {
       }
     }
     Functions: {
+      add_my_player: {
+        Args: {
+          _allergies: string
+          _conditions: string
+          _date_of_birth: string
+          _first_name: string
+          _gender: string
+          _household_id: string
+          _jersey_size: string
+          _last_name: string
+          _medical_notes: string
+          _medications: string
+          _preferred_name: string
+          _school: string
+        }
+        Returns: string
+      }
       approve_role_request: {
         Args: { notes?: string; request_id: string }
         Returns: boolean
@@ -5171,6 +5188,21 @@ export type Database = {
           p_venue_id: string
         }
         Returns: boolean
+      }
+      create_my_household: {
+        Args: {
+          _address_line1: string
+          _address_line2: string
+          _city: string
+          _d301_attestation: string
+          _first_name: string
+          _last_name: string
+          _phone: string
+          _relationship: string
+          _state: string
+          _zip_code: string
+        }
+        Returns: string
       }
       create_player_in_league: {
         Args: { _league_id: string; _player: Json }

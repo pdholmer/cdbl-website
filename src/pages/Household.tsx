@@ -16,6 +16,7 @@ import {
 } from "@/components/family";
 import type { ChipTone } from "@/components/family/StatusChip";
 import HouseholdEditSheet from "@/components/family/HouseholdEditSheet";
+import AddPlayerSheet from "@/components/family/AddPlayerSheet";
 import { useHouseholdOverview } from "@/hooks/useHouseholdOverview";
 
 const formatTime = (t: string | null) => {
@@ -41,6 +42,7 @@ const Household = () => {
   const navigate = useNavigate();
   const { data, isLoading, error, refetch } = useHouseholdOverview();
   const [editing, setEditing] = useState(false);
+  const [adding, setAdding] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const signOut = async () => {
@@ -65,7 +67,7 @@ const Household = () => {
   type Todo = { key: string; task: string; why: string; chip: string; tone: ChipTone; action?: { label: string; onClick?: () => void; to?: string } };
   const todos: Todo[] = [];
   if (data && children.length === 0) {
-    todos.push({ key: "link", task: "Link your player", why: "Your child shows up here once their registration is processed.", chip: "Due", tone: "warning", action: { label: "Start registration", to: "/registration" } });
+    todos.push({ key: "link", task: "Add your players", why: "Each child you add here can be registered for the season.", chip: "Due", tone: "warning", action: { label: "Add a player", onClick: () => setAdding(true) } });
   }
   if (household && !household.address_line1) {
     todos.push({ key: "address", task: "Add your address", why: "Mailings and field directions need a home address.", chip: "Due", tone: "warning", action: { label: "Add address", onClick: () => setEditing(true) } });
@@ -158,6 +160,7 @@ const Household = () => {
                 players={children.map((c) => ({ id: c.id, initials: c.initials, name: c.display_name }))}
                 selectedId={selected?.id ?? null}
                 onSelect={setSelectedId}
+                onAdd={household ? () => setAdding(true) : undefined}
               />
               {selected && (
                 <ol className="tex-mesh mt-4 divide-y divide-border rounded-xl border border-border bg-card">
@@ -361,6 +364,14 @@ const Household = () => {
           household={household}
           open={editing}
           onOpenChange={setEditing}
+          onSaved={() => refetch()}
+        />
+      )}
+      {household && (
+        <AddPlayerSheet
+          householdId={household.id}
+          open={adding}
+          onOpenChange={setAdding}
           onSaved={() => refetch()}
         />
       )}

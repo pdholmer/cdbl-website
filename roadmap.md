@@ -21,7 +21,7 @@
 - [x] Prompt 5: parent Home (/household) to-dos, flood card, player pickers, steps
 - [ ] Household Forms and Pay steps: waiting on a forms/payment data source (shows "Not tracked yet")
 # 2027 in-house registration (each phase needs its own "approved"; SQL shown first)
-- [ ] Phase 1: household setup + add player (SQL drafted, waiting for approval)
+- [x] Phase 1: household setup + add player (built in preview Nov 2; D301 typed attestation checked but not stored)
 - [ ] Phase 2: registration record + division placement by birth date (needs 2027 cutoff date, clinic details)
 - [ ] Phase 3: forms and waivers (needs waiver list and wording)
 - [ ] Phase 4: fees, discounts, cart total (needs league decisions 1-6)
