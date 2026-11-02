@@ -11,3 +11,5 @@
 - The Night Game Builder look applies only on signed-in paths via the `ngb` class on <html>, set by `src/lib/theme.ts` and a pre-paint script in index.html (keep their path lists in sync); dark mode is stored on the device only. Why: public pages keep their look until Stage 3 and no database change is needed.
 - Signed-in pages (/household, /account, /training, /coach, /admin) render inside `src/components/shell/AppShell.tsx`; tabs and sidebar groups live only in `src/lib/shellNav.ts` and are filtered by `canAccessAdminPath`. Why: one header and navigation to change, and menus never show more than the role map allows.
 - Sign-in, reset and two-step screens use `src/components/AuthShell.tsx`, which shares `src/components/shell/LitHeader.tsx` with AppShell; /admin/login only redirects to /login. Why: one header for every signed-in-look screen and one sign-in address.
+
+- Division placement is decided only by the database function `division_eligibility` (mode per division, ages derived from the season cutoff); families start registrations only through `start_my_registration`. Why: one placement rule the registrar can trust, never chosen in the browser.

@@ -758,17 +758,27 @@ export type Database = {
           age_range: string
           capacity: number | null
           cost: number | null
+          cost_confirmed_at: string | null
           created_at: string | null
           default_max_roster_size: number | null
           default_min_roster_size: number | null
+          description: string | null
+          display_label: string | null
           display_order: number | null
+          eligibility_confirmed_at: string | null
+          eligibility_mode: string
           features: Json | null
           id: string
           league_id: string
+          max_age: number | null
+          max_grade: number | null
+          min_age: number | null
+          min_grade: number | null
           name: string
           program_id: string
           schedule_notes: string | null
           season_length: string | null
+          typical_ages: string | null
           updated_at: string | null
           waitlist_enabled: boolean
         }
@@ -776,17 +786,27 @@ export type Database = {
           age_range: string
           capacity?: number | null
           cost?: number | null
+          cost_confirmed_at?: string | null
           created_at?: string | null
           default_max_roster_size?: number | null
           default_min_roster_size?: number | null
+          description?: string | null
+          display_label?: string | null
           display_order?: number | null
+          eligibility_confirmed_at?: string | null
+          eligibility_mode?: string
           features?: Json | null
           id?: string
           league_id?: string
+          max_age?: number | null
+          max_grade?: number | null
+          min_age?: number | null
+          min_grade?: number | null
           name: string
           program_id: string
           schedule_notes?: string | null
           season_length?: string | null
+          typical_ages?: string | null
           updated_at?: string | null
           waitlist_enabled?: boolean
         }
@@ -794,17 +814,27 @@ export type Database = {
           age_range?: string
           capacity?: number | null
           cost?: number | null
+          cost_confirmed_at?: string | null
           created_at?: string | null
           default_max_roster_size?: number | null
           default_min_roster_size?: number | null
+          description?: string | null
+          display_label?: string | null
           display_order?: number | null
+          eligibility_confirmed_at?: string | null
+          eligibility_mode?: string
           features?: Json | null
           id?: string
           league_id?: string
+          max_age?: number | null
+          max_grade?: number | null
+          min_age?: number | null
+          min_grade?: number | null
           name?: string
           program_id?: string
           schedule_notes?: string | null
           season_length?: string | null
+          typical_ages?: string | null
           updated_at?: string | null
           waitlist_enabled?: boolean
         }
@@ -1989,6 +2019,9 @@ export type Database = {
           address_line2: string | null
           city: string | null
           created_at: string
+          d301_attestation_text: string | null
+          d301_attested_at: string | null
+          d301_attested_by: string | null
           id: string
           league_id: string
           name: string | null
@@ -2001,6 +2034,9 @@ export type Database = {
           address_line2?: string | null
           city?: string | null
           created_at?: string
+          d301_attestation_text?: string | null
+          d301_attested_at?: string | null
+          d301_attested_by?: string | null
           id?: string
           league_id?: string
           name?: string | null
@@ -2013,6 +2049,9 @@ export type Database = {
           address_line2?: string | null
           city?: string | null
           created_at?: string
+          d301_attestation_text?: string | null
+          d301_attested_at?: string | null
+          d301_attested_by?: string | null
           id?: string
           league_id?: string
           name?: string | null
@@ -2021,6 +2060,13 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "households_d301_attested_by_fkey"
+            columns: ["d301_attested_by"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "households_league_id_fkey"
             columns: ["league_id"]
@@ -2826,6 +2872,137 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      placement_reviews: {
+        Row: {
+          age_division_id: string | null
+          created_at: string
+          created_by: string | null
+          grade: number | null
+          grade_division_id: string | null
+          id: string
+          league_age: number | null
+          league_id: string
+          player_id: string
+          program_id: string
+          reason: string
+          registration_id: string
+          resolution_division_id: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          season_id: string
+          status: string
+        }
+        Insert: {
+          age_division_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          grade?: number | null
+          grade_division_id?: string | null
+          id?: string
+          league_age?: number | null
+          league_id?: string
+          player_id: string
+          program_id: string
+          reason: string
+          registration_id: string
+          resolution_division_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          season_id: string
+          status?: string
+        }
+        Update: {
+          age_division_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          grade?: number | null
+          grade_division_id?: string | null
+          id?: string
+          league_age?: number | null
+          league_id?: string
+          player_id?: string
+          program_id?: string
+          reason?: string
+          registration_id?: string
+          resolution_division_id?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          season_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "placement_reviews_age_division_id_fkey"
+            columns: ["age_division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_grade_division_id_fkey"
+            columns: ["grade_division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["player_id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["registration_id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_resolution_division_id_fkey"
+            columns: ["resolution_division_id"]
+            isOneToOne: false
+            referencedRelation: "divisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "placement_reviews_season_id_fkey"
+            columns: ["season_id"]
+            isOneToOne: false
+            referencedRelation: "seasons"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       platform_feedback: {
         Row: {
@@ -3996,12 +4173,17 @@ export type Database = {
         Row: {
           age_cutoff_date: string | null
           created_at: string
+          dates_confirmed_at: string | null
           ends_on: string | null
           id: string
           is_current: boolean
           label: string | null
+          late_registration_until: string | null
           league_id: string
           locked_at: string | null
+          registration_closes_on: string | null
+          registration_opens_on: string | null
+          registration_test_mode: boolean
           school_year_start: string | null
           starts_on: string | null
           updated_at: string
@@ -4010,12 +4192,17 @@ export type Database = {
         Insert: {
           age_cutoff_date?: string | null
           created_at?: string
+          dates_confirmed_at?: string | null
           ends_on?: string | null
           id?: string
           is_current?: boolean
           label?: string | null
+          late_registration_until?: string | null
           league_id?: string
           locked_at?: string | null
+          registration_closes_on?: string | null
+          registration_opens_on?: string | null
+          registration_test_mode?: boolean
           school_year_start?: string | null
           starts_on?: string | null
           updated_at?: string
@@ -4024,12 +4211,17 @@ export type Database = {
         Update: {
           age_cutoff_date?: string | null
           created_at?: string
+          dates_confirmed_at?: string | null
           ends_on?: string | null
           id?: string
           is_current?: boolean
           label?: string | null
+          late_registration_until?: string | null
           league_id?: string
           locked_at?: string | null
+          registration_closes_on?: string | null
+          registration_opens_on?: string | null
+          registration_test_mode?: boolean
           school_year_start?: string | null
           starts_on?: string | null
           updated_at?: string
@@ -5177,7 +5369,24 @@ export type Database = {
       }
       assign_first_user_admin: { Args: { _user_id: string }; Returns: boolean }
       calendar_is_public: { Args: { _calendar_id: string }; Returns: boolean }
+      can_see_household_contact: {
+        Args: { _household_id: string }
+        Returns: boolean
+      }
+      can_see_player_medical_as_guardian: {
+        Args: { _player_id: string }
+        Returns: boolean
+      }
       can_see_player_pii: { Args: { _player_id: string }; Returns: boolean }
+      change_season_dates: {
+        Args: {
+          _acknowledged_moves: number
+          _cutoff: string
+          _school_year_start: string
+          _season_id: string
+        }
+        Returns: number
+      }
       check_schedule_conflict: {
         Args: {
           p_date: string
@@ -5213,6 +5422,10 @@ export type Database = {
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
+      }
+      division_eligibility: {
+        Args: { _dob: string; _grade: number; _program_id: string }
+        Returns: Json
       }
       email_mfa_session_valid: { Args: never; Returns: boolean }
       email_queue_dispatch: { Args: never; Returns: undefined }
@@ -5327,6 +5540,7 @@ export type Database = {
         }
         Returns: number
       }
+      program_open_issues: { Args: { _program_id: string }; Returns: string[] }
       purge_expired_assistant_data: { Args: never; Returns: undefined }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
@@ -5352,6 +5566,10 @@ export type Database = {
       }
       requires_mfa: { Args: { _user_id: string }; Returns: boolean }
       safe_uuid: { Args: { _t: string }; Returns: string }
+      season_date_change_impact: {
+        Args: { _new_cutoff: string; _season_id: string }
+        Returns: number
+      }
       set_coach_clearance: {
         Args: {
           _coach_id: string
@@ -5364,6 +5582,15 @@ export type Database = {
       set_division_fee: {
         Args: { _cost: number; _division_id: string }
         Returns: undefined
+      }
+      start_my_registration: {
+        Args: {
+          _choice?: string
+          _grade: number
+          _player_id: string
+          _program_id: string
+        }
+        Returns: Json
       }
       unsubscribe_by_token: {
         Args: { _category?: string; _token: string }

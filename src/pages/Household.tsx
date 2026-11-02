@@ -178,6 +178,11 @@ const Household = () => {
                   ))}
                 </ol>
               )}
+              {selected && (
+                <Link to={`/household/register/${selected.id}`} className="mt-3 inline-flex h-11 items-center rounded-full bg-primary px-5 font-label text-[15px] font-semibold text-primary-foreground">
+                  Choose a program for {selected.display_name}
+                </Link>
+              )}
             </section>
 
             {data?.nextEvent && (
