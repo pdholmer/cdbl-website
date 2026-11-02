@@ -165,6 +165,7 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
             ) : undefined
           }
           actions={
+            <>
               <Link to="/account" aria-label="Account" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
                 <UserRound className="h-5 w-5" aria-hidden />
               </Link>
