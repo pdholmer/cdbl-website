@@ -8,7 +8,11 @@ import { StatusChip } from "@/components/family";
 import { cn } from "@/lib/utils";
 import { GRADES, gradeLabel, longDate, registrationWindow, todayISO } from "@/lib/registration";
 import { toast } from "sonner";
-import RegistrationForms from "@/components/family/RegistrationForms";
+import RegistrationForms, { type NextForm } from "@/components/family/RegistrationForms";
+import PlayerPicker from "@/components/family/PlayerPicker";
+import AddPlayerSheet from "@/components/family/AddPlayerSheet";
+import { BuilderActionBar, BuilderHeaderExtra, BuilderLayout, BuilderStage } from "@/components/family/Builder";
+import { useHouseholdOverview } from "@/hooks/useHouseholdOverview";
 
 type Elig = {
   league_age: number | null;
@@ -62,6 +66,10 @@ const HouseholdRegister = () => {
   const [choice, setChoice] = useState<Choice>("recommended");
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const family = useHouseholdOverview();
+  const [adding, setAdding] = useState(false);
+  const [nextForm, setNextForm] = useState<NextForm>(null);
+  const [formsReady, setFormsReady] = useState(false);
 
   useEffect(() => {
     if (!data) return;
@@ -120,18 +128,60 @@ const HouseholdRegister = () => {
     return `${name}'s grade and age don't match one division exactly. We picked the closest one.`;
   };
 
+  const goPay = async () => {
+    if (!existingForProgram) return;
+    const { error: ce } = await supabase.rpc("add_to_my_cart", { _registration_id: existingForProgram.id });
+    if (ce) return setErr(ce.message);
+    navigate("/household/checkout");
+  };
+
+  const step = existingForProgram ? 3 : 2;
+  const progLabel = PROGRAM_LABEL[data?.programs.find((p) => p.id === programId)?.type ?? ""] ?? "";
+  const stageLabel = [division ? division.display_label ?? division.name : null, progLabel || null, s ? `${s.year}` : null].filter(Boolean).join(" · ") || "Registration";
+  const saveLabel = saving ? "Saving" : win === "before" ? `Opens ${longDate(s?.registration_opens_on ?? null)}` : existingForProgram ? "Update draft" : "Save draft registration";
+
+  const action = step === 2
+    ? { label: saveLabel, onClick: save, disabled: !canSave || saving }
+    : nextForm
+      ? { label: `Sign the ${nextForm.title}`, onClick: nextForm.open, disabled: false }
+      : formsReady
+        ? { label: "Go to payment", onClick: goPay, disabled: false }
+        : { label: "Loading forms", onClick: () => {}, disabled: true };
+
+  const kids = family.data?.children ?? [];
+  const household = family.data?.household ?? null;
+  const sectionTitle = "mb-3 font-label text-[17px] font-semibold";
+
   return (
-    <AppShell area="family" label={s ? `${s.year} season, registration` : "Registration"} title={name}>
-      <div className="mx-auto w-full max-w-2xl px-4 py-8 pb-40 sm:px-6">
-        {isLoading ? (
-          <Skeleton className="h-64 w-full rounded-2xl" />
-        ) : error || !data?.player ? (
+    <AppShell area="family" label={stageLabel} title={name} titleClassName="md:sr-only"
+      headerExtra={data?.player ? <BuilderHeaderExtra step={step} /> : undefined}>
+      {isLoading ? (
+        <div className="mx-auto w-full max-w-2xl px-4 py-8"><Skeleton className="h-64 w-full rounded-2xl" /></div>
+      ) : error || !data?.player ? (
+        <div className="mx-auto w-full max-w-2xl px-4 py-8">
           <div className="tex-mesh rounded-xl border border-border bg-card p-5">
             <p className="font-label text-[17px] font-semibold">We couldn't find this player in your household.</p>
             <Link to="/household" className="mt-3 inline-flex h-11 items-center underline">Back to Household</Link>
           </div>
-        ) : (
+        </div>
+      ) : (
+        <BuilderLayout
+          stage={<BuilderStage label={stageLabel} name={name} step={step} />}
+          actionBar={
+            <BuilderActionBar step={step} label={action.label} onClick={action.onClick} disabled={action.disabled}
+              aside={existingForProgram ? <StatusChip tone="neutral">{existingForProgram.lifecycle === "draft" ? "Draft saved" : "Submitted"}</StatusChip> : undefined} />
+          }
+        >
           <div className="space-y-8">
+            <section aria-label="Player">
+              <p className={sectionTitle}>Player</p>
+              <PlayerPicker
+                players={kids.length ? kids.map((c) => ({ id: c.id, initials: c.initials, name: c.display_name })) : [{ id: data.player.id, initials: name.charAt(0).toUpperCase(), name }]}
+                selectedId={data.player.id}
+                onSelect={(id) => id !== playerId && navigate(`/household/register/${id}`)}
+                onAdd={household ? () => setAdding(true) : undefined}
+              />
+            </section>
             {win === "before" && (
               <div className="tex-mesh rounded-xl border border-border bg-card p-5">
                 <p className="font-display text-2xl font-bold">Registration opens {longDate(s?.registration_opens_on ?? null)}</p>
@@ -151,7 +201,7 @@ const HouseholdRegister = () => {
             {win === "test" && <StatusChip tone="warning">Test mode</StatusChip>}
 
             <section aria-label="Program">
-              <p className="mb-3 font-label text-[17px] font-semibold">Program</p>
+              <p className={sectionTitle}>Program</p>
               <div className="flex flex-wrap gap-2">
                 {data.programs.map((p) => {
                   const on = p.id === programId;
@@ -224,27 +274,22 @@ const HouseholdRegister = () => {
                   className="h-11 rounded-full border border-border px-5 font-label text-[15px] font-semibold">
                   Add to checkout
                 </button>
+                <button type="button" onClick={save} disabled={!canSave || saving}
+                  className="h-11 rounded-full border border-border px-5 font-label text-[15px] font-semibold disabled:opacity-50">
+                  {saveLabel}
+                </button>
               </div>
             )}
             {existingForProgram && (
-              <RegistrationForms registrationId={existingForProgram.id} childName={name} />
+              <RegistrationForms registrationId={existingForProgram.id} childName={name} onNext={(n, r) => { setNextForm(n); setFormsReady(r); }} />
             )}
             {elig?.error && <p className="text-[15px]">{elig.error}</p>}
             {err && <p role="alert" className="text-sm font-semibold text-destructive">{err}</p>}
           </div>
-        )}
-      </div>
-
-      {data?.player && (
-        <div className="fixed inset-x-0 bottom-[calc(64px+env(safe-area-inset-bottom))] z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:bottom-0">
-          <div className="mx-auto flex max-w-2xl items-center gap-3">
-            {existingForProgram && <StatusChip tone="neutral">{existingForProgram.lifecycle === "draft" ? "Draft saved" : "Submitted"}</StatusChip>}
-            <button type="button" onClick={save} disabled={!canSave || saving}
-              className="h-12 flex-1 rounded-full bg-primary px-5 font-label text-[16px] font-semibold text-primary-foreground disabled:opacity-50">
-              {saving ? "Saving" : win === "before" ? `Opens ${longDate(s?.registration_opens_on ?? null)}` : existingForProgram ? "Update draft" : "Save draft registration"}
-            </button>
-          </div>
-        </div>
+        </BuilderLayout>
+      )}
+      {household && (
+        <AddPlayerSheet householdId={household.id} open={adding} onOpenChange={setAdding} onSaved={() => family.refetch()} />
       )}
     </AppShell>
   );

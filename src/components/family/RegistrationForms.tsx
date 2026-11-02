@@ -94,7 +94,6 @@ export const RegistrationForms = ({ registrationId, childName, onNext }: {
   return (
     <section aria-label="Forms" className="space-y-3">
       <p className="font-label text-[17px] font-semibold">Forms for {childName}</p>
-      <p className="text-sm text-muted-foreground">Signed rows show a chip. The next one to sign is highlighted.</p>
       <ul className="space-y-3">
         {data.docs.map((d) => {
           const s = current(d);
