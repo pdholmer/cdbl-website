@@ -107,13 +107,9 @@ export function AdminNavGrid() {
                         "hover:bg-muted transition-colors group"
                       )}
                     >
-                      <item.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                                            <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
                         {item.title}
                       </span>
-                      {item.adminOnly && (
-                        
-                      )}
                     </Link>
                   ))}
                 </div>

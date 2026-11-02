@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { Monitor, Moon, Sun } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { FamilyHeader } from "@/components/family";
 import { getThemePref, setThemePref, type ThemePref } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
-const OPTIONS: { value: ThemePref; label: string; Icon: typeof Sun }[] = [
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "dark", label: "Dark", Icon: Moon },
-  { value: "system", label: "Device", Icon: Monitor },
+const OPTIONS: { value: ThemePref; label: string; }[] = [
+  { value: "light", label: "Light" },
+  { value: "dark", label: "Dark" },
+  { value: "system", label: "Device" },
 ];
 
 const Account = () => {
@@ -38,7 +37,7 @@ const Account = () => {
             Saved on this device. Device follows your phone or computer setting.
           </p>
           <div role="radiogroup" aria-label="Appearance" className="mt-4 grid grid-cols-3 gap-2">
-            {OPTIONS.map(({ value, label, Icon }) => (
+            {OPTIONS.map(({ value, label }) => (
               <button
                 key={value}
                 type="button"
@@ -48,11 +47,10 @@ const Account = () => {
                 className={cn(
                   "flex h-12 items-center justify-center gap-2 rounded-full border font-label text-sm font-semibold transition-colors",
                   pref === value
-                    ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-background text-foreground hover:bg-muted",
+                    ? "is-selected"
+                    : "tex-mesh border-border bg-card text-foreground hover:bg-muted",
                 )}
               >
-                <Icon className="h-4 w-4" aria-hidden />
                 {label}
               </button>
             ))}

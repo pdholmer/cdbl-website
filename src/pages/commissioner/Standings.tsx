@@ -221,11 +221,7 @@ export default function CommissionerStandings() {
                 standings.map((team, index) => (
                   <TableRow key={team.id}>
                     <TableCell>
-                      {index === 0 && standings.length > 1 ? (
-                        
-                      ) : (
-                        index + 1
-                      )}
+                      {index + 1}
                     </TableCell>
                     <TableCell className="font-medium">{team.name}</TableCell>
                     <TableCell>{team.division}</TableCell>

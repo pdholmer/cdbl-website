@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { Plus, Search, Loader2, Tag, Copy, Check, Trash2 } from 'lucide-react';
+import { Plus, Search, Loader2, Copy, Check, Trash2 } from 'lucide-react';
 import { AdminLayout } from '@/components/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
