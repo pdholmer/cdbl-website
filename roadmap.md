@@ -8,3 +8,6 @@
 # Two-step sign-in
 - [x] Fix /two-step/setup and /two-step/verify for signed-in admins in preview (stale session, QR, help message)
 - [ ] Email-code plan: waiting for Paul's written "approved"
+# Night Game Builder
+- [x] Stage 1: signed-in look (fonts, colors, shapes, flat cards, Light/Dark/Device on /account)
+- [ ] Stage 3: delete retired tokens and restyle public pages (waiting on Paul)

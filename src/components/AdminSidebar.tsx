@@ -19,7 +19,7 @@ import {
 import { 
   Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, 
   RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, 
-  MessageSquare, UserCog, ExternalLink, Lock, Tag, CheckSquare, 
+  MessageSquare, UserCog, ExternalLink, Settings2, Lock, Tag, CheckSquare, 
   Coffee, ChevronDown, Settings, Megaphone
 } from "lucide-react";
 import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
@@ -253,6 +253,14 @@ export function AdminSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link to="/account" className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
+                    <Settings2 className="h-4 w-4" />
+                    <span className="ml-2">Account</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link to="/" className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">

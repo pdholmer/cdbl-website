@@ -16,7 +16,7 @@ export const EmptyStateBlock = ({ children, icon, className }: EmptyStateBlockPr
   }
   return (
     <div className={cn("flex items-start gap-3", className)}>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[hsl(217_100%_94%)] text-[hsl(217_100%_30%)]">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary dark:bg-primary/25 dark:text-primary-foreground">
         {icon}
       </span>
       <p className="text-sm leading-relaxed text-muted-foreground">{children}</p>

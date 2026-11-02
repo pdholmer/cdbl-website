@@ -173,6 +173,94 @@ All colors MUST be HSL.
   }
 }
 
+
+/* Night Game Builder: signed-in pages only (html.ngb, set by ThemeScope). */
+@layer base {
+  :root { --font-sans: 'Montserrat'; --font-heading: 'Montserrat'; }
+  html.ngb {
+    --font-sans: 'Barlow';
+    --font-heading: 'Big Shoulders Display';
+    --background: 214 27% 95%;
+    --foreground: 216 17% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 216 17% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 17% 9%;
+    --primary: 218 100% 32%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 218 100% 32%;
+    --secondary: 213 29% 92%;
+    --secondary-foreground: 216 17% 9%;
+    --muted: 213 29% 92%;
+    --muted-foreground: 221 12% 40%;
+    --accent: 213 29% 92%;
+    --accent-foreground: 216 17% 9%;
+    --destructive: 3 71% 41%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 145 61% 30%;
+    --success-foreground: 0 0% 100%;
+    --warning: 37 71% 58%;
+    --warning-foreground: 37 100% 8%;
+    --seal-navy: 221 71% 29%;
+    --seal-black: 345 5% 13%;
+    --illinois-mist: 213 29% 92%;
+    --border: 214 25% 89%;
+    --input: 214 25% 89%;
+    --ring: 218 100% 32%;
+    --radius: 12px;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 216 17% 9%;
+    --sidebar-primary: 218 100% 32%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 213 29% 92%;
+    --sidebar-accent-foreground: 216 17% 9%;
+    --sidebar-border: 214 25% 89%;
+    --sidebar-ring: 218 100% 32%;
+    /* Retired on signed-in pages; tokens kept until Stage 3 for public pages. */
+    --carolina-blue: var(--primary);
+    --carolina-blue-foreground: 0 0% 100%;
+    --silver: var(--muted);
+    --silver-foreground: var(--foreground);
+    --event-practice: var(--primary);
+    --event-game: var(--success);
+    --event-gold: var(--warning);
+    --mlb-red: var(--primary); --mlb-blue: var(--primary); --mlb-orange: var(--primary);
+    --mlb-green: var(--primary); --mlb-navy: var(--primary);
+    --rocket-red: var(--primary); --rocket-orange: var(--primary);
+    --gradient-hero: hsl(var(--primary));
+    --gradient-primary: hsl(var(--primary));
+    --gradient-carolina: hsl(var(--primary));
+    --gradient-subtle: hsl(var(--background));
+    --rocket-gradient: hsl(var(--primary));
+    --shadow-strong: none;
+    --shadow-carolina: none;
+    --shadow-card: none;
+  }
+  html.ngb.dark {
+    --background: 206 24% 6%;
+    --foreground: 216 22% 96%;
+    --card: 206 20% 10%;
+    --card-foreground: 216 22% 96%;
+    --popover: 206 20% 10%;
+    --popover-foreground: 216 22% 96%;
+    --secondary: 206 18% 17%;
+    --secondary-foreground: 216 22% 96%;
+    --muted: 206 18% 17%;
+    --muted-foreground: 208 11% 61%;
+    --accent: 206 18% 17%;
+    --accent-foreground: 216 22% 96%;
+    --border: 206 18% 17%;
+    --input: 206 18% 17%;
+    --sidebar-background: 206 20% 10%;
+    --sidebar-foreground: 216 22% 96%;
+    --sidebar-accent: 206 18% 17%;
+    --sidebar-accent-foreground: 216 22% 96%;
+    --sidebar-border: 206 18% 17%;
+  }
+  html.ngb h1, html.ngb h2 { font-family: 'Big Shoulders Display', system-ui, sans-serif; }
+  html.ngb .shadow-sm, html.ngb .shadow, html.ngb .shadow-md { box-shadow: none; }
+}
+
 /* Print styles: hide all site chrome, show only checklist */
 @media print {
   header,

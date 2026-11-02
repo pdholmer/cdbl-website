@@ -14,8 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Montserrat', 'system-ui', 'sans-serif'],
-        heading: ['Montserrat', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['"Big Shoulders Display"', 'system-ui', 'sans-serif'],
+        label: ['"Barlow Semi Condensed"', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -45,6 +47,19 @@ export default {
           game: "hsl(var(--event-game))",
           gold: "hsl(var(--event-gold))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        seal: {
+          navy: "hsl(var(--seal-navy))",
+          black: "hsl(var(--seal-black))",
+        },
+        mist: "hsl(var(--illinois-mist))",
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -80,6 +95,9 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        card: "12px",
+        input: "10px",
+        pill: "9999px",
       },
       keyframes: {
         "accordion-down": {

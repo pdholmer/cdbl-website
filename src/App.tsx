@@ -3,6 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ThemeScope from "@/components/ThemeScope";
+import Account from "./pages/Account";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import { PageGate } from "./components/PageGate";
@@ -93,6 +95,7 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <ChatAssistant />
+        <ThemeScope />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
@@ -125,6 +128,7 @@ const App = () => (
           <Route path="/two-step/verify" element={<TwoStepVerify />} />
           <Route path="/training" element={<Training />} />
           <Route path="/training/:slug" element={<SituationDetail />} />
+          <Route path="/account" element={<Account />} />
           <Route path="/household" element={<Household />} />
           <Route path="/household/new" element={<HouseholdNew />} />
           {/* Admin Routes */}

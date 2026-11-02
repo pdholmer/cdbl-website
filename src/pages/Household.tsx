@@ -56,7 +56,7 @@ const Household = () => {
   const greetingName = you?.first_name ?? "there";
 
   const renderEvent = (e: FamilyEvent & { childName?: string }) => (
-    <div className="rounded-2xl bg-[linear-gradient(150deg,hsl(var(--primary))_0%,hsl(217_100%_24%)_100%)] p-5 text-primary-foreground shadow-[0_14px_36px_-16px_hsl(var(--primary)/0.75)]">
+    <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground/70">
         {e.childName ? `${e.childName}'s next event` : "Next up"}
       </p>
@@ -67,7 +67,7 @@ const Household = () => {
         {dayWord(e.start_date)} · {e.title}
       </p>
       {(e.facility_site || e.location) && (
-        <div className="mt-4 space-y-1 rounded-xl bg-white/10 p-3 text-sm">
+        <div className="mt-4 space-y-1 rounded-xl bg-primary-foreground/10 p-3 text-sm">
           <p className="flex items-center gap-2">
             <MapPin className="h-4 w-4 shrink-0" />
             {e.facility_site ?? e.location}
@@ -81,7 +81,7 @@ const Household = () => {
   );
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[hsl(217_30%_97%)] pb-16">
+    <div className="min-h-screen overflow-x-hidden bg-background pb-16">
       <FamilyHeader context="Household" />
       <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 lg:px-8 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
         {isLoading ? (
@@ -118,7 +118,7 @@ const Household = () => {
             {data?.nextEvent ? (
               renderEvent(data.nextEvent)
             ) : (
-              <div className="rounded-2xl bg-[linear-gradient(150deg,hsl(217_100%_26%)_0%,hsl(217_100%_32%)_100%)] p-5 text-primary-foreground shadow-[0_14px_36px_-16px_hsl(var(--primary)/0.75)]">
+              <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h2 className="font-heading text-xl font-bold">{household?.name}</h2>
