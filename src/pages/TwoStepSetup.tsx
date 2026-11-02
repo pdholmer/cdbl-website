@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { safeNext } from "@/lib/mfa";
+import { safeNext, ensureLiveSession, qrSrc, MFA_HELP } from "@/lib/mfa";
 
 const TwoStepSetup = () => {
   const navigate = useNavigate();
@@ -21,25 +21,35 @@ const TwoStepSetup = () => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     const start = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { navigate(`/login?next=${encodeURIComponent(next)}`, { replace: true }); return; }
-      // Clear any half-finished setup so a fresh code can be shown.
-      const { data: factors } = await supabase.auth.mfa.listFactors();
-      if (factors?.totp?.some((f) => f.status === "verified")) {
-        navigate(`/two-step/verify?next=${encodeURIComponent(next)}`, { replace: true });
-        return;
+      try {
+        if (!(await ensureLiveSession())) { navigate(`/login?next=${encodeURIComponent(next)}`, { replace: true }); return; }
+        const { data: factors, error: lErr } = await supabase.auth.mfa.listFactors();
+        if (lErr) throw lErr;
+        if (factors?.totp?.some((f) => f.status === "verified")) {
+          navigate(`/two-step/verify?next=${encodeURIComponent(next)}`, { replace: true });
+          return;
+        }
+        // Remove this user's own half-finished setups so a fresh code can be issued.
+        for (const f of factors?.all ?? []) {
+          if (f.status !== "verified") await supabase.auth.mfa.unenroll({ factorId: f.id });
+        }
+        const { data, error } = await supabase.auth.mfa.enroll({
+          factorType: "totp",
+          friendlyName: `Authenticator app ${new Date().toISOString().slice(0, 16)}`,
+        });
+        if (error) throw error;
+        if (cancelled) return;
+        setFactorId(data.id);
+        setQr(qrSrc(data.totp.qr_code));
+        setSecret(data.totp.secret);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Couldn't start setup.");
       }
-      for (const f of factors?.all ?? []) {
-        if (f.status === "unverified") await supabase.auth.mfa.unenroll({ factorId: f.id });
-      }
-      const { data, error } = await supabase.auth.mfa.enroll({ factorType: "totp", friendlyName: "Authenticator app" });
-      if (error) { setError(error.message); return; }
-      setFactorId(data.id);
-      setQr(data.totp.qr_code);
-      setSecret(data.totp.secret);
     };
     start();
+    return () => { cancelled = true; };
   }, [navigate, next]);
 
   const confirm = async () => {
@@ -49,7 +59,7 @@ const TwoStepSetup = () => {
     if (chErr) { setBusy(false); toast.error(chErr.message); return; }
     const { error } = await supabase.auth.mfa.verify({ factorId, challengeId: ch.id, code });
     setBusy(false);
-    if (error) { setCode(""); toast.error("That code didn't match. Try the newest one in your app."); return; }
+    if (error) { setCode(""); toast.error(`That code didn't match. Try the newest one in your app. ${MFA_HELP}`); return; }
     toast.success("Two-step sign-in is on");
     navigate(next, { replace: true });
   };
@@ -65,7 +75,13 @@ const TwoStepSetup = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && (
+            <div role="alert" className="rounded-lg border border-destructive/40 p-3 text-sm">
+              <p className="text-destructive">{error}</p>
+              <p className="mt-1 text-muted-foreground">{MFA_HELP}</p>
+              <Button variant="outline" className="mt-3 h-11 w-full" onClick={() => window.location.reload()}>Try again</Button>
+            </div>
+          )}
           <ol className="space-y-2 text-sm text-muted-foreground list-decimal pl-5">
             <li>Open an authenticator app (Google Authenticator, 1Password, Authy, or iPhone Passwords).</li>
             <li>Scan this code, or type the setup key.</li>
