@@ -20,7 +20,7 @@ export const SECTION_ROLES: Record<string, readonly string[]> = {
   "/admin/commissioner": ["commissioner"],
   "/admin/divisions": ["commissioner", "registrar", "treasurer"],
   "/admin/programs": ["registrar"],
-  "/admin/registration-setup": ["registrar"],
+  "/admin/registration-setup": ["registrar", "treasurer"],
   "/admin/registration-codes": ["treasurer"],
 };
 

@@ -23,9 +23,9 @@
 # 2027 in-house registration (each phase needs its own "approved"; SQL shown first)
 - [x] Phase 1: household setup + add player (built in preview Nov 2; D301 typed attestation checked but not stored)
 - [x] Phase 2: eligibility engine, draft registrations, placement reviews, split-household privacy (built Nov 2; working values await registrar/board confirmation)
-- [ ] Pending test runs (board, end of build): new family + two kids; second family can't see them; split-household contact/medical; conflict review end to end; sign a form, reload, status stays; commissioner cannot read signatures; re-sign after a required new version; screens at 390/768/1280 light and dark
+- [ ] Pending test runs (board, end of build): new family + two kids; second family can't see them; split-household contact/medical; conflict review end to end; sign a form, reload, status stays; commissioner cannot read signatures; re-sign after a required new version; real cart lock, help request hold and comp with test families; screens at 390/768/1280 light and dark
 - [x] Phase 3: forms and waivers (built Nov 2; five forms carry PLACEHOLDER wording until the league supplies final text)
-- [ ] Phase 4: fees, discounts, cart total (needs league decisions 1-6)
+- [x] Phase 4: fees, discounts, cart total, help-paying holds, comps (built Nov 2; values are working values to confirm)
 - [ ] Phase 5: Stripe test checkout + paid status (needs Stripe test key)
 - [ ] Phase 6: league office registration views; Household to-dos read real status
 - [ ] Phase 7: builder layout on top of real steps

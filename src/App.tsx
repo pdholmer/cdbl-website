@@ -85,6 +85,7 @@ import Requests from "./pages/admin/Requests";
 import RequestDetail from "./pages/admin/RequestDetail";
 import RegistrationSetup from "./pages/admin/RegistrationSetup";
 import HouseholdRegister from "./pages/HouseholdRegister";
+import HouseholdCheckout from "./pages/HouseholdCheckout";
 import Training from "./pages/Training";
 
 const queryClient = new QueryClient();
@@ -135,6 +136,7 @@ const App = () => (
           <Route path="/household" element={<Household />} />
           <Route path="/household/new" element={<HouseholdNew />} />
           <Route path="/household/register/:playerId" element={<HouseholdRegister />} />
+          <Route path="/household/checkout" element={<HouseholdCheckout />} />
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLoginRedirect />} />
           <Route path="/admin/email-bounces" element={<ProtectedRoute requireBoardMember><EmailBounces /></ProtectedRoute>} />
