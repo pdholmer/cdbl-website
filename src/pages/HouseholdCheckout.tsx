@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { BuilderActionBar, BuilderHeaderExtra, BuilderLayout, BuilderStage } from "@/components/family/Builder";
 
 type Line = { registration_id: string; type: string; label: string; amount: number };
 type CartResult = { lines: Line[]; total: number; locked: boolean; status: string; lock_expires_at?: string | null; closed?: boolean; waitlisted?: number };
@@ -119,8 +120,16 @@ const HouseholdCheckout = () => {
   const canPay = !!r?.locked && status === "locked" && !held;
 
   return (
-    <AppShell area="family" label="2027 season, checkout" title={r ? `${money(r.total)} total` : "Checkout"}>
-      <div className="mx-auto w-full max-w-2xl px-4 py-8 pb-40 sm:px-6">
+    <AppShell area="family" label="2027 season · Checkout" title={r ? `${money(r.total)} total` : "Checkout"} titleClassName="md:sr-only"
+      headerExtra={<BuilderHeaderExtra step={4} />}>
+      <BuilderLayout
+        stage={<BuilderStage label="2027 season · Checkout" name={r ? `${money(r.total)} total` : "Checkout"} step={4} />}
+        actionBar={data && r && !held && !paid && !pending ? (
+          canPay
+            ? <BuilderActionBar step={4} onClick={payOnline} disabled={busy} label={busy ? "Opening payment" : `Pay ${money(bal?.balance ?? r.total)} by bank or card`} />
+            : <BuilderActionBar step={4} onClick={lock} disabled={busy || r.closed} label={busy ? "Saving" : `Save spots at ${money(r.total)}`} />
+        ) : undefined}
+      >
         {isLoading ? <Skeleton className="h-64 w-full rounded-2xl" /> : error ? (
           <p className="text-[15px]">We couldn't load your checkout. <button className="min-h-[44px] underline" onClick={() => refetch()}>Try again</button></p>
         ) : !data || !r ? (
@@ -188,25 +197,7 @@ const HouseholdCheckout = () => {
             {err && <p role="alert" className="text-sm font-semibold text-destructive">{err}</p>}
           </div>
         )}
-      </div>
-
-      {data && r && !held && !paid && !pending && (
-        <div className="fixed inset-x-0 bottom-[calc(64px+env(safe-area-inset-bottom))] z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:bottom-0">
-          <div className="mx-auto flex max-w-2xl items-center gap-3">
-            {canPay ? (
-              <button type="button" onClick={payOnline} disabled={busy}
-                className="h-12 flex-1 rounded-full bg-primary px-5 font-label text-[16px] font-semibold text-primary-foreground disabled:opacity-50">
-                {busy ? "Opening payment" : `Pay ${money(bal?.balance ?? r.total)} by bank or card`}
-              </button>
-            ) : (
-              <button type="button" onClick={lock} disabled={busy || r.closed}
-                className="h-12 flex-1 rounded-full bg-primary px-5 font-label text-[16px] font-semibold text-primary-foreground disabled:opacity-50">
-                {busy ? "Saving" : `Save spots at ${money(r.total)}`}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+      </BuilderLayout>
 
       <Sheet open={helpOpen} onOpenChange={setHelpOpen}>
         <SheetContent side="bottom" className="sm:mx-auto sm:max-w-xl sm:rounded-t-2xl">
