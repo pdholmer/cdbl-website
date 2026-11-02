@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Calendar, Users, Play, Clock, CheckCircle2, Pause } from "lucide-react";
+import { Plus, Play, Pause } from "lucide-react";
 import { useDrafts } from "@/hooks/useDrafts";
 import { usePrograms } from "@/hooks/usePrograms";
 import { format } from "date-fns";
@@ -45,15 +45,15 @@ const getStatusBadge = (status: string) => {
 const getStatusIcon = (status: string) => {
   switch (status) {
     case "setup":
-      return <Clock className="h-4 w-4" />;
+      return ;
     case "ready":
-      return <Calendar className="h-4 w-4" />;
+      return ;
     case "in_progress":
       return <Play className="h-4 w-4" />;
     case "paused":
       return <Pause className="h-4 w-4" />;
     case "completed":
-      return <CheckCircle2 className="h-4 w-4" />;
+      return ;
     default:
       return null;
   }
@@ -104,7 +104,7 @@ export default function Drafts() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Setup</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{setupCount}</div>
@@ -113,7 +113,7 @@ export default function Drafts() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Ready</CardTitle>
-              <Calendar className="h-4 w-4 text-blue-500" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{readyCount}</div>
@@ -131,7 +131,7 @@ export default function Drafts() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Completed</CardTitle>
-              <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{completedCount}</div>
@@ -206,7 +206,7 @@ export default function Drafts() {
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-8">
                       <div className="flex flex-col items-center gap-2">
-                        <Users className="h-8 w-8 text-muted-foreground" />
+                        
                         <p className="text-muted-foreground">No drafts found</p>
                         <Button asChild variant="outline" size="sm">
                           <Link to="/admin/drafts/new">Create your first draft</Link>

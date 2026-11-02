@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { calculateCurrentTeamOrder, getTotalPicks } from "@/utils/draftUtils";
-import { ArrowLeft, Users, Play } from "lucide-react";
+import { ArrowLeft, Play } from "lucide-react";
 
 const DraftLive = () => {
   const { id: draftId } = useParams<{ id: string }>();
@@ -205,7 +205,7 @@ const DraftLive = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
+                
                 Participating Teams
               </CardTitle>
             </CardHeader>

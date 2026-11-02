@@ -35,7 +35,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Plus, Shuffle, Trash2, Users, Play, Star } from "lucide-react";
+import { ArrowLeft, Plus, Shuffle, Trash2, Play, Star } from "lucide-react";
 import { useDraft } from "@/hooks/useDrafts";
 import { useDraftMutations } from "@/hooks/useDraftMutations";
 import { useDraftTeams, useDraftTeamMutations } from "@/hooks/useDraftTeams";
@@ -563,7 +563,7 @@ export default function DraftEdit() {
                         <TableRow>
                           <TableCell colSpan={5} className="text-center py-8">
                             <div className="flex flex-col items-center gap-2">
-                              <Users className="h-8 w-8 text-muted-foreground" />
+                              
                               <p className="text-muted-foreground">No teams added yet</p>
                             </div>
                           </TableCell>
@@ -685,7 +685,7 @@ export default function DraftEdit() {
                         <TableRow>
                           <TableCell colSpan={7} className="text-center py-8">
                             <div className="flex flex-col items-center gap-2">
-                              <Users className="h-8 w-8 text-muted-foreground" />
+                              
                               <p className="text-muted-foreground">No players in pool</p>
                             </div>
                           </TableCell>

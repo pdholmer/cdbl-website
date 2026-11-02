@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users as UsersIcon, Shield, UserCog, Search, Plus, Loader2, UserCheck } from 'lucide-react';
+import { Search, Plus, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { AdminLayout } from '@/components/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -217,7 +217,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-              <UsersIcon className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.total}</div>
@@ -226,7 +226,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Admins</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.admins}</div>
@@ -235,7 +235,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Board Members</CardTitle>
-              <UsersIcon className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.boardMembers}</div>
@@ -244,7 +244,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Coaches</CardTitle>
-              <UserCog className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.coaches}</div>
@@ -253,7 +253,7 @@ export default function Users() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Parents</CardTitle>
-              <UserCheck className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.parents}</div>

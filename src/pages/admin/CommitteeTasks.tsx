@@ -43,15 +43,15 @@ import {
   type CommitteeTask,
 } from "@/hooks/useCommitteeTasks";
 import { useUsers } from "@/hooks/useUsers";
-import { Plus, CheckCircle2, Clock, AlertCircle, Ban, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { format } from "date-fns";
 
 const statusIcons: Record<TaskStatus, React.ReactNode> = {
-  pending: <Clock className="h-4 w-4 text-slate-500" />,
-  in_progress: <Clock className="h-4 w-4 text-blue-500" />,
-  completed: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-  cancelled: <X className="h-4 w-4 text-red-500" />,
-  blocked: <Ban className="h-4 w-4 text-orange-500" />,
+  pending: <span className="text-xs font-label">Pending</span>,
+  in_progress: <span className="text-xs font-label">In progress</span>,
+  completed: <span className="text-xs font-label">Done</span>,
+  cancelled: <span className="text-xs font-label">Cancelled</span>,
+  blocked: <span className="text-xs font-label">Blocked</span>,
 };
 
 const priorityColors: Record<TaskPriority, string> = {
@@ -328,7 +328,7 @@ const CommitteeTasks = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium flex items-center gap-1">
-                <AlertCircle className="h-4 w-4 text-red-500" />
+                
                 Overdue
               </CardTitle>
             </CardHeader>

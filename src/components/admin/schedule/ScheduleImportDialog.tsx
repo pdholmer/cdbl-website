@@ -14,7 +14,7 @@ import { useGameMutations } from "@/hooks/useGameMutations";
 import { useLeagueEventMutations } from "@/hooks/useLeagueEvents";
 import { useTeams } from "@/hooks/useTeams";
 import { useVenues } from "@/hooks/useVenues";
-import { Upload, FileSpreadsheet } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import * as XLSX from "xlsx";
 
@@ -150,7 +150,7 @@ export const ScheduleImportDialog = () => {
               </SelectContent>
             </Select>
             <Button variant="outline" onClick={() => fileRef.current?.click()}>
-              <FileSpreadsheet className="mr-2 h-4 w-4" />Choose File (.csv / .xlsx)
+              Choose File (.csv / .xlsx)
             </Button>
             <input ref={fileRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={handleFile} />
           </div>

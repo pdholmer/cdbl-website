@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { LogOut, MapPin, Pencil, Phone, Mail, CalendarDays, Shield } from "lucide-react";
+import { LogOut, Pencil, Phone, Mail } from "lucide-react";
 import {
   SectionLabel,
   GroupedCard,
@@ -56,7 +56,7 @@ const Household = () => {
   const greetingName = you?.first_name ?? "there";
 
   const renderEvent = (e: FamilyEvent & { childName?: string }) => (
-    <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
+    <div className="card-flood rounded-xl border p-5">
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground/70">
         {e.childName ? `${e.childName}'s next event` : "Next up"}
       </p>
@@ -69,7 +69,7 @@ const Household = () => {
       {(e.facility_site || e.location) && (
         <div className="mt-4 space-y-1 rounded-xl bg-primary-foreground/10 p-3 text-sm">
           <p className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 shrink-0" />
+            
             {e.facility_site ?? e.location}
           </p>
           {e.facility_field && (
@@ -118,7 +118,7 @@ const Household = () => {
             {data?.nextEvent ? (
               renderEvent(data.nextEvent)
             ) : (
-              <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
+              <div className="card-flood rounded-xl border p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h2 className="font-heading text-xl font-bold">{household?.name}</h2>
@@ -263,7 +263,7 @@ const Household = () => {
                     </>
                   ) : (
                     <div className="p-4">
-                      <EmptyStateBlock icon={<Shield className="h-5 w-5" />}>
+                      <EmptyStateBlock>
                         When {c.display_name} is placed on a team, his schedule, coach contact,
                         and development updates will appear here.
                       </EmptyStateBlock>
@@ -282,7 +282,7 @@ const Household = () => {
                     c.next_events.map((e) => (
                       <ListRow
                         key={e.id}
-                        icon={<CalendarDays className="h-5 w-5" />}
+                       
                         title={e.title}
                         subtitle={`${dayWord(e.start_date)}${
                           e.all_day ? "" : ` · ${formatTime(e.start_time) ?? ""}`
@@ -293,7 +293,7 @@ const Household = () => {
                   )
                 ) : (
                   <div className="p-4">
-                    <EmptyStateBlock icon={<CalendarDays className="h-5 w-5" />}>
+                    <EmptyStateBlock>
                       No upcoming events yet — the 2027 season is coming.
                     </EmptyStateBlock>
                   </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Search, Users, Settings } from "lucide-react";
+import { Plus, Search, Settings } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -212,7 +212,7 @@ export default function CommissionerTeams() {
                     <TableCell>{team.division?.name || 'N/A'}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4 text-muted-foreground" />
+                        
                         {formatRosterCount(rosterCounts?.get(team.id))}
                       </div>
                     </TableCell>

@@ -1,12 +1,5 @@
 import { Link } from "react-router-dom";
-import { 
-  Users, 
-  ClipboardList, 
-  UsersRound, 
-  CalendarDays, 
-  UserPlus,
-  ArrowRight
-} from "lucide-react";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCommissionerAssignments } from "@/hooks/useCommissionerAssignments";
@@ -91,7 +84,7 @@ export default function CommissionerDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Total Players</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{filteredPlayers.length}</div>
@@ -104,7 +97,7 @@ export default function CommissionerDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Active Teams</CardTitle>
-            <UsersRound className="h-4 w-4 text-muted-foreground" />
+            
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activeTeams}</div>
@@ -117,7 +110,7 @@ export default function CommissionerDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Upcoming Games</CardTitle>
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{upcomingGames.length}</div>
@@ -130,7 +123,7 @@ export default function CommissionerDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Active Drafts</CardTitle>
-            <UserPlus className="h-4 w-4 text-muted-foreground" />
+            
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{activeDrafts.length}</div>
@@ -146,7 +139,7 @@ export default function CommissionerDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ClipboardList className="h-5 w-5" />
+              
               Pending Registrations
             </CardTitle>
             <CardDescription>
@@ -158,7 +151,7 @@ export default function CommissionerDashboard() {
             <Button asChild variant="outline" className="w-full">
               <Link to="/commissioner/registrations">
                 Review Registrations
-                <ArrowRight className="ml-2 h-4 w-4" />
+                
               </Link>
             </Button>
           </CardContent>
@@ -167,7 +160,7 @@ export default function CommissionerDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
+              
               Invite Coaches
             </CardTitle>
             <CardDescription>
@@ -181,7 +174,7 @@ export default function CommissionerDashboard() {
             <Button asChild variant="outline" className="w-full">
               <Link to="/commissioner/coaches">
                 Manage Coaches
-                <ArrowRight className="ml-2 h-4 w-4" />
+                
               </Link>
             </Button>
           </CardContent>
@@ -190,7 +183,7 @@ export default function CommissionerDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <UserPlus className="h-5 w-5" />
+              
               Run a Draft
             </CardTitle>
             <CardDescription>
@@ -204,7 +197,7 @@ export default function CommissionerDashboard() {
             <Button asChild variant="outline" className="w-full">
               <Link to="/commissioner/drafts">
                 Manage Drafts
-                <ArrowRight className="ml-2 h-4 w-4" />
+                
               </Link>
             </Button>
           </CardContent>
@@ -244,7 +237,7 @@ export default function CommissionerDashboard() {
             <Button asChild variant="link" className="mt-4 p-0">
               <Link to="/commissioner/schedule">
                 View Full Schedule
-                <ArrowRight className="ml-2 h-4 w-4" />
+                
               </Link>
             </Button>
           </CardContent>

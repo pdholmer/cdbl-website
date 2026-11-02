@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+
 import { formatDistanceToNow } from "date-fns";
 
 type Suppression = {
@@ -156,7 +156,7 @@ export const HealthTab = () => {
     <div className="space-y-6">
       {configured ? (
         <Alert className="border-emerald-200 bg-emerald-50 text-emerald-900">
-          <CheckCircle2 className="h-4 w-4 text-emerald-700" />
+          
           <AlertTitle>Email sending is live</AlertTitle>
           <AlertDescription>
             Sending from <code>{league?.sending_from_address}</code> on{" "}
@@ -166,7 +166,7 @@ export const HealthTab = () => {
         </Alert>
       ) : (
         <Alert className="border-amber-200 bg-amber-50 text-amber-900">
-          <AlertTriangle className="h-4 w-4 text-amber-700" />
+          
           <AlertTitle>Email sending is not configured</AlertTitle>
           <AlertDescription>
             No message can currently be delivered. The Compose tab writes to the

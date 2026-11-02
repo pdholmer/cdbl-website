@@ -21,7 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useCoaches, type CoachFilters } from "@/hooks/useCoaches";
-import { UserPlus, Search, Users, Shield, AlertCircle } from "lucide-react";
+import { UserPlus, Search } from "lucide-react";
 
 const Coaches = () => {
   const [filters, setFilters] = useState<CoachFilters>({});
@@ -76,7 +76,7 @@ const Coaches = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Coaches</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.total}</div>
@@ -85,7 +85,7 @@ const Coaches = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Coaches</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.active}</div>
@@ -94,7 +94,7 @@ const Coaches = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Background Checks Expiring</CardTitle>
-              <AlertCircle className="h-4 w-4 text-muted-foreground" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.backgroundChecksExpiring}</div>

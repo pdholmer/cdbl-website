@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 
 interface QuickActionCardProps {
   title: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   href: string;
   description?: string;
 }
 
-export function QuickActionCard({ title, icon: Icon, href, description }: QuickActionCardProps) {
+export function QuickActionCard({ title, href, description }: QuickActionCardProps) {
   return (
     <Link to={href} className="block group">
       <div
@@ -17,13 +17,9 @@ export function QuickActionCard({ title, icon: Icon, href, description }: QuickA
           "rounded-2xl border bg-card p-4 min-h-[80px]",
           "flex items-center gap-4",
           "transition-all duration-200",
-          "hover:shadow-md hover:scale-[1.02] hover:border-primary/30",
-          "backdrop-blur-sm bg-card/80"
+          "hover:border-primary/30"
         )}
       >
-        <div className="rounded-xl bg-primary/10 p-3 group-hover:bg-primary/20 transition-colors">
-          <Icon className="h-5 w-5 text-primary" />
-        </div>
         <div className="flex-1 min-w-0">
           <h4 className="font-medium text-foreground group-hover:text-primary transition-colors">
             {title}

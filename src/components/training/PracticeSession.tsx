@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dumbbell } from "lucide-react";
+
 import SituationField from "@/components/training/SituationField";
 import QuizCard from "@/components/training/QuizCard";
 import { shuffle, useFirstFrames, usePracticePool, type QuizQuestion } from "@/hooks/useQuiz";
@@ -62,7 +62,7 @@ export const PracticeSession = ({ enabled }: { enabled: boolean }) => {
         <CardContent className="p-4 md:p-6 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <Dumbbell className="h-5 w-5 text-primary" aria-hidden="true" />
+              
               <h2 className="font-heading text-lg font-semibold">Practice Mode</h2>
             </div>
             <p className="text-sm text-muted-foreground">

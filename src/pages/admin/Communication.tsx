@@ -4,7 +4,7 @@ import { InboxTab } from "@/components/admin/communication/InboxTab";
 import { ComposeTab } from "@/components/admin/communication/ComposeTab";
 import { OutboxTab } from "@/components/admin/communication/OutboxTab";
 import { HealthTab } from "@/components/admin/communication/HealthTab";
-import { Megaphone } from "lucide-react";
+
 import { useSearchParams } from "react-router-dom";
 import { useUnreadContactCount } from "@/hooks/useUnreadContactCount";
 
@@ -21,10 +21,7 @@ export default function Communication() {
     <AdminLayout>
       <div className="p-6 space-y-6">
         <header className="flex items-center gap-3">
-          <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-            <Megaphone className="h-6 w-6" />
-          </div>
-          <div>
+                    <div>
             <h1 className="text-2xl font-heading font-semibold">Communication</h1>
             <p className="text-sm text-muted-foreground">
               Parent inbox, outbound messages, delivery health, and suppression list.

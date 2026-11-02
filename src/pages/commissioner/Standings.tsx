@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Trophy } from "lucide-react";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -186,7 +186,7 @@ export default function CommissionerStandings() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5" />
+            
             League Standings
           </CardTitle>
           <CardDescription>
@@ -221,11 +221,7 @@ export default function CommissionerStandings() {
                 standings.map((team, index) => (
                   <TableRow key={team.id}>
                     <TableCell>
-                      {index === 0 && standings.length > 1 ? (
-                        <Trophy className="h-4 w-4 text-yellow-500" />
-                      ) : (
-                        index + 1
-                      )}
+                      {index + 1}
                     </TableCell>
                     <TableCell className="font-medium">{team.name}</TableCell>
                     <TableCell>{team.division}</TableCell>

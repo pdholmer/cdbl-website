@@ -120,8 +120,8 @@ export function AdminSidebar() {
 
   const getNavClass = ({ isActive }: { isActive: boolean }) =>
     isActive
-      ? "bg-primary-foreground/20 text-primary-foreground font-medium hover:bg-primary-foreground/30"
-      : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground";
+      ? "is-selected font-medium"
+      : "text-foreground/80 hover:bg-muted hover:text-foreground";
 
   // Check if any item in a section is active
   const isSectionActive = (section: NavSection) => {
@@ -135,7 +135,7 @@ export function AdminSidebar() {
 
   return (
     <Sidebar className="w-60">
-      <SidebarContent className="bg-primary">
+      <SidebarContent className="bg-card tex-mesh border-r border-border">
         <div className="pl-[10px]">
           <Link to="/" className="flex items-center justify-start pr-4 py-6 hover:opacity-80 transition-opacity">
             <img 
@@ -153,7 +153,7 @@ export function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/admin" end className={getNavClass}>
-                    <Home className="h-4 w-4" />
+                    <Home className="h-5 w-5" />
                     <span className="ml-2">Dashboard</span>
                   </NavLink>
                 </SidebarMenuButton>
@@ -168,11 +168,11 @@ export function AdminSidebar() {
                 >
                   <CollapsibleTrigger className={cn(
                     "flex items-center justify-between w-full py-2 px-2 text-sm rounded-md transition-colors",
-                    "text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground",
-                    isSectionActive(section) && "text-primary-foreground"
+                    "text-muted-foreground hover:bg-muted hover:text-foreground",
+                    isSectionActive(section) && "text-foreground"
                   )}>
                     <div className="flex items-center gap-2">
-                      <section.icon className="h-4 w-4" />
+                      <section.icon className="h-5 w-5" />
                       <span className="font-medium">{section.title}</span>
                       {section.title === "Communication" && unreadContacts > 0 && (
                         <span className="ml-1 inline-flex items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[10px] font-semibold text-destructive-foreground min-w-[18px]">
@@ -187,7 +187,7 @@ export function AdminSidebar() {
                       <SidebarMenuItem key={item.url}>
                         <SidebarMenuButton asChild>
                           <NavLink to={item.url} end className={getNavClass}>
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className="h-5 w-5" />
                             <span className="ml-2">{item.title}</span>
                             {item.url === "/admin/communication" && unreadContacts > 0 && (
                               <span className="ml-auto inline-flex items-center justify-center rounded-full bg-destructive px-1.5 py-0.5 text-[10px] font-semibold text-destructive-foreground min-w-[18px]">
@@ -204,9 +204,8 @@ export function AdminSidebar() {
 
               {/* Admin Only Indicator */}
               {roles.includes("admin") && (
-                <div className="flex items-center gap-1 px-2 py-2 mt-2 text-xs text-primary-foreground/40 uppercase tracking-wider">
-                  <Lock className="h-3 w-3" />
-                  <span>Admin sections above</span>
+                <div className="flex items-center gap-1 px-2 py-2 mt-2 text-xs text-muted-foreground">
+                                    <span>Admin sections above</span>
                 </div>
               )}
             </SidebarMenu>
@@ -221,7 +220,7 @@ export function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/admin/feedback" className={getNavClass}>
-                    <MessageSquare className="h-4 w-4" />
+                    <MessageSquare className="h-5 w-5" />
                     <span className="ml-2">Feedback (archive)</span>
                   </NavLink>
                 </SidebarMenuButton>
@@ -230,7 +229,7 @@ export function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/admin/users" className={getNavClass}>
-                    <UserCog className="h-4 w-4" />
+                    <UserCog className="h-5 w-5" />
                     <span className="ml-2">Users</span>
                   </NavLink>
                 </SidebarMenuButton>
@@ -238,7 +237,7 @@ export function AdminSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/admin/profile" className={getNavClass}>
-                    <User className="h-4 w-4" />
+                    <User className="h-5 w-5" />
                     <span className="ml-2">Profile</span>
                   </NavLink>
                 </SidebarMenuButton>
@@ -247,7 +246,7 @@ export function AdminSidebar() {
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild>
                     <NavLink to="/household" className={getNavClass}>
-                      <Users className="h-4 w-4" />
+                      <Users className="h-5 w-5" />
                       <span className="ml-2">My household</span>
                     </NavLink>
                   </SidebarMenuButton>
@@ -255,16 +254,16 @@ export function AdminSidebar() {
               )}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/account" className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
-                    <Settings2 className="h-4 w-4" />
+                  <Link to="/account" className="text-foreground/80 hover:bg-muted hover:text-foreground">
+                    <Settings2 className="h-5 w-5" />
                     <span className="ml-2">Account</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link to="/" className="text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground">
-                    <ExternalLink className="h-4 w-4" />
+                  <Link to="/" className="text-foreground/80 hover:bg-muted hover:text-foreground">
+                    <ExternalLink className="h-5 w-5" />
                     <span className="ml-2">Return to Site</span>
                   </Link>
                 </SidebarMenuButton>

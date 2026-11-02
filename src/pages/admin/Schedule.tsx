@@ -7,7 +7,7 @@ import { PracticesTab } from "@/components/admin/schedule/PracticesTab";
 import { EventsTab } from "@/components/admin/schedule/EventsTab";
 import { CalendarsTab } from "@/components/admin/schedule/CalendarsTab";
 import { ScheduleImportDialog } from "@/components/admin/schedule/ScheduleImportDialog";
-import { ExternalLink, MapPin } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 const AdminSchedule = () => {
   return (
@@ -26,7 +26,7 @@ const AdminSchedule = () => {
             </Link>
             <Link to="/admin/facilities">
               <Button variant="outline" size="sm">
-                <MapPin className="mr-2 h-4 w-4" />Facilities
+                Facilities
               </Button>
             </Link>
             <ScheduleImportDialog />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Check, X, Loader2, UserPlus } from 'lucide-react';
+import { Check, X, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -73,7 +73,7 @@ export function RoleRequestsCard() {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <UserPlus className="h-5 w-5" />
+              
               Pending Role Requests
             </CardTitle>
             <CardDescription>

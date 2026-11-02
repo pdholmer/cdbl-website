@@ -21,7 +21,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useTeamImportantDates, useTeamDateMutations } from "@/hooks/useTeamTasks";
-import { Plus, Calendar, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { format } from "date-fns";
 
 interface TeamDatesCardProps {
@@ -91,7 +91,7 @@ export function TeamDatesCard({ teamId }: TeamDatesCardProps) {
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+            
             Important Dates
           </CardTitle>
           <CardDescription>Key dates for the team</CardDescription>

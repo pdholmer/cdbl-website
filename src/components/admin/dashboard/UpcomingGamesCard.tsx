@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Calendar, MapPin, ChevronRight } from "lucide-react";
+import {  ChevronRight } from "lucide-react";
 import { format, parseISO, isToday, isTomorrow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -56,7 +56,7 @@ export function UpcomingGamesCard({ games, isLoading = false }: UpcomingGamesCar
     <div className="rounded-2xl border bg-card overflow-hidden backdrop-blur-sm bg-card/80">
       <div className="p-4 border-b bg-muted/30 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-primary" />
+          
           <h3 className="font-semibold text-foreground">Upcoming Games</h3>
         </div>
         <Link
@@ -70,7 +70,7 @@ export function UpcomingGamesCard({ games, isLoading = false }: UpcomingGamesCar
 
       {games.length === 0 ? (
         <div className="p-8 text-center">
-          <Calendar className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
+          
           <p className="text-sm text-muted-foreground">No upcoming games scheduled</p>
         </div>
       ) : (
@@ -97,7 +97,7 @@ export function UpcomingGamesCard({ games, isLoading = false }: UpcomingGamesCar
                     <span>{formatGameTime(game.time)}</span>
                   </div>
                   <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
-                    <MapPin className="h-3 w-3" />
+                    
                     <span className="truncate">{game.venue}</span>
                   </div>
                 </div>

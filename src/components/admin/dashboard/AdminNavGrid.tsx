@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { 
-  Database, Users, HelpCircle, Heart, BookOpen, Shield, 
+import { Database, Users, HelpCircle, Heart, BookOpen, Shield, 
   Calendar, MapPin, BarChart3, RefreshCw, MessageSquare,
-  ChevronDown, ChevronUp, UserCog, Lock
-} from "lucide-react";
+  ChevronDown, ChevronUp, UserCog } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -75,7 +73,7 @@ export function AdminNavGrid() {
         className="w-full p-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
       >
         <div className="flex items-center gap-2">
-          <Database className="h-4 w-4 text-primary" />
+          
           <h3 className="font-semibold text-foreground">All Admin Tools</h3>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
@@ -109,13 +107,9 @@ export function AdminNavGrid() {
                         "hover:bg-muted transition-colors group"
                       )}
                     >
-                      <item.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                                            <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
                         {item.title}
                       </span>
-                      {item.adminOnly && (
-                        <Lock className="h-3 w-3 text-muted-foreground/50" />
-                      )}
                     </Link>
                   ))}
                 </div>

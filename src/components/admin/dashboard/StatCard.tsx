@@ -7,7 +7,7 @@ interface StatCardProps {
   title: string;
   value: number | string;
   subtitle?: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   href: string;
   trend?: "up" | "down" | "neutral";
   accentColor?: "default" | "success" | "warning" | "destructive";
@@ -18,7 +18,6 @@ export function StatCard({
   title,
   value,
   subtitle,
-  icon: Icon,
   href,
   trend,
   accentColor = "default",
@@ -35,7 +34,7 @@ export function StatCard({
     return (
       <div className="rounded-2xl border bg-card p-6 min-h-[140px]">
         <div className="flex items-start justify-between">
-          <Skeleton className="h-10 w-10 rounded-xl" />
+          <span />
           <Skeleton className="h-4 w-16" />
         </div>
         <Skeleton className="h-10 w-20 mt-4" />
@@ -50,14 +49,11 @@ export function StatCard({
         className={cn(
           "rounded-2xl border bg-card p-6 min-h-[140px]",
           "transition-all duration-200",
-          "hover:shadow-lg hover:scale-[1.02] hover:border-primary/30",
-          "backdrop-blur-sm bg-card/80"
+          "hover:border-primary/30"
         )}
       >
         <div className="flex items-start justify-between">
-          <div className={cn("rounded-xl p-2.5", accentClasses[accentColor])}>
-            <Icon className="h-5 w-5" />
-          </div>
+<span />
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             {title}
           </span>

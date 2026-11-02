@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { CheckCircle2, AlertTriangle } from "lucide-react";
+
 import { format } from "date-fns";
 
 interface Bounce {
@@ -80,7 +80,7 @@ const EmailBounces = () => {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+              
               <div>
                 <CardTitle>Unresolved ({unresolved.length})</CardTitle>
                 <CardDescription>Addresses that are silently failing right now</CardDescription>
@@ -122,7 +122,7 @@ const EmailBounces = () => {
                       <TableCell>
                         {b.resolved ? (
                           <Badge variant="outline" className="gap-1">
-                            <CheckCircle2 className="h-3 w-3" /> Resolved
+                             Resolved
                           </Badge>
                         ) : (
                           <Badge variant="destructive">Open</Badge>

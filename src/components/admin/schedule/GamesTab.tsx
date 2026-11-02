@@ -12,7 +12,7 @@ import {
 import { useGames, type GameFilters } from "@/hooks/useGames";
 import { useTeams } from "@/hooks/useTeams";
 import { exportScheduleToCSV, exportForGameChangerSchedule } from "@/utils/scheduleExport";
-import { Plus, Download, Calendar } from "lucide-react";
+import { Plus, Download } from "lucide-react";
 import { format } from "date-fns";
 
 const getStatusBadge = (status: string) => {
@@ -56,21 +56,21 @@ export const GamesTab = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Games</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            
           </CardHeader>
           <CardContent><div className="text-2xl font-bold">{stats.total}</div></CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            
           </CardHeader>
           <CardContent><div className="text-2xl font-bold">{stats.upcoming}</div></CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Today's Games</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            
           </CardHeader>
           <CardContent><div className="text-2xl font-bold">{stats.today}</div></CardContent>
         </Card>

@@ -7,7 +7,6 @@ import {
   Users, 
   UserPlus, 
   CalendarDays, 
-  Trophy, 
   Megaphone, 
   Settings 
 } from "lucide-react";
@@ -32,7 +31,7 @@ const tabs = [
   { id: "coaches", label: "Coaches", icon: Users },
   { id: "drafts", label: "Drafts", icon: UserPlus },
   { id: "schedule", label: "Schedule", icon: CalendarDays },
-  { id: "standings", label: "Standings", icon: Trophy },
+  { id: "standings", label: "Standings", icon: null },
   { id: "communication", label: "Communication", icon: Megaphone },
   { id: "settings", label: "Settings", icon: Settings },
 ];
@@ -61,7 +60,7 @@ export default function Commissioner() {
                     value={tab.id}
                     className="flex items-center gap-2 data-[state=active]:bg-background"
                   >
-                    <tab.icon className="h-4 w-4" />
+                    {tab.icon && <tab.icon className="h-5 w-5" />}
                     <span className="hidden sm:inline">{tab.label}</span>
                   </TabsTrigger>
                 ))}

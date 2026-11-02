@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle } from "lucide-react";
+
 import { supabase } from "@/integrations/supabase/client";
 
 /** Warns admins while an upcoming season has no age cutoff date (registration stays blocked). */
@@ -25,7 +25,7 @@ export const SeasonCutoffBanner = () => {
   if (!data || data.length === 0) return null;
   return (
     <div role="status" className="mb-6 flex gap-3 rounded-2xl border border-destructive/40 bg-destructive/5 p-4">
-      <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+      
       <p className="text-sm">
         {data.map((s) => s.label ?? s.year).join(", ")} {data.length > 1 ? "have" : "has"} no age cutoff date.
         Registration can't open until it's set.

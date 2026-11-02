@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/dialog";
 import { useTeamTasks, useTeamTaskMutations, TeamTask } from "@/hooks/useTeamTasks";
 import { useCoaches } from "@/hooks/useCoaches";
-import { Plus, CheckCircle2, Circle, Clock, X, Flag, Target } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { format } from "date-fns";
 
 interface TeamTasksCardProps {
@@ -46,10 +46,10 @@ const priorityColors: Record<string, string> = {
 };
 
 const statusIcons: Record<string, React.ReactNode> = {
-  pending: <Circle className="h-4 w-4 text-muted-foreground" />,
-  in_progress: <Clock className="h-4 w-4 text-blue-500" />,
-  completed: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-  cancelled: <X className="h-4 w-4 text-red-500" />,
+  pending: <span className="text-xs font-label">Pending</span>,
+  in_progress: <span className="text-xs font-label">In progress</span>,
+  completed: <span className="text-xs font-label">Done</span>,
+  cancelled: <span className="text-xs font-label">Cancelled</span>,
 };
 
 export function TeamTasksCard({ teamId }: TeamTasksCardProps) {
@@ -107,7 +107,7 @@ export function TeamTasksCard({ teamId }: TeamTasksCardProps) {
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <Flag className="h-5 w-5" />
+            
             Tasks & Milestones
           </CardTitle>
           <CardDescription>Track team activities and important milestones</CardDescription>
@@ -223,7 +223,7 @@ export function TeamTasksCard({ teamId }: TeamTasksCardProps) {
         {milestones.length > 0 && (
           <div>
             <h4 className="font-medium mb-2 flex items-center gap-2">
-              <Target className="h-4 w-4" />
+              
               Milestones
             </h4>
             <div className="space-y-2">

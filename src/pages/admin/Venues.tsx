@@ -18,12 +18,12 @@ import {
   useVenueFieldMutations,
   useBulkUpdateFieldStatus,
 } from "@/hooks/useVenueFields";
-import { MapPin, Plus, Search, Pencil, CircleCheck, CircleX, AlertTriangle } from "lucide-react";
+import {  Plus, Search, Pencil, } from "lucide-react";
 
-const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof CircleCheck }> = {
-  open: { label: "Open", color: "bg-emerald-500/15 text-emerald-700 border-emerald-300", icon: CircleCheck },
-  closed: { label: "Closed", color: "bg-destructive/15 text-destructive border-destructive/30", icon: CircleX },
-  maintenance: { label: "Maintenance", color: "bg-yellow-500/15 text-yellow-700 border-yellow-400", icon: AlertTriangle },
+const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
+  open: { label: "Open", color: "bg-emerald-500/15 text-emerald-700 border-emerald-300" },
+  closed: { label: "Closed", color: "bg-destructive/15 text-destructive border-destructive/30" },
+  maintenance: { label: "Maintenance", color: "bg-yellow-500/15 text-yellow-700 border-yellow-400" },
 };
 
 const Venues = () => {
@@ -102,7 +102,7 @@ const Venues = () => {
           <Card className="border-emerald-200 bg-emerald-50/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-emerald-700">Open</CardTitle>
-              <CircleCheck className="h-4 w-4 text-emerald-600" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-emerald-700">{openCount}</div>
@@ -111,7 +111,7 @@ const Venues = () => {
           <Card className="border-destructive/20 bg-destructive/5">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-destructive">Closed</CardTitle>
-              <CircleX className="h-4 w-4 text-destructive" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-destructive">{closedCount}</div>
@@ -120,7 +120,7 @@ const Venues = () => {
           <Card className="border-yellow-300 bg-yellow-50/50">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-yellow-700">Maintenance</CardTitle>
-              <AlertTriangle className="h-4 w-4 text-yellow-600" />
+              
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-yellow-700">{maintCount}</div>
@@ -199,7 +199,7 @@ const Venues = () => {
                   <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        
                         <CardTitle className="text-lg">{venue.name}</CardTitle>
                         {venue.city && (
                           <span className="text-sm text-muted-foreground">
@@ -266,17 +266,17 @@ const Venues = () => {
                                 <SelectContent>
                                   <SelectItem value="open">
                                     <span className="flex items-center gap-1.5">
-                                      <CircleCheck className="h-3.5 w-3.5 text-emerald-600" /> Open
+                                       Open
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="closed">
                                     <span className="flex items-center gap-1.5">
-                                      <CircleX className="h-3.5 w-3.5 text-destructive" /> Closed
+                                       Closed
                                     </span>
                                   </SelectItem>
                                   <SelectItem value="maintenance">
                                     <span className="flex items-center gap-1.5">
-                                      <AlertTriangle className="h-3.5 w-3.5 text-yellow-600" /> Maintenance
+                                       Maintenance
                                     </span>
                                   </SelectItem>
                                 </SelectContent>

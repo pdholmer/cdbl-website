@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send, Users, Mail, History } from "lucide-react";
+import { Send } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -82,7 +82,7 @@ export default function CommissionerCommunication() {
             Compose
           </TabsTrigger>
           <TabsTrigger value="history">
-            <History className="h-4 w-4 mr-2" />
+            
             History
           </TabsTrigger>
         </TabsList>
@@ -105,19 +105,19 @@ export default function CommissionerCommunication() {
                   <SelectContent>
                     <SelectItem value="all_coaches">
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4" />
+                        
                         All Coaches
                       </div>
                     </SelectItem>
                     <SelectItem value="all_parents">
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4" />
+                        
                         All Parents
                       </div>
                     </SelectItem>
                     <SelectItem value="everyone">
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4" />
+                        
                         Everyone
                       </div>
                     </SelectItem>
