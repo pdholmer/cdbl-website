@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Eye, X } from "lucide-react";
+import { Eye } from "lucide-react";
 import SituationPlayer from "@/components/training/SituationPlayer";
 import { useRecordAttempt, useSituationSteps, type QuizQuestion } from "@/hooks/useQuiz";
 import { cn } from "@/lib/utils";
@@ -65,14 +65,12 @@ export const QuizCard = ({ question, header, onAnswered, footer }: QuizCardProps
                   answered && !isPicked && !isRight && "border-border opacity-60",
                 )}
               >
-                <span className="flex items-start gap-3">
-                  <span className="mt-0.5 shrink-0">
-                    {answered && isRight && <Check className="h-5 w-5 text-green-700" aria-hidden="true" />}
-                    {answered && isPicked && !isRight && (
-                      <X className="h-5 w-5 text-destructive" aria-hidden="true" />
-                    )}
-                  </span>
+                <span className="flex flex-wrap items-start gap-2">
                   <span>{option.text}</span>
+                  {answered && isRight && <span className="rounded-full bg-success px-2 py-0.5 font-label text-xs font-semibold text-success-foreground">Correct</span>}
+                  {answered && isPicked && !isRight && (
+                    <span className="rounded-full bg-destructive px-2 py-0.5 font-label text-xs font-semibold text-destructive-foreground">Not quite</span>
+                  )}
                 </span>
               </button>
             );
@@ -111,7 +109,7 @@ export const QuizCard = ({ question, header, onAnswered, footer }: QuizCardProps
                 className="w-full min-h-12 rounded-2xl"
                 onClick={() => setWatching(true)}
               >
-                <Eye className="h-5 w-5 mr-2" aria-hidden="true" /> Watch the play
+                <Eye className="h-4 w-4 mr-2" aria-hidden="true" /> Watch the play
               </Button>
             ) : (
               <div className="space-y-3">

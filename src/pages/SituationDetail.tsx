@@ -281,14 +281,14 @@ const SituationDetail = () => {
                         aria-current={active ? "step" : undefined}
                         className={`w-full text-left min-h-[44px] rounded-2xl border p-3 transition-colors ${
                           active
-                            ? "border-primary bg-primary/10"
+                            ? "is-selected"
                             : "border-border bg-card/60 hover:bg-muted/60"
                         }`}
                       >
                         <div className="flex items-start gap-3">
                           <span
                             className={`shrink-0 h-7 w-7 rounded-full grid place-items-center text-xs font-bold ${
-                              active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                              active ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
                             }`}
                           >
                             {i + 1}

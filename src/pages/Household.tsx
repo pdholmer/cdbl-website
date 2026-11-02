@@ -56,7 +56,7 @@ const Household = () => {
   const greetingName = you?.first_name ?? "there";
 
   const renderEvent = (e: FamilyEvent & { childName?: string }) => (
-    <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
+    <div className="card-flood rounded-xl border p-5">
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground/70">
         {e.childName ? `${e.childName}'s next event` : "Next up"}
       </p>
@@ -118,7 +118,7 @@ const Household = () => {
             {data?.nextEvent ? (
               renderEvent(data.nextEvent)
             ) : (
-              <div className="rounded-2xl bg-primary p-5 text-primary-foreground">
+              <div className="card-flood rounded-xl border p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h2 className="font-heading text-xl font-bold">{household?.name}</h2>
