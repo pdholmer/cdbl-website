@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { StatusChip } from "@/components/family";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -32,6 +31,7 @@ const money = (n: number) => `${n < 0 ? "-" : ""}$${Math.abs(Number(n)).toFixed(
 const HouseholdCheckout = () => {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["my-cart"],
+    refetchInterval: (q) => new URLSearchParams(window.location.search).get("paid") && (q.state.data as { balance?: Balance | null } | undefined)?.balance?.status !== "paid" ? 5000 : false,
     queryFn: async () => {
       const { data: carts, error: ce } = await supabase.from("carts").select("id, status, created_at")
         .in("status", ["open", "locked", "on_hold", "payment_pending", "paid"]).order("created_at", { ascending: false }).limit(1);
