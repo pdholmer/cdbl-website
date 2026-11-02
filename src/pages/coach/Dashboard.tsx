@@ -106,7 +106,7 @@ const CoachDashboard = () => {
       )}
 
       {/* Upcoming Drafts */}
-      <Card>
+      <Card id="team" className="scroll-mt-4">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             
