@@ -54,6 +54,7 @@ const TwoStepVerify = () => {
     if (e.error === "hourly_limit") setError("You've asked for 10 codes this hour. Wait a bit, then try again.");
     else if (e.error === "locked") setError(lockMsg(e.until));
     else if (e.error === "email_blocked") setError("Email to this address is turned off, so we can't send a code.");
+    else if (e.error === "unauthorized") setError("Your sign-in has ended. Sign out, then sign in again.");
     else setError("We couldn't send your code.");
   }, []);
 
