@@ -300,6 +300,7 @@ All colors MUST be HSL.
   html.ngb [data-sidebar="menu-button"][data-active="true"], html.ngb [aria-current="page"].ngb-nav {
     background-color: #003DA5 !important; color: #fff !important; border-color: transparent !important;
   }
+  html.ngb.dark .text-destructive { color: #F2B8B5; }
   /* One outline icon style, current color. */
   html.ngb svg.lucide { stroke-width: 1.75; }
 }

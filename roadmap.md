@@ -13,4 +13,4 @@
 # Night Game Builder
 - [x] Stage 1: signed-in look (fonts, colors, shapes, flat cards, Light/Dark/Device on /account)
 - [ ] Stage 3: delete retired tokens and restyle public pages (waiting on Paul)
-- [ ] Stage 2: textures, flood cards, blue selected states, icon cleanup (approved Nov 2, building)
+- [x] Stage 2: textures, flood cards, blue selected states, icon cleanup
