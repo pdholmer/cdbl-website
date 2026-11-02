@@ -6,7 +6,7 @@ import { Menu, ChevronDown, X } from "lucide-react";
 import WeatherDisplay from "@/components/WeatherDisplay";
 import DropdownNav from "@/components/DropdownNav";
 import SearchTray from "@/components/SearchTray";
-import UserMenu from "@/components/UserMenu";
+import UserMenu, { SignInInline } from "@/components/UserMenu";
 import {
   Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from "@/components/ui/collapsible";
@@ -108,6 +108,9 @@ const Header = () => {
             <span className="text-muted-foreground">|</span>
             <UserMenu variant="desktop" />
           </div>
+
+          {/* Mobile: sign-in door without opening MENU */}
+          <SignInInline />
 
           {/* Mobile Menu */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
