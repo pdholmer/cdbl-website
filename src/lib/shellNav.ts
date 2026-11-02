@@ -59,7 +59,7 @@ export const tabsFor = (area: ShellArea, roles: string[]): NavLinkItem[] => {
   ];
   if (area === "coach") return [
     { label: "Home", to: "/coach", icon: Home },
-    { label: "My Team", to: "/coach", icon: UsersRound },
+    { label: "My Team", to: "/coach#team", icon: UsersRound },
     { label: "Schedule", to: "/schedule", icon: CalendarDays },
     { label: "Training", to: "/training", icon: BookOpen },
     { label: "More", to: "", icon: MoreHorizontal, more: true },
