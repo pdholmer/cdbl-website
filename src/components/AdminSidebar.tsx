@@ -19,7 +19,7 @@ import {
 import { 
   Database, Users, HelpCircle, Heart, Home, FileText, BarChart3, 
   RefreshCw, MapPin, Calendar, User, ClipboardList, UsersRound, 
-  MessageSquare, UserCog, ExternalLink, Lock, Tag, CheckSquare, 
+  MessageSquare, UserCog, ExternalLink, Settings2, Lock, Tag, CheckSquare, 
   Coffee, ChevronDown, Settings, Megaphone
 } from "lucide-react";
 import cdblSidebarLogo from "@/assets/cdbl-sidebar-logo.png";
