@@ -202,7 +202,7 @@ export function AdminSidebar() {
               ))}
 
               {/* Admin Only Indicator */}
-              {isAdmin && (
+              {roles.includes("admin") && (
                 <div className="flex items-center gap-1 px-2 py-2 mt-2 text-xs text-primary-foreground/40 uppercase tracking-wider">
                   <Lock className="h-3 w-3" />
                   <span>Admin sections above</span>
