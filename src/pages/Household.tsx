@@ -263,7 +263,7 @@ const Household = () => {
                     </>
                   ) : (
                     <div className="p-4">
-                      <EmptyStateBlock icon={}>
+                      <EmptyStateBlock>
                         When {c.display_name} is placed on a team, his schedule, coach contact,
                         and development updates will appear here.
                       </EmptyStateBlock>
@@ -282,7 +282,7 @@ const Household = () => {
                     c.next_events.map((e) => (
                       <ListRow
                         key={e.id}
-                        icon={}
+                       
                         title={e.title}
                         subtitle={`${dayWord(e.start_date)}${
                           e.all_day ? "" : ` · ${formatTime(e.start_time) ?? ""}`
@@ -293,7 +293,7 @@ const Household = () => {
                   )
                 ) : (
                   <div className="p-4">
-                    <EmptyStateBlock icon={}>
+                    <EmptyStateBlock>
                       No upcoming events yet — the 2027 season is coming.
                     </EmptyStateBlock>
                   </div>
