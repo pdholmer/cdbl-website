@@ -309,7 +309,7 @@ export const ChatAssistant = () => {
                       key={idx}
                       variant="outline"
                       size="sm"
-                      className="w-full text-left justify-start h-auto py-2"
+                      className="w-full text-left justify-start h-auto min-h-11 py-2 whitespace-normal"
                       onClick={() => setInput(q)}
                     >
                       {q}
