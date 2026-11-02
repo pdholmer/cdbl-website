@@ -13,8 +13,6 @@ project_id = "nqywnfgpwqpczesjkwtp"
     verify_jwt = false
   [functions.programs]
     verify_jwt = false
-  [functions.register-player]
-    verify_jwt = false
   [functions.resources]
     verify_jwt = true
   [functions.support]
