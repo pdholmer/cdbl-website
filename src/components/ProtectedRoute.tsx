@@ -41,11 +41,11 @@ export const ProtectedRoute = ({
 
       setIsAuthenticated(true);
 
-      // Two-step sign-in gate for admin, registrar, treasurer, background_checks.
+      // Two-step sign-in gate for every role in requires_mfa (email code by default).
       try {
         const status = await getMfaStatus(session.user.id);
         setMfaRedirect(
-          status === "needs_setup" ? "/two-step/setup" : status === "needs_code" ? "/two-step/verify" : null
+          status === "needs_code" || status === "needs_setup" ? "/two-step/verify" : null
         );
       } catch {
         // Fail closed: if we cannot confirm, ask for the code.
