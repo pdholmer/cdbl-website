@@ -176,9 +176,10 @@ All colors MUST be HSL.
 
 /* Night Game Builder: signed-in pages only (html.ngb, set by ThemeScope). */
 @layer base {
-  :root { --font-sans: 'Montserrat'; }
+  :root { --font-sans: 'Montserrat'; --font-heading: 'Montserrat'; }
   html.ngb {
     --font-sans: 'Barlow';
+    --font-heading: 'Big Shoulders Display';
     --background: 214 27% 95%;
     --foreground: 216 17% 9%;
     --card: 0 0% 100%;

@@ -17,7 +17,7 @@ export default {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         display: ['"Big Shoulders Display"', 'system-ui', 'sans-serif'],
         label: ['"Barlow Semi Condensed"', 'system-ui', 'sans-serif'],
-        heading: ['Montserrat', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
