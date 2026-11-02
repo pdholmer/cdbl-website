@@ -14,3 +14,4 @@
 - [x] Stage 1: signed-in look (fonts, colors, shapes, flat cards, Light/Dark/Device on /account)
 - [ ] Stage 3: delete retired tokens and restyle public pages (waiting on Paul)
 - [x] Stage 2: textures, flood cards, blue selected states, icon cleanup
+- [x] Stage 3 shell: lit header, piping, tab bar, grouped sidebar, Prompt 2 follow-ups

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { FamilyHeader } from "@/components/family";
+import { AppShell } from "@/components/shell/AppShell";
 import { getThemePref, setThemePref, type ThemePref } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
@@ -27,8 +27,7 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <FamilyHeader context="Account" />
+    <AppShell area="auto" title="Account">
       <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
         <h1 className="font-display text-5xl font-extrabold leading-none text-foreground">Account</h1>
         <section className="mt-8 rounded-lg border border-border bg-card p-5">
@@ -57,7 +56,7 @@ const Account = () => {
           </div>
         </section>
       </main>
-    </div>
+    </AppShell>
   );
 };
 
