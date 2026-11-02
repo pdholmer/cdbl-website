@@ -34,8 +34,8 @@ export const BuilderStage = ({ label, name, step }: StageProps) => (
   <div className="ngb-stage tex-twill relative hidden overflow-hidden border-r border-border md:flex md:flex-col md:justify-end md:px-6 md:py-10 lg:px-10">
     <span
       aria-hidden
-      className="pointer-events-none absolute -right-4 top-2 select-none font-display font-black leading-none text-foreground/[0.06]"
-      style={{ fontSize: "clamp(160px, 22vw, 300px)" }}
+      className="pointer-events-none absolute left-4 top-4 lg:left-8 select-none font-display font-black leading-none text-foreground/[0.06]"
+      style={{ fontSize: "clamp(160px, 20vw, 280px)" }}
     >
       {step}
     </span>
@@ -73,7 +73,7 @@ interface ActionBarProps {
 /** Counter box plus a full-width pill. Fixed above the tab bar on phones; sticky at the panel foot on iPad/desktop. */
 export const BuilderActionBar = ({ step, label, onClick, disabled, aside }: ActionBarProps) => (
   <div className="fixed inset-x-0 bottom-[calc(64px+env(safe-area-inset-bottom))] z-30 border-t border-border bg-background/95 px-4 py-3 backdrop-blur md:sticky md:inset-x-auto md:bottom-0 md:px-6">
-    <div className="mx-auto flex max-w-2xl items-center gap-3">
+    <div className="mx-auto flex max-w-2xl items-center gap-3 pr-[68px]">
       <span className="flex h-12 shrink-0 items-center rounded-lg border border-border bg-card px-3 font-display text-lg font-black uppercase tabular-nums text-foreground">
         {step} of 4
       </span>
