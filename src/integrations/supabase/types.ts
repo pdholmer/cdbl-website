@@ -1717,6 +1717,62 @@ export type Database = {
           },
         ]
       }
+      form_documents: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          display_order: number
+          form_key: string
+          id: string
+          is_placeholder: boolean
+          kind: string
+          league_id: string
+          required: boolean
+          requires_resign: boolean
+          title: string
+          version: number
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          form_key: string
+          id?: string
+          is_placeholder?: boolean
+          kind?: string
+          league_id?: string
+          required?: boolean
+          requires_resign?: boolean
+          title: string
+          version: number
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          display_order?: number
+          form_key?: string
+          id?: string
+          is_placeholder?: boolean
+          kind?: string
+          league_id?: string
+          required?: boolean
+          requires_resign?: boolean
+          title?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_documents_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       games: {
         Row: {
           away_score: number | null
@@ -3811,6 +3867,99 @@ export type Database = {
           },
         ]
       }
+      registration_forms: {
+        Row: {
+          attestation_text: string | null
+          attested: boolean
+          created_by: string
+          form_document_id: string
+          form_key: string
+          form_version: number
+          guardian_id: string
+          id: string
+          ip_address: string | null
+          league_id: string
+          locale: string | null
+          photo_release_consent: boolean | null
+          registration_id: string
+          signed_at: string
+          typed_name: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          attestation_text?: string | null
+          attested?: boolean
+          created_by: string
+          form_document_id: string
+          form_key: string
+          form_version: number
+          guardian_id: string
+          id?: string
+          ip_address?: string | null
+          league_id?: string
+          locale?: string | null
+          photo_release_consent?: boolean | null
+          registration_id: string
+          signed_at?: string
+          typed_name?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          attestation_text?: string | null
+          attested?: boolean
+          created_by?: string
+          form_document_id?: string
+          form_key?: string
+          form_version?: number
+          guardian_id?: string
+          id?: string
+          ip_address?: string | null
+          league_id?: string
+          locale?: string | null
+          photo_release_consent?: boolean | null
+          registration_id?: string
+          signed_at?: string
+          typed_name?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registration_forms_form_document_id_fkey"
+            columns: ["form_document_id"]
+            isOneToOne: false
+            referencedRelation: "form_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_forms_guardian_id_fkey"
+            columns: ["guardian_id"]
+            isOneToOne: false
+            referencedRelation: "guardians"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_forms_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_forms_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "registrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "registration_forms_registration_id_fkey"
+            columns: ["registration_id"]
+            isOneToOne: false
+            referencedRelation: "v_player_current"
+            referencedColumns: ["registration_id"]
+          },
+        ]
+      }
       registration_submissions: {
         Row: {
           admin_notes: string | null
@@ -5433,6 +5582,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      form_min_valid_version: { Args: { _form_key: string }; Returns: number }
       get_coach_contact_for_guardian: {
         Args: { _team_id: string }
         Returns: {
@@ -5541,6 +5691,15 @@ export type Database = {
         Returns: number
       }
       program_open_issues: { Args: { _program_id: string }; Returns: string[] }
+      publish_form_version: {
+        Args: {
+          _body: string
+          _form_key: string
+          _require_resign: boolean
+          _title: string
+        }
+        Returns: string
+      }
       purge_expired_assistant_data: { Args: never; Returns: undefined }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
@@ -5559,6 +5718,10 @@ export type Database = {
           _player_id?: string
         }
         Returns: boolean
+      }
+      refresh_waiver_status: {
+        Args: { _registration_id: string }
+        Returns: string
       }
       reject_role_request: {
         Args: { notes?: string; request_id: string }
@@ -5582,6 +5745,18 @@ export type Database = {
       set_division_fee: {
         Args: { _cost: number; _division_id: string }
         Returns: undefined
+      }
+      sign_registration_form: {
+        Args: {
+          _attested: boolean
+          _form_document_id: string
+          _locale?: string
+          _photo_release_consent?: boolean
+          _registration_id: string
+          _typed_name: string
+          _user_agent?: string
+        }
+        Returns: Json
       }
       start_my_registration: {
         Args: {
