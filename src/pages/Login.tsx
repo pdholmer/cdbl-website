@@ -195,16 +195,6 @@ const Login = () => {
                   Sign in
                 </Button>
               </form>
-              <p className="mt-6 text-center text-sm text-muted-foreground">
-                New to CDBL?{" "}
-                <button
-                  type="button"
-                  className="min-h-11 font-semibold text-primary underline-offset-4 hover:underline"
-                  onClick={() => switchTo("signup")}
-                >
-                  Create account
-                </button>
-              </p>
               <p className="text-center text-xs text-muted-foreground">
                 Used an email link before? Choose Forgot password to set a password.
               </p>
@@ -294,6 +284,18 @@ const Login = () => {
           </>
         )}
       </Card>
+      {mode === "signin" && (
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          New to CDBL?{" "}
+          <button
+            type="button"
+            className="min-h-11 font-semibold text-primary underline-offset-4 hover:underline dark:text-foreground"
+            onClick={() => switchTo("signup")}
+          >
+            Create account
+          </button>
+        </p>
+      )}
     </AuthShell>
   );
 };

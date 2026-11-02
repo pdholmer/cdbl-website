@@ -111,7 +111,7 @@ const UserMenu = ({ onMenuAction, variant = "desktop" }: UserMenuProps) => {
     if (variant === "mobile") {
       return (
         <Link
-          to="/admin/login"
+          to="/login"
           onClick={onMenuAction}
           className="flex items-center gap-3 py-3 px-3 text-base font-medium text-foreground hover:text-primary transition-colors rounded-md hover:bg-muted"
         >
@@ -123,7 +123,7 @@ const UserMenu = ({ onMenuAction, variant = "desktop" }: UserMenuProps) => {
 
     return (
       <Link
-        to="/admin/login"
+        to="/login"
         className="flex items-center gap-1.5 text-foreground hover:text-primary transition-colors"
         aria-label="Sign in"
       >

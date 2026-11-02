@@ -3,7 +3,7 @@ import { AppShell } from "@/components/shell/AppShell";
 
 /** Coach area: shared signed-in shell with coach tabs. */
 export const CoachLayout = () => (
-  <AppShell area="coach">
+  <AppShell area="coach" title="Coach dashboard">
     <Outlet />
   </AppShell>
 );

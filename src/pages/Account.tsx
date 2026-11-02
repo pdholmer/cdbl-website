@@ -29,8 +29,7 @@ const Account = () => {
   return (
     <AppShell area="auto" title="Account">
       <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
-        <h1 className="font-display text-5xl font-extrabold leading-none text-foreground">Account</h1>
-        <section className="mt-8 rounded-lg border border-border bg-card p-5">
+        <section className="rounded-lg border border-border bg-card p-5">
           <h2 className="font-label text-lg font-semibold text-foreground">Appearance</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Saved on this device. Device follows your phone or computer setting.
