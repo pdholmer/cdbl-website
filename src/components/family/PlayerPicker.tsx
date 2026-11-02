@@ -31,7 +31,7 @@ export const PlayerPicker = ({ players, selectedId, onSelect }: PlayerPickerProp
                 className={cn(
                   "flex h-12 w-12 items-center justify-center rounded-full font-display text-lg font-bold",
                   on
-                    ? "bg-[#003DA5] text-white ring-2 ring-[#003DA5] ring-offset-2 ring-offset-background"
+                    ? "is-selected bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2 ring-offset-background"
                     : "tex-mesh border border-border bg-card text-foreground",
                 )}
               >
