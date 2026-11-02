@@ -12,7 +12,7 @@ export interface NavGroup { label: string; items: NavLinkItem[] }
 
 export const ADMIN_GROUPS: NavGroup[] = [
   { label: "Run the season", items: [
-    { label: "Registrations", to: "/admin/commissioner" },
+    { label: "Registrations", to: "/admin/commissioner?tab=registrations" },
     { label: "Players", to: "/admin/players" },
     { label: "Teams and coaches", to: "/admin/teams" },
     { label: "Coaches", to: "/admin/coaches" },
@@ -46,7 +46,7 @@ export const ADMIN_GROUPS: NavGroup[] = [
 ];
 
 export const adminGroupsFor = (roles: string[]): NavGroup[] =>
-  ADMIN_GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => canAccessAdminPath(roles, i.to)) }))
+  ADMIN_GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => canAccessAdminPath(roles, i.to.split("?")[0])) }))
     .filter((g) => g.items.length > 0);
 
 export const tabsFor = (area: ShellArea, roles: string[]): NavLinkItem[] => {
@@ -59,13 +59,13 @@ export const tabsFor = (area: ShellArea, roles: string[]): NavLinkItem[] => {
   ];
   if (area === "coach") return [
     { label: "Home", to: "/coach", icon: Home },
-    { label: "My Team", to: "/coach#team", icon: UsersRound },
+    { label: "My Team", to: "/coach", icon: UsersRound },
     { label: "Schedule", to: "/schedule", icon: CalendarDays },
     { label: "Training", to: "/training", icon: BookOpen },
     { label: "More", to: "", icon: MoreHorizontal, more: true },
   ];
-  const ok = (p: string) => canAccessAdminPath(roles, p);
-  const reg = ok("/admin/commissioner") ? "/admin/commissioner" : "/admin/players";
+  const ok = (p: string) => canAccessAdminPath(roles, p.split("?")[0]);
+  const reg = ok("/admin/commissioner") ? "/admin/commissioner?tab=registrations" : "/admin/players";
   const candidates: NavLinkItem[] = [
     { label: "Registrations", to: reg, icon: ClipboardList },
     { label: "Teams", to: "/admin/teams", icon: UsersRound },
@@ -83,6 +83,6 @@ export const tabsFor = (area: ShellArea, roles: string[]): NavLinkItem[] => {
 
 /** Which group label owns a path (used as the admin page headline). */
 export const adminGroupLabel = (path: string): string => {
-  for (const g of ADMIN_GROUPS) if (g.items.some((i) => path === i.to || path.startsWith(i.to + "/"))) return g.label;
+  for (const g of ADMIN_GROUPS) if (g.items.some((i) => { const t = i.to.split("?")[0]; return path === t || path.startsWith(t + "/"); })) return g.label;
   return "League office";
 };

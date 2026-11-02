@@ -47,7 +47,7 @@ const useShellIdentity = (fixed: AppShellProps["area"]) => {
 };
 
 const isActive = (item: NavLinkItem, pathname: string, hash: string) => {
-  const [p, h] = item.to.split("#");
+  const [p, h] = item.to.split("?")[0].split("#");
   if (h) return pathname === p && hash === `#${h}`;
   if (p === "/admin" || p === "/coach" || p === "/household") return pathname === p && !hash;
   return pathname === p || pathname.startsWith(p + "/");

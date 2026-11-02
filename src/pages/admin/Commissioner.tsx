@@ -10,8 +10,8 @@ import {
   Megaphone, 
   Settings 
 } from "lucide-react";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AdminSidebar } from "@/components/AdminSidebar";
+import { AdminLayout } from "@/components/AdminLayout";
+import { useSearchParams } from "react-router-dom";
 
 // Import commissioner tab content components
 import CommissionerDashboard from "@/pages/commissioner/Dashboard";
@@ -37,13 +37,12 @@ const tabs = [
 ];
 
 export default function Commissioner() {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [params] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(params.get("tab") ?? "dashboard");
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <AdminSidebar />
-        <main className="flex-1 p-8 overflow-auto">
+    <AdminLayout>
+        <div>
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">Commissioner Portal</h1>
@@ -103,8 +102,7 @@ export default function Commissioner() {
               </TabsContent>
             </Tabs>
           </div>
-        </main>
-      </div>
-    </SidebarProvider>
+        </div>
+    </AdminLayout>
   );
 }
