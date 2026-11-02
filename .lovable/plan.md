@@ -1,81 +1,71 @@
-# Prompt 3 cleanup and Night Game Builder Prompt 4 (sign-in screens)
+# Prompt 4 follow-ups and Prompt 5: parent Home (/household)
 
-Styling and layout only. No change to auth behavior, the mfa-email-code function, guards (ProtectedRoute), RLS or the database. Sign-in, sign-up, reset, resend, code send/verify, 60-second resend lock, trust-device and authenticator switch keep their current logic line for line; only the markup around them changes.
+Layout and styling only. No data queries, auth, guards, RLS, functions, payments or database changes.
 
-## Part 1: cleanup from Prompt 3
+## Stop-and-say items (please decide before approval)
 
-a) Duplicate headlines. Remove a page's own big title only where it repeats the lit-header title:
-- Account: remove "Account" H1 (header says ACCOUNT).
-- Training list: removed with the banner (b).
-- Coach dashboard: header headline becomes "Coach dashboard"; remove its "Coach Dashboard" H1, keep the subtitle.
-- Household: "Hi, Paul" is a greeting, not a repeat, so it stays. The error-state title stays.
-- Situation detail: the situation's own title stays (header says TRAINING).
-- Admin pages: the header shows the group ("Run the season"), and page H1s ("Players") are different words, so they stay. No admin page files change.
-The lit-header headline becomes the page's heading for screen readers on Account, Training and Coach (it is already marked as a level-1 heading).
+1. **The page has no registration, forms or payment data.** The Household page loads only: the household record, guardians, linked players (name, birth date), team placement, coaches and upcoming events. It loads nothing about registrations, signed forms, balances or payments. So "Sign now", "Due", "Unpaid" and "Paid" cannot be shown truthfully without a new data query. Building those would need a data change, which this step forbids. The plan below uses only what the page already loads, and lists the unknowable steps.
+2. **There is no add-player flow for parents.** Players reach a household only when staff process a registration (the current empty state says so). The only "add" screens are admin tools. Option A (default): the dashed "+ Add" circle opens the public /registration page, which is how a child gets added today. Option B: leave the "+ Add" circle out until a real flow exists.
 
-b) Training list: delete the full-width blue gradient banner. Header label becomes "CDBL TRAINING", headline "SITUATIONS TRAINER". The banner's sentence ("Know where to go before the ball is hit...") moves to a plain subtitle line at the top of the content. Uses a new optional `label` and `title` already supported by AppShell.
+## Part 1: Prompt 4 follow-ups
 
-c) Coach "My Team" tab unchanged. Roadmap gets an open item: "Coach My Team tab: waiting on a real team section".
+- a) Measure the contrast of the light underlined links in dark mode on /login, /reset-password and the two-step screens. Report the ratio. If it falls below 4.5:1, lighten only the dark-mode link token.
+- b) On /login, show the sign-in errors (wrong password, invalid email, missing password, email not confirmed, and resend/reset/sign-up failures) as destructive-token text inside the card, under the button, with `role="alert"`. The wording stays the same. The sign-in calls and branching stay exactly as they are; only the display changes from popup to inline text. Success messages ("Confirmation email sent") stay as popups. The error clears when the person edits a field.
+- c) Re-run the edge-bar scan across signed-in pages (border-l/border-t accent classes, left/top accent pseudo-elements, inset box-shadow bars) and report any hits by file.
 
-## Part 2: sign-in screens
+## Part 2: /household rebuild
 
-### New frame
-`AuthShell` is rebuilt: the shell's lit header (seal 36px as home link, label "CENTRAL DISTRICT BASEBALL LEAGUE", headline per screen) and the piping line, then one centered card (max 440px, full width on phone with 16px gutters). No sidebar, no tabs, no blue half-panel, no slogan. Card uses the card surface, mesh texture and 1px border; no flood (the Sign in button is the only blue).
+### Header
+- **Label:** "2027 season, In-House". Fixed text: the page loads no program per player, so it cannot be read from data.
+- **Headline:** a count of open to-dos, for example "TWO THINGS TO DO". There is no deadline field in loaded data, so the headline won't name a date. Using the board's Dec 21 opening date would need it written into the page as fixed text, so tell me if you want "BEFORE DEC 21".
+- **Fallback when nothing is open:** if there are players but no to-dos, the headline reads "YOU'RE ALL SET". If no players are linked yet, it reads "HI, {FIRST NAME}".
 
-To get the Night Game Builder colors and fonts, /login, /reset-password and /two-step/* are added to the signed-in look path list (theme.ts and the matching pre-paint list in index.html). This is a look-only switch; it does not change who can open those pages. Light/Dark/Device follows the saved device choice.
+### To-dos (only from loaded data)
 
-The lit header and piping styles move out of AppShell into a shared `LitHeader` component so both shells use the same one.
+| To-do | Shows when | Source | Chip |
+|---|---|---|---|
+| Link your player | the household has no linked players | household_players (via the page's existing query) | Due (warning) |
+| Add your address | household has no address line | households record | Due (warning) |
+| Waiting for team placement | a player has no team | v_roster_family | Pending (neutral) |
 
-### /login (sign in)
-Headline "SIGN IN". One card: email, password with show toggle (eye icon, kept), "Forgot password?" link (44px target), full-width CDBL Blue pill "Sign in". Below the card: "New to CDBL? Create account".
-Other modes of the same page, same card:
-- Create account: headline "CREATE ACCOUNT"; existing fields and 10-character rule unchanged.
-- Forgot password / link sent: headline "RESET PASSWORD".
-- Signup sent: "Check your email to confirm your account."
-- Unconfirmed: "Check your email to confirm your account" with the existing resend button as a full-width outline pill.
-- "Couldn't check your access" notice: plain text in the card with a "Try again" pill.
+Payment and form to-dos aren't shown (see stop item 1). "Paid" and "Unpaid" chip styles get built and tested, but nothing uses them yet.
 
-### /reset-password
-Headline "NEW PASSWORD". Same card, existing fields, blue pill "Save password".
+### How "most important" is chosen
+It's the first match in this fixed order: Link your player, then Add your address, then Waiting for team placement for the oldest player. That card gets the one `.card-flood` on the page: a small "MOST IMPORTANT" label, the task in Big Shoulders 24px, one sentence on why it matters, and a white pill button ("Add address" opens the existing edit sheet; "Start registration" opens /registration). A waiting-only card has no button. If there are no to-dos, the page has no flood card. The current blue next-event card becomes a normal textured card, so there's still at most one flood.
 
-### /two-step/verify (emailed code)
-Headline "CHECK YOUR EMAIL".
-- "We emailed a 6-digit code to p•••@gmail.com". Masking is done on screen only: first letter of the name, three dots, then the domain. Whatever the function returns today is shown masked; the function itself is not touched.
-- Six large digit boxes (56px tall, 48px wide on phone), paste fills all six (existing behavior of the code input, verified in testing).
-- "The code expires in 10 minutes." on its own line.
-- "Trust this device for 30 days" checkbox row, 44px.
-- Blue pill "Continue" (unchanged logic, including auto-continue on the sixth digit).
-- "Send a new code" text link, disabled with "Send a new code in 42s" until the existing 60-second timer ends.
-- "Use authenticator app instead" link when the account has one (unchanged switch), and "Sign out".
-Who sees this screen is still decided only by the database's `requires_mfa` list, which today covers admin, board member, commissioner, registrar, treasurer and background checks. Families never reach it. Your note says "admins and board only"; narrowing the list would be a database change, so it is not in this plan.
+### Players row
+- Each player is a 48px circle with initials in Big Shoulders and the name below in Barlow Semi Condensed, with a 44px or larger tap area. The selected player gets a CDBL Blue flood and a 2px ring. The first player is selected by default. The row scrolls sideways inside itself if it's too wide, never the page.
+- The dashed "+ Add" circle follows stop item 2.
+- Under the selected player, the numbered steps:
+  1. Player info: Done (success) when the player is linked with a name and birth date.
+  2. Program: Placed (success) with the team name when the player is on a team. Otherwise Not yet (neutral).
+  3. Forms: **can't be known yet.** It shows a neutral "Not tracked yet" chip.
+  4. Pay: **can't be known yet.** It shows a neutral "Not tracked yet" chip.
 
-### /two-step/setup (optional authenticator)
-Headline "AUTHENTICATOR APP". Same card: QR code on a white tile (so it scans in dark mode), manual key, code boxes, blue pill "Turn on", "Skip for now" link. Logic unchanged.
+### Sections kept
+Family (#family), Guardians, team and coach (#team, on the first player), and Upcoming (#upcoming). The ids, contact buttons, edit sheet, loading skeleton, error card and Try again button stay unchanged. The page's own "Hi, name" heading moves into the shell headline, so the title isn't repeated.
 
-### /admin/login retired
-The /admin/login route already renders the same sign-in page. It becomes a redirect to /login that keeps any `?next=` value. The few places that link to /admin/login (account menu on public pages, OAuth consent page) are pointed at /login. The guard file (ProtectedRoute) still redirects to /admin/login and is not edited; the redirect forwards those users to /login. After sign-in, landing stays as today (staff to /admin, coach to /coach, others to /household).
-
-### Errors and icons
-Errors are destructive-token text inside the card (dark mode uses the lighter red already measured at 10.3:1), no icons, no tinted boxes; the MFA help sentence stays below in muted text. Only the show-password eye, a back arrow (Situation-style "Back to sign in" in forgot mode) and the loading spinner on buttons remain.
+### Empty states (one specific sentence)
+- No players: "No players are linked yet; they appear here once a registration is processed."
+- No events: "No games or practices are scheduled for your players yet."
+- No coach: unchanged.
 
 ## Acceptance checks
-Light and dark at 390, 768 and 1280 for: sign in, create account, forgot, unconfirmed, reset, two-step verify, two-step setup, Account, Training, Coach. No sideways scroll, contrast at least 4.5:1 (including the lit-header label and muted text), every tap target at least 44px (scripted size check), no edge accent bars (scripted scan), paste of a 6-digit code fills all boxes, /admin/login?next=/admin lands on /login?next=/admin. Seal file unchanged.
+- Light and dark at 390, 768 and 1280 widths.
+- No sideways scroll.
+- Text contrast of 4.5:1 or better, including the links from a).
+- Tap targets of 44px or larger.
+- At most one flood card.
+- No edge accent bars.
+- The #upcoming, #family and #team tab links still scroll to their sections.
 
-## Files to change
-- `src/components/AuthShell.tsx` (rebuilt frame)
-- `src/components/shell/LitHeader.tsx` (new, shared header and piping)
-- `src/components/shell/AppShell.tsx` (use LitHeader)
-- `src/pages/Login.tsx` (markup only)
-- `src/pages/ResetPassword.tsx` (markup only)
-- `src/pages/TwoStepVerify.tsx` (markup and on-screen masking only)
-- `src/pages/TwoStepSetup.tsx` (markup only)
-- `src/pages/admin/Login.tsx` (already a redirect; kept) and `src/App.tsx` (/admin/login route uses it)
-- `src/components/UserMenu.tsx`, `src/pages/OAuthConsent.tsx` (link target /login)
-- `src/lib/theme.ts` and `index.html` (add /login, /reset-password to the look path list)
-- `src/pages/Account.tsx`, `src/pages/Training.tsx`, `src/pages/coach/Dashboard.tsx` (Part 1)
-- `src/index.css` (code boxes size, QR tile)
-- `roadmap.md`, `AGENTS.md` (sign-in screens use AuthShell with the shared LitHeader)
+## Technical details
+Files changed:
+- `src/pages/Login.tsx`: inline error state.
+- `src/index.css`: dark link token (only if needed), player-picker styles and the dashed add circle.
+- `src/pages/Household.tsx`: new layout and a to-do list built from the existing `useHouseholdOverview` data.
+- `src/components/family/StatusChip.tsx`: warning, destructive and success tones, if they're missing.
+- `src/components/family/PlayerPicker.tsx`: new, display only.
+- `roadmap.md`: note that forms and payment status are waiting on a data source.
 
-Not changed: ProtectedRoute, mfa-email-code, `src/lib/mfa.ts` logic, landing rules, database.
-
-Undo: revert these files.
+`useHouseholdOverview.ts`, `AppShell` logic, the routes and all backend files stay untouched.
