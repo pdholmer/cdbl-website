@@ -63,13 +63,17 @@ const Login = () => {
     }
   };
 
+  const [formError, setFormError] = useState<string | null>(null);
+  const fail = (m: string) => { setFormError(m); };
+
   const cleanEmail = () => email.trim().toLowerCase();
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     const a = cleanEmail();
-    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
-    if (!password) return toast.error("Enter your password.");
+    if (!emailRegex.test(a)) return fail("Please enter a valid email address.");
+    if (!password) return fail("Enter your password.");
+    setFormError(null);
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({ email: a, password });
     setBusy(false);
@@ -78,7 +82,7 @@ const Login = () => {
         setMode("unconfirmed");
         return;
       }
-      toast.error(
+      fail(
         error.message === "Invalid login credentials"
           ? "That email and password don't match. If you've never set a password, use Forgot password."
           : error.message,
@@ -89,7 +93,7 @@ const Login = () => {
 
   const handleResendConfirmation = async () => {
     const a = cleanEmail();
-    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    if (!emailRegex.test(a)) return fail("Please enter a valid email address.");
     setBusy(true);
     const { error } = await supabase.auth.resend({
       type: "signup",
@@ -97,16 +101,16 @@ const Login = () => {
       options: { emailRedirectTo: `${window.location.origin}/login` },
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) return fail(error.message);
     toast.success("Confirmation email sent. Check your inbox.");
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     const a = cleanEmail();
-    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    if (!emailRegex.test(a)) return fail("Please enter a valid email address.");
     const problem = passwordProblem(password, confirm);
-    if (problem) return toast.error(problem);
+    if (problem) return fail(problem);
     setBusy(true);
     const { data, error } = await supabase.auth.signUp({
       email: a,
@@ -114,7 +118,7 @@ const Login = () => {
       options: { emailRedirectTo: `${window.location.origin}/login` },
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) return fail(error.message);
     if (!data.session) setMode("signup-sent");
     // With a session, onAuthStateChange routes.
   };
@@ -122,19 +126,20 @@ const Login = () => {
   const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault();
     const a = cleanEmail();
-    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    if (!emailRegex.test(a)) return fail("Please enter a valid email address.");
     setBusy(true);
     const { error } = await supabase.auth.resetPasswordForEmail(a, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) return fail(error.message);
     setMode("forgot-sent");
   };
 
   const switchTo = (m: Mode) => {
     setPassword("");
     setConfirm("");
+    setFormError(null);
     setMode(m);
   };
 
@@ -147,7 +152,7 @@ const Login = () => {
         autoComplete="email"
         className="h-11"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => { setEmail(e.target.value); setFormError(null); }}
         required
       />
     </div>
@@ -188,7 +193,7 @@ const Login = () => {
                       Forgot password?
                     </button>
                   </div>
-                  <PasswordInput id="password" autoComplete="current-password" value={password} onChange={setPassword} />
+                  <PasswordInput id="password" autoComplete="current-password" value={password} onChange={(v) => { setPassword(v); setFormError(null); }} />
                 </div>
                 <Button type="submit" className="h-12 w-full" disabled={busy}>
                   {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -213,11 +218,11 @@ const Login = () => {
                 {emailField}
                 <div>
                   <Label htmlFor="new-password">Password</Label>
-                  <PasswordInput id="new-password" autoComplete="new-password" value={password} onChange={setPassword} />
+                  <PasswordInput id="new-password" autoComplete="new-password" value={password} onChange={(v) => { setPassword(v); setFormError(null); }} />
                 </div>
                 <div>
                   <Label htmlFor="confirm-password">Confirm password</Label>
-                  <PasswordInput id="confirm-password" autoComplete="new-password" value={confirm} onChange={setConfirm} />
+                  <PasswordInput id="confirm-password" autoComplete="new-password" value={confirm} onChange={(v) => { setConfirm(v); setFormError(null); }} />
                 </div>
                 <Button type="submit" className="h-12 w-full" disabled={busy}>
                   {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -282,6 +287,11 @@ const Login = () => {
               {backLink}
             </CardContent>
           </>
+        )}
+        {formError && (
+          <p role="alert" className="px-6 pb-6 text-sm font-medium text-destructive">
+            {formError}
+          </p>
         )}
       </Card>
       {mode === "signin" && (

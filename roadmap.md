@@ -17,3 +17,6 @@
 - [x] Stage 3 shell: lit header, piping, tab bar, grouped sidebar, Prompt 2 follow-ups
 - [x] Prompt 4: sign-in screens restyle + Prompt 3 cleanup
 - [ ] Coach My Team tab: waiting on a real team section
+- [x] Prompt 4 follow-ups: dark link contrast, inline sign-in errors, edge-bar rescan
+- [x] Prompt 5: parent Home (/household) to-dos, flood card, player pickers, steps
+- [ ] Household Forms and Pay steps: waiting on a forms/payment data source (shows "Not tracked yet")

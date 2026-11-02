@@ -25,7 +25,7 @@ export const LitHeader = ({ label, title, actions, sealPhoneOnly, className }: L
       </Link>
       <div className="min-w-0 flex-1 pt-1">
         <p className="font-label text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-        <h1 className="ngb-headline mt-1 truncate font-display font-black uppercase leading-[0.95] text-foreground">{title}</h1>
+        <h1 className="ngb-headline mt-1 break-words font-display font-black uppercase leading-[0.95] text-foreground">{title}</h1>
       </div>
       {actions}
     </div>

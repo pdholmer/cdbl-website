@@ -1,20 +1,22 @@
 import { AppShell } from "@/components/shell/AppShell";
 import { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { LogOut, Pencil, Phone, Mail } from "lucide-react";
+import { LogOut, Phone, Mail } from "lucide-react";
 import {
   SectionLabel,
   GroupedCard,
   ListRow,
   StatusChip,
   EmptyStateBlock,
+  PlayerPicker,
 } from "@/components/family";
+import type { ChipTone } from "@/components/family/StatusChip";
 import HouseholdEditSheet from "@/components/family/HouseholdEditSheet";
-import { useHouseholdOverview, type FamilyEvent } from "@/hooks/useHouseholdOverview";
+import { useHouseholdOverview } from "@/hooks/useHouseholdOverview";
 
 const formatTime = (t: string | null) => {
   if (!t) return null;
@@ -39,6 +41,7 @@ const Household = () => {
   const navigate = useNavigate();
   const { data, isLoading, error, refetch } = useHouseholdOverview();
   const [editing, setEditing] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -55,37 +58,57 @@ const Household = () => {
   const you = data?.guardians.find((g) => g.is_you);
   const greetingName = you?.first_name ?? "there";
 
-  const renderEvent = (e: FamilyEvent & { childName?: string }) => (
-    <div className="card-flood rounded-xl border p-5">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary-foreground/70">
-        {e.childName ? `${e.childName}'s next event` : "Next up"}
-      </p>
-      <p className="mt-2 font-heading text-3xl font-bold leading-tight">
-        {e.all_day ? dayWord(e.start_date) : formatTime(e.start_time) ?? dayWord(e.start_date)}
-      </p>
-      <p className="text-sm text-primary-foreground/85">
-        {dayWord(e.start_date)} · {e.title}
-      </p>
-      {(e.facility_site || e.location) && (
-        <div className="mt-4 space-y-1 rounded-xl bg-primary-foreground/10 p-3 text-sm">
-          <p className="flex items-center gap-2">
-            
-            {e.facility_site ?? e.location}
-          </p>
-          {e.facility_field && (
-            <p className="pl-6 text-primary-foreground/80">{e.facility_field}</p>
-          )}
-        </div>
-      )}
-    </div>
-  );
+  const children = data?.children ?? [];
+  const selected = children.find((c) => c.id === selectedId) ?? children[0] ?? null;
+
+  // To-dos come only from data this page already loads.
+  type Todo = { key: string; task: string; why: string; chip: string; tone: ChipTone; action?: { label: string; onClick?: () => void; to?: string } };
+  const todos: Todo[] = [];
+  if (data && children.length === 0) {
+    todos.push({ key: "link", task: "Link your player", why: "Your child shows up here once their registration is processed.", chip: "Due", tone: "warning", action: { label: "Start registration", to: "/registration" } });
+  }
+  if (household && !household.address_line1) {
+    todos.push({ key: "address", task: "Add your address", why: "Mailings and field directions need a home address.", chip: "Due", tone: "warning", action: { label: "Add address", onClick: () => setEditing(true) } });
+  }
+  [...children]
+    .filter((c) => !c.team_name)
+    .sort((a, b) => (b.age ?? 0) - (a.age ?? 0))
+    .forEach((c) =>
+      todos.push({ key: `team-${c.id}`, task: `Waiting for ${c.display_name}'s team`, why: "The league places players on teams; schedule and coach details follow.", chip: "Pending", tone: "neutral" }),
+    );
+  const [top, ...rest] = todos;
+  const words = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"];
+  const headline = todos.length > 0
+    ? `${words[todos.length] ?? todos.length} ${todos.length === 1 ? "THING" : "THINGS"} TO DO`
+    : children.length > 0
+      ? "YOU'RE ALL SET"
+      : `HI, ${greetingName.toUpperCase()}`;
+
+  const steps = selected
+    ? [
+        { n: 1, name: "Player info", chip: selected.date_of_birth ? "Done" : "Not yet", tone: (selected.date_of_birth ? "success" : "neutral") as ChipTone },
+        { n: 2, name: "Program", chip: selected.team_name ? "Placed" : "Not yet", tone: (selected.team_name ? "success" : "neutral") as ChipTone, sub: selected.team_name },
+        { n: 3, name: "Forms", chip: "Not tracked yet", tone: "neutral" as ChipTone },
+        { n: 4, name: "Pay", chip: "Not tracked yet", tone: "neutral" as ChipTone },
+      ]
+    : [];
+
+  const actionBtn = (a: NonNullable<Todo["action"]>, flood: boolean) => {
+    const cls = flood
+      ? "inline-flex h-11 items-center rounded-full bg-white px-5 font-label text-[15px] font-semibold text-[#003DA5]"
+      : "inline-flex h-11 items-center rounded-full bg-primary px-5 font-label text-[15px] font-semibold text-primary-foreground";
+    return a.to ? (
+      <Link to={a.to} className={cls}>{a.label}</Link>
+    ) : (
+      <button type="button" onClick={a.onClick} className={cls}>{a.label}</button>
+    );
+  };
 
   return (
-    <AppShell area="auto" title="Household">
-      <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 lg:px-8 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500">
+    <AppShell area="auto" label="2027 season, In-House" title={isLoading || error ? "Household" : headline}>
+      <div className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 lg:px-8">
         {isLoading ? (
           <div className="space-y-4">
-            <Skeleton className="h-10 w-2/3" />
             <Skeleton className="h-40 w-full rounded-2xl" />
             <Skeleton className="h-56 w-full rounded-2xl" />
           </div>
@@ -104,45 +127,73 @@ const Household = () => {
           </GroupedCard>
         ) : (
           <div className="space-y-8">
-            <header>
-              <h1 className="font-heading text-[34px] font-bold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-[44px]">
-                Hi, {greetingName}
-              </h1>
-              <p className="mt-1 text-[15px] text-muted-foreground">
-                {household?.name ?? "Your household"}
-              </p>
-            </header>
-
-            {/* Hero: next event when one exists, otherwise the household card */}
-            {data?.nextEvent ? (
-              renderEvent(data.nextEvent)
-            ) : (
+            {top && (
               <div className="card-flood rounded-xl border p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h2 className="font-heading text-xl font-bold">{household?.name}</h2>
-                    {household?.address_line1 ? (
-                      <p className="mt-1 text-sm leading-relaxed text-primary-foreground/85">
-                        {household.address_line1}
-                        {household.address_line2 ? `, ${household.address_line2}` : ""}
-                        <br />
-                        {[household.city, household.state].filter(Boolean).join(", ")}{" "}
-                        {household.zip_code}
-                      </p>
-                    ) : (
-                      <p className="mt-1 text-sm leading-relaxed text-primary-foreground/85">
-                        Add your address so mailings and field directions reach you.
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setEditing(true)}
-                    className="flex h-11 shrink-0 items-center rounded-full border border-primary-foreground/60 px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/10"
-                  >
-                    <Pencil className="mr-2 h-4 w-4" /> Edit
-                  </button>
-                </div>
+                <p className="font-label text-xs font-semibold tracking-[0.12em]">MOST IMPORTANT</p>
+                <p className="mt-2 font-display text-2xl font-bold leading-tight">{top.task}</p>
+                <p className="mt-1 text-[15px] text-white/90">{top.why}</p>
+                {top.action && <div className="mt-4">{actionBtn(top.action, true)}</div>}
+              </div>
+            )}
+            {rest.length > 0 && (
+              <ul className="space-y-3" role="list">
+                {rest.map((t) => (
+                  <li key={t.key} className="tex-mesh rounded-xl border border-border bg-card p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-label text-[17px] font-semibold">{t.task}</p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">{t.why}</p>
+                      </div>
+                      <StatusChip tone={t.tone}>{t.chip}</StatusChip>
+                    </div>
+                    {t.action && <div className="mt-3">{actionBtn(t.action, false)}</div>}
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <section aria-label="Players">
+              <SectionLabel>Players</SectionLabel>
+              <PlayerPicker
+                players={children.map((c) => ({ id: c.id, initials: c.initials, name: c.display_name }))}
+                selectedId={selected?.id ?? null}
+                onSelect={setSelectedId}
+              />
+              {selected && (
+                <ol className="tex-mesh mt-4 divide-y divide-border rounded-xl border border-border bg-card">
+                  {steps.map((st) => (
+                    <li key={st.n} className="flex min-h-[52px] items-center justify-between gap-3 px-4 py-3">
+                      <span className="flex min-w-0 items-center gap-3">
+                        <span className="w-5 shrink-0 font-display text-lg font-bold text-muted-foreground">{st.n}</span>
+                        <span className="min-w-0">
+                          <span className="block font-label text-[16px] font-semibold">{st.name}</span>
+                          {st.sub && <span className="block truncate text-sm text-muted-foreground">{st.sub}</span>}
+                        </span>
+                      </span>
+                      <StatusChip tone={st.tone}>{st.chip}</StatusChip>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+
+            {data?.nextEvent && (
+              <div className="tex-mesh rounded-xl border border-border bg-card p-5">
+                <p className="font-label text-sm font-semibold text-muted-foreground">
+                  {data.nextEvent.childName ? `${data.nextEvent.childName}'s next event` : "Next up"}
+                </p>
+                <p className="mt-1 font-display text-2xl font-bold leading-tight">
+                  {data.nextEvent.all_day ? dayWord(data.nextEvent.start_date) : formatTime(data.nextEvent.start_time) ?? dayWord(data.nextEvent.start_date)}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {dayWord(data.nextEvent.start_date)}, {data.nextEvent.title}
+                </p>
+                {(data.nextEvent.facility_site || data.nextEvent.location) && (
+                  <p className="mt-2 text-sm">
+                    {data.nextEvent.facility_site ?? data.nextEvent.location}
+                    {data.nextEvent.facility_field ? `, ${data.nextEvent.facility_field}` : ""}
+                  </p>
+                )}
               </div>
             )}
 
@@ -171,8 +222,7 @@ const Household = () => {
                 ) : (
                   <div className="p-4">
                     <EmptyStateBlock>
-                      No players are linked to this household yet. Once a registration is
-                      processed, your child will show up here.
+                      No players are linked yet; they appear here once a registration is processed.
                     </EmptyStateBlock>
                   </div>
                 )}
@@ -293,7 +343,7 @@ const Household = () => {
                 ) : (
                   <div className="p-4">
                     <EmptyStateBlock>
-                      No upcoming events yet — the 2027 season is coming.
+                      No games or practices are scheduled for your players yet.
                     </EmptyStateBlock>
                   </div>
                 )}
