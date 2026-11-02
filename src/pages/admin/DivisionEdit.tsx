@@ -1,3 +1,4 @@
+import { hasFullAccess, useMyRoles } from "@/lib/adminAccess";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -99,6 +100,8 @@ const DivisionEdit = () => {
 
   const money = (v: number | null) => (v === null ? "no fee" : `$${Number(v).toFixed(2)}`);
 
+  const roles = useMyRoles();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -111,7 +114,12 @@ const DivisionEdit = () => {
         features: features,
       };
 
-      if (id) {
+      if (id && roles && !hasFullAccess(roles) && roles.includes("treasurer")) {
+        // Treasurer: fee only, through the narrow database function.
+        const { error } = await supabase.rpc("set_division_fee", { _division_id: id, _cost: payload.cost as number });
+        if (error) throw error;
+        toast.success("Fee updated");
+      } else if (id) {
         const { error } = await supabase
           .from("divisions")
           .update(payload)
