@@ -18,6 +18,8 @@ import type { ChipTone } from "@/components/family/StatusChip";
 import HouseholdEditSheet from "@/components/family/HouseholdEditSheet";
 import AddPlayerSheet from "@/components/family/AddPlayerSheet";
 import { useHouseholdOverview } from "@/hooks/useHouseholdOverview";
+import { useQuery } from "@tanstack/react-query";
+import { familyActions, formsChip, payChip, seatChip, type RegStatus } from "@/lib/familyStatus";
 
 const formatTime = (t: string | null) => {
   if (!t) return null;
@@ -63,9 +65,23 @@ const Household = () => {
   const children = data?.children ?? [];
   const selected = children.find((c) => c.id === selectedId) ?? children[0] ?? null;
 
+  // Registration, forms, payment and seat status come only from my_registration_status().
+  const { data: regs } = useQuery({
+    queryKey: ["my-registration-status"],
+    enabled: !!household,
+    queryFn: async () => {
+      const { data: rows, error: e } = await supabase.rpc("my_registration_status");
+      if (e) throw e;
+      return (rows ?? []) as RegStatus[];
+    },
+  });
+  const nameOf = (pid: string) => children.find((c) => c.id === pid)?.display_name ?? "your player";
+
   // To-dos come only from data this page already loads.
   type Todo = { key: string; task: string; why: string; chip: string; tone: ChipTone; action?: { label: string; onClick?: () => void; to?: string } };
-  const todos: Todo[] = [];
+  const todos: Todo[] = familyActions(regs ?? [], nameOf).map((a) => ({
+    key: a.key, task: a.task, why: a.why, chip: a.chip, tone: a.tone, action: a.to && a.label ? { label: a.label, to: a.to } : undefined,
+  }));
   if (data && children.length === 0) {
     todos.push({ key: "link", task: "Add your players", why: "Each child you add here can be registered for the season.", chip: "Due", tone: "warning", action: { label: "Add a player", onClick: () => setAdding(true) } });
   }
@@ -73,7 +89,7 @@ const Household = () => {
     todos.push({ key: "address", task: "Add your address", why: "Mailings and field directions need a home address.", chip: "Due", tone: "warning", action: { label: "Add address", onClick: () => setEditing(true) } });
   }
   [...children]
-    .filter((c) => !c.team_name)
+    .filter((c) => !c.team_name && !(regs ?? []).some((r) => r.player_id === c.id && r.seat !== "confirmed"))
     .sort((a, b) => (b.age ?? 0) - (a.age ?? 0))
     .forEach((c) =>
       todos.push({ key: `team-${c.id}`, task: `Waiting for ${c.display_name}'s team`, why: "The league places players on teams; schedule and coach details follow.", chip: "Pending", tone: "neutral" }),
@@ -86,12 +102,17 @@ const Household = () => {
       ? "YOU'RE ALL SET"
       : `HI, ${greetingName.toUpperCase()}`;
 
-  const steps = selected
+  const reg = selected ? (regs ?? []).find((r) => r.player_id === selected.id) ?? null : null;
+  type Step = { n: number; name: string; chip: string; tone: ChipTone; sub?: string | null };
+  const steps: Step[] = selected
     ? [
-        { n: 1, name: "Player info", chip: selected.date_of_birth ? "Done" : "Not yet", tone: (selected.date_of_birth ? "success" : "neutral") as ChipTone },
-        { n: 2, name: "Program", chip: selected.team_name ? "Placed" : "Not yet", tone: (selected.team_name ? "success" : "neutral") as ChipTone, sub: selected.team_name },
-        { n: 3, name: "Forms", chip: "Not tracked yet", tone: "neutral" as ChipTone },
-        { n: 4, name: "Pay", chip: "Not tracked yet", tone: "neutral" as ChipTone },
+        { n: 1, name: "Player info", chip: selected.date_of_birth ? "Done" : "Not yet", tone: selected.date_of_birth ? "success" : "neutral" },
+        reg
+          ? { n: 2, name: "Program", chip: "Chosen", tone: "success", sub: [reg.program_name, reg.division_name].filter(Boolean).join(", ") }
+          : { n: 2, name: "Program", chip: selected.team_name ? "Placed" : "Not yet", tone: selected.team_name ? "success" : "neutral", sub: selected.team_name },
+        reg ? { n: 3, name: "Forms", ...formsChip(reg) } : { n: 3, name: "Forms", chip: "Not yet", tone: "neutral" },
+        reg ? { n: 4, name: "Pay", ...payChip(reg) } : { n: 4, name: "Pay", chip: "Not yet", tone: "neutral" },
+        ...(reg && reg.lifecycle !== "draft" ? [{ n: 5, name: "Spot", ...seatChip(reg) }] : []),
       ]
     : [];
 
