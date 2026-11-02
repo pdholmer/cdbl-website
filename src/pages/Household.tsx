@@ -367,6 +367,14 @@ const Household = () => {
           onSaved={() => refetch()}
         />
       )}
+      {household && (
+        <AddPlayerSheet
+          householdId={household.id}
+          open={adding}
+          onOpenChange={setAdding}
+          onSaved={() => refetch()}
+        />
+      )}
     </AppShell>
   );
 };
