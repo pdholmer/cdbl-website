@@ -69,7 +69,7 @@ const scrollToHash = (to: string) => {
 export const AppShell = ({ area: fixedArea, label, title, children, banner }: AppShellProps) => {
   const { pathname, hash } = useLocation();
   const navigate = useNavigate();
-  const { roles, area, hasHousehold } = useShellIdentity(fixedArea);
+  const { roles, area, hasHousehold, isTeamCoach } = useShellIdentity(fixedArea);
   const [moreOpen, setMoreOpen] = useState(false);
 
   const tabs = tabsFor(area, roles);
@@ -97,10 +97,18 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
     </NavLink>
   );
 
+  // Area switches: show only areas this person can open, and not the one they are in.
+  const canOpenAdmin = canAccessAdminPath(roles, "/admin");
+  const canOpenCoach = roles.includes("coach") || isTeamCoach;
+  const areaSwitches: NavLinkItem[] = [];
+  if (canOpenAdmin && area !== "admin") areaSwitches.push({ label: "League office", to: "/admin" });
+  if (canOpenCoach && area !== "coach") areaSwitches.push({ label: "Coach", to: "/coach" });
+  if (hasHousehold && area !== "family") areaSwitches.push({ label: "My household", to: "/household" });
+
   const footerLinks: NavLinkItem[] = [
     { label: "Account", to: "/account" },
-    ...(area === "admin" && hasHousehold ? [{ label: "My household", to: "/household" }] : []),
-    { label: "Return to site", to: "/" },
+    ...areaSwitches,
+    { label: "Back to cdbaseball.org", to: "/" },
   ];
 
   const nav = (
