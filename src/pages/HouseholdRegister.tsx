@@ -8,6 +8,7 @@ import { StatusChip } from "@/components/family";
 import { cn } from "@/lib/utils";
 import { GRADES, gradeLabel, longDate, registrationWindow, todayISO } from "@/lib/registration";
 import { toast } from "sonner";
+import RegistrationForms from "@/components/family/RegistrationForms";
 
 type Elig = {
   league_age: number | null;
@@ -211,6 +212,9 @@ const HouseholdRegister = () => {
                   </div>
                 )}
               </section>
+            )}
+            {existingForProgram && (
+              <RegistrationForms registrationId={existingForProgram.id} childName={name} />
             )}
             {elig?.error && <p className="text-[15px]">{elig.error}</p>}
             {err && <p role="alert" className="text-sm font-semibold text-destructive">{err}</p>}
