@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import FormVersions from "@/components/admin/FormVersions";
 import MoneySetup from "@/components/admin/MoneySetup";
 import PaymentsDesk from "@/components/admin/PaymentsDesk";
+import RegistrationReadiness from "@/components/admin/RegistrationReadiness";
 
 /** Registration setup: working values to confirm, open-gate issues, and placement reviews. */
 const RegistrationSetup = () => {
@@ -108,6 +109,7 @@ const RegistrationSetup = () => {
           <p>We couldn't load the season. {(error as Error | null)?.message}</p>
         ) : (
           <>
+            <RegistrationReadiness />
             <section className="tex-mesh space-y-4 rounded-xl border border-border bg-card p-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="font-label text-[17px] font-semibold">{s.year} season</p>
@@ -176,7 +178,7 @@ const RegistrationSetup = () => {
 
             <FormVersions isAdmin={isAdmin} />
 
-            <section className="space-y-3" aria-label="Placement reviews">
+            <section id="reviews" className="scroll-mt-4 space-y-3" aria-label="Placement reviews">
               <p className="font-label text-[17px] font-semibold">Placement reviews</p>
               {data.reviews.length === 0 ? (
                 <p className="text-[15px] text-muted-foreground">No families are waiting on a division decision.</p>
