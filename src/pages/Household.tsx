@@ -16,7 +16,7 @@ import {
 } from "@/components/family";
 import type { ChipTone } from "@/components/family/StatusChip";
 import HouseholdEditSheet from "@/components/family/HouseholdEditSheet";
-import { useHouseholdOverview, type FamilyEvent } from "@/hooks/useHouseholdOverview";
+import { useHouseholdOverview } from "@/hooks/useHouseholdOverview";
 
 const formatTime = (t: string | null) => {
   if (!t) return null;
