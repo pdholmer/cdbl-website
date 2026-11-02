@@ -260,6 +260,7 @@ HELP REQUESTS, PROBLEMS AND FEEDBACK:
             },
           },
         }],
+      }),
     });
 
     // Handle specific error codes from AI Gateway
