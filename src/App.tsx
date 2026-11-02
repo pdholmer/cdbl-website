@@ -71,7 +71,6 @@ import { CoachLayout } from "./components/CoachLayout";
 import CoachDashboard from "./pages/coach/Dashboard";
 import CoachDraftRoom from "./pages/coach/DraftRoom";
 import { FeedbackProvider } from "./contexts/FeedbackContext";
-import { FeedbackFAB, FeedbackSlider } from "./components/feedback";
 import OAuthConsent from "./pages/OAuthConsent";
 import GuardianLogin from "./pages/Login";
 import TwoStepSetup from "./pages/TwoStepSetup";

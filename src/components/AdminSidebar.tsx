@@ -49,6 +49,7 @@ const navSections: NavSection[] = [
     icon: Megaphone,
     items: [
       { title: "Communication", url: "/admin/communication", icon: Megaphone },
+      { title: "Requests", url: "/admin/requests", icon: MessageSquare },
     ],
   },
   {
@@ -216,14 +217,16 @@ export function AdminSidebar() {
         <SidebarGroup className="mt-auto pl-[25px] pb-6">
           <SidebarGroupContent>
             <SidebarMenu>
+              {canAccessAdminPath(roles, "/admin/feedback") && (
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/admin/feedback" className={getNavClass}>
                     <MessageSquare className="h-4 w-4" />
-                    <span className="ml-2">Feedback</span>
+                    <span className="ml-2">Feedback (archive)</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              )}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/admin/users" className={getNavClass}>
