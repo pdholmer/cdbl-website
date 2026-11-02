@@ -21,6 +21,10 @@ interface AppShellProps {
   children: React.ReactNode;
   /** Extra content shown above the page inside main (admin banner). */
   banner?: React.ReactNode;
+  /** Extra content below the headline in the lit header. */
+  headerExtra?: React.ReactNode;
+  /** Extra classes on the headline. */
+  titleClassName?: string;
 }
 
 const AREA_LABEL: Record<ShellArea, string> = { admin: "CDBL · League office", coach: "CDBL · Coach", family: "CDBL · Family" };
@@ -66,7 +70,7 @@ const scrollToHash = (to: string) => {
   window.setTimeout(() => document.getElementById(id)?.scrollIntoView({ block: "start" }), 60);
 };
 
-export const AppShell = ({ area: fixedArea, label, title, children, banner }: AppShellProps) => {
+export const AppShell = ({ area: fixedArea, label, title, children, banner, headerExtra, titleClassName }: AppShellProps) => {
   const { pathname, hash } = useLocation();
   const navigate = useNavigate();
   const { roles, area, hasHousehold, isTeamCoach } = useShellIdentity(fixedArea);
@@ -153,6 +157,8 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner }: Ap
           label={label ?? AREA_LABEL[area]}
           title={headline}
           sealPhoneOnly
+          extra={headerExtra}
+          titleClassName={titleClassName}
           notice={
             area === "family" ? (
               /* Family phones have no More sheet, so the way back to the public site lives here. */
