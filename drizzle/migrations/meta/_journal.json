@@ -141,6 +141,13 @@
       "when": 1793649589667,
       "tag": "0019_phase5_payments_ledger_checkout_holds",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1793649829867,
+      "tag": "0020_phase5_fix_add_to_cart_non_ihtt",
+      "breakpoints": true
     }
   ]
 }
