@@ -36,6 +36,7 @@ const Dashboard = () => {
                 description={stats.liveDraft.name}
                 href={`/admin/drafts/${stats.liveDraft.id}/live`}
                 meta={`Round ${stats.liveDraft.currentRound} of ${stats.liveDraft.totalRounds}`}
+                flood={!showCriticalFeedback}
               />
             )}
             {showCriticalFeedback && (

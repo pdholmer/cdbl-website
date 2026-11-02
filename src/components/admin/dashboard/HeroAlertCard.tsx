@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 import { cn } from "@/lib/utils";
 
 interface HeroAlertCardProps {
@@ -8,74 +7,47 @@ interface HeroAlertCardProps {
   description: string;
   href: string;
   meta?: string;
+  /** Show as a flood card. Only one flood per screen; the dashboard decides. */
+  flood?: boolean;
 }
 
-export function HeroAlertCard({ type, title, description, href, meta }: HeroAlertCardProps) {
+export function HeroAlertCard({ type, title, description, href, meta, flood = true }: HeroAlertCardProps) {
   const isLiveDraft = type === "live-draft";
-  
+
+  if (!flood) {
+    return (
+      <div className="tex-mesh rounded-xl border border-border bg-card p-6 text-card-foreground">
+        <p className="font-label text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+          {isLiveDraft ? "Live" : "Urgent"}
+        </p>
+        <h3 className="mt-1 text-lg font-semibold">{title}</h3>
+        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+        {meta && <p className="mt-2 text-xs font-medium text-muted-foreground">{meta}</p>}
+        <Link
+          to={href}
+          className="mt-4 inline-flex min-h-[44px] items-center rounded-full bg-primary px-5 font-label text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          {isLiveDraft ? "Open live draft" : "Review now"}
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <Link to={href} className="block group">
-      <div
-        className={cn(
-          "relative overflow-hidden rounded-2xl p-6 min-h-[120px]",
-          "border transition-colors duration-200",
-          isLiveDraft ? "card-flood" : "card-alert"
-        )}
-      >
-        {/* Animated pulse indicator */}
+      <div className={cn("relative overflow-hidden rounded-xl border p-6 min-h-[120px]", isLiveDraft ? "card-flood" : "card-alert")}>
         <div className="absolute top-4 right-4 flex items-center gap-2">
-          <span
-            className={cn(
-              "relative flex h-3 w-3",
-            )}
-          >
-            <span
-              className={cn(
-                "animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-white"
-              )}
-            />
-            <span
-              className={cn(
-                "relative inline-flex rounded-full h-3 w-3 bg-white"
-              )}
-            />
+          <span className="relative flex h-3 w-3">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-white opacity-75 motion-safe:animate-ping" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-white" />
           </span>
-          <span className={cn(
-            "text-xs font-medium uppercase tracking-wide text-white"
-          )}>
-            {isLiveDraft ? "Live" : "Urgent"}
-          </span>
+          <span className="text-xs font-medium uppercase tracking-wide text-white">{isLiveDraft ? "Live" : "Urgent"}</span>
         </div>
-
-        <div className="flex items-start gap-4">
-
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-semibold text-white">
-              {title}
-            </h3>
-            <p className="text-sm text-white/90 mt-1">
-              {description}
-            </p>
-            {meta && (
-              <p className={cn(
-                "text-xs font-medium mt-2 text-white"
-              )}>
-                {meta}
-              </p>
-            )}
-          </div>
-
-          <div className="hidden sm:flex items-center text-white">
-            <span className="text-sm font-medium mr-1">Take Action</span>
-            <svg
-              className="h-4 w-4 transform group-hover:translate-x-1 transition-transform"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
+        <div className="pr-20">
+          <h3 className="text-lg font-semibold text-white">{title}</h3>
+          <p className="mt-1 text-sm text-white/90">{description}</p>
+          {meta && <p className="mt-2 text-xs font-medium text-white">{meta}</p>}
+          <span className="mt-3 inline-block text-sm font-medium text-white underline underline-offset-4">Take action</span>
         </div>
       </div>
     </Link>
