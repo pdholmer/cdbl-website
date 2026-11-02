@@ -72,6 +72,10 @@ const Login = () => {
     const { error } = await supabase.auth.signInWithPassword({ email: a, password });
     setBusy(false);
     if (error) {
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        setMode("unconfirmed");
+        return;
+      }
       toast.error(
         error.message === "Invalid login credentials"
           ? "That email and password don't match. If you've never set a password, use Forgot password."
@@ -79,6 +83,20 @@ const Login = () => {
       );
     }
     // onAuthStateChange routes on success
+  };
+
+  const handleResendConfirmation = async () => {
+    const a = cleanEmail();
+    if (!emailRegex.test(a)) return toast.error("Please enter a valid email address.");
+    setBusy(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: a,
+      options: { emailRedirectTo: `${window.location.origin}/login` },
+    });
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success("Confirmation email sent. Check your inbox.");
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
