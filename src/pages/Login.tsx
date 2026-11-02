@@ -12,7 +12,7 @@ import { AuthShell } from "@/components/AuthShell";
 import { PasswordInput } from "@/components/PasswordInput";
 import { MIN_PASSWORD_LENGTH, passwordProblem } from "@/lib/password";
 
-type Mode = "signin" | "signup" | "forgot" | "forgot-sent" | "signup-sent";
+type Mode = "signin" | "signup" | "forgot" | "forgot-sent" | "signup-sent" | "unconfirmed";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
