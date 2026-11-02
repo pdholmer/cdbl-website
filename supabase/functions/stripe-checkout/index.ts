@@ -17,7 +17,27 @@ Deno.serve(async (req) => {
 
   const auth = req.headers.get("Authorization");
   if (!auth?.startsWith("Bearer ")) return json(401, { error: "Sign in first" });
-  const parsed = Body.safeParse(await req.json().catch(() => ({})));
+  const raw = await req.json().catch(() => ({}));
+
+  // Readiness check for the league office: reports only whether keys are set, never their values.
+  if (raw?.action === "readiness") {
+    const url = Deno.env.get("SUPABASE_URL")!;
+    const uc = createClient(url, Deno.env.get("SUPABASE_ANON_KEY")!, { global: { headers: { Authorization: auth } } });
+    const { data: claims } = await uc.auth.getClaims(auth.slice(7));
+    const uid = claims?.claims?.sub;
+    if (!uid) return json(401, { error: "Sign in first" });
+    const { data: ok } = await uc.rpc("has_any_role", { _user_id: uid, _roles: ["admin", "board_member", "registrar", "treasurer"] });
+    if (!ok) return json(403, { error: "not allowed" });
+    const sk = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
+    return json(200, {
+      stripe_key_set: sk.startsWith("sk_test_"),
+      stripe_key_is_live: sk.startsWith("sk_live_"),
+      webhook_secret_set: !!Deno.env.get("STRIPE_WEBHOOK_SECRET"),
+      resend_key_set: !!Deno.env.get("RESEND_API_KEY"),
+    });
+  }
+
+  const parsed = Body.safeParse(raw);
   if (!parsed.success) return json(400, { error: parsed.error.flatten().fieldErrors });
   const { cart_id, return_origin } = parsed.data;
   const origin = new URL(return_origin).origin;
