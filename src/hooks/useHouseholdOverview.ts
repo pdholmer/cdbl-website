@@ -73,7 +73,24 @@ const initialsOf = (first?: string | null, last?: string | null) =>
 export const useHouseholdOverview = () => {
   return useQuery<HouseholdOverview>({
     queryKey: ["household-overview"],
-    queryFn: async () => {
+    retry: 1,
+    // A stalled sign-in refresh or request must end in the error card, never an endless skeleton.
+    queryFn: () => withTimeout(loadOverview(), HOUSEHOLD_TIMEOUT_MS),
+  });
+};
+
+export const HOUSEHOLD_TIMEOUT_MS = 15000;
+export const withTimeout = <T,>(work: Promise<T>, ms: number): Promise<T> =>
+  new Promise<T>((resolve, reject) => {
+    const t = setTimeout(
+      () => reject(new Error("The league server took too long to answer. Check your connection and try again.")),
+      ms,
+    );
+    work.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+  });
+
+const loadOverview = async (): Promise<HouseholdOverview> => {
+  {
       const { data: sessionData } = await supabase.auth.getSession();
       const session = sessionData.session;
       if (!session) throw new Error("Not signed in");
@@ -253,6 +270,5 @@ export const useHouseholdOverview = () => {
         children,
         nextEvent: upcoming[0] ?? null,
       };
-    },
-  });
+  }
 };

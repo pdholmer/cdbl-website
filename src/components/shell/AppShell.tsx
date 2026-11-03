@@ -4,7 +4,10 @@ import { LogOut, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import seal from "@/assets/cdbl-seal.png";
+import wordmarkLight from "@/assets/cdbl-logo.png";
+import wordmarkDark from "@/assets/cdbl-footer-logo.png";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { LitHeader } from "@/components/shell/LitHeader";
 import { canAccessAdminPath, fetchMyRoles } from "@/lib/adminAccess";
 import { hasGuardianRecord, resolveLanding } from "@/lib/landing";
@@ -73,7 +76,11 @@ const scrollToHash = (to: string) => {
 export const AppShell = ({ area: fixedArea, label, title, children, banner, headerExtra, titleClassName }: AppShellProps) => {
   const { pathname, hash } = useLocation();
   const navigate = useNavigate();
-  const { roles, area, hasHousehold, isTeamCoach } = useShellIdentity(fixedArea);
+  const identity = useShellIdentity(fixedArea);
+  const { roles, hasHousehold, isTeamCoach } = identity;
+  // Family pages always use the public-site look, whatever else the person can open.
+  const familyPage = pathname.startsWith("/household") || pathname === "/account";
+  const area: ShellArea = familyPage ? "family" : identity.area;
   const [moreOpen, setMoreOpen] = useState(false);
 
   const tabs = tabsFor(area, roles);
@@ -139,16 +146,91 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner, head
     </>
   );
 
+  const tabBar = (
+    <>
+      {/* Phone tab bar */}
+        <nav aria-label="Tabs" className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card pb-[env(safe-area-inset-bottom)] md:hidden">
+          <ul className="mx-auto grid max-w-lg grid-cols-5 gap-1 px-2 py-1.5">
+            {tabs.map((t) => {
+              const active = !t.more && isActive(t, pathname, hash);
+              const inner = (
+                <>
+                  {t.icon && <t.icon className="h-5 w-5" aria-hidden />}
+                  <span className="font-label text-[10px] font-semibold leading-none">{t.label}</span>
+                </>
+              );
+              const cls = cn(
+                "flex min-h-[48px] w-full flex-col items-center justify-center gap-1 rounded-full transition-colors motion-reduce:transition-none",
+                active ? "is-selected" : "text-muted-foreground hover:text-foreground",
+              );
+              return (
+                <li key={t.label}>
+                  {t.more ? (
+                    <button type="button" className={cls} onClick={() => setMoreOpen(true)}>{inner}</button>
+                  ) : (
+                    <Link to={t.to} className={cls} aria-current={active ? "page" : undefined} onClick={() => scrollToHash(t.to)}>{inner}</Link>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+  
+      </>
+  );
+
+  if (area === "family") {
+    return (
+      <div className="flex min-h-screen flex-col overflow-x-hidden bg-background">
+        <Header />
+        <LitHeader label={label ?? AREA_LABEL.family} title={headline} hideSeal extra={headerExtra} titleClassName={titleClassName} />
+        {/* iPad and desktop: simple tab row under the page title. */}
+        <nav aria-label="Family" className="hidden border-b border-border bg-background md:block">
+          <ul className="mx-auto flex w-full max-w-6xl flex-wrap gap-2 px-4 py-3 sm:px-6 lg:px-8">
+            {tabs.map((t) => {
+              const active = isActive(t, pathname, hash);
+              return (
+                <li key={t.label}>
+                  <Link
+                    to={t.to}
+                    onClick={() => scrollToHash(t.to)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "inline-flex min-h-[44px] items-center rounded-full px-4 font-label text-[15px] font-semibold transition-colors motion-reduce:transition-none",
+                      active ? "is-selected" : "text-foreground/85 hover:bg-muted",
+                    )}
+                  >
+                    {t.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+        <main className="flex-1 pb-10">
+          {banner}
+          {children}
+        </main>
+        <Footer />
+        {/* Room so the phone tab bar never covers the footer. */}
+        <div className="h-[calc(64px+env(safe-area-inset-bottom))] md:hidden" aria-hidden />
+        {tabBar}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-background md:flex">
       {/* iPad and desktop sidebar */}
       <aside className="tex-mesh sticky top-0 hidden h-screen w-[220px] shrink-0 overflow-y-auto border-r border-border bg-card px-3 py-5 md:block">
-        <Link to="/" aria-label="CDBL home" className="mb-5 flex min-h-[44px] items-center gap-3 px-2">
-          <img src={seal} alt="Central District Baseball League" className="h-9 w-9 object-contain" />
-          <span className="font-display text-lg font-black uppercase leading-none text-foreground">
-            {area === "admin" ? "League office" : area === "coach" ? "Coach" : "Family"}
-          </span>
+        <Link to="/" aria-label="CDBL home" className="mb-2 block px-3 py-2">
+          {/* Existing wordmark files, unchanged: dark letters in light mode, white letters in dark mode. */}
+          <img src={wordmarkLight} alt="Central District Baseball League" className="block h-auto w-full max-w-[164px] dark:hidden" />
+          <img src={wordmarkDark} alt="Central District Baseball League" className="hidden h-auto w-full max-w-[164px] dark:block" />
         </Link>
+        <p className="mb-4 px-3 font-display text-lg font-black uppercase leading-none text-foreground">
+          {area === "admin" ? "League office" : "Coach"}
+        </p>
         <nav aria-label="Main">{nav}</nav>
       </aside>
 
@@ -159,17 +241,6 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner, head
           sealPhoneOnly
           extra={headerExtra}
           titleClassName={titleClassName}
-          notice={
-            area === "family" ? (
-              /* Family phones have no More sheet, so the way back to the public site lives here. */
-              <Link
-                to="/"
-                className="md:hidden -mr-1 inline-flex min-h-[44px] items-center px-1 text-[13px] font-semibold text-foreground/90 underline decoration-foreground/40 underline-offset-2 hover:decoration-foreground"
-              >
-                Back to cdbaseball.org
-              </Link>
-            ) : undefined
-          }
           actions={
             <>
               <Link to="/account" aria-label="Account" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">
@@ -188,33 +259,7 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner, head
         </main>
       </div>
 
-      {/* Phone tab bar */}
-      <nav aria-label="Tabs" className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card pb-[env(safe-area-inset-bottom)] md:hidden">
-        <ul className="mx-auto grid max-w-lg grid-cols-5 gap-1 px-2 py-1.5">
-          {tabs.map((t) => {
-            const active = !t.more && isActive(t, pathname, hash);
-            const inner = (
-              <>
-                {t.icon && <t.icon className="h-5 w-5" aria-hidden />}
-                <span className="font-label text-[10px] font-semibold leading-none">{t.label}</span>
-              </>
-            );
-            const cls = cn(
-              "flex min-h-[48px] w-full flex-col items-center justify-center gap-1 rounded-full transition-colors motion-reduce:transition-none",
-              active ? "is-selected" : "text-muted-foreground hover:text-foreground",
-            );
-            return (
-              <li key={t.label}>
-                {t.more ? (
-                  <button type="button" className={cls} onClick={() => setMoreOpen(true)}>{inner}</button>
-                ) : (
-                  <Link to={t.to} className={cls} aria-current={active ? "page" : undefined} onClick={() => scrollToHash(t.to)}>{inner}</Link>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
+      {tabBar}
 
       <Sheet open={moreOpen} onOpenChange={setMoreOpen}>
         <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-xl motion-reduce:transition-none" onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setMoreOpen(false); }}>

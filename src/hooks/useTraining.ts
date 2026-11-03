@@ -42,7 +42,10 @@ export function useTrainingAccess(): TrainingAccess {
     };
 
     check();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => check());
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      // Defer: awaiting backend calls inside this callback deadlocks the sign-in lock.
+      setTimeout(check, 0);
+    });
     return () => {
       active = false;
       subscription.unsubscribe();
