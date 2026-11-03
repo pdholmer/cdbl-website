@@ -11,6 +11,8 @@ interface LitHeaderProps {
   notice?: React.ReactNode;
   /** Hide the seal at md+ (the sidebar shows it there). */
   sealPhoneOnly?: boolean;
+  /** No seal at all (family pages, where the public site header shows the wordmark). */
+  hideSeal?: boolean;
   className?: string;
   /** Extra classes on the headline (for example hide it where a stage shows the same name). */
   titleClassName?: string;
@@ -19,16 +21,16 @@ interface LitHeaderProps {
 }
 
 /** Shared lit header ("stage") with the piping line, used by AppShell and AuthShell. */
-export const LitHeader = ({ label, title, actions, notice, sealPhoneOnly, className, titleClassName, extra }: LitHeaderProps) => (
+export const LitHeader = ({ label, title, actions, notice, sealPhoneOnly, hideSeal, className, titleClassName, extra }: LitHeaderProps) => (
   <header className={cn("ngb-stage tex-twill", className)}>
     <div className="mx-auto flex w-full max-w-6xl items-start gap-3 px-4 pb-5 pt-4 sm:px-6 lg:px-8">
-      <Link
+      {!hideSeal && <Link
         to="/"
         aria-label="CDBL home"
         className={cn("flex h-11 w-11 shrink-0 items-center justify-center", sealPhoneOnly && "md:hidden")}
       >
         <img src={seal} alt="Central District Baseball League" className="h-9 w-9 object-contain" />
-      </Link>
+      </Link>}
       <div className="min-w-0 flex-1 pt-1">
         <div className="flex items-start justify-between gap-3">
           <p className="font-label pt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
