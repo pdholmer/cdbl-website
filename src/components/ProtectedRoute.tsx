@@ -79,7 +79,8 @@ export const ProtectedRoute = ({
     checkAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
-      checkAuth();
+      // Defer: backend calls made inside this callback wait on the sign-in lock it holds.
+      setTimeout(checkAuth, 0);
     });
 
     return () => subscription.unsubscribe();

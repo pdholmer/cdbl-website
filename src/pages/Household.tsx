@@ -19,6 +19,7 @@ import HouseholdEditSheet from "@/components/family/HouseholdEditSheet";
 import AddPlayerSheet from "@/components/family/AddPlayerSheet";
 import { useHouseholdOverview } from "@/hooks/useHouseholdOverview";
 import { useQuery } from "@tanstack/react-query";
+import { HOUSEHOLD_TIMEOUT_MS, withTimeout } from "@/hooks/useHouseholdOverview";
 import { familyActions, formsChip, payChip, seatChip, type RegStatus } from "@/lib/familyStatus";
 
 const formatTime = (t: string | null) => {
@@ -48,14 +49,19 @@ const Household = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   // Registration, forms, payment and seat status come only from my_registration_status().
-  const { data: regs } = useQuery({
+  const { data: regs, error: regsError, refetch: refetchRegs } = useQuery({
     queryKey: ["my-registration-status"],
     enabled: !!data?.household,
-    queryFn: async () => {
-      const { data: rows, error: e } = await supabase.rpc("my_registration_status");
-      if (e) throw e;
-      return (rows ?? []) as RegStatus[];
-    },
+    retry: 1,
+    queryFn: () =>
+      withTimeout(
+        (async () => {
+          const { data: rows, error: e } = await supabase.rpc("my_registration_status");
+          if (e) throw e;
+          return (rows ?? []) as RegStatus[];
+        })(),
+        HOUSEHOLD_TIMEOUT_MS,
+      ),
   });
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -150,6 +156,13 @@ const Household = () => {
           </GroupedCard>
         ) : (
           <div className="space-y-8">
+            {regsError && (
+              <div role="alert" className="tex-mesh rounded-xl border border-border bg-card p-4">
+                <p className="font-label text-[17px] font-semibold">We couldn't load registration status</p>
+                <p className="mt-0.5 text-sm text-destructive">{(regsError as Error).message}</p>
+                <Button className="mt-3 h-11 rounded-full" onClick={() => refetchRegs()}>Try again</Button>
+              </div>
+            )}
             {top && (
               <div className="card-flood rounded-xl border p-5">
                 <p className="font-label text-xs font-semibold tracking-[0.12em]">MOST IMPORTANT</p>
