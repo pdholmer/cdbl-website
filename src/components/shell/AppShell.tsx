@@ -241,17 +241,6 @@ export const AppShell = ({ area: fixedArea, label, title, children, banner, head
           sealPhoneOnly
           extra={headerExtra}
           titleClassName={titleClassName}
-          notice={
-            area === "family" ? (
-              /* Family phones have no More sheet, so the way back to the public site lives here. */
-              <Link
-                to="/"
-                className="md:hidden -mr-1 inline-flex min-h-[44px] items-center px-1 text-[13px] font-semibold text-foreground/90 underline decoration-foreground/40 underline-offset-2 hover:decoration-foreground"
-              >
-                Back to cdbaseball.org
-              </Link>
-            ) : undefined
-          }
           actions={
             <>
               <Link to="/account" aria-label="Account" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-foreground/80 hover:bg-foreground/10">

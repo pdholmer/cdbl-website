@@ -134,6 +134,11 @@ const UserMenu = ({ onMenuAction, variant = "desktop" }: UserMenuProps) => {
             <span>League office</span>
           </Link>
         )}
+        {roles.includes("coach") && (
+          <Link to="/coach" onClick={onMenuAction} className={sheetLink}>
+            <span>Coach</span>
+          </Link>
+        )}
         <Link to="/household" onClick={onMenuAction} className={sheetLink}>
           <span>My household</span>
         </Link>
@@ -171,9 +176,16 @@ const UserMenu = ({ onMenuAction, variant = "desktop" }: UserMenuProps) => {
                 <span>League office</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
           </>
         )}
+        {roles.includes("coach") && (
+          <DropdownMenuItem asChild>
+            <Link to="/coach" className="flex items-center gap-2 cursor-pointer">
+              <span>Coach</span>
+            </Link>
+          </DropdownMenuItem>
+        )}
+        {(canOpenAdmin || roles.includes("coach")) && <DropdownMenuSeparator />}
         <DropdownMenuItem asChild>
           <Link to="/household" className="flex items-center gap-2 cursor-pointer">
             <span>My household</span>
