@@ -25,12 +25,13 @@ const useAuthState = () => {
 
   useEffect(() => {
     const loadRoles = (uid: string) => {
-      // Defer the read so it never runs inside the auth callback.
+      // Show the account button as soon as we know who is signed in;
+      // roles arrive after and only add the League office link.
+      setIsLoading(false);
       setTimeout(() => {
         fetchMyRoles(uid)
           .then(setRoles)
-          .catch(() => setRoles([]))
-          .finally(() => setIsLoading(false));
+          .catch(() => setRoles([]));
       }, 0);
     };
 
